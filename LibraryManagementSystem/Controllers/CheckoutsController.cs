@@ -80,35 +80,44 @@ namespace LibraryManagement.API.Controllers
         [HttpPut("reserve/{id}")]
         public async Task<IActionResult> CheckOutReserve(int id)
         {
-            var reserve = await _libraryRepo.GetReserve(id);
+            //var reserve = await _libraryRepo.GetReserve(id);
 
-            if (reserve == null)
+            //if (reserve == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //if (reserve.Status.Name == "Checkedout")
+            //{
+            //    return BadRequest($"{reserve.Id} has already been checked out");
+            //}
+
+            //if (reserve.Status.Name == "Expired")
+            //{
+            //    return BadRequest($"{reserve.Id} has expired");
+            //}
+
+            //reserve.Status = await _context.Statuses.FirstOrDefaultAsync(s => s.Id == 3);
+            //reserve.DateCheckedOut = DateTime.Now;
+
+            //var checkout = new CheckoutForCreationDto()
+            //{
+            //    LibraryAssetId = reserve.LibraryAssetId,
+            //    LibraryCardId = reserve.LibraryCardId
+            //};
+
+            //var result = await _checkoutService.CheckoutReservedAsset(id);
+
+            //return Ok(result);
+
+           var checkout = await _checkoutService.CheckoutReservedAsset(id);
+
+            if (checkout.Valid)
             {
-                return NotFound();
+                return NoContent();
             }
 
-            if (reserve.Status.Name == "Checkedout")
-            {
-                return BadRequest($"{reserve.Id} has already been checked out");
-            }
-
-            if (reserve.Status.Name == "Expired")
-            {
-                return BadRequest($"{reserve.Id} has expired");
-            }
-
-            reserve.Status = await _context.Statuses.FirstOrDefaultAsync(s => s.Id == 3);
-            reserve.DateCheckedOut = DateTime.Now;
-
-            var checkout = new CheckoutForCreationDto()
-            {
-                LibraryAssetId = reserve.LibraryAssetId,
-                LibraryCardId = reserve.LibraryCardId
-            };
-
-            var result = await _checkoutService.CheckoutReservedAsset(reserve);
-
-            return Ok(result);
+            return BadRequest();
         }
 
         [HttpPost]
@@ -120,10 +129,6 @@ namespace LibraryManagement.API.Controllers
             {
                 return BadRequest(result.Errors);
             }
-
-            //return Ok(result.Result);
-
-            //var checkout = await _checkoutService.CreateCheckout(checkoutForCreationDto);
 
             return CreatedAtRoute(nameof(GetCheckout), new { id = result.Id }, result.Result);
         }

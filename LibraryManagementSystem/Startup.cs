@@ -114,6 +114,7 @@ namespace LibraryManagement.API
             services.AddScoped<ILibraryCardRepository, LibraryCardRepository>();
             services.AddScoped<ICheckoutService, CheckoutService>();
             services.AddScoped<ICheckoutRepository, CheckoutRepository>();
+            services.AddScoped<IReserveRepository, ReserveRepository>();
             services.AddScoped<LogUserActivity>();
         }
 
