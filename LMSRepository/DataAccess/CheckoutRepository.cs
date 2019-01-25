@@ -48,6 +48,15 @@ namespace LMSRepository.DataAccess
             return checkoutHistory;
         }
 
+        public async Task<IEnumerable<Checkout>> GetCheckoutsForMember(int id)
+        {
+            var checkouts = await _context.Checkouts
+                .Where(l => l.LibraryCard.Id == id)
+                .ToListAsync();
+
+            return checkouts;
+        }
+
         public Task<Checkout> GetLatestCheckout(int id)
         {
             throw new NotImplementedException();

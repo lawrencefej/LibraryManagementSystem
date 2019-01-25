@@ -19,16 +19,20 @@ namespace LMSService.Service
         private readonly string checkedout = "Checkedout";
         private readonly string unavailable = "Unavailable";
         private readonly string returned = "Returned";
+        private readonly string expired = "Expired";
+        private readonly string canceled = "Canceled";
         private readonly ICheckoutRepository _checkoutRepo;
         private readonly ILibraryRepository _libraryRepo;
         private readonly ILibraryCardRepository _cardRepo;
         private readonly ILibraryAssetRepository _assetRepo;
         private readonly IMapper _mapper;
         private readonly ILogger<CheckoutService> _logger;
+        private readonly IReserveRepository _reserveRepo;
         private List<string> errors = new List<string>();
 
         public CheckoutService(ICheckoutRepository checkoutRepo, ILibraryRepository libraryRepo, 
-            ILibraryCardRepository CardRepo, ILibraryAssetRepository AssetRepo, IMapper mapper, ILogger<CheckoutService> logger)
+            ILibraryCardRepository CardRepo, ILibraryAssetRepository AssetRepo, IMapper mapper, 
+            ILogger<CheckoutService> logger, IReserveRepository reserveRepo)
         {
             _checkoutRepo = checkoutRepo;
             _libraryRepo = libraryRepo;
@@ -36,11 +40,52 @@ namespace LMSService.Service
             _assetRepo = AssetRepo;
             _mapper = mapper;
             _logger = logger;
+            _reserveRepo = reserveRepo;
         }
 
-        public Task<Checkout> CheckoutReservedAsset(ReserveAsset reserve)
+        public async Task<ResponseHandler> CheckoutReservedAsset(int id)
         {
-            throw new NotImplementedException();
+            var reserve = await _reserveRepo.GetReserve(id);
+
+            if (reserve == null)
+            {
+                throw new NoValuesFoundException("Reserve was not found");
+            }
+
+            if (reserve.Status.Name == checkedout)
+            {
+                throw new LMSValidationException($"{reserve.Id} has already been checked out");
+            }
+
+            if (reserve.Status.Name == expired)
+            {
+                throw new LMSValidationException($"{reserve.Id} has expired");
+            }
+
+            if (reserve.Status.Name == canceled)
+            {
+                throw new LMSValidationException($"{reserve.Id} has been canceled");
+            }
+
+            reserve.Status = await _libraryRepo.GetStatus(checkedout);
+            reserve.DateCheckedOut = DateTime.Now;
+
+            var checkout = new CheckoutForCreationDto()
+            {
+                LibraryAssetId = reserve.LibraryAssetId,
+                LibraryCardId = reserve.LibraryCardId
+            };
+
+            _libraryRepo.Add(checkout);
+
+            if (await _libraryRepo.SaveAll())
+            {
+                ResponseHandler response = new ResponseHandler();
+                response.Valid = true;
+                return response;
+            }
+
+            throw new Exception("Failed to Checkout the item");
         }
 
         public async Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
@@ -55,7 +100,7 @@ namespace LMSService.Service
 
             var result = await validate.ValidateAsync(checkoutForCreationDto);
 
-            ResponseHandler t = new ResponseHandler(checkoutForCreationDto, errors);
+            ResponseHandler response = new ResponseHandler(checkoutForCreationDto, errors);
 
             if (!result.IsValid)
             {
@@ -63,7 +108,7 @@ namespace LMSService.Service
                 {
                     errors.Add($"{failure.PropertyName}: {failure.ErrorMessage}");
                 }
-                return t;
+                return response;
             }
 
             ReduceAssetCopiesAvailable(libraryAsset);
@@ -76,59 +121,50 @@ namespace LMSService.Service
             if (await _libraryRepo.SaveAll())
             {
                 var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
-                t.Id = checkoutToReturn.Id;
-                t.Valid = true;
-                t.Result = checkoutToReturn;
+                response.Id = checkoutToReturn.Id;
+                response.Valid = true;
+                response.Result = checkoutToReturn;
 
-                return t;
+                return response;
             }
 
             throw new Exception("Failed to Checkout the item");
         }
 
-        public async Task<IReadOnlyList<string>> ValidateCheckout(CheckoutForCreationDto checkout)
-        {
-            var validate = new CheckoutValidation();
-            var libraryCard = await GetLibraryCard(checkout.LibraryCardId);
-            var libraryAsset = await GetLibraryAsset(checkout.LibraryAssetId);
-            
-
-            checkout.AssetStatus = libraryAsset.Status.Name;
-            checkout.Fees = libraryCard.Fees;
-            checkout.CurrentCheckoutCount = await _checkoutRepo.GetMemberCurrentCheckoutAmount(libraryCard.Id);
-
-            var result = await validate.ValidateAsync(checkout);
-
-            var result2 = validate.Validate(checkout);
-
-            if (!result.IsValid)
-            {
-                foreach (var failure in result.Errors)
-                {
-                    errors.Add($"{failure.PropertyName}: {failure.ErrorMessage}");
-                }
-            }
-
-            return errors;
-        }
-
-        public async Task<IEnumerable<Checkout>> GetAllCheckouts()
+        public async Task<IEnumerable<CheckoutForReturnDto>> GetAllCheckouts()
         {
             var checkouts = await _checkoutRepo.GetAllCheckouts();
 
-            return checkouts;
+            if (checkouts == null)
+            {
+                throw new NoValuesFoundException("There are no checkouts available");
+            }
+
+            return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
         }
 
         public async Task<CheckoutForReturnDto> GetCheckout(int id)
         {
             var checkout = await _checkoutRepo.GetCheckout(id);
 
+            if (checkout == null)
+            {
+                throw new NoValuesFoundException("This checkout does not exist");
+            }
+
             return _mapper.Map<CheckoutForReturnDto>(checkout);
         }
 
-        public Task<IEnumerable<Checkout>> GetCheckoutsForMember(int id)
+        public async Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForMember(int id)
         {
-            throw new NotImplementedException();
+            var checkouts = await _checkoutRepo.GetCheckoutsForMember(id);
+
+            if (checkouts == null)
+            {
+                throw new NoValuesFoundException("There are no checkouts available");
+            }
+
+            return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
         }
 
         public async Task<CheckoutForReturnDto> CheckInAsset(int id)
@@ -204,16 +240,6 @@ namespace LMSService.Service
             {
                 asset.Status = await _libraryRepo.GetStatus(unavailable);
             }
-        }
-
-        internal void IsAssetAvailable(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponseHandler> CreateCheckout(CheckoutForCreationDto checkoutForCreation)
-        {
-            throw new NotImplementedException();
         }
     }
 }

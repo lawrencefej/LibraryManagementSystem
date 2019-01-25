@@ -22,7 +22,6 @@ namespace LMSService.Helpers
 
         public ResponseHandler()
         {
-
         }
     }
 }
