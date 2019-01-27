@@ -72,13 +72,9 @@ namespace LibraryManagement.API.Helpers
                      });
             CreateMap<ReserveForCreationDto, ReserveAsset>().ReverseMap();
             CreateMap<ReserveAsset, ReserveForReturnDto>()
-                     .ForMember(dest => dest.LibraryAssetId, opt =>
+                     .ForMember(dest => dest.Id, opt =>
                      {
-                         opt.MapFrom(src => src.LibraryAsset.Id);
-                     })
-                     .ForMember(dest => dest.LibraryCardId, opt =>
-                     {
-                         opt.MapFrom(src => src.LibraryCard.Id);
+                         opt.MapFrom(src => src.Id);
                      })
                      .ForMember(dest => dest.Status, opt =>
                      {

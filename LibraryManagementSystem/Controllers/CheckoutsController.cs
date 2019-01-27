@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using LMSLibrary.Data;
-using LMSLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using LMSLibrary.Dto;
 using AutoMapper;
-using FluentValidation;
-using LMSLibrary.Validators;
-using LMSLibrary.Services;
 using LMSService.Interfaces;
 
 namespace LibraryManagement.API.Controllers
@@ -24,7 +15,6 @@ namespace LibraryManagement.API.Controllers
     [ApiController]
     public class CheckoutsController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly ILibraryAssetRepository _libraryAssetRepo;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
@@ -32,15 +22,11 @@ namespace LibraryManagement.API.Controllers
         private readonly ILibraryRepository _libraryRepo;
         private readonly ICheckoutService _checkoutService;
 
-        public CheckoutsController(DataContext context,
-            ILibraryAssetRepository libraryAssetRepo,
-            IMapper mapper,
-            IUserRepository userRepo,
-            ILibraryCardRepository libraryCardRepo,
-            ILibraryRepository libraryRepo,
+        public CheckoutsController(ILibraryAssetRepository libraryAssetRepo,
+            IMapper mapper, IUserRepository userRepo,
+            ILibraryCardRepository libraryCardRepo, ILibraryRepository libraryRepo,
             ICheckoutService checkoutService)
         {
-            _context = context;
             _libraryAssetRepo = libraryAssetRepo;
             _mapper = mapper;
             _userRepo = userRepo;
@@ -53,8 +39,7 @@ namespace LibraryManagement.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetCheckouts()
         {
-            //var checkouts = await _.
-            var checkouts = await _context.Checkouts.ToListAsync();
+            var checkouts = await _checkoutService.GetAllCheckouts();
 
             return Ok(checkouts);
         }
@@ -80,36 +65,6 @@ namespace LibraryManagement.API.Controllers
         [HttpPut("reserve/{id}")]
         public async Task<IActionResult> CheckOutReserve(int id)
         {
-            //var reserve = await _libraryRepo.GetReserve(id);
-
-            //if (reserve == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //if (reserve.Status.Name == "Checkedout")
-            //{
-            //    return BadRequest($"{reserve.Id} has already been checked out");
-            //}
-
-            //if (reserve.Status.Name == "Expired")
-            //{
-            //    return BadRequest($"{reserve.Id} has expired");
-            //}
-
-            //reserve.Status = await _context.Statuses.FirstOrDefaultAsync(s => s.Id == 3);
-            //reserve.DateCheckedOut = DateTime.Now;
-
-            //var checkout = new CheckoutForCreationDto()
-            //{
-            //    LibraryAssetId = reserve.LibraryAssetId,
-            //    LibraryCardId = reserve.LibraryCardId
-            //};
-
-            //var result = await _checkoutService.CheckoutReservedAsset(id);
-
-            //return Ok(result);
-
            var checkout = await _checkoutService.CheckoutReservedAsset(id);
 
             if (checkout.Valid)
@@ -130,28 +85,23 @@ namespace LibraryManagement.API.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return CreatedAtRoute(nameof(GetCheckout), new { id = result.Id }, result.Result);
+            return NoContent();
         }
 
         // DELETE: api/Checkouts/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Checkout>> DeleteCheckout(int id)
+        public async Task<ActionResult> DeleteCheckout(int id)
         {
-            var checkout = await _context.Checkouts.FindAsync(id);
-            if (checkout == null)
-            {
-                return NotFound();
-            }
+            //var checkout = await _context.Checkouts.FindAsync(id);
+            //if (checkout == null)
+            //{
+            //    return NotFound();
+            //}
 
-            _context.Checkouts.Remove(checkout);
-            await _context.SaveChangesAsync();
+            //_context.Checkouts.Remove(checkout);
+            //await _context.SaveChangesAsync();
 
-            return checkout;
-        }
-
-        private bool CheckoutExists(int id)
-        {
-            return _context.Checkouts.Any(e => e.Id == id);
+            return NoContent();
         }
     }
 }

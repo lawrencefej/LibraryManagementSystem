@@ -16,15 +16,15 @@ namespace LMSService.Service
 {
     public class CheckoutService : ICheckoutService
     {
-        private readonly string checkedout = "Checkedout";
-        private readonly string unavailable = "Unavailable";
-        private readonly string returned = "Returned";
-        private readonly string expired = "Expired";
-        private readonly string canceled = "Canceled";
-        private readonly ICheckoutRepository _checkoutRepo;
-        private readonly ILibraryRepository _libraryRepo;
-        private readonly ILibraryCardRepository _cardRepo;
-        private readonly ILibraryAssetRepository _assetRepo;
+        protected const string checkedout = "Checkedout";
+        protected const string unavailable = "Unavailable";
+        private const string returned = "Returned";
+        protected const string expired = "Expired";
+        protected const string canceled = "Canceled";
+        protected readonly ICheckoutRepository _checkoutRepo;
+        protected readonly ILibraryRepository _libraryRepo;
+        protected readonly ILibraryCardRepository _cardRepo;
+        protected readonly ILibraryAssetRepository _assetRepo;
         private readonly IMapper _mapper;
         private readonly ILogger<CheckoutService> _logger;
         private readonly IReserveRepository _reserveRepo;
@@ -43,7 +43,37 @@ namespace LMSService.Service
             _reserveRepo = reserveRepo;
         }
 
+        public CheckoutService()
+        {
+
+        }
+
         public async Task<ResponseHandler> CheckoutReservedAsset(int id)
+        {
+            ReserveAsset reserve = await GetCurrentReserve(id);
+
+            reserve.Status = await _libraryRepo.GetStatus(checkedout);
+            reserve.DateCheckedOut = DateTime.Now;
+
+            var checkout = new CheckoutForCreationDto()
+            {
+                LibraryAssetId = reserve.LibraryAssetId,
+                LibraryCardId = reserve.LibraryCardId
+            };
+
+            _libraryRepo.Add(checkout);
+
+            if (await _libraryRepo.SaveAll())
+            {
+                ResponseHandler response = new ResponseHandler();
+                response.Valid = true;
+                return response;
+            }
+
+            throw new Exception("Failed to Checkout the item");
+        }
+
+        protected async Task<ReserveAsset> GetCurrentReserve(int id)
         {
             var reserve = await _reserveRepo.GetReserve(id);
 
@@ -67,25 +97,7 @@ namespace LMSService.Service
                 throw new LMSValidationException($"{reserve.Id} has been canceled");
             }
 
-            reserve.Status = await _libraryRepo.GetStatus(checkedout);
-            reserve.DateCheckedOut = DateTime.Now;
-
-            var checkout = new CheckoutForCreationDto()
-            {
-                LibraryAssetId = reserve.LibraryAssetId,
-                LibraryCardId = reserve.LibraryCardId
-            };
-
-            _libraryRepo.Add(checkout);
-
-            if (await _libraryRepo.SaveAll())
-            {
-                ResponseHandler response = new ResponseHandler();
-                response.Valid = true;
-                return response;
-            }
-
-            throw new Exception("Failed to Checkout the item");
+            return reserve;
         }
 
         public async Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
@@ -128,7 +140,7 @@ namespace LMSService.Service
                 return response;
             }
 
-            throw new Exception("Failed to Checkout the item");
+            throw new Exception("Failed to Checkout the asset on save");
         }
 
         public async Task<IEnumerable<CheckoutForReturnDto>> GetAllCheckouts()
@@ -197,7 +209,7 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("Checkout does not exist");
             }
 
-            if (checkout.Status.Name == "Returned" || checkout.DateReturned != null)
+            if (checkout.Status.Name == returned || checkout.DateReturned != null)
             {
                 _logger.LogError("Checkout has already been returned");
                 throw new LMSValidationException("Checkout has already been returned");
@@ -206,7 +218,7 @@ namespace LMSService.Service
             return checkout;
         }
 
-        private async Task<LibraryAsset> GetLibraryAsset(int id)
+        protected async Task<LibraryAsset> GetLibraryAsset(int id)
         {
             var asset = await _assetRepo.GetAsset(id);
 
@@ -219,7 +231,7 @@ namespace LMSService.Service
             return asset;
         }
 
-        private async Task<LibraryCard> GetLibraryCard(int id)
+        protected async Task<LibraryCard> GetLibraryCard(int id)
         {
             var card = await _cardRepo.GetCard(id);
 
@@ -232,7 +244,7 @@ namespace LMSService.Service
             return card;
         }
 
-        private async void ReduceAssetCopiesAvailable(LibraryAsset asset)
+        protected async void ReduceAssetCopiesAvailable(LibraryAsset asset)
         {
             asset.CopiesAvailable--;
 
