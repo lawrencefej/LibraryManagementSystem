@@ -23,7 +23,7 @@ namespace LMSRepository.DataAccess
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.LibraryCard)
                 .Include(s => s.Status)
-                .Where(u => u.Status.Name == "").ToListAsync();
+                .Where(u => u.Status.Name == reserved).ToListAsync();
 
             return reserves;
         }
@@ -41,6 +41,7 @@ namespace LMSRepository.DataAccess
         public async Task<ReserveAsset> GetReserve(int id)
         {
             var reserve = await _context.ReserveAssets
+                .Include(s => s.LibraryAsset)
                 .Include(s => s.Status)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
@@ -50,7 +51,10 @@ namespace LMSRepository.DataAccess
         public async Task<IEnumerable<ReserveAsset>> GetReservesForMember(int id)
         {
             var reserve = await _context.ReserveAssets
+                .Include(s => s.LibraryAsset)
+                .Include(s => s.Status)
                 .Where(l => l.LibraryCard.Id == id)
+                .Where(l => l.Status.Name == reserved)
                 .ToListAsync();
 
             return reserve;

@@ -35,6 +35,7 @@ namespace LMSService.Exceptions
 
             if (exception is NoValuesFoundException) code = HttpStatusCode.NotFound;
             else if (exception is LMSValidationException) code = HttpStatusCode.BadRequest;
+            else if (exception is LMSUnauthorizedException) code = HttpStatusCode.Unauthorized;
 
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";

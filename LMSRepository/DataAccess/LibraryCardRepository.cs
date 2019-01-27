@@ -8,16 +8,12 @@ namespace LMSLibrary.Data
 {
     public class LibraryCardRepository : ILibraryCardRepository
     {
+        private const string reserved = "Reserved";
         private readonly DataContext _context;
 
         public LibraryCardRepository(DataContext context)
         {
             _context = context;
-        }
-        public void Add(LibraryCard libraryCard)
-        {
-            var newCard =  _context.Add(libraryCard);
-            _context.SaveChanges();
         }
 
         public async Task<List<LibraryCard>> GetAllLibraryCards()
@@ -30,14 +26,19 @@ namespace LMSLibrary.Data
 
         public async Task<LibraryCard> GetCard(int id)
         {
-            var cardId = await _context.LibraryCards.FirstOrDefaultAsync(p => p.Id == id);
+            var cardId = await _context.LibraryCards
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             return cardId;
         }
 
-        public Task<LibraryCard> GetMemberCard(int id)
+        public async Task<LibraryCard> GetMemberCard(int id)
         {
-            throw new System.NotImplementedException();
+            var libraryCard = await _context.LibraryCards
+                //.Include(u => u.ReservedAssets)
+                .FirstOrDefaultAsync(p => p.UserId == id);
+
+            return libraryCard;
         }
     }
 }

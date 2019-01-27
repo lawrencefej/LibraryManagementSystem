@@ -1,30 +1,28 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using LMSLibrary.Data;
-using LMSLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using LMSService.Interfaces;
+using System.Security.Claims;
+using LMSLibrary.Dto;
 
 namespace LibraryManagementSystem.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/{userId}/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class ReserveController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IReserveService _reserveService;
 
         public ReserveController(DataContext context, IReserveService reserveService)
         {
-            _context = context;
             _reserveService = reserveService;
         }
 
         // GET: api/Reserve
+        [Route("api/[controller]")]
         [HttpGet]
+        [Authorize(Policy = "RequireLibrarianRole")]
         public async Task<ActionResult> GetReserveAssets()
         {
             var reserves = await _reserveService.GetAllReserves();
@@ -32,79 +30,73 @@ namespace LibraryManagementSystem.Controllers
             return Ok(reserves);
         }
 
-        // GET: api/Reserve/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ReserveAsset>> GetReserveAsset(int id)
+        [HttpGet]
+        public async Task<ActionResult> GetReserveAssetsForMember(int userId)
         {
-            var reserveAsset = await _context.ReserveAssets.FindAsync(id);
-
-            if (reserveAsset == null)
+            if (!IsCurrentuser(userId))
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            return reserveAsset;
+            var reserves = await _reserveService.GetReservesForMember(userId);
+
+            return Ok(reserves);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetReserveAsset(int userId, int id)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            var reserve = await _reserveService.GetReserveForMember(userId, id);
+
+            return Ok(reserve);
         }
 
         // PUT: api/Reserve/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReserveAsset(int id, ReserveAsset reserveAsset)
+        public async Task<IActionResult> CancelReserve(int userId, int id)
         {
-            if (id != reserveAsset.Id)
+            if (!IsCurrentuser(userId))
             {
-                return BadRequest();
+                return Unauthorized();
             }
 
-            _context.Entry(reserveAsset).State = EntityState.Modified;
+            await _reserveService.CancelReserve(userId ,id);
 
-            try
+           return NoContent();
+        }
+
+        // POST: api/Reserve
+        [HttpPost]
+        public async Task<ActionResult> ReserveAsset(int userId, ReserveForCreationDto reserveForCreation)
+        {
+            if (!IsCurrentuser(userId))
             {
-                await _context.SaveChangesAsync();
+                return Unauthorized();
             }
-            catch (DbUpdateConcurrencyException)
+
+            var result = await _reserveService.ReserveAsset(userId, reserveForCreation);
+
+            if (!result.Valid)
             {
-                if (!ReserveAssetExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(result.Errors);
             }
 
             return NoContent();
         }
 
-        // POST: api/Reserve
-        [HttpPost]
-        public async Task<ActionResult<ReserveAsset>> PostReserveAsset(ReserveAsset reserveAsset)
+        private bool IsCurrentuser(int id)
         {
-            _context.ReserveAssets.Add(reserveAsset);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetReserveAsset", new { id = reserveAsset.Id }, reserveAsset);
-        }
-
-        // DELETE: api/Reserve/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ReserveAsset>> DeleteReserveAsset(int id)
-        {
-            var reserveAsset = await _context.ReserveAssets.FindAsync(id);
-            if (reserveAsset == null)
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
-                return NotFound();
+                return false;
             }
 
-            _context.ReserveAssets.Remove(reserveAsset);
-            await _context.SaveChangesAsync();
-
-            return reserveAsset;
-        }
-
-        private bool ReserveAssetExists(int id)
-        {
-            return _context.ReserveAssets.Any(e => e.Id == id);
+            return true;
         }
     }
 }

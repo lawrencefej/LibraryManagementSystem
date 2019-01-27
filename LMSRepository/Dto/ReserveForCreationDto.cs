@@ -11,16 +11,12 @@ namespace LMSLibrary.Dto
         public int LibraryAssetId { get; set; }
         public int LibraryCardId { get; set; }
         public DateTime Reserved { get; set; }
-        public bool IsCheckedOut { get; set; }
         public DateTime Until { get; set; }
         public Status Status { get; set; }
         public string AssetStatus { get; set; }
         public int CurrentReserveCount { get; set; }
 
-        [FeesPaid]
         public decimal Fees { get; set; }
-        [Required]
-        public string Status2 { get; set; }
 
         public ReserveForCreationDto()
         {

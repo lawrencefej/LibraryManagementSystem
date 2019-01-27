@@ -14,5 +14,10 @@ namespace LMSService.Interfaces
         Task<ResponseHandler> CheckoutReservedAsset(int id);
         Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForMember(int id);
         Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto);
+        Task<LibraryCard> GetMemberLibraryCard(int id);
+        Task<LibraryAsset> GetLibraryAsset(int id);
+        Task<ReserveAsset> GetCurrentReserve(int id);
+
+        void ReduceAssetCopiesAvailable(LibraryAsset asset);
     }
 }

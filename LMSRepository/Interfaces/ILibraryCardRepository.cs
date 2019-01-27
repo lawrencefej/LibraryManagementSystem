@@ -6,7 +6,7 @@ namespace LMSLibrary.Data
 {
     public interface ILibraryCardRepository
     {
-        void Add(LibraryCard newCard);
+        //void Add(LibraryCard newCard);
         Task<List<LibraryCard>> GetAllLibraryCards();
         Task<LibraryCard> GetCard(int id);
         Task<LibraryCard> GetMemberCard(int id);

@@ -10,7 +10,6 @@ namespace LMSRepository.Interfaces
         Task<Checkout> GetCheckout(int id);
         Task<List<Checkout>> GetCheckoutHistory(int cardId);
         Task<Checkout> GetLatestCheckout(int id);
-        bool IsCheckedOut(int id);
         Task<int> GetMemberCurrentCheckoutAmount(int cardId);
         Task<IEnumerable<Checkout>> GetCheckoutsForMember(int id);
     }

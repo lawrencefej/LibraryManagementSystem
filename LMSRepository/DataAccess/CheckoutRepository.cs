@@ -71,10 +71,5 @@ namespace LMSRepository.DataAccess
 
             return count;
         }
-
-        public bool IsCheckedOut(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
