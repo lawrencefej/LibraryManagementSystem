@@ -2,7 +2,6 @@
 using LMSLibrary.Models;
 using LMSRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ namespace LMSRepository.DataAccess
 {
     public class ReserveRepository : IReserveRepository
     {
-        private readonly string reserved = "Reserved";
+        private const string reserved = "Reserved";
         private readonly DataContext _context;
 
         public ReserveRepository(DataContext context)
@@ -21,8 +20,10 @@ namespace LMSRepository.DataAccess
         public async Task<IEnumerable<ReserveAsset>> GetAllReserves()
         {
             var reserves = await _context.ReserveAssets
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.LibraryCard)
                 .Include(s => s.Status)
-                .Where(u => u.Status.Name == reserved).ToListAsync();
+                .Where(u => u.Status.Name == "").ToListAsync();
 
             return reserves;
         }
