@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using LMSLibrary.Data;
 using Microsoft.AspNetCore.Authorization;
 using LMSLibrary.Dto;
-using AutoMapper;
 using LMSService.Interfaces;
 
 namespace LibraryManagement.API.Controllers
@@ -15,23 +13,10 @@ namespace LibraryManagement.API.Controllers
     [ApiController]
     public class CheckoutsController : ControllerBase
     {
-        private readonly ILibraryAssetRepository _libraryAssetRepo;
-        private readonly IMapper _mapper;
-        private readonly IUserRepository _userRepo;
-        private readonly ILibraryCardRepository _libraryCardRepo;
-        private readonly ILibraryRepository _libraryRepo;
         private readonly ICheckoutService _checkoutService;
 
-        public CheckoutsController(ILibraryAssetRepository libraryAssetRepo,
-            IMapper mapper, IUserRepository userRepo,
-            ILibraryCardRepository libraryCardRepo, ILibraryRepository libraryRepo,
-            ICheckoutService checkoutService)
+        public CheckoutsController(ICheckoutService checkoutService)
         {
-            _libraryAssetRepo = libraryAssetRepo;
-            _mapper = mapper;
-            _userRepo = userRepo;
-            _libraryCardRepo = libraryCardRepo;
-            _libraryRepo = libraryRepo;
             _checkoutService = checkoutService;
         }
 
@@ -86,22 +71,6 @@ namespace LibraryManagement.API.Controllers
             }
 
             return NoContent();
-        }
-
-        // DELETE: api/Checkouts/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCheckout(int id)
-        {
-            //var checkout = await _context.Checkouts.FindAsync(id);
-            //if (checkout == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //_context.Checkouts.Remove(checkout);
-            //await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+        } 
     }
 }

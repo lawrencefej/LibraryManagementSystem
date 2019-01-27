@@ -3,43 +3,51 @@ using LMSLibrary.Data;
 using LMSLibrary.Dto;
 using LMSLibrary.Models;
 using LMSRepository.Interfaces;
+using LMSService.Exceptions;
 using LMSService.Helpers;
 using LMSService.Interfaces;
 using LMSService.Validators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSService.Service
 {
-    public class ReserveService : CheckoutService ,IReserveService
+    public class ReserveService : IReserveService
     {
         private const string reserved = "Reserved";
-        //private readonly ILibraryRepository _libraryRepo;
-        //private readonly ILibraryCardRepository _cardRepo;
-        //private readonly ILibraryAssetRepository _assetRepo;
+        private const string canceled = "Canceled";
+        private const string expired = "Expired";
+        private readonly ILibraryRepository _libraryRepo;
+        private readonly ILibraryCardRepository _cardRepo;
+        private readonly ILibraryAssetRepository _assetRepo;
         private readonly IMapper _mapper;
         private readonly IReserveRepository _reserveRepo;
         private readonly ILogger<ReserveService> _logger;
+        private readonly IUserRepository _userRepo;
+        private readonly ICheckoutService _checkoutService;
 
         public ReserveService(IReserveRepository reserveRepo, ILibraryRepository libraryRepo, ILibraryCardRepository cardRepo, 
-            ILibraryAssetRepository assetRepo, IMapper mapper, ILogger<ReserveService> logger)
+            ILibraryAssetRepository assetRepo, IMapper mapper, ILogger<ReserveService> logger, IUserRepository userRepo, ICheckoutService checkoutService)
         {
-            //_libraryRepo = libraryRepo;
-            //_cardRepo = cardRepo;
-            //_assetRepo = assetRepo;
+            _libraryRepo = libraryRepo;
+            _cardRepo = cardRepo;
+            _assetRepo = assetRepo;
             _mapper = mapper;
             _reserveRepo = reserveRepo;
             _logger = logger;
+            _userRepo = userRepo;
+            _checkoutService = checkoutService;
         }
 
-        public async Task<ResponseHandler> CancelReserve(int id)
+        public async Task<ResponseHandler> CancelReserve(int userId, int id)
         {
-            var reserve = await GetCurrentReserve(id);
+            var reserve = await GetReservedAsset(userId, id);
 
             reserve.Status = await  _libraryRepo.GetStatus(canceled);
-
+            
             if (await _libraryRepo.SaveAll())
             {
                 ResponseHandler response = new ResponseHandler();
@@ -52,7 +60,7 @@ namespace LMSService.Service
 
         public async Task<ResponseHandler> ExpireReserveAsset(int id)
         {
-            var reserve = await GetCurrentReserve(id);
+            var reserve = await _checkoutService.GetCurrentReserve(id);
 
             reserve.Status = await _libraryRepo.GetStatus(expired);
 
@@ -70,54 +78,57 @@ namespace LMSService.Service
         {
             var reserves = await _reserveRepo.GetAllReserves();
 
-            //if (reserves == null)
-            //{
-            //    throw new NoValuesFoundException("There are no reserves available");
-            //}
-
             var reserveToReturn = _mapper.Map<IEnumerable<ReserveForReturnDto>>(reserves);
 
             return reserveToReturn;
         }
 
-        public async Task<ReserveForReturnDto> GetReserve(int id)
+        public async Task<ReserveForReturnDto> GetReserveForMember(int userId, int id)
         {
-            var reserve = await _reserveRepo.GetReserve(id);
-
-            //if (reserve == null)
-            //{
-            //    throw new NoValuesFoundException("This checkout does not exist");
-            //}
+            var reserve = await GetReservedAsset(userId, id);
 
             var reserveToReturn = _mapper.Map<ReserveForReturnDto>(reserve);
 
             return reserveToReturn;
         }
 
-        public async Task<IEnumerable<ReserveForReturnDto>> GetReservesForMember(int id)
+        private async Task<ReserveAsset> GetReservedAsset(int userId, int id)
         {
-            var reserves = await _reserveRepo.GetReservesForMember(id);
+            var card = await _checkoutService.GetMemberLibraryCard(userId);
 
-            //if (reserves == null)
-            //{
-            //    throw new NoValuesFoundException("There are no checkouts available");
-            //}
+            if (!card.ReservedAssets.Any(p => p.Id == id))
+            {
+                throw new LMSUnauthorizedException();
+            }
 
-            return _mapper.Map<IEnumerable<ReserveForReturnDto>>(reserves);
+            var reserve = await _reserveRepo.GetReserve(id);
+
+            return reserve;
         }
 
-        public async Task<ResponseHandler> ReserveAsset(ReserveForCreationDto reserveforForCreationDto)
+        public async Task<IEnumerable<ReserveForReturnDto>> GetReservesForMember(int userId)
         {
-            var validate = new ReserveValidation();
+            var card = await _checkoutService.GetMemberLibraryCard(userId);
+            var reserves = await _reserveRepo.GetReservesForMember(card.Id);
 
-            var libraryCard = await GetLibraryCard(reserveforForCreationDto.LibraryCardId);
-            var libraryAsset = await GetLibraryAsset(reserveforForCreationDto.LibraryAssetId);
+            var reservesToReturn = _mapper.Map<IEnumerable<ReserveForReturnDto>>(reserves);
+
+            return reservesToReturn;
+        }
+
+        public async Task<ResponseHandler> ReserveAsset(int userId, ReserveForCreationDto reserveforForCreationDto)
+        {
+            var libraryCard = await _checkoutService.GetMemberLibraryCard(userId);
+            var libraryAsset = await _checkoutService.GetLibraryAsset(reserveforForCreationDto.LibraryAssetId);
 
 
             reserveforForCreationDto.AssetStatus = libraryAsset.Status.Name;
             reserveforForCreationDto.Fees = libraryCard.Fees;
+            reserveforForCreationDto.LibraryCardId = libraryCard.Id;
             reserveforForCreationDto.CurrentReserveCount = await _reserveRepo.GetMemberCurrentReserveAmount(libraryCard.Id);
 
+
+            var validate = new ReserveValidation();
             var result = await validate.ValidateAsync(reserveforForCreationDto);
 
             var errors = new List<string>();
@@ -132,7 +143,7 @@ namespace LMSService.Service
                 return response;
             }
 
-            ReduceAssetCopiesAvailable(libraryAsset);
+            _checkoutService.ReduceAssetCopiesAvailable(libraryAsset);
 
             var reserve = _mapper.Map<ReserveAsset>(reserveforForCreationDto);
             reserve.Status = await _libraryRepo.GetStatus(reserved);

@@ -26,19 +26,18 @@ namespace LibraryManagement.API.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly ILibraryCardRepository _libraryCardRepo;
+        private readonly ILibraryRepository _libraryRepo;
 
         public AuthController(IConfiguration config,
-            IMapper mapper,
+            IMapper mapper, ILibraryRepository libraryRepo,
             UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            ILibraryCardRepository libraryCardRepo)
+            SignInManager<User> signInManager)
         {
             _config = config;
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
-            _libraryCardRepo = libraryCardRepo;
+            _libraryRepo = libraryRepo;
         }
 
         [HttpPost("register")]
@@ -64,7 +63,7 @@ namespace LibraryManagement.API.Controllers
             {
                 await _userManager.AddToRoleAsync(userToCreate, role);
 
-                _libraryCardRepo.Add(newIdCard);
+                _libraryRepo.Add(newIdCard);
 
                 return CreatedAtRoute("GetUser",
                     new { Controller = "Users", id = userToCreate.Id }, userToReturn);

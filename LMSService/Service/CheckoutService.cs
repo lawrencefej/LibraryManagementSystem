@@ -73,7 +73,7 @@ namespace LMSService.Service
             throw new Exception("Failed to Checkout the item");
         }
 
-        protected async Task<ReserveAsset> GetCurrentReserve(int id)
+        public async Task<ReserveAsset> GetCurrentReserve(int id)
         {
             var reserve = await _reserveRepo.GetReserve(id);
 
@@ -102,8 +102,9 @@ namespace LMSService.Service
 
         public async Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
         {
+            // TODO fix Id issue
             var validate = new CheckoutValidation();
-            var libraryCard = await GetLibraryCard(checkoutForCreationDto.LibraryCardId);
+            var libraryCard = await GetMemberLibraryCard(checkoutForCreationDto.LibraryCardId);
             var libraryAsset = await GetLibraryAsset(checkoutForCreationDto.LibraryAssetId);
 
             checkoutForCreationDto.AssetStatus = libraryAsset.Status.Name;
@@ -218,7 +219,7 @@ namespace LMSService.Service
             return checkout;
         }
 
-        protected async Task<LibraryAsset> GetLibraryAsset(int id)
+        public async Task<LibraryAsset> GetLibraryAsset(int id)
         {
             var asset = await _assetRepo.GetAsset(id);
 
@@ -231,20 +232,20 @@ namespace LMSService.Service
             return asset;
         }
 
-        protected async Task<LibraryCard> GetLibraryCard(int id)
+        public async Task<LibraryCard> GetMemberLibraryCard(int id)
         {
-            var card = await _cardRepo.GetCard(id);
+            var card = await _cardRepo.GetMemberCard(id);
 
             if (card == null)
             {
-                _logger.LogError("Library Card was null");
+                _logger.LogError("Member has no library Card");
                 throw new NoValuesFoundException("LibraryCard does not exist");
             }
 
             return card;
-        }
+         }
 
-        protected async void ReduceAssetCopiesAvailable(LibraryAsset asset)
+        public async void ReduceAssetCopiesAvailable(LibraryAsset asset)
         {
             asset.CopiesAvailable--;
 
