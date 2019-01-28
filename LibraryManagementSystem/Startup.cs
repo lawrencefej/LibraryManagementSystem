@@ -117,8 +117,8 @@ namespace LibraryManagement.API
         {
             if (env.IsDevelopment())
             {
-                app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-                //app.UseDeveloperExceptionPage();
+                //app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+                app.UseDeveloperExceptionPage();
                 //app.ConfigureCustomExceptionMiddleware();
 
             }
@@ -145,8 +145,8 @@ namespace LibraryManagement.API
 
             loggerFactory.AddSerilog();
             seeder.SeedUsers();
-            seeder.SeedBooks();
-            seeder.SeedMedia();
+            seeder.SeedAuthors();
+            seeder.SeedAssets();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions

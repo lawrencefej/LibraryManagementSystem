@@ -60,21 +60,21 @@ namespace LMSLibrary.Data
             return asset;
         }
 
-        public async Task<List<LibraryAsset>> GetByAuthorOrDirector(string author)
-        {
-            var query = await GetLibraryAssets();
+        //public async Task<List<LibraryAsset>> GetByAuthorOrDirector(string author)
+        //{
+        //    var query = await GetLibraryAssets();
 
-            var assets = query.Where(a => a.Author.FullName == author).ToList();
+        //    var assets = query.Where(a => a.Author.FullName == author).ToList();
 
-            return assets;
-        }
+        //    return assets;
+        //}
 
-        public async Task<List<LibraryAsset>> GetLibraryAssets()
+        public async Task<IEnumerable<LibraryAsset>> GetLibraryAssets()
         {
             var assets = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
+                //.Include(p => p.Photo)
+                //.Include(a => a.AssetType)
+                //.Include(s => s.Status)
                 .ToListAsync();
 
             return assets;

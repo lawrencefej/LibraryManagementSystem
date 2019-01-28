@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace LMSLibrary.Models
 {
@@ -10,6 +8,5 @@ namespace LMSLibrary.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public ICollection<LibraryAsset> Assets { get; set; }
-        public int LibraryAssetId { get; set; }
     }
 }

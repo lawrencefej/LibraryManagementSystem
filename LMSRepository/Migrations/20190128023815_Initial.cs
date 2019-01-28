@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LMSLibrary.Migrations
+namespace LMSRepository.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,12 +65,39 @@ namespace LMSLibrary.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    LibraryAssetId = table.Column<int>(nullable: false)
+                    Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AssetTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Authors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,17 +250,17 @@ namespace LMSLibrary.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(nullable: true),
                     Year = table.Column<int>(nullable: false),
-                    StatusId = table.Column<int>(nullable: true),
+                    StatusId = table.Column<int>(nullable: false),
                     Cost = table.Column<decimal>(nullable: false),
+                    Added = table.Column<DateTime>(nullable: false),
                     NumberOfCopies = table.Column<int>(nullable: false),
                     CopiesAvailable = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    AssetTypeId = table.Column<int>(nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
+                    AssetTypeId = table.Column<int>(nullable: false),
+                    AuthorId = table.Column<int>(nullable: false),
                     ISBN = table.Column<string>(nullable: true),
-                    Author = table.Column<string>(nullable: true),
                     DeweyIndex = table.Column<string>(nullable: true),
-                    Director = table.Column<string>(nullable: true)
+                    CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -243,13 +270,25 @@ namespace LMSLibrary.Migrations
                         column: x => x.AssetTypeId,
                         principalTable: "AssetTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LibraryAssets_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LibraryAssets_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LibraryAssets_Statuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Statuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -286,10 +325,13 @@ namespace LMSLibrary.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LibraryAssetId = table.Column<int>(nullable: true),
-                    LibraryCardId = table.Column<int>(nullable: true),
                     Since = table.Column<DateTime>(nullable: false),
-                    Until = table.Column<DateTime>(nullable: false)
+                    Until = table.Column<DateTime>(nullable: false),
+                    LibraryAssetId = table.Column<int>(nullable: false),
+                    LibraryCardId = table.Column<int>(nullable: false),
+                    IsReturned = table.Column<bool>(nullable: false),
+                    DateReturned = table.Column<DateTime>(nullable: true),
+                    StatusId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -299,11 +341,17 @@ namespace LMSLibrary.Migrations
                         column: x => x.LibraryAssetId,
                         principalTable: "LibraryAssets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Checkouts_LibraryCards_LibraryCardId",
                         column: x => x.LibraryCardId,
                         principalTable: "LibraryCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Checkouts_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -333,32 +381,6 @@ namespace LMSLibrary.Migrations
                         principalTable: "LibraryCards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LibraryAssetTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LibraryAssetId = table.Column<int>(nullable: false),
-                    AssetTypeId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LibraryAssetTypes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LibraryAssetTypes_AssetTypes_AssetTypeId",
-                        column: x => x.AssetTypeId,
-                        principalTable: "AssetTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LibraryAssetTypes_LibraryAssets_LibraryAssetId",
-                        column: x => x.LibraryAssetId,
-                        principalTable: "LibraryAssets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -396,9 +418,14 @@ namespace LMSLibrary.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LibraryAssetId = table.Column<int>(nullable: true),
-                    LibraryCardId = table.Column<int>(nullable: true),
-                    Reserved = table.Column<DateTime>(nullable: false)
+                    LibraryCardId = table.Column<int>(nullable: false),
+                    LibraryAssetId = table.Column<int>(nullable: false),
+                    Reserved = table.Column<DateTime>(nullable: false),
+                    Until = table.Column<DateTime>(nullable: false),
+                    IsCheckedOut = table.Column<bool>(nullable: false),
+                    IsExpired = table.Column<bool>(nullable: false),
+                    DateCheckedOut = table.Column<DateTime>(nullable: true),
+                    StatusId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -408,11 +435,17 @@ namespace LMSLibrary.Migrations
                         column: x => x.LibraryAssetId,
                         principalTable: "LibraryAssets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ReserveAssets_LibraryCards_LibraryCardId",
                         column: x => x.LibraryCardId,
                         principalTable: "LibraryCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReserveAssets_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -422,19 +455,28 @@ namespace LMSLibrary.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "cc4f9d74-1e9b-4f7f-8e71-f6aaefd508cc", "Member", "MEMBER" },
-                    { 2, "dacf7be6-bf65-45e2-bd58-0a05743c7cfa", "Admin", "ADMIN" },
-                    { 3, "3b19ac0b-11d4-44bc-897f-74ebbf417bb1", "Librarian", "LIBRARIAN" }
+                    { 1, "33d78e92-8906-4770-bb81-1ecc75cad052", "Member", "MEMBER" },
+                    { 2, "f663014e-32bd-424e-902f-49f9dd7412ae", "Admin", "ADMIN" },
+                    { 3, "a57fd3d0-7c39-4c7b-892d-3d2ec6a592c0", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AssetTypes",
-                columns: new[] { "Id", "Description", "LibraryAssetId", "Name" },
+                columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Paper back books", 0, "Book" },
-                    { 2, "Video and media", 0, "Media" },
-                    { 3, "Others", 0, "Other" }
+                    { 1, "Paper back books", "Book" },
+                    { 2, "Video and media", "Media" },
+                    { 3, "Others", "Other" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Category",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Paper back books", "Science" },
+                    { 2, "Video and media", "Computer" }
                 });
 
             migrationBuilder.InsertData(
@@ -443,8 +485,13 @@ namespace LMSLibrary.Migrations
                 values: new object[,]
                 {
                     { 1, "There is a copy available for loan", "Available" },
-                    { 2, "The last copy has been reserved", "Reserved" },
-                    { 3, "The last copy has been hecked out", "Checked Out" }
+                    { 2, "The last available copy has been checked out", "Unavailable" },
+                    { 3, "", "Checkedout" },
+                    { 4, "", "Reserved" },
+                    { 5, "", "Canceled" },
+                    { 6, "", "Returned" },
+                    { 7, "", "Expired" },
+                    { 8, "", "Canceled" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -505,6 +552,11 @@ namespace LMSLibrary.Migrations
                 column: "LibraryCardId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Checkouts_StatusId",
+                table: "Checkouts",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Holds_LibraryAssetId",
                 table: "Holds",
                 column: "LibraryAssetId");
@@ -520,19 +572,19 @@ namespace LMSLibrary.Migrations
                 column: "AssetTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LibraryAssets_AuthorId",
+                table: "LibraryAssets",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LibraryAssets_CategoryId",
+                table: "LibraryAssets",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LibraryAssets_StatusId",
                 table: "LibraryAssets",
                 column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LibraryAssetTypes_AssetTypeId",
-                table: "LibraryAssetTypes",
-                column: "AssetTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LibraryAssetTypes_LibraryAssetId",
-                table: "LibraryAssetTypes",
-                column: "LibraryAssetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibraryCards_UserId",
@@ -561,6 +613,11 @@ namespace LMSLibrary.Migrations
                 name: "IX_ReserveAssets_LibraryCardId",
                 table: "ReserveAssets",
                 column: "LibraryCardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReserveAssets_StatusId",
+                table: "ReserveAssets",
+                column: "StatusId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -590,9 +647,6 @@ namespace LMSLibrary.Migrations
                 name: "Holds");
 
             migrationBuilder.DropTable(
-                name: "LibraryAssetTypes");
-
-            migrationBuilder.DropTable(
                 name: "Photos");
 
             migrationBuilder.DropTable(
@@ -609,6 +663,12 @@ namespace LMSLibrary.Migrations
 
             migrationBuilder.DropTable(
                 name: "AssetTypes");
+
+            migrationBuilder.DropTable(
+                name: "Authors");
+
+            migrationBuilder.DropTable(
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Statuses");

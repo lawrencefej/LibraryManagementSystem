@@ -46,9 +46,9 @@ namespace LMSLibrary.Data
                     .IsRequired();
             });
 
-            builder.Entity<AssetType>()
-                .HasMany(c => c.LibraryAssets)
-                .WithOne(l => l.AssetType);
+            //builder.Entity<AssetType>()
+            //    .HasMany(c => c.LibraryAssets)
+            //    .WithOne(l => l.AssetType);
 
 
             builder.Entity<Role>().HasData(
@@ -74,18 +74,10 @@ namespace LMSLibrary.Data
                 new AssetType { Id = 3, Name = "Other", Description = "Others" }
                 );
 
-            //builder.Entity<Media>().HasData(
-            //    new Media { Id = 1, Title = "test", Year = 1992, Cost = 10, NumberOfCopies = 10, Description = "sfhhshhasdhsdhhh", Director = " Larry Flin"}
-            //    );
-
-            //builder.HasSequence<int>("CardNumbers", schema: "shared")
-            //    .StartsAt(1000)
-            //    .IncrementsBy(1);
-
-            //builder.Entity<LibraryCard>()
-            //    .Property(n => n.Id)
-            //    .HasDefaultValueSql("Next VALUE FOR share.CardNumbers");
-
+            builder.Entity<Category>().HasData(
+                new AssetType { Id = 1, Name = "Science", Description = "Paper back books" },
+                new AssetType { Id = 2, Name = "Computer", Description = "Video and media" }
+                );
         }
     }
 }

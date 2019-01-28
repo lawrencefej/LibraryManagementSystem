@@ -63,6 +63,39 @@ namespace LMSLibrary.Data
             }
         }
 
+        public void SeedAuthors()
+        {
+            if (!_context.Authors.Any())
+            {
+                var authorData = System.IO.File.ReadAllText("AuthorSeedData.json");
+                var authors = JsonConvert.DeserializeObject<List<Author>>(authorData);
+
+                foreach (var author in authors)
+                {
+                    _context.Add(author);
+                }
+
+                _context.SaveChanges();
+            }
+        }
+
+        public void SeedAssets()
+        {
+            if (!_context.LibraryAssets.Any())
+            {
+                var assetData = System.IO.File.ReadAllText("AssetSeedData.json");
+                var assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
+
+                foreach (var asset in assets)
+                {
+                    asset.CopiesAvailable = asset.NumberOfCopies;
+                    _context.Add(asset);
+                }
+
+                _context.SaveChanges();
+            }
+        }
+
         public void SeedBooks()
         {
             //if (!_context.Books.Any())

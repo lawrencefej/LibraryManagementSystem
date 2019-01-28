@@ -252,6 +252,7 @@ namespace LMSService.Service
             if (asset.CopiesAvailable == 0)
             {
                 asset.Status = await _libraryRepo.GetStatus(unavailable);
+                asset.StatusId = 1;
             }
         }
     }
