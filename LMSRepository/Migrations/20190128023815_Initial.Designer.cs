@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LMSLibrary.Migrations
+namespace LMSRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20181231201451_fixCheckout")]
-    partial class fixCheckout
+    [Migration("20190128023815_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("LMSLibrary.Models.AssetType", b =>
@@ -25,8 +25,6 @@ namespace LMSLibrary.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
-
-                    b.Property<int>("LibraryAssetId");
 
                     b.Property<string>("Name");
 
@@ -39,21 +37,18 @@ namespace LMSLibrary.Migrations
                         {
                             Id = 1,
                             Description = "Paper back books",
-                            LibraryAssetId = 0,
                             Name = "Book"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Video and media",
-                            LibraryAssetId = 0,
                             Name = "Media"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Others",
-                            LibraryAssetId = 0,
                             Name = "Other"
                         });
                 });
@@ -72,28 +67,60 @@ namespace LMSLibrary.Migrations
                     b.ToTable("Authors");
                 });
 
+            modelBuilder.Entity("LMSLibrary.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Paper back books",
+                            Name = "Science"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Video and media",
+                            Name = "Computer"
+                        });
+                });
+
             modelBuilder.Entity("LMSLibrary.Models.Checkout", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("LibraryAssetId");
+                    b.Property<DateTime?>("DateReturned");
 
-                    b.Property<int?>("LibraryAssetId1");
+                    b.Property<bool>("IsReturned");
 
-                    b.Property<string>("LibraryCardId");
+                    b.Property<int>("LibraryAssetId");
 
-                    b.Property<int?>("LibraryCardId1");
+                    b.Property<int>("LibraryCardId");
 
                     b.Property<DateTime>("Since");
+
+                    b.Property<int?>("StatusId");
 
                     b.Property<DateTime>("Until");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LibraryAssetId1");
+                    b.HasIndex("LibraryAssetId");
 
-                    b.HasIndex("LibraryCardId1");
+                    b.HasIndex("LibraryCardId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Checkouts");
                 });
@@ -147,9 +174,11 @@ namespace LMSLibrary.Migrations
 
                     b.Property<DateTime>("Added");
 
-                    b.Property<int?>("AssetTypeId");
+                    b.Property<int>("AssetTypeId");
 
-                    b.Property<int?>("AuthorId");
+                    b.Property<int>("AuthorId");
+
+                    b.Property<int>("CategoryId");
 
                     b.Property<int>("CopiesAvailable");
 
@@ -163,7 +192,7 @@ namespace LMSLibrary.Migrations
 
                     b.Property<int>("NumberOfCopies");
 
-                    b.Property<int?>("StatusId");
+                    b.Property<int>("StatusId");
 
                     b.Property<string>("Title");
 
@@ -174,6 +203,8 @@ namespace LMSLibrary.Migrations
                     b.HasIndex("AssetTypeId");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("StatusId");
 
@@ -225,17 +256,29 @@ namespace LMSLibrary.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("LibraryAssetId");
+                    b.Property<DateTime?>("DateCheckedOut");
 
-                    b.Property<int?>("LibraryCardId");
+                    b.Property<bool>("IsCheckedOut");
+
+                    b.Property<bool>("IsExpired");
+
+                    b.Property<int>("LibraryAssetId");
+
+                    b.Property<int>("LibraryCardId");
 
                     b.Property<DateTime>("Reserved");
+
+                    b.Property<int?>("StatusId");
+
+                    b.Property<DateTime>("Until");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LibraryAssetId");
 
                     b.HasIndex("LibraryCardId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("ReserveAssets");
                 });
@@ -266,21 +309,21 @@ namespace LMSLibrary.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "24662dee-32a5-4b97-9e29-6cc845b7a117",
+                            ConcurrencyStamp = "33d78e92-8906-4770-bb81-1ecc75cad052",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "b28221ee-b5ae-4558-87cb-cea26926c9d5",
+                            ConcurrencyStamp = "f663014e-32bd-424e-902f-49f9dd7412ae",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "28097557-82f3-44f3-b8d0-bccc96e983e2",
+                            ConcurrencyStamp = "a57fd3d0-7c39-4c7b-892d-3d2ec6a592c0",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -309,14 +352,44 @@ namespace LMSLibrary.Migrations
                         new
                         {
                             Id = 2,
-                            Description = "The last copy has been reserved",
-                            Name = "Reserved"
+                            Description = "The last available copy has been checked out",
+                            Name = "Unavailable"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "The last copy has been hecked out",
-                            Name = "Checked Out"
+                            Description = "",
+                            Name = "Checkedout"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "",
+                            Name = "Reserved"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "",
+                            Name = "Canceled"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "",
+                            Name = "Returned"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "",
+                            Name = "Expired"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "",
+                            Name = "Canceled"
                         });
                 });
 
@@ -497,11 +570,17 @@ namespace LMSLibrary.Migrations
                 {
                     b.HasOne("LMSLibrary.Models.LibraryAsset", "LibraryAsset")
                         .WithMany()
-                        .HasForeignKey("LibraryAssetId1");
+                        .HasForeignKey("LibraryAssetId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("LMSLibrary.Models.LibraryCard", "LibraryCard")
                         .WithMany("Checkouts")
-                        .HasForeignKey("LibraryCardId1");
+                        .HasForeignKey("LibraryCardId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LMSLibrary.Models.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
                 });
 
             modelBuilder.Entity("LMSLibrary.Models.CheckoutHistory", b =>
@@ -529,16 +608,24 @@ namespace LMSLibrary.Migrations
             modelBuilder.Entity("LMSLibrary.Models.LibraryAsset", b =>
                 {
                     b.HasOne("LMSLibrary.Models.AssetType", "AssetType")
-                        .WithMany("LibraryAssets")
-                        .HasForeignKey("AssetTypeId");
+                        .WithMany()
+                        .HasForeignKey("AssetTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("LMSLibrary.Models.Author", "Author")
                         .WithMany("Assets")
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LMSLibrary.Models.Category", "Category")
+                        .WithMany("Assets")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("LMSLibrary.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("LMSLibrary.Models.LibraryCard", b =>
@@ -553,11 +640,17 @@ namespace LMSLibrary.Migrations
                 {
                     b.HasOne("LMSLibrary.Models.LibraryAsset", "LibraryAsset")
                         .WithMany()
-                        .HasForeignKey("LibraryAssetId");
+                        .HasForeignKey("LibraryAssetId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("LMSLibrary.Models.LibraryCard", "LibraryCard")
+                        .WithMany("ReservedAssets")
+                        .HasForeignKey("LibraryCardId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LMSLibrary.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("LibraryCardId");
+                        .HasForeignKey("StatusId");
                 });
 
             modelBuilder.Entity("LMSLibrary.Models.UserRole", b =>

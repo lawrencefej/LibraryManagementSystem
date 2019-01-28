@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LMSLibrary.Data;
@@ -16,7 +14,7 @@ using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContex
 
 namespace LibraryManagement.API.Controllers
 {
-    
+
     [Route("api/[controller]")]
     //[AllowAnonymous]
     [Authorize(Policy = "RequireMemberRole")]
@@ -49,7 +47,6 @@ namespace LibraryManagement.API.Controllers
             var assetToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 
             return Ok(assetToReturn);
-            //return assets;
         }
 
         // GET: api/Catalog/5
@@ -99,63 +96,63 @@ namespace LibraryManagement.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("{assetId}/reserveasset/{id}")]
-        public async Task<IActionResult> ReserveAsset(int assetId, int id)
-        {
+        //[HttpPost("{assetId}/reserveasset/{id}")]
+        //public async Task<IActionResult> ReserveAsset(int assetId, int id)
+        //{
 
-            if (!IsCurrentuser(id))
-            {
-                return Unauthorized();
-            }
+        //    if (!IsCurrentuser(id))
+        //    {
+        //        return Unauthorized();
+        //    }
 
-            var libraryCard = await _userRepo.GetUserLibraryCard(id);
-            var libraryAsset = await _libraryAssetRepo.GetAsset(assetId);
+        //    var libraryCard = await _userRepo.GetUserLibraryCard(id);
+        //    var libraryAsset = await _libraryAssetRepo.GetAsset(assetId);
 
-            var errors = _libraryAssetRepo.ValidateCheckout(libraryAsset, libraryCard);
+        //    var errors = _libraryAssetRepo.ValidateCheckout(libraryAsset, libraryCard);
 
-            if (errors.Any())
-            {
-                return BadRequest(errors);
-            }
+        //    if (errors.Any())
+        //    {
+        //        return BadRequest(errors);
+        //    }
 
-            var reserveForCreation = new ReserveForCreationDto()
-            {
-                LibraryAssetId = libraryAsset.Id,
-                LibraryCardId = libraryCard.Id,
-                //Status2 = libraryAsset.Status.Name,
-                Fees = libraryCard.Fees
-            };
+        //    var reserveForCreation = new ReserveForCreationDto()
+        //    {
+        //        LibraryAssetId = libraryAsset.Id,
+        //        LibraryCardId = libraryCard.Id,
+        //        //Status2 = libraryAsset.Status.Name,
+        //        Fees = libraryCard.Fees
+        //    };
 
-            var context = new ValidationContext(reserveForCreation);
-            var results = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(reserveForCreation, context, results);
+        //    var context = new ValidationContext(reserveForCreation);
+        //    var results = new List<ValidationResult>();
+        //    var isValid = Validator.TryValidateObject(reserveForCreation, context, results);
 
-            if (!isValid)
-            {
-                return BadRequest(results);
-            }
+        //    if (!isValid)
+        //    {
+        //        return BadRequest(results);
+        //    }
 
-            var reserve = _mapper.Map<ReserveAsset>(reserveForCreation);
+        //    var reserve = _mapper.Map<ReserveAsset>(reserveForCreation);
 
-            reserve.Status = await _context.Statuses.FirstOrDefaultAsync(s => s.Id == 4);
+        //    reserve.Status = await _context.Statuses.FirstOrDefaultAsync(s => s.Id == 4);
 
-            _libraryAssetRepo.Add(reserve);
+        //    _libraryAssetRepo.Add(reserve);
 
-            _libraryAssetRepo.ReduceAssetCopiesAvailable(libraryAsset); 
+        //    _libraryAssetRepo.ReduceAssetCopiesAvailable(libraryAsset); 
 
-            var reserveToReturn = _mapper.Map<ReserveForReturnDto>(reserve);
+        //    var reserveToReturn = _mapper.Map<ReserveForReturnDto>(reserve);
 
 
-            if (await _libraryAssetRepo.SaveAll())
-            {
-                //return CreatedAtRoute("GetCheckout", new { id = reserve.Id }, reserveToReturn);
-                reserveToReturn.Id = reserve.Id;
-                return Ok(reserveToReturn);
-            }
+        //    if (await _libraryAssetRepo.SaveAll())
+        //    {
+        //        //return CreatedAtRoute("GetCheckout", new { id = reserve.Id }, reserveToReturn);
+        //        reserveToReturn.Id = reserve.Id;
+        //        return Ok(reserveToReturn);
+        //    }
 
-            return BadRequest("Failed to Checkout the item");
+        //    return BadRequest("Failed to Checkout the item");
 
-        }
+        //}
 
         private bool Test(ReserveForCreationDto reserveForCreation)
         {
