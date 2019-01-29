@@ -8,7 +8,6 @@ namespace LMSLibrary.Data
 {
     public class LibraryCardRepository : ILibraryCardRepository
     {
-        private const string reserved = "Reserved";
         private readonly DataContext _context;
 
         public LibraryCardRepository(DataContext context)
@@ -35,7 +34,6 @@ namespace LMSLibrary.Data
         public async Task<LibraryCard> GetMemberCard(int id)
         {
             var libraryCard = await _context.LibraryCards
-                //.Include(u => u.ReservedAssets)
                 .FirstOrDefaultAsync(p => p.UserId == id);
 
             return libraryCard;

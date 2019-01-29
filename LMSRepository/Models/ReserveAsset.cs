@@ -16,5 +16,6 @@ namespace LMSLibrary.Models
         public bool IsExpired { get; set; }
         public DateTime? DateCheckedOut { get; set; }
         public Status Status { get; set; }
+        public int StatusId { get; set; }
     }
 }

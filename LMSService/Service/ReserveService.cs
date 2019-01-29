@@ -2,6 +2,7 @@
 using LMSLibrary.Data;
 using LMSLibrary.Dto;
 using LMSLibrary.Models;
+using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSService.Exceptions;
 using LMSService.Helpers;
@@ -17,9 +18,6 @@ namespace LMSService.Service
 {
     public class ReserveService : IReserveService
     {
-        private const string reserved = "Reserved";
-        private const string canceled = "Canceled";
-        private const string expired = "Expired";
         private readonly ILibraryRepository _libraryRepo;
         private readonly ILibraryCardRepository _cardRepo;
         private readonly ILibraryAssetRepository _assetRepo;
@@ -46,7 +44,7 @@ namespace LMSService.Service
         {
             var reserve = await GetReservedAsset(userId, id);
 
-            reserve.Status = await  _libraryRepo.GetStatus(canceled);
+            reserve.StatusId = (int)StatusEnum.Canceled;
             
             if (await _libraryRepo.SaveAll())
             {
@@ -62,7 +60,7 @@ namespace LMSService.Service
         {
             var reserve = await _checkoutService.GetCurrentReserve(id);
 
-            reserve.Status = await _libraryRepo.GetStatus(expired);
+            reserve.StatusId = (int)StatusEnum.Expired;
 
             if (await _libraryRepo.SaveAll())
             {
@@ -146,7 +144,8 @@ namespace LMSService.Service
             _checkoutService.ReduceAssetCopiesAvailable(libraryAsset);
 
             var reserve = _mapper.Map<ReserveAsset>(reserveforForCreationDto);
-            reserve.Status = await _libraryRepo.GetStatus(reserved);
+
+            reserve.StatusId = (int)StatusEnum.Reserved;
 
             _libraryRepo.Add(reserve);
 
