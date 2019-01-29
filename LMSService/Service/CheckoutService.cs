@@ -2,6 +2,7 @@
 using LMSLibrary.Data;
 using LMSLibrary.Dto;
 using LMSLibrary.Models;
+using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSService.Exceptions;
 using LMSService.Helpers;
@@ -16,11 +17,6 @@ namespace LMSService.Service
 {
     public class CheckoutService : ICheckoutService
     {
-        protected const string checkedout = "Checkedout";
-        protected const string unavailable = "Unavailable";
-        private const string returned = "Returned";
-        protected const string expired = "Expired";
-        protected const string canceled = "Canceled";
         protected readonly ICheckoutRepository _checkoutRepo;
         protected readonly ILibraryRepository _libraryRepo;
         protected readonly ILibraryCardRepository _cardRepo;
@@ -52,7 +48,7 @@ namespace LMSService.Service
         {
             ReserveAsset reserve = await GetCurrentReserve(id);
 
-            reserve.Status = await _libraryRepo.GetStatus(checkedout);
+            reserve.StatusId = (int)StatusEnum.Checkedout;
             reserve.DateCheckedOut = DateTime.Now;
 
             var checkout = new CheckoutForCreationDto()
@@ -82,17 +78,17 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("Reserve was not found");
             }
 
-            if (reserve.Status.Name == checkedout)
+            if (reserve.StatusId == (int)StatusEnum.Checkedout)
             {
                 throw new LMSValidationException($"{reserve.Id} has already been checked out");
             }
 
-            if (reserve.Status.Name == expired)
+            if (reserve.StatusId == (int)StatusEnum.Expired)
             {
                 throw new LMSValidationException($"{reserve.Id} has expired");
             }
 
-            if (reserve.Status.Name == canceled)
+            if (reserve.StatusId == (int)StatusEnum.Canceled)
             {
                 throw new LMSValidationException($"{reserve.Id} has been canceled");
             }
@@ -127,7 +123,7 @@ namespace LMSService.Service
             ReduceAssetCopiesAvailable(libraryAsset);
 
             var checkout = _mapper.Map<Checkout>(checkoutForCreationDto);
-            checkout.Status = await _libraryRepo.GetStatus(checkedout);
+            checkout.StatusId = (int)StatusEnum.Checkedout;
 
             _libraryRepo.Add(checkout);
 
@@ -184,7 +180,7 @@ namespace LMSService.Service
         {
             var checkout = await ValidateCheckin(id);
 
-            checkout.Status = await _libraryRepo.GetStatus(returned);
+            checkout.StatusId = (int)StatusEnum.Returned;
 
             checkout.DateReturned = DateTime.Now;
 
@@ -210,7 +206,7 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("Checkout does not exist");
             }
 
-            if (checkout.Status.Name == returned || checkout.DateReturned != null)
+            if (checkout.StatusId == (int)StatusEnum.Returned || checkout.DateReturned != null)
             {
                 _logger.LogError("Checkout has already been returned");
                 throw new LMSValidationException("Checkout has already been returned");
@@ -245,14 +241,13 @@ namespace LMSService.Service
             return card;
          }
 
-        public async void ReduceAssetCopiesAvailable(LibraryAsset asset)
+        public void ReduceAssetCopiesAvailable(LibraryAsset asset)
         {
             asset.CopiesAvailable--;
 
             if (asset.CopiesAvailable == 0)
             {
-                asset.Status = await _libraryRepo.GetStatus(unavailable);
-                asset.StatusId = 1;
+                asset.StatusId = (int)StatusEnum.Unavailable;
             }
         }
     }

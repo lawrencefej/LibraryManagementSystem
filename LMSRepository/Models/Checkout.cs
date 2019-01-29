@@ -14,5 +14,6 @@ namespace LMSLibrary.Models
         public bool IsReturned { get; set; }
         public DateTime? DateReturned { get; set; }
         public Status Status { get; set; }
+        public int StatusId { get; set; }
     }
 }

@@ -72,9 +72,9 @@ namespace LMSLibrary.Data
         public async Task<IEnumerable<LibraryAsset>> GetLibraryAssets()
         {
             var assets = await _context.LibraryAssets
-                //.Include(p => p.Photo)
-                //.Include(a => a.AssetType)
-                //.Include(s => s.Status)
+                .Include(p => p.Photo)
+                .Include(a => a.AssetType)
+                .Include(s => s.Status)
                 .ToListAsync();
 
             return assets;
