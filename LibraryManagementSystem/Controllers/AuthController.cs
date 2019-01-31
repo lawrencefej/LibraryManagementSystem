@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using LMSLibrary.Data;
+using LMSLibrary.DataAccess;
 
 namespace LibraryManagement.API.Controllers
 {

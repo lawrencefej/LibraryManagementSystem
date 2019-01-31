@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LMSLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public class LibraryCardRepository : ILibraryCardRepository
     {

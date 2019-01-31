@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LMSLibrary.Dto;
 using LMSLibrary.Models;
-using System.Linq;
+using LMSRepository.Dto;
 
 namespace LibraryManagement.API.Helpers
 {
@@ -42,6 +42,7 @@ namespace LibraryManagement.API.Helpers
             CreateMap<Photo, PhotoForReturnDto>();
             CreateMap<Status, StatusToReturnDto>();
             CreateMap<AssetType, AssetTypeForReturn>();
+            CreateMap<LibraryAssetForUpdateDto, LibraryAsset>();
             CreateMap<LibraryAsset, LibraryAssetForDetailedDto>()
                     .ForMember(dest => dest.PhotoUrl, opt =>
                     {
@@ -55,7 +56,7 @@ namespace LibraryManagement.API.Helpers
                     {
                         opt.MapFrom(src => src.Status.Name);
                     });
-            CreateMap<LibraryAssetForCreationDto, LibraryAsset>();
+            CreateMap<LibraryAssetForCreationDto, LibraryAsset>().ReverseMap();
             CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();
             CreateMap<Checkout, CheckoutForReturnDto>()
                      .ForMember(dest => dest.Title, opt =>
@@ -84,9 +85,6 @@ namespace LibraryManagement.API.Helpers
                      {
                          opt.MapFrom(src => src.LibraryAsset.Title);
                      });
-
-
-
         }
     }
 }

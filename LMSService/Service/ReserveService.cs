@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LMSLibrary.Data;
+using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
 using LMSLibrary.Models;
 using LMSRepository.Helpers;

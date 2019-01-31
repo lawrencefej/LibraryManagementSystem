@@ -1,40 +1,86 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LMSLibrary.Data;
-using LMSLibrary.Models;
-using AutoMapper;
-using LMSLibrary.Dto;
+﻿using AutoMapper;
+using LMSRepository.Dto;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Security.Claims;
-using System.ComponentModel.DataAnnotations;
-using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContext;
+using System.Threading.Tasks;
 
 namespace LibraryManagement.API.Controllers
 {
-
     [Route("api/[controller]")]
     //[AllowAnonymous]
-    [Authorize(Policy = "RequireMemberRole")]
+    //[Authorize(Policy = "RequireMemberRole")]
+    [Authorize(Policy = "RequireLibrarianRole")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
-        private readonly DataContext _context;
-        private readonly ILibraryAssetRepository _libraryAssetRepo;
-        private readonly IUserRepository _userRepo;
-        private readonly IMapper _mapper;
+        private readonly ILibraryAssestService _libraryAssestService;
+        private readonly ILogger<CatalogController> _logger;
 
-        public CatalogController(DataContext context, 
-            ILibraryAssetRepository libraryAssetRepo,
-            IUserRepository userRepo,
-            IMapper mapper)
+        public CatalogController(ILibraryAssestService libraryAssestService, ILogger<CatalogController> logger)
         {
-            _context = context;
-            _libraryAssetRepo = libraryAssetRepo;
-            _userRepo = userRepo;
-            _mapper = mapper;
+            _libraryAssestService = libraryAssestService;
+            _logger = logger;
+        }
+
+        // DELETE: api/Catalog/5
+        [HttpPost("{userId}")]
+        public async Task<ActionResult> AddLibraryAsset(int userId, LibraryAssetForCreationDto libraryAssetForCreation)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            await _libraryAssestService.AddAsset(libraryAssetForCreation);
+
+            _logger.LogInformation($"{userId} added {libraryAssetForCreation.Title}");
+
+            return NoContent();
+        }
+
+        [HttpDelete("{assetId}")]
+        public async Task<IActionResult> DeleteLibararyAsset(int userId, int assetId)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            await _libraryAssestService.DeleteAsset(assetId);
+
+            return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EditAsset(int userId, LibraryAssetForUpdateDto libraryAssetForUpdate)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            await _libraryAssestService.EditAsset(libraryAssetForUpdate);
+
+            return NoContent();
+        }
+
+        // GET: api/Catalog/5
+        [AllowAnonymous]
+        [HttpGet("{assetId}")]
+        public async Task<ActionResult> GetLibraryAsset(int assetId)
+        {
+            var libraryAsset = await _libraryAssestService.GetAsset(assetId);
+
+            if (libraryAsset == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(libraryAsset);
         }
 
         // GET: api/Catalog
@@ -42,149 +88,9 @@ namespace LibraryManagement.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetLibraryAssets()
         {
-            var assets = await _libraryAssetRepo.GetLibraryAssets();
+            var assets = await _libraryAssestService.GetAllAssets();
 
-            var assetToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
-
-            return Ok(assetToReturn);
-        }
-
-        // GET: api/Catalog/5
-        [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetLibraryAsset(int id)
-        {
-            var libraryAsset = await _libraryAssetRepo.GetAsset(id);
-
-            if (libraryAsset == null)
-            {
-                return NoContent();
-            }
-
-            var assetToReturn = _mapper.Map<LibraryAssetForDetailedDto>(libraryAsset);
-
-            return Ok(assetToReturn);
-        }
-
-        // PUT: api/Catalog/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLibraryAsset(int id, LibraryAsset libraryAsset)
-        {
-            if (id != libraryAsset.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(libraryAsset).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LibraryAssetExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        //[HttpPost("{assetId}/reserveasset/{id}")]
-        //public async Task<IActionResult> ReserveAsset(int assetId, int id)
-        //{
-
-        //    if (!IsCurrentuser(id))
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    var libraryCard = await _userRepo.GetUserLibraryCard(id);
-        //    var libraryAsset = await _libraryAssetRepo.GetAsset(assetId);
-
-        //    var errors = _libraryAssetRepo.ValidateCheckout(libraryAsset, libraryCard);
-
-        //    if (errors.Any())
-        //    {
-        //        return BadRequest(errors);
-        //    }
-
-        //    var reserveForCreation = new ReserveForCreationDto()
-        //    {
-        //        LibraryAssetId = libraryAsset.Id,
-        //        LibraryCardId = libraryCard.Id,
-        //        //Status2 = libraryAsset.Status.Name,
-        //        Fees = libraryCard.Fees
-        //    };
-
-        //    var context = new ValidationContext(reserveForCreation);
-        //    var results = new List<ValidationResult>();
-        //    var isValid = Validator.TryValidateObject(reserveForCreation, context, results);
-
-        //    if (!isValid)
-        //    {
-        //        return BadRequest(results);
-        //    }
-
-        //    var reserve = _mapper.Map<ReserveAsset>(reserveForCreation);
-
-        //    reserve.Status = await _context.Statuses.FirstOrDefaultAsync(s => s.Id == 4);
-
-        //    _libraryAssetRepo.Add(reserve);
-
-        //    _libraryAssetRepo.ReduceAssetCopiesAvailable(libraryAsset); 
-
-        //    var reserveToReturn = _mapper.Map<ReserveForReturnDto>(reserve);
-
-
-        //    if (await _libraryAssetRepo.SaveAll())
-        //    {
-        //        //return CreatedAtRoute("GetCheckout", new { id = reserve.Id }, reserveToReturn);
-        //        reserveToReturn.Id = reserve.Id;
-        //        return Ok(reserveToReturn);
-        //    }
-
-        //    return BadRequest("Failed to Checkout the item");
-
-        //}
-
-        private bool Test(ReserveForCreationDto reserveForCreation)
-        {
-            return true;
-        }
-
-        // DELETE: api/Catalog/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> CancelReservation(int id, int userId)
-        {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
-            var libraryAsset = await _context.LibraryAssets.FindAsync(userId);
-
-            if (libraryAsset == null)
-            {
-                return NotFound();
-            }
-
-            _context.LibraryAssets.Remove(libraryAsset);
-
-            await _context.SaveChangesAsync();
-
-            return Ok(libraryAsset);
-        } 
-
-        private bool LibraryAssetExists(int id)
-        {
-            return _context.LibraryAssets.Any(e => e.Id == id);
+            return Ok(assets);
         }
 
         private bool IsCurrentuser(int id)

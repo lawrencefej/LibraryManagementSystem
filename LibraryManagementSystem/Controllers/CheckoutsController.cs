@@ -7,9 +7,9 @@ using LMSService.Interfaces;
 namespace LibraryManagement.API.Controllers
 {
     //[Route("api/catalog/{assetId}/[controller]")]
-    //[Authorize(Policy = "RequireLibrarianRole")]
+    [Authorize(Policy = "RequireLibrarianRole")]
     [Route("api/[controller]")]
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [ApiController]
     public class CheckoutsController : ControllerBase
     {
@@ -42,7 +42,7 @@ namespace LibraryManagement.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> CheckInAsset(int id)
         {
-           await _checkoutService.CheckInAsset(id);
+            await _checkoutService.CheckInAsset(id);
 
             return NoContent();
         }
@@ -50,7 +50,7 @@ namespace LibraryManagement.API.Controllers
         [HttpPut("reserve/{id}")]
         public async Task<IActionResult> CheckOutReserve(int id)
         {
-           var checkout = await _checkoutService.CheckoutReservedAsset(id);
+            var checkout = await _checkoutService.CheckoutReservedAsset(id);
 
             if (checkout.Valid)
             {
@@ -71,6 +71,6 @@ namespace LibraryManagement.API.Controllers
             }
 
             return NoContent();
-        } 
+        }
     }
 }

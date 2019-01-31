@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using LMSLibrary.Data;
-using Microsoft.AspNetCore.Authorization;
-using LMSService.Interfaces;
-using System.Security.Claims;
+﻿using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
+using LMSService.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -14,7 +14,7 @@ namespace LibraryManagementSystem.Controllers
     {
         private readonly IReserveService _reserveService;
 
-        public ReserveController(DataContext context, IReserveService reserveService)
+        public ReserveController(IReserveService reserveService)
         {
             _reserveService = reserveService;
         }
@@ -65,9 +65,9 @@ namespace LibraryManagementSystem.Controllers
                 return Unauthorized();
             }
 
-            await _reserveService.CancelReserve(userId ,id);
+            await _reserveService.CancelReserve(userId, id);
 
-           return NoContent();
+            return NoContent();
         }
 
         // POST: api/Reserve

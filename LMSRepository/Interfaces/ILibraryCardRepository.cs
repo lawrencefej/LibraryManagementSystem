@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public interface ILibraryCardRepository
     {

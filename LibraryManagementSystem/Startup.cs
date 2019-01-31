@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using System.Text;
 using LibraryManagement.API.Helpers;
-using LMSLibrary.Data;
+using LMSLibrary.DataAccess;
 using LMSLibrary.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +24,7 @@ using LMSRepository.Interfaces;
 using LMSService.Exceptions;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace LibraryManagement.API
 {
@@ -83,7 +84,6 @@ namespace LibraryManagement.API
                     .Build();
                 Options.Filters.Add(new AuthorizeFilter(policy));
                 Options.Filters.Add(typeof(ValidateModelAttribute));
-
             })
             //.AddFluentValidation()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -98,6 +98,10 @@ namespace LibraryManagement.API
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             //Mapper.Reset();
             services.AddAutoMapper();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Library Management System", Version = "V1" });
+            });
             services.AddTransient<Seed>();
             //services.AddScoped<IValidator<CheckoutForCreationDto>, CheckoutForCreationDtoValidator>();
             services.AddScoped<ILibraryCardRepository, LibraryCardRepository>();
@@ -109,6 +113,7 @@ namespace LibraryManagement.API
             services.AddScoped<IReserveService, ReserveService>();
             services.AddScoped<ICheckoutRepository, CheckoutRepository>();
             services.AddScoped<IReserveRepository, ReserveRepository>();
+            services.AddScoped<ILibraryAssestService, LibraryAssetService>();
             services.AddScoped<LogUserActivity>();
         }
 
@@ -120,7 +125,6 @@ namespace LibraryManagement.API
                 //app.UseMiddleware(typeof(ErrorHandlingMiddleware));
                 app.UseDeveloperExceptionPage();
                 //app.ConfigureCustomExceptionMiddleware();
-
             }
             else
             {
@@ -155,6 +159,11 @@ namespace LibraryManagement.API
             });
             app.UseAuthentication();
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library Management System V1");
+            });
         }
     }
 }

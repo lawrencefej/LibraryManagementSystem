@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LMSLibrary.Models;
+﻿using LMSLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public class LibraryRepository : ILibraryRepository
     {
@@ -17,14 +17,15 @@ namespace LMSLibrary.Data
             _context = context;
             _userManager = userManager;
         }
-        public  void Add<T>(T entity) where T : class
+
+        public void Add<T>(T entity) where T : class
         {
-             _context.AddAsync(entity);
+            _context.Add(entity);
         }
 
-        public  void Delete<T>(T entity) where T : class
+        public void Delete<T>(T entity) where T : class
         {
-           _context.Remove(entity);
+            _context.Remove(entity);
         }
 
         public async Task<IList<User>> GetAdmins()
@@ -136,7 +137,7 @@ namespace LMSLibrary.Data
 
         public void Update<T>(T entity) where T : class
         {
-             _context.Update(entity);
+            _context.Update(entity);
         }
 
         public async Task<Status> GetStatus(string status)
