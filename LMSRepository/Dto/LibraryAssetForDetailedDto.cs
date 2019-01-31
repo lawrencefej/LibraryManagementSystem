@@ -1,9 +1,6 @@
-﻿using LMSLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace LMSLibrary.Dto
+namespace LMSRepository.Dto
 {
     public class LibraryAssetForDetailedDto
     {

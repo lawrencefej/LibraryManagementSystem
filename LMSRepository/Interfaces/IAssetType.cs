@@ -1,7 +1,7 @@
 ﻿using LMSLibrary.Models;
 using System.Collections.Generic;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public interface IAssetType
     {

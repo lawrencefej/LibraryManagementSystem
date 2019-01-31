@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public interface ICheckoutHistory
     {

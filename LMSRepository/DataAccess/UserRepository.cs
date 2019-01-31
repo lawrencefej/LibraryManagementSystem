@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using LMSLibrary.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LMSLibrary.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public class UserRepository : IUserRepository
     {
@@ -27,12 +27,12 @@ namespace LMSLibrary.Data
             return user;
         }
 
-        public async Task<List<Checkout>> GetUserCheckoutHistory(int id)
+        public async Task<List<Checkout>> GetUserCheckoutHistory(int memberId)
         {
             var checkoutHistory = await _context.Checkouts
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.LibraryCard)
-                .Where(l => l.LibraryCard.Id == id)
+                .Where(l => l.LibraryCard.Id == memberId)
                 .ToListAsync();
 
             return checkoutHistory;
@@ -42,7 +42,7 @@ namespace LMSLibrary.Data
         {
             var userCheckouts = await GetUserCheckoutHistory(id);
 
-            var currentCheckouts = userCheckouts.Where(u => u.IsReturned == false && u.DateReturned == null).ToList();
+            var currentCheckouts = userCheckouts.Where(u => !u.IsReturned && u.DateReturned == null).ToList();
 
             return currentCheckouts;
         }
@@ -64,11 +64,11 @@ namespace LMSLibrary.Data
             return libraryCard;
         }
 
-        public async Task<List<ReserveAsset>> GetUserReservedAssets(int id)
+        public async Task<List<ReserveAsset>> GetUserReservedAssets(int memberId)
         {
             var reserveHistory = await _context.ReserveAssets
                 .Include(a => a.LibraryAsset)
-                .Where(l => l.LibraryCard.Id == id)
+                .Where(l => l.LibraryCard.Id == memberId)
                 .ToListAsync();
 
             return reserveHistory;
@@ -81,7 +81,7 @@ namespace LMSLibrary.Data
                 .Include(c => c.UserRoles)
                 .OrderBy(u => u.Lastname).ToListAsync();
 
-            return  users;
+            return users;
         }
 
         public async Task<bool> SaveAll()

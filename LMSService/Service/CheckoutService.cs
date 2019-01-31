@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LMSLibrary.Data;
+using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
 using LMSLibrary.Models;
 using LMSRepository.Helpers;
@@ -26,8 +26,8 @@ namespace LMSService.Service
         private readonly IReserveRepository _reserveRepo;
         private List<string> errors = new List<string>();
 
-        public CheckoutService(ICheckoutRepository checkoutRepo, ILibraryRepository libraryRepo, 
-            ILibraryCardRepository CardRepo, ILibraryAssetRepository AssetRepo, IMapper mapper, 
+        public CheckoutService(ICheckoutRepository checkoutRepo, ILibraryRepository libraryRepo,
+            ILibraryCardRepository CardRepo, ILibraryAssetRepository AssetRepo, IMapper mapper,
             ILogger<CheckoutService> logger, IReserveRepository reserveRepo)
         {
             _checkoutRepo = checkoutRepo;
@@ -41,7 +41,6 @@ namespace LMSService.Service
 
         public CheckoutService()
         {
-
         }
 
         public async Task<ResponseHandler> CheckoutReservedAsset(int id)
@@ -56,6 +55,8 @@ namespace LMSService.Service
                 LibraryAssetId = reserve.LibraryAssetId,
                 LibraryCardId = reserve.LibraryCardId
             };
+
+            var checkoutForCreation = _mapper.Map<Checkout>(checkout);
 
             _libraryRepo.Add(checkout);
 
@@ -98,7 +99,6 @@ namespace LMSService.Service
 
         public async Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
         {
-            // TODO fix Id issue
             var validate = new CheckoutValidation();
             var libraryCard = await GetMemberLibraryCard(checkoutForCreationDto.LibraryCardId);
             var libraryAsset = await GetLibraryAsset(checkoutForCreationDto.LibraryAssetId);
@@ -239,7 +239,7 @@ namespace LMSService.Service
             }
 
             return card;
-         }
+        }
 
         public void ReduceAssetCopiesAvailable(LibraryAsset asset)
         {

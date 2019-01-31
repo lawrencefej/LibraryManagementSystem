@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Data;
+﻿using LMSLibrary.DataAccess;
 using LMSLibrary.Models;
 using LMSRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;

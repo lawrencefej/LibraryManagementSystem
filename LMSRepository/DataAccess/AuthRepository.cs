@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using LMSLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public class AuthRepository : IAuthRepository
     {
@@ -35,16 +34,6 @@ namespace LMSLibrary.Data
         {
             throw new NotImplementedException();
         }
-
-        //private bool IsCurrentuser(int id)
-        //{
-        //    if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
 
     }
 }

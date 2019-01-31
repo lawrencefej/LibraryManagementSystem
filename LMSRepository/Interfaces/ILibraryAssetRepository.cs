@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.Data
+namespace LMSLibrary.DataAccess
 {
     public interface ILibraryAssetRepository
     {
-        Task<IEnumerable<LibraryAsset>> GetLibraryAssets();
         Task<LibraryAsset> GetAsset(int id);
-        //Task<List<LibraryAsset>> GetByAuthorOrDirector(string author);
 
+        Task<LibraryAsset> GetAssetByIsbn(string isbn);
+
+        Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId);
+
+        Task<IEnumerable<LibraryAsset>> GetLibraryAssets();
+
+        void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset);
     }
 }

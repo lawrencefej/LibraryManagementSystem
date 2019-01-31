@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LMSLibrary.Data;
+using LMSLibrary.DataAccess;
 using LMSLibrary.Helpers;
 using LMSLibrary.Models;
 using Microsoft.AspNetCore.Http;
