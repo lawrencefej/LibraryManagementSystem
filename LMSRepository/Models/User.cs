@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LMSLibrary.Models
 {
@@ -19,6 +18,5 @@ namespace LMSLibrary.Models
         public UserProfilePhoto ProfilePicture { get; set; }
         public LibraryCard LibraryCard { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
-
     }
 }

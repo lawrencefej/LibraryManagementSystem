@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CloudinaryDotNet;
 using LMSLibrary.DataAccess;
 using LMSLibrary.Helpers;
 using LMSLibrary.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
+using System.Collections.Generic;
 
 namespace LibraryManagement.API.Controllers
 {
@@ -25,7 +20,7 @@ namespace LibraryManagement.API.Controllers
         private Cloudinary _cloudinary;
 
         public AdminController(
-            DataContext context, 
+            DataContext context,
             UserManager<User> userManager,
             IUserRepository userRepo,
             IOptions<CloudinarySettings> cloudinaryConfig)

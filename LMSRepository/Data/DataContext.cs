@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LMSLibrary.DataAccess
 {
@@ -12,7 +9,9 @@ namespace LMSLibrary.DataAccess
         IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>,
         IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
-        public DataContext(DbContextOptions<DataContext> options) : base   (options) {}
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        {
+        }
 
         public DbSet<AssetType> AssetTypes { get; set; }
         public DbSet<Checkout> Checkouts { get; set; }
@@ -49,7 +48,6 @@ namespace LMSLibrary.DataAccess
             //builder.Entity<AssetType>()
             //    .HasMany(c => c.LibraryAssets)
             //    .WithOne(l => l.AssetType);
-
 
             builder.Entity<Role>().HasData(
                     new Role { Id = 1, Name = "Member", NormalizedName = "MEMBER" },

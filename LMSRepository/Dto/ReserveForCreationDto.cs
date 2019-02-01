@@ -1,7 +1,5 @@
-﻿using LMSLibrary.Helpers;
-using LMSLibrary.Models;
+﻿using LMSLibrary.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace LMSLibrary.Dto
 {
@@ -15,7 +13,6 @@ namespace LMSLibrary.Dto
         public Status Status { get; set; }
         public string AssetStatus { get; set; }
         public int CurrentReserveCount { get; set; }
-
         public decimal Fees { get; set; }
 
         public ReserveForCreationDto()

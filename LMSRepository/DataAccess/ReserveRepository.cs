@@ -2,6 +2,7 @@
 using LMSLibrary.Models;
 using LMSRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace LMSRepository.DataAccess
         {
             _context = context;
         }
+
         public async Task<IEnumerable<ReserveAsset>> GetAllReserves()
         {
             var reserves = await _context.ReserveAssets
@@ -58,6 +60,15 @@ namespace LMSRepository.DataAccess
                 .ToListAsync();
 
             return reserve;
+        }
+
+        public async Task<IEnumerable<ReserveAsset>> GetExpiringReserves()
+        {
+            var reserves = await _context.ReserveAssets
+                .Where(a => a.Until == DateTime.Today)
+                .ToListAsync();
+
+            return reserves;
         }
     }
 }

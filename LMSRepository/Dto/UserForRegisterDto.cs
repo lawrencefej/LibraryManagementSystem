@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace LMSLibrary.Dto
 {
@@ -9,8 +7,10 @@ namespace LMSLibrary.Dto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
         [Required]
         public string Email { get; set; }
+
         //[Required]
         public string UserName { get; set; }
 
@@ -38,6 +38,7 @@ namespace LMSLibrary.Dto
 
         //[Required]
         public DateTime Created { get; set; }
+
         public UserForRegisterDto()
         {
             UserName = Email;

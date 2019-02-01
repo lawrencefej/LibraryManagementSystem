@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LMSService.Exceptions
 {
@@ -22,7 +21,6 @@ namespace LMSService.Exceptions
 
         public LMSUnauthorizedException(List<string> message)
         {
-
         }
     }
 }

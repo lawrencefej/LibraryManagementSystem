@@ -1,8 +1,14 @@
 ﻿using AutoMapper;
-using System.Text;
+using FluentValidation.AspNetCore;
 using LibraryManagement.API.Helpers;
 using LMSLibrary.DataAccess;
+using LMSLibrary.Helpers;
 using LMSLibrary.Models;
+using LMSRepository.DataAccess;
+using LMSRepository.Interfaces;
+using LMSService.Exceptions;
+using LMSService.Interfaces;
+using LMSService.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -14,17 +20,11 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using LMSLibrary.Helpers;
-using FluentValidation.AspNetCore;
-using LMSService.Interfaces;
-using LMSService.Service;
-using LMSRepository.DataAccess;
-using LMSRepository.Interfaces;
-using LMSService.Exceptions;
-using Serilog;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Text;
 
 namespace LibraryManagement.API
 {

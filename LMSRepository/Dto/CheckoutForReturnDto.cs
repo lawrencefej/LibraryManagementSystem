@@ -1,5 +1,4 @@
-﻿using LMSLibrary.Models;
-using System;
+﻿using System;
 
 namespace LMSLibrary.Dto
 {
@@ -7,8 +6,10 @@ namespace LMSLibrary.Dto
     {
         public int Id { get; set; }
         public string Title { get; set; }
+
         //public int LibraryCardNumber { get; set; }
         public DateTime Since { get; set; } /*= DateTime.Now;*/
+
         public DateTime Until { get; set; }
         public string Status { get; set; }
         public DateTime? DateReturned { get; set; }

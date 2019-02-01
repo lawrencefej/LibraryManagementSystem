@@ -1,7 +1,4 @@
 ﻿using AutoMapper;
-using LMSLibrary.Dto;
-using LMSLibrary.Models;
-using System.Linq;
 
 namespace LibraryManagement.API.Helpers
 {
@@ -84,9 +81,6 @@ namespace LibraryManagement.API.Helpers
             //         {
             //             opt.MapFrom(src => src.LibraryAsset.Title);
             //         });
-
-
-
         }
     }
 }

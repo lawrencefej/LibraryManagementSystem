@@ -36,7 +36,7 @@ namespace LMSRepository.DataAccess
 
             return checkout;
         }
-        
+
         public async Task<List<Checkout>> GetCheckoutHistory(int cardId)
         {
             var checkoutHistory = await _context.Checkouts
