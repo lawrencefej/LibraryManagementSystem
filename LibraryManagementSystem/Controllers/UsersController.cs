@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Models;
-using System.Security.Claims;
-using LMSLibrary.Dto;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
 using LibraryManagement.API.Helpers;
+using LMSLibrary.DataAccess;
+using LMSLibrary.Dto;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace LibraryManagement.API.Controllers
 {
@@ -41,7 +40,7 @@ namespace LibraryManagement.API.Controllers
         }
 
         [Authorize(Policy = "RequireMemberRole")]
-        [HttpGet("{id}", Name ="GetUser")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<ActionResult> GetUser(int id)
         {
             if (!IsCurrentuser(id))
@@ -97,12 +96,12 @@ namespace LibraryManagement.API.Controllers
         [HttpGet("{id}/checkouthistory")]
         public async Task<IActionResult> GetUserCheckoutHistory(int id)
         {
-            if (!IsCurrentuser(id) )
+            if (!IsCurrentuser(id))
             {
                 return Unauthorized();
             }
 
-            var libraryCard = await  _userRepo.GetUserLibraryCard(id);
+            var libraryCard = await _userRepo.GetUserLibraryCard(id);
 
             var checkouthistory = await _userRepo.GetUserCheckoutHistory(libraryCard.Id);
 

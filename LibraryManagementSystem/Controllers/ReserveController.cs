@@ -1,5 +1,4 @@
-﻿using LMSLibrary.DataAccess;
-using LMSLibrary.Dto;
+﻿using LMSLibrary.Dto;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -87,6 +86,16 @@ namespace LibraryManagementSystem.Controllers
             }
 
             return NoContent();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("test/")]
+        public async Task<IActionResult> Test()
+        {
+            // Todo remember to remove
+            var assets = await _reserveService.Test();
+
+            return Ok(assets);
         }
 
         private bool IsCurrentuser(int id)

@@ -1,6 +1,5 @@
 ﻿using LMSLibrary.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace LMSLibrary.Dto
 {
@@ -17,7 +16,7 @@ namespace LMSLibrary.Dto
 
         public CheckoutForCreationDto()
         {
-            Since = DateTime.Now;
+            Since = DateTime.Today;
             Until = DateTime.Today.AddDays(21);
         }
     }

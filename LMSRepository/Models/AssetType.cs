@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace LMSLibrary.Models
+﻿namespace LMSLibrary.Models
 {
     public class AssetType
     {

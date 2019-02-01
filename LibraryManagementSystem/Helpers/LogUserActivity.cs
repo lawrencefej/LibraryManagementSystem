@@ -1,9 +1,8 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using LMSLibrary.DataAccess;
+﻿using LMSLibrary.DataAccess;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace LibraryManagement.API.Helpers
 {

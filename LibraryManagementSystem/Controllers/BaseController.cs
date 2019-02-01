@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.Controllers
 {
-
     public abstract class BaseController<T> : ControllerBase where T : BaseController<T>
     {
         private ILogger<T> _logger;

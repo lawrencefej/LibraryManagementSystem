@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using LMSLibrary.Models;
+﻿using LMSLibrary.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace LMSLibrary.DataAccess
 {
@@ -13,6 +13,7 @@ namespace LMSLibrary.DataAccess
         {
             _context = context;
         }
+
         public async Task<User> Login(string emailAddress, string password)
         {
             var user = await _context.Users.Include(p => p.ProfilePicture).FirstOrDefaultAsync(x => x.Email == emailAddress);
@@ -34,6 +35,5 @@ namespace LMSLibrary.DataAccess
         {
             throw new NotImplementedException();
         }
-
     }
 }

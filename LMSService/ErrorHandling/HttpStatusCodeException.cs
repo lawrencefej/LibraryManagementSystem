@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace LMSService.ErrorHandling
 {
@@ -21,12 +19,13 @@ namespace LMSService.ErrorHandling
             this.StatusCode = statusCode;
         }
 
-        public HttpStatusCodeException(HttpStatusCode statusCode, Exception inner) : this(statusCode, inner.ToString()) { }
+        public HttpStatusCodeException(HttpStatusCode statusCode, Exception inner) : this(statusCode, inner.ToString())
+        {
+        }
 
         public HttpStatusCodeException(HttpStatusCode statusCode, JObject errorObject) : this(statusCode, errorObject.ToString())
         {
             this.ContentType = @"application/json";
         }
-
     }
 }

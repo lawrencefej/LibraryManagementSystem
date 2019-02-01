@@ -27,7 +27,7 @@ namespace LMSService.Service
         private readonly IUserRepository _userRepo;
         private readonly ICheckoutService _checkoutService;
 
-        public ReserveService(IReserveRepository reserveRepo, ILibraryRepository libraryRepo, ILibraryCardRepository cardRepo, 
+        public ReserveService(IReserveRepository reserveRepo, ILibraryRepository libraryRepo, ILibraryCardRepository cardRepo,
             ILibraryAssetRepository assetRepo, IMapper mapper, ILogger<ReserveService> logger, IUserRepository userRepo, ICheckoutService checkoutService)
         {
             _libraryRepo = libraryRepo;
@@ -45,7 +45,7 @@ namespace LMSService.Service
             var reserve = await GetReservedAsset(userId, id);
 
             reserve.StatusId = (int)StatusEnum.Canceled;
-            
+
             if (await _libraryRepo.SaveAll())
             {
                 ResponseHandler response = new ResponseHandler();
@@ -71,6 +71,22 @@ namespace LMSService.Service
 
             throw new Exception("Failed to cancel the reserve");
         }
+
+        //public async Task<ResponseHandler> AutomatedExpireReserveAsset()
+        //{
+        //    var reserve = await _checkoutService.GetAllCheckouts();
+
+        //    reserve.StatusId = (int)StatusEnum.Expired;
+
+        //    if (await _libraryRepo.SaveAll())
+        //    {
+        //        ResponseHandler response = new ResponseHandler();
+        //        response.Valid = true;
+        //        return response;
+        //    }
+
+        //    throw new Exception("Failed to cancel the reserve");
+        //}
 
         public async Task<IEnumerable<ReserveForReturnDto>> GetAllReserves()
         {
@@ -119,12 +135,10 @@ namespace LMSService.Service
             var libraryCard = await _checkoutService.GetMemberLibraryCard(userId);
             var libraryAsset = await _checkoutService.GetLibraryAsset(reserveforForCreationDto.LibraryAssetId);
 
-
             reserveforForCreationDto.AssetStatus = libraryAsset.Status.Name;
             reserveforForCreationDto.Fees = libraryCard.Fees;
             reserveforForCreationDto.LibraryCardId = libraryCard.Id;
             reserveforForCreationDto.CurrentReserveCount = await _reserveRepo.GetMemberCurrentReserveAmount(libraryCard.Id);
-
 
             var validate = new ReserveValidation();
             var result = await validate.ValidateAsync(reserveforForCreationDto);
@@ -156,6 +170,13 @@ namespace LMSService.Service
             }
 
             throw new Exception("Failed to reserve the asset on save");
+        }
+
+        public async Task<IEnumerable<ReserveAsset>> Test()
+        {
+            var assets = await _reserveRepo.GetExpiringReserves();
+
+            return assets;
         }
     }
 }

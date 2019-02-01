@@ -38,7 +38,6 @@ namespace LMSService.Service
 
             asset.StatusId = (int)StatusEnum.Available;
             asset.CopiesAvailable = asset.NumberOfCopies;
-            asset.Added = DateTime.Now;
 
             _libraryRepo.Add(asset);
 

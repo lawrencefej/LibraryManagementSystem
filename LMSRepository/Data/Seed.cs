@@ -12,8 +12,8 @@ namespace LMSLibrary.DataAccess
         private readonly RoleManager<Role> _roleManager;
         private readonly DataContext _context;
 
-        public Seed(UserManager<User> userManager, 
-            RoleManager<Role> roleManager,  
+        public Seed(UserManager<User> userManager,
+            RoleManager<Role> roleManager,
             DataContext context)
         {
             _userManager = userManager;

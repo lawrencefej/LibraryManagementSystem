@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 namespace LibraryManagement.API.Controllers
 {
     [Route("api/[controller]")]
-    //[AllowAnonymous]
-    //[Authorize(Policy = "RequireMemberRole")]
     [Authorize(Policy = "RequireLibrarianRole")]
     [ApiController]
     public class CatalogController : ControllerBase

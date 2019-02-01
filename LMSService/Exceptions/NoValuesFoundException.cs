@@ -21,7 +21,6 @@ namespace LMSService.Exceptions
 
         public NoValuesFoundException(List<string> message)
         {
-
         }
     }
 }
