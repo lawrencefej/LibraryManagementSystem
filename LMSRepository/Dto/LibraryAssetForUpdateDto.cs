@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LMSRepository.Dto
+﻿namespace LMSRepository.Dto
 {
     public class LibraryAssetForUpdateDto
     {

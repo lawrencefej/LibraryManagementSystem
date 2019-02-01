@@ -38,6 +38,7 @@ namespace LMSService.Service
 
             asset.StatusId = (int)StatusEnum.Available;
             asset.CopiesAvailable = asset.NumberOfCopies;
+            asset.Added = DateTime.Now;
 
             _libraryRepo.Add(asset);
 
@@ -108,6 +109,15 @@ namespace LMSService.Service
         public async Task<IEnumerable<LibraryAssetForDetailedDto>> GetAssetsByAuthor(int authorId)
         {
             var assets = await _libraryAssetRepo.GetAssetsByAuthor(authorId);
+
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+
+            return assetsToReturn;
+        }
+
+        public async Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(string searchString)
+        {
+            var assets = await _libraryAssetRepo.SearchLibraryAsset(searchString);
 
             var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 

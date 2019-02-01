@@ -15,5 +15,7 @@ namespace LMSLibrary.DataAccess
         Task<IEnumerable<LibraryAsset>> GetLibraryAssets();
 
         void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset);
+
+        Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString);
     }
 }
