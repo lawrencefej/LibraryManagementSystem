@@ -1,5 +1,4 @@
-﻿using LMSLibrary.Models;
-using System;
+﻿using System;
 
 namespace LMSRepository.Dto
 {
@@ -11,16 +10,7 @@ namespace LMSRepository.Dto
             Added = DateTime.Now;
         }
 
-        public string Title { get; set; }
-        public int Year { get; set; }
         public DateTime Added { get; set; }
-
-        //public Status Status { get; set; }
-        public decimal Cost { get; set; }
-
-        public int NumberOfCopies { get; set; }
-        public int CopiesAvailable { get; set; }
-        public string Description { get; set; }
 
         //public AssetPhoto Photo { get; set; }
         //public AssetType AssetType { get; set; }
@@ -28,5 +18,14 @@ namespace LMSRepository.Dto
 
         public int AuthorId { get; set; }
         public int CategoryId { get; set; }
+        public int CopiesAvailable { get; set; }
+
+        //public Status Status { get; set; }
+        public decimal Cost { get; set; }
+
+        public string Description { get; set; }
+        public int NumberOfCopies { get; set; }
+        public string Title { get; set; }
+        public int Year { get; set; }
     }
 }

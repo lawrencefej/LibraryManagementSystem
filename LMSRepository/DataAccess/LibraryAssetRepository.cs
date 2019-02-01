@@ -66,6 +66,19 @@ namespace LMSLibrary.DataAccess
             return assets;
         }
 
+        public async Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString)
+        {
+            var assets = from asset in _context.LibraryAssets
+                         select asset;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                assets = assets.Where(s => s.Title.Contains(searchString));
+            }
+
+            return await assets.ToListAsync();
+        }
+
         public void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset)
         {
             libraryAsset.CopiesAvailable--;

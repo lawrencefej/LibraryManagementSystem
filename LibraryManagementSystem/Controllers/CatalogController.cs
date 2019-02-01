@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using LMSRepository.Dto;
+﻿using LMSRepository.Dto;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -55,7 +53,7 @@ namespace LibraryManagement.API.Controllers
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpPut("{userId}")]
         public async Task<IActionResult> EditAsset(int userId, LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
             if (!IsCurrentuser(userId))
@@ -81,6 +79,20 @@ namespace LibraryManagement.API.Controllers
             }
 
             return Ok(libraryAsset);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("search/{searchString}")]
+        public async Task<IActionResult> SearchLibraryAsset(string searchString)
+        {
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var assets = await _libraryAssestService.SearchLibraryAsset(searchString);
+
+                return Ok(assets);
+            }
+
+            return Ok();
         }
 
         // GET: api/Catalog
