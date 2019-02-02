@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
+using LMSRepository.Dto;
 using LMSService.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,6 +22,15 @@ namespace LMSService.Service
         public async Task<UserForDetailedDto> GetUser(int userId)
         {
             var user = await _userRepo.GetUser(userId);
+
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+
+            return userToReturn;
+        }
+
+        public async Task<UserForDetailedDto> SearchUser(SearchUserDto searchUser)
+        {
+            var user = await _userRepo.SearchUser(searchUser);
 
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 

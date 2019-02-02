@@ -21,5 +21,7 @@ namespace LMSService.Interfaces
         Task<IEnumerable<LibraryAssetForDetailedDto>> GetAssetsByAuthor(int authorId);
 
         Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(string searchString);
+
+        Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(SearchAssetDto searchAsset);
     }
 }

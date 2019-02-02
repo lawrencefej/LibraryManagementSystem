@@ -1,4 +1,5 @@
 ﻿using LMSLibrary.Models;
+using LMSRepository.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,5 +18,7 @@ namespace LMSLibrary.DataAccess
         void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset);
 
         Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString);
+
+        Task<IEnumerable<LibraryAsset>> SearchAssets(SearchAssetDto searchAsset);
     }
 }

@@ -78,7 +78,7 @@ namespace LMSLibrary.DataAccess
 
         public async Task<IList<User>> GetMembers()
         {
-            var members = await _userManager.GetUsersInRoleAsync("members");
+            var members = await _userManager.GetUsersInRoleAsync("member");
 
             return members;
         }

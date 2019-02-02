@@ -47,7 +47,7 @@ namespace LMSService.Service
         {
             ReserveAsset reserve = await GetCurrentReserve(id);
 
-            reserve.StatusId = (int)StatusEnum.Checkedout;
+            reserve.StatusId = (int)EnumStatus.Checkedout;
             reserve.DateCheckedOut = DateTime.Now;
 
             var checkout = new CheckoutForCreationDto()
@@ -79,17 +79,17 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("Reserve was not found");
             }
 
-            if (reserve.StatusId == (int)StatusEnum.Checkedout)
+            if (reserve.StatusId == (int)EnumStatus.Checkedout)
             {
                 throw new LMSValidationException($"{reserve.Id} has already been checked out");
             }
 
-            if (reserve.StatusId == (int)StatusEnum.Expired)
+            if (reserve.StatusId == (int)EnumStatus.Expired)
             {
                 throw new LMSValidationException($"{reserve.Id} has expired");
             }
 
-            if (reserve.StatusId == (int)StatusEnum.Canceled)
+            if (reserve.StatusId == (int)EnumStatus.Canceled)
             {
                 throw new LMSValidationException($"{reserve.Id} has been canceled");
             }
@@ -123,7 +123,7 @@ namespace LMSService.Service
             ReduceAssetCopiesAvailable(libraryAsset);
 
             var checkout = _mapper.Map<Checkout>(checkoutForCreationDto);
-            checkout.StatusId = (int)StatusEnum.Checkedout;
+            checkout.StatusId = (int)EnumStatus.Checkedout;
 
             _libraryRepo.Add(checkout);
 
@@ -180,7 +180,7 @@ namespace LMSService.Service
         {
             var checkout = await ValidateCheckin(id);
 
-            checkout.StatusId = (int)StatusEnum.Returned;
+            checkout.StatusId = (int)EnumStatus.Returned;
 
             checkout.DateReturned = DateTime.Now;
 
@@ -206,7 +206,7 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("Checkout does not exist");
             }
 
-            if (checkout.StatusId == (int)StatusEnum.Returned || checkout.DateReturned != null)
+            if (checkout.StatusId == (int)EnumStatus.Returned || checkout.DateReturned != null)
             {
                 _logger.LogError("Checkout has already been returned");
                 throw new LMSValidationException("Checkout has already been returned");
@@ -247,7 +247,7 @@ namespace LMSService.Service
 
             if (asset.CopiesAvailable == 0)
             {
-                asset.StatusId = (int)StatusEnum.Unavailable;
+                asset.StatusId = (int)EnumStatus.Unavailable;
             }
         }
     }

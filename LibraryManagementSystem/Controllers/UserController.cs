@@ -2,6 +2,7 @@
 using LibraryManagementSystem.API.Helpers;
 using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
+using LMSRepository.Dto;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -77,6 +78,19 @@ namespace LibraryManagementSystem.Controllers
             }
 
             var user = await _userService.GetUserByCardNumber(cardId);
+
+            return Ok(user);
+        }
+
+        [HttpGet("search/")]
+        public async Task<IActionResult> SearchUser(int userId, SearchUserDto searchUser)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userService.SearchUser(searchUser);
 
             return Ok(user);
         }
