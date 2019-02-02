@@ -1,6 +1,8 @@
 ﻿using LMSLibrary.Models;
+using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,6 +56,40 @@ namespace LMSLibrary.DataAccess
             return assets;
         }
 
+        public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthorName(string name)
+        {
+            var assets = await _context.LibraryAssets
+                .Include(p => p.Photo)
+                .Include(a => a.AssetType)
+                .Include(s => s.Status)
+                .Include(s => s.Author)
+                .Where(s => s.Author.FullName == name).ToListAsync();
+
+            return assets;
+        }
+
+        public async Task<IEnumerable<LibraryAsset>> SearchAssets(SearchAssetDto searchAsset)
+        {
+            var assets = from asset in _context.LibraryAssets
+                         select asset;
+
+            if (searchAsset != null)
+            {
+                if (!string.IsNullOrEmpty(searchAsset.Title))
+                {
+                    assets = assets.Where(a => a.Title.Contains(searchAsset.Title, StringComparison.OrdinalIgnoreCase));
+                    return await assets.ToListAsync();
+                }
+                else if (!string.IsNullOrEmpty(searchAsset.AuthorName))
+                {
+                    assets = assets.Where(a => a.Author.FullName.Contains(searchAsset.AuthorName, StringComparison.OrdinalIgnoreCase));
+                    return await assets.ToListAsync();
+                }
+            }
+
+            return null;
+        }
+
         public async Task<IEnumerable<LibraryAsset>> GetLibraryAssets()
         {
             var assets = await _context.LibraryAssets
@@ -85,7 +121,7 @@ namespace LMSLibrary.DataAccess
 
             if (libraryAsset.CopiesAvailable == 0)
             {
-                libraryAsset.StatusId = (int)StatusEnum.Unavailable;
+                libraryAsset.StatusId = (int)EnumStatus.Unavailable;
             }
         }
     }

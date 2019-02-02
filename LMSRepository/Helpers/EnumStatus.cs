@@ -1,6 +1,6 @@
 ﻿namespace LMSRepository.Helpers
 {
-    public enum StatusEnum
+    public enum EnumStatus
     {
         Available = 1,
         Unavailable = 2,
@@ -9,5 +9,12 @@
         Canceled = 5,
         Returned = 6,
         Expired = 7
+    }
+
+    public enum EnumRoles
+    {
+        Member = 1,
+        Admin = 2,
+        Librarian = 3
     }
 }

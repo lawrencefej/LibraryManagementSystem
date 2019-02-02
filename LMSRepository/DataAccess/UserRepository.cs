@@ -1,18 +1,24 @@
-﻿using LMSLibrary.Models;
+﻿using LMSLibrary.DataAccess;
+using LMSLibrary.Models;
+using LMSRepository.Dto;
+using LMSRepository.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.DataAccess
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(DataContext context)
+        public UserRepository(DataContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<User> GetUser(int id)
@@ -27,22 +33,51 @@ namespace LMSLibrary.DataAccess
             return user;
         }
 
-        public async Task<User> GetUserByCardId(int cardId)
+        public async Task<User> SearchUser(SearchUserDto searchUser)
         {
-            var user = await _context.Users
+            User user = null;
+
+            if (searchUser != null)
+            {
+                if (searchUser.LibraryCard.HasValue)
+                {
+                    user = await GetUserByCardId(searchUser.LibraryCard);
+                }
+                else
+                {
+                    user = await GetUserByEmail(searchUser.Email);
+                }
+            }
+
+            return user;
+        }
+
+        public async Task<User> GetUserByCardId(int? cardId)
+        {
+            var user = await _userManager.Users
                 .Include(c => c.LibraryCard)
+                .Include(c => c.ProfilePicture)
                 .Include(c => c.UserRoles)
-                .FirstOrDefaultAsync(u => u.LibraryCard.CardNumber == cardId);
+                .FirstOrDefaultAsync(u => u.LibraryCard.Id == cardId);
 
             return user;
         }
 
         public async Task<User> GetUserByEmail(string email)
         {
-            var user = await _context.Users
-                .Include(c => c.LibraryCard)
-                .Include(c => c.UserRoles)
-                .FirstOrDefaultAsync(u => u.NormalizedEmail == email);
+            // TODO try to optimize to one db trip
+            var users = await _userManager.GetUsersInRoleAsync(EnumRoles.Member.ToString());
+
+            var user = users.FirstOrDefault(u => u.Email == email);
+
+            if (user != null)
+            {
+                user = await _userManager.Users
+                    .Include(c => c.LibraryCard)
+                    .Include(c => c.ProfilePicture)
+                    .Include(c => c.UserRoles)
+                    .FirstOrDefaultAsync(u => u.Id == user.Id);
+            }
 
             return user;
         }
@@ -96,10 +131,11 @@ namespace LMSLibrary.DataAccess
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = await _context.Users.Include(p => p.ProfilePicture)
-                .Include(c => c.LibraryCard)
-                .Include(c => c.UserRoles)
-                .OrderBy(u => u.Lastname).ToListAsync();
+            var users = await _userManager.GetUsersInRoleAsync(EnumRoles.Member.ToString());
+            //var users = await _context.Users.Include(p => p.ProfilePicture)
+            //    .Include(c => c.LibraryCard)
+            //    .Include(c => c.UserRoles)
+            //    .OrderBy(u => u.Lastname).ToListAsync();
 
             return users;
         }

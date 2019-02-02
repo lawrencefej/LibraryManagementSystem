@@ -44,7 +44,7 @@ namespace LMSService.Service
         {
             var reserve = await GetReservedAsset(userId, id);
 
-            reserve.StatusId = (int)StatusEnum.Canceled;
+            reserve.StatusId = (int)EnumStatus.Canceled;
 
             if (await _libraryRepo.SaveAll())
             {
@@ -60,7 +60,7 @@ namespace LMSService.Service
         {
             var reserve = await _checkoutService.GetCurrentReserve(id);
 
-            reserve.StatusId = (int)StatusEnum.Expired;
+            reserve.StatusId = (int)EnumStatus.Expired;
 
             if (await _libraryRepo.SaveAll())
             {
@@ -159,7 +159,7 @@ namespace LMSService.Service
 
             var reserve = _mapper.Map<ReserveAsset>(reserveforForCreationDto);
 
-            reserve.StatusId = (int)StatusEnum.Reserved;
+            reserve.StatusId = (int)EnumStatus.Reserved;
 
             _libraryRepo.Add(reserve);
 

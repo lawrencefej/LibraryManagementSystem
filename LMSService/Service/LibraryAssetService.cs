@@ -36,7 +36,7 @@ namespace LMSService.Service
 
             var asset = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
-            asset.StatusId = (int)StatusEnum.Available;
+            asset.StatusId = (int)EnumStatus.Available;
             asset.CopiesAvailable = asset.NumberOfCopies;
 
             _libraryRepo.Add(asset);
@@ -117,6 +117,19 @@ namespace LMSService.Service
         public async Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(string searchString)
         {
             var assets = await _libraryAssetRepo.SearchLibraryAsset(searchString);
+
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+
+            return assetsToReturn;
+        }
+
+        public async Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(SearchAssetDto searchAsset)
+        {
+            if (searchAsset == null)
+            {
+                return null;
+            }
+            var assets = await _libraryAssetRepo.SearchAssets(searchAsset);
 
             var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 

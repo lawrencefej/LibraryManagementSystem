@@ -1,4 +1,5 @@
 ﻿using LMSLibrary.Models;
+using LMSRepository.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,13 +11,15 @@ namespace LMSLibrary.DataAccess
 
         Task<User> GetUser(int id);
 
+        Task<User> SearchUser(SearchUserDto searchUser);
+
         Task<IEnumerable<User>> GetUsers();
 
         Task<IEnumerable<Checkout>> GetUserCheckoutHistory(int memberId);
 
         Task<User> GetUserByEmail(string email);
 
-        Task<User> GetUserByCardId(int cardId);
+        Task<User> GetUserByCardId(int? cardId);
 
         Task<IEnumerable<ReserveAsset>> GetUserReservedAssets(int memberId);
 

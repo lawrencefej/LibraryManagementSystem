@@ -80,17 +80,12 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("search/{searchString}")]
-        public async Task<IActionResult> SearchLibraryAsset(string searchString)
+        [HttpGet("search/")]
+        public async Task<IActionResult> SearchLibraryAsset(SearchAssetDto searchAsset)
         {
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                var assets = await _libraryAssestService.SearchLibraryAsset(searchString);
+            var assets = await _libraryAssestService.SearchLibraryAsset(searchAsset);
 
-                return Ok(assets);
-            }
-
-            return Ok();
+            return Ok(assets);
         }
 
         // GET: api/Catalog
