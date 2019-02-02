@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
 
-namespace LibraryManagement.API.Helpers
+namespace LibraryManagementSystem.API.Helpers
 {
     public static class Extensions
     {

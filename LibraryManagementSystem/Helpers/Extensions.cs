@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace LibraryManagement.API.Helpers
+namespace LibraryManagementSystem.API.Helpers
 {
     public static class Extensions
     {

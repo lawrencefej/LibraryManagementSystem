@@ -3,7 +3,7 @@ using LMSLibrary.Dto;
 using LMSLibrary.Models;
 using LMSRepository.Dto;
 
-namespace LibraryManagement.API.Helpers
+namespace LibraryManagementSystem.API.Helpers
 {
     public class AutoMapperProfiles : Profile
     {

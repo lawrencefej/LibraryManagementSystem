@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace LibraryManagement.API
+namespace LibraryManagementSystem.API
 {
     public class Program
     {

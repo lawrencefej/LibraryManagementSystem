@@ -27,7 +27,27 @@ namespace LMSLibrary.DataAccess
             return user;
         }
 
-        public async Task<List<Checkout>> GetUserCheckoutHistory(int memberId)
+        public async Task<User> GetUserByCardId(int cardId)
+        {
+            var user = await _context.Users
+                .Include(c => c.LibraryCard)
+                .Include(c => c.UserRoles)
+                .FirstOrDefaultAsync(u => u.LibraryCard.CardNumber == cardId);
+
+            return user;
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _context.Users
+                .Include(c => c.LibraryCard)
+                .Include(c => c.UserRoles)
+                .FirstOrDefaultAsync(u => u.NormalizedEmail == email);
+
+            return user;
+        }
+
+        public async Task<IEnumerable<Checkout>> GetUserCheckoutHistory(int memberId)
         {
             var checkoutHistory = await _context.Checkouts
                 .Include(a => a.LibraryAsset)
@@ -38,7 +58,7 @@ namespace LMSLibrary.DataAccess
             return checkoutHistory;
         }
 
-        public async Task<List<Checkout>> GetUserCurrentCheckouts(int id)
+        public async Task<IEnumerable<Checkout>> GetUserCurrentCheckouts(int id)
         {
             var userCheckouts = await GetUserCheckoutHistory(id);
 
@@ -47,7 +67,7 @@ namespace LMSLibrary.DataAccess
             return currentCheckouts;
         }
 
-        public async Task<List<ReserveAsset>> GetUserCurrentReservedAssets(int id)
+        public async Task<IEnumerable<ReserveAsset>> GetUserCurrentReservedAssets(int id)
         {
             var userReserves = await GetUserReservedAssets(id);
 
@@ -64,7 +84,7 @@ namespace LMSLibrary.DataAccess
             return libraryCard;
         }
 
-        public async Task<List<ReserveAsset>> GetUserReservedAssets(int memberId)
+        public async Task<IEnumerable<ReserveAsset>> GetUserReservedAssets(int memberId)
         {
             var reserveHistory = await _context.ReserveAssets
                 .Include(a => a.LibraryAsset)
@@ -74,7 +94,7 @@ namespace LMSLibrary.DataAccess
             return reserveHistory;
         }
 
-        public async Task<List<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
             var users = await _context.Users.Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)

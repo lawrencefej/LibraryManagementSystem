@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace LibraryManagement.API.Helpers
+namespace LibraryManagementSystem.API.Helpers
 {
     public class AutoMapperProfiles : Profile
     {

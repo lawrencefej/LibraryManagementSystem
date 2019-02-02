@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace LibraryManagement.API.Controllers
+namespace LibraryManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLibrarianRole")]
