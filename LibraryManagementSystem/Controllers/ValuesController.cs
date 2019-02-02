@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-namespace LibraryManagement.API.Controllers
+namespace LibraryManagementSystem.API.Controllers
 {
     [AllowAnonymous]
     [Route("api/[controller]")]

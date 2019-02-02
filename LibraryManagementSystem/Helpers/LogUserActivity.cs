@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace LibraryManagement.API.Helpers
+namespace LibraryManagementSystem.API.Helpers
 {
     public class LogUserActivity : IAsyncActionFilter
     {

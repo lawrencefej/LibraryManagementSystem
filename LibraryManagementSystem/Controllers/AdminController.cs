@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 
-namespace LibraryManagement.API.Controllers
+namespace LibraryManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

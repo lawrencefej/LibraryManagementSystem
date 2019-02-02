@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using LibraryManagement.API.Helpers;
+using LibraryManagementSystem.API.Helpers;
 using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,50 +10,75 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace LibraryManagement.API.Controllers
+namespace LibraryManagementSystem.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
-    [Route("api/[controller]")]
+    [Route("api/{userId}/[controller]")]
+    [Authorize(Policy = "RequireLibrarianRole")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IUserRepository _userRepo;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UsersController(DataContext context, IUserRepository userRepo, IMapper mapper)
+        public UserController(IUserRepository userRepo, IMapper mapper, IUserService userService)
         {
-            _context = context;
             _userRepo = userRepo;
             _mapper = mapper;
+            _userService = userService;
         }
 
-        // GET: api/Users
-        [Authorize(Policy = "RequireLibrarianRole")]
         [HttpGet]
-        public async Task<ActionResult> GetUsers()
+        public async Task<ActionResult> GetUsers(int userId)
         {
-            var users = await _userRepo.GetUsers();
-
-            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
-
-            return Ok(usersToReturn);
-        }
-
-        [Authorize(Policy = "RequireMemberRole")]
-        [HttpGet("{id}", Name = "GetUser")]
-        public async Task<ActionResult> GetUser(int id)
-        {
-            if (!IsCurrentuser(id))
+            if (!IsCurrentuser(userId))
             {
                 return Unauthorized();
             }
 
-            var user = await _userRepo.GetUser(id);
+            var users = await _userService.GetUsers();
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            return Ok(users);
+        }
 
-            return Ok(userToReturn);
+        [HttpGet("{id}", Name = "GetUser")]
+        public async Task<ActionResult> GetUser(int userId, int id)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userService.GetUser(id);
+
+            return Ok(user);
+        }
+
+        [HttpGet("email/{email}")]
+        public async Task<IActionResult> GetUserByEmail(int userId, string email)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userService.GetUserByEmail(email);
+
+            return Ok(user);
+        }
+
+        [HttpGet("card/{cardId}")]
+        public async Task<IActionResult> GetUserByCarNumber(int userId, int cardId)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userService.GetUserByCardNumber(cardId);
+
+            return Ok(user);
         }
 
         // PUT: api/Users/5
@@ -76,22 +102,6 @@ namespace LibraryManagement.API.Controllers
 
             throw new Exception($"Updating user {id} failed on save");
         }
-
-        // DELETE: api/Users/5
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<User>> DeleteUser(int id)
-        //{
-        //    var user = await _context.Users.FindAsync(id);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Users.Remove(user);
-        //    await _context.SaveChangesAsync();
-
-        //    return user;
-        //}
 
         [HttpGet("{id}/checkouthistory")]
         public async Task<IActionResult> GetUserCheckoutHistory(int id)
@@ -153,22 +163,5 @@ namespace LibraryManagement.API.Controllers
 
             return true;
         }
-
-        //private async Task<bool> IsCurrentUserCard(int id, int cardId)
-        //{
-        //    var userCard = await _userRepo.GetUser(id);
-
-        //    if (cardId != userCard.LibraryCard.Id)
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
-
-        //private bool UserExists(int id)
-        //{
-        //    return _context.Users.Any(e => e.Id == id);
-        //}
     }
 }

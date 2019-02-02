@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace LibraryManagement.API.Controllers
+namespace LibraryManagementSystem.API.Controllers
 {
     //[Route("api/catalog/{assetId}/[controller]")]
     [Authorize(Policy = "RequireLibrarianRole")]

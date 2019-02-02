@@ -10,15 +10,19 @@ namespace LMSLibrary.DataAccess
 
         Task<User> GetUser(int id);
 
-        Task<List<User>> GetUsers();
+        Task<IEnumerable<User>> GetUsers();
 
-        Task<List<Checkout>> GetUserCheckoutHistory(int memberId);
+        Task<IEnumerable<Checkout>> GetUserCheckoutHistory(int memberId);
 
-        Task<List<ReserveAsset>> GetUserReservedAssets(int memberId);
+        Task<User> GetUserByEmail(string email);
 
-        Task<List<Checkout>> GetUserCurrentCheckouts(int id);
+        Task<User> GetUserByCardId(int cardId);
 
-        Task<List<ReserveAsset>> GetUserCurrentReservedAssets(int id);
+        Task<IEnumerable<ReserveAsset>> GetUserReservedAssets(int memberId);
+
+        Task<IEnumerable<Checkout>> GetUserCurrentCheckouts(int id);
+
+        Task<IEnumerable<ReserveAsset>> GetUserCurrentReservedAssets(int id);
 
         Task<LibraryCard> GetUserLibraryCard(int id);
     }

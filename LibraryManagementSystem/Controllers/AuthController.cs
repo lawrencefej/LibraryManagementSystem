@@ -15,7 +15,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibraryManagement.API.Controllers
+namespace LibraryManagementSystem.API.Controllers
 {
     [AllowAnonymous]
     [Route("api/[controller]")]

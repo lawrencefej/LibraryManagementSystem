@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
-using LibraryManagement.API.Helpers;
+using LibraryManagementSystem.API.Helpers;
 using LMSLibrary.DataAccess;
 using LMSLibrary.Helpers;
 using LMSLibrary.Models;
@@ -26,7 +26,7 @@ using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 
-namespace LibraryManagement.API
+namespace LibraryManagementSystem.API
 {
     public class Startup
     {
@@ -114,6 +114,7 @@ namespace LibraryManagement.API
             services.AddScoped<ICheckoutRepository, CheckoutRepository>();
             services.AddScoped<IReserveRepository, ReserveRepository>();
             services.AddScoped<ILibraryAssestService, LibraryAssetService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<LogUserActivity>();
         }
 
