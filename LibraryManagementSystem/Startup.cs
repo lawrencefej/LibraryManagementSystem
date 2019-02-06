@@ -123,8 +123,8 @@ namespace LibraryManagementSystem.API
         {
             if (env.IsDevelopment())
             {
-                //app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-                app.UseDeveloperExceptionPage();
+                app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+                //app.UseDeveloperExceptionPage();
                 //app.ConfigureCustomExceptionMiddleware();
             }
             else

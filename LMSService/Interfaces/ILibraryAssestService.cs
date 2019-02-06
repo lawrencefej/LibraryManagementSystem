@@ -12,16 +12,16 @@ namespace LMSService.Interfaces
 
         Task EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate);
 
-        Task<IEnumerable<LibraryAssetForDetailedDto>> GetAllAssets();
+        Task<IEnumerable<LibraryAssetForListDto>> GetAllAssets();
 
         Task<LibraryAssetForDetailedDto> GetAsset(int assetId);
 
         Task<LibraryAssetForDetailedDto> GetAssetByIsbn(string isbn);
 
-        Task<IEnumerable<LibraryAssetForDetailedDto>> GetAssetsByAuthor(int authorId);
+        Task<IEnumerable<LibraryAssetForListDto>> GetAssetsByAuthor(int authorId);
 
-        Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(string searchString);
+        Task<IEnumerable<LibraryAssetForListDto>> SearchLibraryAsset(string searchString);
 
-        Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(SearchAssetDto searchAsset);
+        Task<IEnumerable<LibraryAssetForListDto>> SearchLibraryAsset(SearchAssetDto searchAsset);
     }
 }

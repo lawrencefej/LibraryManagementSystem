@@ -11,6 +11,7 @@ namespace LMSLibrary.Dto
         public string Title { get; set; }
 
         public DateTime Reserved { get; set; }
+        public DateTime Until { get; set; }
 
         //public bool IsCheckedOut { get; set; }
         public DateTime? DateCheckedOut { get; set; }

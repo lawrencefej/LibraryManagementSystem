@@ -8,17 +8,19 @@ namespace LMSService.Interfaces
 {
     public interface IReserveService
     {
+        Task<ResponseHandler> CancelReserve(int userId, int id);
+
+        Task<ResponseHandler> ExpireReserveAsset(int id);
+
         Task<IEnumerable<ReserveForReturnDto>> GetAllReserves();
+
+        Task<IEnumerable<CheckoutForReturnDto>> GetCurrentCheckoutsForMember(int userId);
 
         Task<ReserveForReturnDto> GetReserveForMember(int userId, int id);
 
         Task<IEnumerable<ReserveForReturnDto>> GetReservesForMember(int userId);
 
         Task<ResponseHandler> ReserveAsset(int userId, ReserveForCreationDto reserveforForCreationDto);
-
-        Task<ResponseHandler> CancelReserve(int userId, int id);
-
-        Task<ResponseHandler> ExpireReserveAsset(int id);
 
         Task<IEnumerable<ReserveAsset>> Test();
     }

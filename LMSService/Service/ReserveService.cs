@@ -178,5 +178,12 @@ namespace LMSService.Service
 
             return assets;
         }
+
+        public async Task<IEnumerable<CheckoutForReturnDto>> GetCurrentCheckoutsForMember(int userId)
+        {
+            var checkouts = await _checkoutService.GetCheckoutsForMember(userId);
+
+            return checkouts;
+        }
     }
 }
