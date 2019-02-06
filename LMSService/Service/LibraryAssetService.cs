@@ -78,11 +78,11 @@ namespace LMSService.Service
             return;
         }
 
-        public async Task<IEnumerable<LibraryAssetForDetailedDto>> GetAllAssets()
+        public async Task<IEnumerable<LibraryAssetForListDto>> GetAllAssets()
         {
             var assets = await _libraryAssetRepo.GetLibraryAssets();
 
-            var assetToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+            var assetToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
 
             return assetToReturn;
         }
@@ -105,25 +105,25 @@ namespace LMSService.Service
             return assetToReturn;
         }
 
-        public async Task<IEnumerable<LibraryAssetForDetailedDto>> GetAssetsByAuthor(int authorId)
+        public async Task<IEnumerable<LibraryAssetForListDto>> GetAssetsByAuthor(int authorId)
         {
             var assets = await _libraryAssetRepo.GetAssetsByAuthor(authorId);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
 
             return assetsToReturn;
         }
 
-        public async Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(string searchString)
+        public async Task<IEnumerable<LibraryAssetForListDto>> SearchLibraryAsset(string searchString)
         {
             var assets = await _libraryAssetRepo.SearchLibraryAsset(searchString);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
 
             return assetsToReturn;
         }
 
-        public async Task<IEnumerable<LibraryAssetForDetailedDto>> SearchLibraryAsset(SearchAssetDto searchAsset)
+        public async Task<IEnumerable<LibraryAssetForListDto>> SearchLibraryAsset(SearchAssetDto searchAsset)
         {
             if (searchAsset == null)
             {
@@ -131,7 +131,7 @@ namespace LMSService.Service
             }
             var assets = await _libraryAssetRepo.SearchAssets(searchAsset);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
 
             return assetsToReturn;
         }

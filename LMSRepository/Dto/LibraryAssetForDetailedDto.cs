@@ -15,5 +15,6 @@ namespace LMSRepository.Dto
         public int CopiesAvailable { get; set; }
         public string Description { get; set; }
         public string AssetType { get; set; }
+        public string AuthorName { get; set; }
     }
 }

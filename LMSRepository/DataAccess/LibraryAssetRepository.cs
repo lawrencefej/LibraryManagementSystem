@@ -71,6 +71,7 @@ namespace LMSLibrary.DataAccess
         public async Task<IEnumerable<LibraryAsset>> SearchAssets(SearchAssetDto searchAsset)
         {
             var assets = from asset in _context.LibraryAssets
+                         .Include(a => a.Author)
                          select asset;
 
             if (searchAsset != null)
@@ -97,6 +98,7 @@ namespace LMSLibrary.DataAccess
                 .Include(a => a.AssetType)
                 .Include(s => s.Status)
                 .Include(s => s.Author)
+                .OrderByDescending(o => o.Added)
                 .ToListAsync();
 
             return assets;

@@ -164,14 +164,11 @@ namespace LMSService.Service
             return _mapper.Map<CheckoutForReturnDto>(checkout);
         }
 
-        public async Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForMember(int id)
+        public async Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForMember(int userId)
         {
-            var checkouts = await _checkoutRepo.GetCheckoutsForMember(id);
+            var card = await GetMemberLibraryCard(userId);
 
-            if (checkouts == null)
-            {
-                throw new NoValuesFoundException("There are no checkouts available");
-            }
+            var checkouts = await _checkoutRepo.GetMemberCurrentCheckouts(card.Id);
 
             return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
         }

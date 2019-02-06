@@ -89,13 +89,17 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("test/")]
-        public async Task<IActionResult> Test()
+        [HttpGet("checkout/")]
+        public async Task<IActionResult> GetCheckoutsForMember(int userId)
         {
-            // Todo remember to remove
-            var assets = await _reserveService.Test();
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
 
-            return Ok(assets);
+            var checkouts = await _reserveService.GetCurrentCheckoutsForMember(userId);
+
+            return Ok(checkouts);
         }
 
         private bool IsCurrentuser(int id)

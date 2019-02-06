@@ -55,6 +55,19 @@ namespace LibraryManagementSystem.API.Helpers
                     .ForMember(dest => dest.Status, opt =>
                     {
                         opt.MapFrom(src => src.Status.Name);
+                    })
+                    .ForMember(dest => dest.AuthorName, opt =>
+                    {
+                        opt.MapFrom(src => src.Author.FullName);
+                    });
+            CreateMap<LibraryAsset, LibraryAssetForListDto>()
+                    .ForMember(dest => dest.AssetType, opt =>
+                    {
+                        opt.MapFrom(src => src.AssetType.Name);
+                    })
+                    .ForMember(dest => dest.AuthorName, opt =>
+                    {
+                        opt.MapFrom(src => src.Author.FullName);
                     });
             CreateMap<LibraryAssetForCreationDto, LibraryAsset>().ReverseMap();
             CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();

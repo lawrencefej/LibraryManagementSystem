@@ -12,10 +12,12 @@ namespace LMSRepository.Interfaces
 
         Task<List<Checkout>> GetCheckoutHistory(int cardId);
 
+        Task<IEnumerable<Checkout>> GetCheckoutsForMember(int cardId);
+
         Task<Checkout> GetLatestCheckout(int id);
 
         Task<int> GetMemberCurrentCheckoutAmount(int cardId);
 
-        Task<IEnumerable<Checkout>> GetCheckoutsForMember(int id);
+        Task<IEnumerable<Checkout>> GetMemberCurrentCheckouts(int cardId);
     }
 }

@@ -34,6 +34,8 @@ namespace LMSLibrary.DataAccess
         public async Task<LibraryCard> GetMemberCard(int id)
         {
             var libraryCard = await _context.LibraryCards
+                .Include(c => c.Checkouts)
+                .Include(c => c.ReservedAssets)
                 .FirstOrDefaultAsync(p => p.UserId == id);
 
             return libraryCard;

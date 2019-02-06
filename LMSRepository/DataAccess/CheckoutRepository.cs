@@ -1,5 +1,6 @@
 ﻿using LMSLibrary.DataAccess;
 using LMSLibrary.Models;
+using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -48,10 +49,10 @@ namespace LMSRepository.DataAccess
             return checkoutHistory;
         }
 
-        public async Task<IEnumerable<Checkout>> GetCheckoutsForMember(int id)
+        public async Task<IEnumerable<Checkout>> GetCheckoutsForMember(int cardId)
         {
             var checkouts = await _context.Checkouts
-                .Where(l => l.LibraryCard.Id == id)
+                .Where(l => l.LibraryCard.Id == cardId)
                 .ToListAsync();
 
             return checkouts;
@@ -66,10 +67,22 @@ namespace LMSRepository.DataAccess
         {
             var count = await _context.Checkouts
                 .Where(l => l.LibraryCard.Id == cardId)
-                .Where(l => l.Status.Name == "Checkedout")
+                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
                 .CountAsync();
 
             return count;
+        }
+
+        public async Task<IEnumerable<Checkout>> GetMemberCurrentCheckouts(int cardId)
+        {
+            var checkout = await _context.Checkouts
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.Status)
+                .Where(l => l.LibraryCard.Id == cardId)
+                .Where(l => l.DateReturned == null)
+                .ToListAsync();
+
+            return checkout;
         }
     }
 }
