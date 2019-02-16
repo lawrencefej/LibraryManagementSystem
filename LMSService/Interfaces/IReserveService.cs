@@ -20,7 +20,7 @@ namespace LMSService.Interfaces
 
         Task<IEnumerable<ReserveForReturnDto>> GetReservesForMember(int userId);
 
-        Task<ResponseHandler> ReserveAsset(int userId, ReserveForCreationDto reserveforForCreationDto);
+        Task<ResponseHandler> ReserveAsset(int userId, int assetId);
 
         Task<IEnumerable<ReserveAsset>> Test();
     }

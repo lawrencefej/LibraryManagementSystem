@@ -25,6 +25,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using Role = LibraryManagementSystem.API.Helpers.Role;
 
 namespace LibraryManagementSystem.API
 {
@@ -52,10 +53,10 @@ namespace LibraryManagementSystem.API
                 opt.Password.RequireUppercase = false;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            builder = new IdentityBuilder(builder.UserType, typeof(LMSLibrary.Models.Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
-            builder.AddRoleValidator<RoleValidator<Role>>();
-            builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddRoleValidator<RoleValidator<LMSLibrary.Models.Role>>();
+            builder.AddRoleManager<RoleManager<LMSLibrary.Models.Role>>();
             builder.AddSignInManager<SignInManager<User>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -72,9 +73,9 @@ namespace LibraryManagementSystem.API
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("RequireLibrarianRole", policy => policy.RequireRole("Admin", "Librarian"));
-                options.AddPolicy("RequireMemberRole", policy => policy.RequireRole("Member", "Admin", "Librarian"));
+                options.AddPolicy(Role.RequireAdminRole, policy => policy.RequireRole(Role.Admin));
+                options.AddPolicy(Role.RequireLibrarianRole, policy => policy.RequireRole(Role.Admin, Role.Librarian));
+                options.AddPolicy(Role.RequireMemberRole, policy => policy.RequireRole(Role.Admin, Role.Librarian, Role.Member));
             });
 
             services.AddMvc(Options =>

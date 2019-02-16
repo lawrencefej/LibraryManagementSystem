@@ -27,17 +27,6 @@ namespace LibraryManagementSystem.API.Helpers
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
 
-        //public static int CalculateAge(this DateTime theDatetime)
-        //{
-        //    var age = DateTime.Today.Year - theDatetime.Year;
-        //    if (theDatetime.AddYears(age) > DateTime.Today)
-        //    {
-        //        age--;
-        //    }
-
-        //    return age;
-        //}
-
         public static void ConfigureCustomExceptionMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<CustomExceptionMiddleware>();
