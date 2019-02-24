@@ -81,7 +81,7 @@ namespace LibraryManagementSystem.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("search/")]
-        public async Task<IActionResult> SearchLibraryAsset(SearchAssetDto searchAsset)
+        public async Task<IActionResult> SearchLibraryAsset([FromQuery]string searchAsset)
         {
             var assets = await _libraryAssestService.SearchLibraryAsset(searchAsset);
 

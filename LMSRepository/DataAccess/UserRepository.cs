@@ -23,12 +23,11 @@ namespace LMSRepository.DataAccess
 
         public async Task<User> GetUser(int id)
         {
-            var query = _context.Users
+            var user = await _userManager.Users
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
-                .AsQueryable();
-
-            var user = await query.FirstOrDefaultAsync(u => u.Id == id);
+                .Include(c => c.UserRoles)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
         }
@@ -131,11 +130,24 @@ namespace LMSRepository.DataAccess
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = await _userManager.GetUsersInRoleAsync(EnumRoles.Member.ToString());
-            //var users = await _context.Users.Include(p => p.ProfilePicture)
-            //    .Include(c => c.LibraryCard)
-            //    .Include(c => c.UserRoles)
-            //    .OrderBy(u => u.Lastname).ToListAsync();
+            //var users = await _userManager.GetUsersInRoleAsync(EnumRoles.Member.ToString());
+            //var users = await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
+            var users = await _userManager.Users
+                .Include(p => p.ProfilePicture)
+                .Include(c => c.LibraryCard)
+                .Include(c => c.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                .OrderBy(u => u.Lastname).ToListAsync();
+
+            return users;
+        }
+
+        public async Task<IEnumerable<User>> GetAdmins()
+        {
+            var users = await _userManager.Users.Include(p => p.ProfilePicture)
+                .Include(c => c.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Role.Name != EnumRoles.Member.ToString()))
+                .OrderBy(u => u.Lastname).ToListAsync();
 
             return users;
         }

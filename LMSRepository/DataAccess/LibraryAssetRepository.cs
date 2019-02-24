@@ -107,14 +107,21 @@ namespace LMSLibrary.DataAccess
         public async Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString)
         {
             var assets = from asset in _context.LibraryAssets
+                    .Include(s => s.Author)
                          select asset;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                assets = assets.Where(s => s.Title.Contains(searchString));
+                assets = assets
+                    .Include(s => s.Author)
+                    .Where(s => s.Title.Contains(searchString)
+                    || s.Author.LastName.Contains(searchString)
+                    || s.Author.FirstName.Contains(searchString));
+
+                return await assets.ToListAsync();
             }
 
-            return await assets.ToListAsync();
+            return await GetLibraryAssets();
         }
 
         public void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset)

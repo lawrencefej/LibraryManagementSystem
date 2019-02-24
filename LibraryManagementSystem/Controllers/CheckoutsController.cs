@@ -72,5 +72,13 @@ namespace LibraryManagementSystem.API.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult> GetCheckoutsForMember(int userId)
+        {
+            var checkouts = await _checkoutService.GetCheckoutsForMember(userId);
+
+            return Ok(checkouts);
+        }
     }
 }

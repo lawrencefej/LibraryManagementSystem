@@ -14,6 +14,10 @@ namespace LibraryManagementSystem.API.Helpers
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
                      })
+                     .ForMember(dest => dest.LibraryCardNumber, opt =>
+                     {
+                         opt.MapFrom(src => src.LibraryCard.Id);
+                     })
                      .ForMember(dest => dest.Age, opt =>
                      {
                          opt.MapFrom(d => d.DateOfBirth.CalculateAge());
@@ -79,6 +83,10 @@ namespace LibraryManagementSystem.API.Helpers
                      .ForMember(dest => dest.Status, opt =>
                      {
                          opt.MapFrom(src => src.Status.Name);
+                     })
+                     .ForMember(dest => dest.LibraryCardNumber, opt =>
+                     {
+                         opt.MapFrom(src => src.LibraryCardId);
                      })
                      .ForMember(dest => dest.Id, opt =>
                      {
