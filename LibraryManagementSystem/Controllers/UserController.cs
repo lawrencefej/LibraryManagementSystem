@@ -70,14 +70,14 @@ namespace LibraryManagementSystem.Controllers
             return Ok(user);
         }
 
-        [Authorize(Policy = Role.RequireLibrarianRole)]
-        [HttpGet("search/")]
-        public async Task<IActionResult> SearchUser(SearchUserDto searchUser)
-        {
-            var user = await _userService.SearchUser(searchUser);
+        //[Authorize(Policy = Role.RequireLibrarianRole)]
+        //[HttpGet("search/")]
+        //public async Task<IActionResult> SearchUser(SearchUserDto searchUser)
+        //{
+        //    var user = await _userService.SearchUser(searchUser);
 
-            return Ok(user);
-        }
+        //    return Ok(user);
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
@@ -149,6 +149,15 @@ namespace LibraryManagementSystem.Controllers
             var reserveHistoryForReturn = _mapper.Map<IEnumerable<ReserveForReturnDto>>(reserveHistory);
 
             return Ok(reserveHistoryForReturn);
+        }
+
+        [Authorize(Policy = Role.RequireLibrarianRole)]
+        [HttpGet("search/")]
+        public async Task<IActionResult> SearchLibraryAsset([FromQuery]string searchAsset)
+        {
+            var users = await _userService.SearchUsers(searchAsset);
+
+            return Ok(users);
         }
 
         private bool IsCurrentuser(int id)

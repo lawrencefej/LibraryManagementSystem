@@ -63,5 +63,14 @@ namespace LMSService.Service
 
             return usersToReturn;
         }
+
+        public async Task<IEnumerable<UserForListDto>> SearchUsers(string searchString)
+        {
+            var users = await _userRepo.SearchUsers(searchString);
+
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            return usersToReturn;
+        }
     }
 }

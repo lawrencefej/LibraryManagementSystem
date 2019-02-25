@@ -247,5 +247,14 @@ namespace LMSService.Service
                 asset.StatusId = (int)EnumStatus.Unavailable;
             }
         }
+
+        public async Task<IEnumerable<CheckoutForReturnDto>> SearchCheckouts(string searchString)
+        {
+            var checkouts = await _checkoutRepo.SearchCheckouts(searchString);
+
+            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+
+            return checkoutsToReturn;
+        }
     }
 }

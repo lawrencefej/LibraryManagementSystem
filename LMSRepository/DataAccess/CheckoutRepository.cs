@@ -84,5 +84,24 @@ namespace LMSRepository.DataAccess
 
             return checkout;
         }
+
+        public async Task<IEnumerable<Checkout>> SearchCheckouts(string searchString)
+        {
+            var checkouts = from checkout in _context.Checkouts
+                        .Include(s => s.LibraryCard)
+                        .Include(s => s.LibraryAsset)
+                        .Include(s => s.Status)
+                            select checkout;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                checkouts = checkouts
+                    .Where(s => s.LibraryAsset.Title.Contains(searchString));
+
+                return await checkouts.ToListAsync();
+            }
+
+            return await GetAllCheckouts();
+        }
     }
 }

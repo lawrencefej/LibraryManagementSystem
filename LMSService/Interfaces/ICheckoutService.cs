@@ -27,5 +27,7 @@ namespace LMSService.Interfaces
         Task<ReserveAsset> GetCurrentReserve(int id);
 
         void ReduceAssetCopiesAvailable(LibraryAsset asset);
+
+        Task<IEnumerable<CheckoutForReturnDto>> SearchCheckouts(string searchString);
     }
 }
