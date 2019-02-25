@@ -80,6 +80,7 @@ namespace LibraryManagementSystem.Controllers
 
             return Ok(reserves);
         }
+
         [HttpPost("{assetId}")]
         public async Task<ActionResult> ReserveAsset(int userId, int assetId)
         {
@@ -97,6 +98,7 @@ namespace LibraryManagementSystem.Controllers
 
             return NoContent();
         }
+
         private bool IsCurrentuser(int id)
         {
             var currentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
