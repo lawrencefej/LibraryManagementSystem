@@ -13,6 +13,8 @@ namespace LMSLibrary.DataAccess
 
         Task<User> SearchUser(SearchUserDto searchUser);
 
+        Task<IEnumerable<User>> SearchUsers(string searchString);
+
         Task<IEnumerable<User>> GetUsers();
 
         Task<IEnumerable<Checkout>> GetUserCheckoutHistory(int memberId);

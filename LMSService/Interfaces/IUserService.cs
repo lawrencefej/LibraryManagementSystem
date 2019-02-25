@@ -16,5 +16,7 @@ namespace LMSService.Interfaces
         Task<UserForDetailedDto> GetUserByCardNumber(int cardId);
 
         Task<UserForDetailedDto> SearchUser(SearchUserDto searchUser);
+
+        Task<IEnumerable<UserForListDto>> SearchUsers(string searchString);
     }
 }

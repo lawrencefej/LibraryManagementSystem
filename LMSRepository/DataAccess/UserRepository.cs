@@ -4,6 +4,7 @@ using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -126,6 +127,29 @@ namespace LMSRepository.DataAccess
                 .ToListAsync();
 
             return reserveHistory;
+        }
+
+        public async Task<IEnumerable<User>> SearchUsers(string searchString)
+        {
+            var users = from user in _userManager.Users
+                        .Include(s => s.LibraryCard)
+                        .Include(s => s.UserRoles)
+                        .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                        select user;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                users = users
+                    .Where(s => s.Email.Contains(searchString)
+                || s.FirstName.Contains(searchString)
+                || s.Lastname.Contains(searchString)
+                //|| Convert.ToString(s.PhoneNumber).Contains(searchString)
+                || Convert.ToString(s.LibraryCard.Id).Contains(searchString));
+
+                return await users.ToListAsync();
+            }
+
+            return await GetUsers();
         }
 
         public async Task<IEnumerable<User>> GetUsers()

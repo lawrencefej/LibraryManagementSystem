@@ -80,5 +80,13 @@ namespace LibraryManagementSystem.API.Controllers
 
             return Ok(checkouts);
         }
+
+        [HttpGet("search/")]
+        public async Task<IActionResult> SearchCheckouts([FromQuery]string searchString)
+        {
+            var checkouts = await _checkoutService.SearchCheckouts(searchString);
+
+            return Ok(checkouts);
+        }
     }
 }

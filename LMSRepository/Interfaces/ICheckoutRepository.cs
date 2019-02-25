@@ -14,6 +14,8 @@ namespace LMSRepository.Interfaces
 
         Task<IEnumerable<Checkout>> GetCheckoutsForMember(int cardId);
 
+        Task<IEnumerable<Checkout>> SearchCheckouts(string searchString);
+
         Task<Checkout> GetLatestCheckout(int id);
 
         Task<int> GetMemberCurrentCheckoutAmount(int cardId);
