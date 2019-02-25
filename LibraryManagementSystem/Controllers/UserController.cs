@@ -2,7 +2,6 @@
 using LibraryManagementSystem.API.Helpers;
 using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
-using LMSRepository.Dto;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
