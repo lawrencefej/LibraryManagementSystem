@@ -152,9 +152,9 @@ namespace LibraryManagementSystem.Controllers
 
         [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet("search/")]
-        public async Task<IActionResult> SearchLibraryAsset([FromQuery]string searchAsset)
+        public async Task<IActionResult> SearchUsers([FromQuery]string searchString)
         {
-            var users = await _userService.SearchUsers(searchAsset);
+            var users = await _userService.SearchUsers(searchString);
 
             return Ok(users);
         }
