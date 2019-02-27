@@ -49,6 +49,16 @@ namespace LMSRepository.DataAccess
             return checkoutHistory;
         }
 
+        public async Task<IEnumerable<Checkout>> GetCheckoutsForAsset(int libraryAssetId)
+        {
+            var checkouts = await _context.Checkouts
+                .Where(l => l.LibraryAssetId == libraryAssetId)
+                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
+                .ToListAsync();
+
+            return checkouts;
+        }
+
         public async Task<IEnumerable<Checkout>> GetCheckoutsForMember(int cardId)
         {
             var checkouts = await _context.Checkouts

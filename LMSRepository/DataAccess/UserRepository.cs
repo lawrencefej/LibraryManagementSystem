@@ -154,8 +154,6 @@ namespace LMSRepository.DataAccess
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            //var users = await _userManager.GetUsersInRoleAsync(EnumRoles.Member.ToString());
-            //var users = await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
             var users = await _userManager.Users
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
