@@ -256,5 +256,12 @@ namespace LMSService.Service
 
             return checkoutsToReturn;
         }
+
+        public async Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForAsset(int libraryAssetId)
+        {
+            var checkouts = await _checkoutRepo.GetCheckoutsForAsset(libraryAssetId);
+
+            return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+        }
     }
 }

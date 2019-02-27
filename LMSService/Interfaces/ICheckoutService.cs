@@ -8,23 +8,25 @@ namespace LMSService.Interfaces
 {
     public interface ICheckoutService
     {
+        Task<CheckoutForReturnDto> CheckInAsset(int id);
+
+        Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto);
+
+        Task<ResponseHandler> CheckoutReservedAsset(int id);
+
         Task<IEnumerable<CheckoutForReturnDto>> GetAllCheckouts();
 
         Task<CheckoutForReturnDto> GetCheckout(int id);
 
-        Task<CheckoutForReturnDto> CheckInAsset(int id);
-
-        Task<ResponseHandler> CheckoutReservedAsset(int id);
+        Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForAsset(int libraryAssetId);
 
         Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForMember(int userId);
 
-        Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto);
-
-        Task<LibraryCard> GetMemberLibraryCard(int id);
+        Task<ReserveAsset> GetCurrentReserve(int id);
 
         Task<LibraryAsset> GetLibraryAsset(int id);
 
-        Task<ReserveAsset> GetCurrentReserve(int id);
+        Task<LibraryCard> GetMemberLibraryCard(int id);
 
         void ReduceAssetCopiesAvailable(LibraryAsset asset);
 

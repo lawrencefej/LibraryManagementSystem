@@ -81,6 +81,14 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(checkouts);
         }
 
+        [HttpGet("asset/{libraryAssetId}")]
+        public async Task<ActionResult> GetCheckoutsForAsset(int libraryAssetId)
+        {
+            var checkouts = await _checkoutService.GetCheckoutsForAsset(libraryAssetId);
+
+            return Ok(checkouts);
+        }
+
         [HttpGet("search/")]
         public async Task<IActionResult> SearchCheckouts([FromQuery]string searchString)
         {
