@@ -99,11 +99,13 @@ namespace LMSService.Service
 
         public async Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
         {
+            // TODO stop user from checking out the same asset when it is already checked out by the member
             var validate = new CheckoutValidation();
-            var libraryCard = await GetMemberLibraryCard(checkoutForCreationDto.LibraryCardId);
+            var libraryCard = await GetMemberLibraryCard(checkoutForCreationDto.userId);
             var libraryAsset = await GetLibraryAsset(checkoutForCreationDto.LibraryAssetId);
 
             checkoutForCreationDto.AssetStatus = libraryAsset.Status.Name;
+            checkoutForCreationDto.LibraryCardId = libraryCard.Id;
             checkoutForCreationDto.Fees = libraryCard.Fees;
             checkoutForCreationDto.CurrentCheckoutCount = await _checkoutRepo.GetMemberCurrentCheckoutAmount(libraryCard.Id);
 
@@ -115,7 +117,8 @@ namespace LMSService.Service
             {
                 foreach (var failure in result.Errors)
                 {
-                    errors.Add($"{failure.PropertyName}: {failure.ErrorMessage}");
+                    //errors.Add($"{failure.PropertyName}: {failure.ErrorMessage}");
+                    errors.Add($"{failure.ErrorMessage}");
                 }
                 return response;
             }
@@ -130,6 +133,7 @@ namespace LMSService.Service
             if (await _libraryRepo.SaveAll())
             {
                 var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
+                checkoutToReturn.Status = EnumStatus.Checkedout.ToString();
                 response.Id = checkoutToReturn.Id;
                 response.Valid = true;
                 response.Result = checkoutToReturn;
@@ -225,9 +229,9 @@ namespace LMSService.Service
             return asset;
         }
 
-        public async Task<LibraryCard> GetMemberLibraryCard(int id)
+        public async Task<LibraryCard> GetMemberLibraryCard(int userId)
         {
-            var card = await _cardRepo.GetMemberCard(id);
+            var card = await _cardRepo.GetMemberCard(userId);
 
             if (card == null)
             {

@@ -7,6 +7,7 @@ namespace LMSLibrary.Dto
     {
         public int LibraryAssetId { get; set; }
         public int LibraryCardId { get; set; }
+        public int userId { get; set; }
         public DateTime Since { get; set; }
         public DateTime Until { get; set; }
         public Status Status { get; set; }

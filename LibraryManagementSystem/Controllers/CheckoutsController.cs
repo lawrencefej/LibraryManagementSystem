@@ -70,7 +70,9 @@ namespace LibraryManagementSystem.API.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return NoContent();
+            return CreatedAtRoute("GetCheckout", new { id = result.Id }, result.Result);
+
+            //return NoContent();
         }
 
         [HttpGet("user/{userId}")]

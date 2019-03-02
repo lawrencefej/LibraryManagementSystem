@@ -116,7 +116,8 @@ namespace LMSLibrary.DataAccess
                 assets = assets
                     .Where(s => s.Title.Contains(searchString)
                     || s.Author.LastName.Contains(searchString)
-                    || s.Author.FirstName.Contains(searchString));
+                    || s.Author.FirstName.Contains(searchString)
+                    || s.ISBN.Contains(searchString));
 
                 return await assets.ToListAsync();
             }
