@@ -10,7 +10,7 @@ namespace LMSService.Interfaces
     {
         Task<CheckoutForReturnDto> CheckInAsset(int id);
 
-        Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto);
+        Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreation);
 
         Task<ResponseHandler> CheckoutReservedAsset(int id);
 

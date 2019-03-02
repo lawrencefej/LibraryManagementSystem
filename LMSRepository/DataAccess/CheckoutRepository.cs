@@ -96,6 +96,21 @@ namespace LMSRepository.DataAccess
             return checkout;
         }
 
+        public async Task<bool> IsAssetCurrentlyCheckedOutByMember(int assetId, int cardId)
+        {
+            var checkout = await _context.Checkouts.
+                Where(u => u.Status.Name == EnumStatus.Checkedout.ToString())
+                .Where(u => u.LibraryCardId == cardId)
+                .FirstOrDefaultAsync(u => u.LibraryAssetId == assetId);
+
+            if (checkout == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<IEnumerable<Checkout>> SearchCheckouts(string searchString)
         {
             var checkouts = from checkout in _context.Checkouts

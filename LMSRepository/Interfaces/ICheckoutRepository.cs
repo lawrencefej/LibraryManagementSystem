@@ -23,5 +23,7 @@ namespace LMSRepository.Interfaces
         Task<int> GetMemberCurrentCheckoutAmount(int cardId);
 
         Task<IEnumerable<Checkout>> GetMemberCurrentCheckouts(int cardId);
+
+        Task<bool> IsAssetCurrentlyCheckedOutByMember(int assetId, int cardId);
     }
 }
