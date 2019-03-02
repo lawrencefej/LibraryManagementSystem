@@ -26,7 +26,7 @@ namespace LMSService.Interfaces
 
         Task<LibraryAsset> GetLibraryAsset(int id);
 
-        Task<LibraryCard> GetMemberLibraryCard(int id);
+        Task<LibraryCard> GetMemberLibraryCard(int userId);
 
         void ReduceAssetCopiesAvailable(LibraryAsset asset);
 

@@ -7,5 +7,6 @@
         public int Year { get; set; }
         public string AssetType { get; set; }
         public string AuthorName { get; set; }
+        public int CopiesAvailable { get; set; }
     }
 }

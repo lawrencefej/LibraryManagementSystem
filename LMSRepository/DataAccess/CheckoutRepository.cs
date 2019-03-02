@@ -52,6 +52,7 @@ namespace LMSRepository.DataAccess
         public async Task<IEnumerable<Checkout>> GetCheckoutsForAsset(int libraryAssetId)
         {
             var checkouts = await _context.Checkouts
+                .Include(a => a.Status)
                 .Where(l => l.LibraryAssetId == libraryAssetId)
                 .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
                 .ToListAsync();

@@ -11,6 +11,6 @@ namespace LMSLibrary.DataAccess
 
         Task<LibraryCard> GetCard(int id);
 
-        Task<LibraryCard> GetMemberCard(int id);
+        Task<LibraryCard> GetMemberCard(int userId);
     }
 }

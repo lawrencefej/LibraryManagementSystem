@@ -31,12 +31,12 @@ namespace LMSLibrary.DataAccess
             return cardId;
         }
 
-        public async Task<LibraryCard> GetMemberCard(int id)
+        public async Task<LibraryCard> GetMemberCard(int userId)
         {
             var libraryCard = await _context.LibraryCards
                 .Include(c => c.Checkouts)
                 .Include(c => c.ReservedAssets)
-                .FirstOrDefaultAsync(p => p.UserId == id);
+                .FirstOrDefaultAsync(p => p.UserId == userId);
 
             return libraryCard;
         }
