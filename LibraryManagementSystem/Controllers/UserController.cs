@@ -69,34 +69,17 @@ namespace LibraryManagementSystem.Controllers
             return Ok(user);
         }
 
-        //[Authorize(Policy = Role.RequireLibrarianRole)]
-        //[HttpGet("search/")]
-        //public async Task<IActionResult> SearchUser(SearchUserDto searchUser)
-        //{
-        //    var user = await _userService.SearchUser(searchUser);
-
-        //    return Ok(user);
-        //}
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
-            //TODO
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (!IsCurrentuser(id))
             {
                 return Unauthorized();
             }
 
-            var UserFromRepo = await _userRepo.GetUser(id);
+            await _userService.UpdateUser(userForUpdateDto);
 
-            _mapper.Map(userForUpdateDto, UserFromRepo);
-
-            if (await _userRepo.SaveAll())
-            {
-                return NoContent();
-            }
-
-            throw new Exception($"Updating user {id} failed on save");
+            return NoContent();
         }
 
         [HttpGet("{id}/checkouthistory")]

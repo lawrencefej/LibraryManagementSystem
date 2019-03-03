@@ -18,5 +18,7 @@ namespace LMSService.Interfaces
         Task<UserForDetailedDto> SearchUser(SearchUserDto searchUser);
 
         Task<IEnumerable<UserForListDto>> SearchUsers(string searchString);
+
+        Task UpdateUser(UserForUpdateDto userForUpdate);
     }
 }

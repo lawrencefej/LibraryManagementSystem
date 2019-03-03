@@ -2,7 +2,9 @@
 using LMSLibrary.DataAccess;
 using LMSLibrary.Dto;
 using LMSRepository.Dto;
+using LMSService.Exceptions;
 using LMSService.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -71,6 +73,25 @@ namespace LMSService.Service
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
             return usersToReturn;
+        }
+
+        public async Task UpdateUser(UserForUpdateDto userForUpdate)
+        {
+            var user = await _userRepo.GetUser(userForUpdate.Id);
+
+            if (user == null)
+            {
+                throw new NoValuesFoundException("User was not found");
+            }
+
+            _mapper.Map(userForUpdate, user);
+
+            if (await _userRepo.SaveAll())
+            {
+                return;
+            }
+
+            throw new Exception($"Updating user failed on save");
         }
     }
 }

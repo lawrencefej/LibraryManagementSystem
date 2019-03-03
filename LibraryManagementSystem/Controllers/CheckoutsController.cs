@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
-    //[Route("api/catalog/{assetId}/[controller]")]
     [Authorize(Policy = "RequireLibrarianRole")]
     [Route("api/[controller]")]
-    //[AllowAnonymous]
     [ApiController]
     public class CheckoutsController : ControllerBase
     {
@@ -20,24 +18,6 @@ namespace LibraryManagementSystem.API.Controllers
             _checkoutService = checkoutService;
         }
 
-        // GET: api/Checkouts
-        [HttpGet]
-        public async Task<ActionResult> GetCheckouts()
-        {
-            var checkouts = await _checkoutService.GetAllCheckouts();
-
-            return Ok(checkouts);
-        }
-
-        // GET: api/Checkouts/5
-        [HttpGet("{id}", Name = "GetCheckout")]
-        public async Task<ActionResult> GetCheckout(int id)
-        {
-            var checkout = await _checkoutService.GetCheckout(id);
-
-            return Ok(checkout);
-        }
-
         // PUT: api/Checkouts/5
         [HttpPut("{id}")]
         public async Task<IActionResult> CheckInAsset(int id)
@@ -45,19 +25,6 @@ namespace LibraryManagementSystem.API.Controllers
             await _checkoutService.CheckInAsset(id);
 
             return NoContent();
-        }
-
-        [HttpPut("reserve/{id}")]
-        public async Task<IActionResult> CheckOutReserve(int id)
-        {
-            var checkout = await _checkoutService.CheckoutReservedAsset(id);
-
-            if (checkout.Valid)
-            {
-                return NoContent();
-            }
-
-            return BadRequest();
         }
 
         [HttpPost]
@@ -75,10 +42,33 @@ namespace LibraryManagementSystem.API.Controllers
             //return NoContent();
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<ActionResult> GetCheckoutsForMember(int userId)
+        [HttpPut("reserve/{id}")]
+        public async Task<IActionResult> CheckOutReserve(int id)
         {
-            var checkouts = await _checkoutService.GetCheckoutsForMember(userId);
+            var checkout = await _checkoutService.CheckoutReservedAsset(id);
+
+            if (checkout.Valid)
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
+
+        // GET: api/Checkouts/5
+        [HttpGet("{id}", Name = "GetCheckout")]
+        public async Task<ActionResult> GetCheckout(int id)
+        {
+            var checkout = await _checkoutService.GetCheckout(id);
+
+            return Ok(checkout);
+        }
+
+        // GET: api/Checkouts
+        [HttpGet]
+        public async Task<ActionResult> GetCheckouts()
+        {
+            var checkouts = await _checkoutService.GetAllCheckouts();
 
             return Ok(checkouts);
         }
@@ -87,6 +77,14 @@ namespace LibraryManagementSystem.API.Controllers
         public async Task<ActionResult> GetCheckoutsForAsset(int libraryAssetId)
         {
             var checkouts = await _checkoutService.GetCheckoutsForAsset(libraryAssetId);
+
+            return Ok(checkouts);
+        }
+
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult> GetCheckoutsForMember(int userId)
+        {
+            var checkouts = await _checkoutService.GetCheckoutsForMember(userId);
 
             return Ok(checkouts);
         }

@@ -11,7 +11,6 @@ using LMSService.Validators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSService.Service
@@ -50,7 +49,7 @@ namespace LMSService.Service
 
             checkout.StatusId = (int)EnumStatus.Returned;
 
-            checkout.DateReturned = DateTime.Now;
+            checkout.DateReturned = DateTime.Today;
 
             var libraryAsset = await GetLibraryAsset(checkout.LibraryAssetId);
 
@@ -58,7 +57,9 @@ namespace LMSService.Service
 
             if (await _libraryRepo.SaveAll())
             {
-                return _mapper.Map<CheckoutForReturnDto>(checkout);
+                var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
+
+                return checkoutToReturn;
             }
 
             throw new Exception($"returning {checkout.Id} failed on save");
