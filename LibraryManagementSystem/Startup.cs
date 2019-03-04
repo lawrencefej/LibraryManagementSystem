@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API.Helpers;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Helpers;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Helpers;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.DataAccess;
 using LMSRepository.Interfaces;
 using LMSService.Exceptions;
@@ -53,10 +53,10 @@ namespace LibraryManagementSystem.API
                 opt.Password.RequireUppercase = false;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(LMSLibrary.Models.Role), builder.Services);
+            builder = new IdentityBuilder(builder.UserType, typeof(LMSRepository.Interfaces.Models.Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
-            builder.AddRoleValidator<RoleValidator<LMSLibrary.Models.Role>>();
-            builder.AddRoleManager<RoleManager<LMSLibrary.Models.Role>>();
+            builder.AddRoleValidator<RoleValidator<LMSRepository.Interfaces.Models.Role>>();
+            builder.AddRoleManager<RoleManager<LMSRepository.Interfaces.Models.Role>>();
             builder.AddSignInManager<SignInManager<User>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

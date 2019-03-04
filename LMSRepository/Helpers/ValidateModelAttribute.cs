@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace LMSLibrary.Helpers
+namespace LMSRepository.Interfaces.Helpers
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {

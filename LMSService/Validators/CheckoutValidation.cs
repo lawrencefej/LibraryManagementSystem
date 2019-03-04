@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using LMSLibrary.Dto;
+using LMSRepository.Interfaces.Dto;
 
 namespace LMSService.Validators
 {

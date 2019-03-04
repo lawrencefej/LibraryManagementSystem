@@ -1,5 +1,5 @@
-﻿using LMSLibrary.DataAccess;
-using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LMSRepository.Interfaces;
 
 namespace LMSRepository.DataAccess
 {

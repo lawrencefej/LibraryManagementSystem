@@ -1,4 +1,4 @@
-﻿using LMSLibrary.DataAccess;
+﻿using LMSRepository.Interfaces;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;

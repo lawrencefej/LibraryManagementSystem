@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Dto;
+﻿using LMSRepository.Interfaces.Dto;
 using LMSRepository.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;

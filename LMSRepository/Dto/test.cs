@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using System;
 
 namespace LMSRepository.Dto

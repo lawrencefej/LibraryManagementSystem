@@ -1,9 +1,9 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces.DataAccess
 {
     public class DataContext : IdentityDbContext<User, Role, int,
         IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>,

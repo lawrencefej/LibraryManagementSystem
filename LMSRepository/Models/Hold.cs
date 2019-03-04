@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LMSLibrary.Models
+namespace LMSRepository.Interfaces.Models
 {
     public class Hold
     {

@@ -1,9 +1,9 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces.DataAccess
 {
     public class AuthRepository : IAuthRepository
     {

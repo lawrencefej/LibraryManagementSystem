@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces.DataAccess
 {
     public class LibraryAssetRepository : ILibraryAssetRepository
     {
