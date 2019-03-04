@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Dto;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Dto;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSService.Exceptions;

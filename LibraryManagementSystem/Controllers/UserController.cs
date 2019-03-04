@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Dto;
+using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.Dto;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;

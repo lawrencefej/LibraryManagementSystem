@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LMSLibrary.Dto;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces.Dto;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 
 namespace LibraryManagementSystem.API.Helpers
@@ -74,6 +74,7 @@ namespace LibraryManagementSystem.API.Helpers
                         opt.MapFrom(src => src.Author.FullName);
                     });
             CreateMap<LibraryAssetForCreationDto, LibraryAsset>().ReverseMap();
+            CreateMap<AuthorDto, Author>().ReverseMap();
             CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();
             CreateMap<Checkout, CheckoutForReturnDto>()
                      .ForMember(dest => dest.Title, opt =>

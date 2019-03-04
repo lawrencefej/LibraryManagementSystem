@@ -1,4 +1,4 @@
-﻿namespace LMSLibrary.Helpers
+﻿namespace LMSRepository.Interfaces.Helpers
 {
     public class CloudinarySettings
     {

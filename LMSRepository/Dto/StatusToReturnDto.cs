@@ -1,4 +1,4 @@
-﻿namespace LMSLibrary.Dto
+﻿namespace LMSRepository.Interfaces.Dto
 {
     public class StatusToReturnDto
     {

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Dto;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Dto;
+using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

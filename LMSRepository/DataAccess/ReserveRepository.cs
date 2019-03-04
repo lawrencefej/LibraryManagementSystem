@@ -1,5 +1,5 @@
-﻿using LMSLibrary.DataAccess;
-using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

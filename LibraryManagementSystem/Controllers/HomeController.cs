@@ -1,5 +1,6 @@
-﻿using LMSLibrary.DataAccess;
-using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
