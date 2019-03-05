@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LMSLibrary.Models
+namespace LMSRepository.Interfaces.Models
 {
     public class User : IdentityUser<int>
     {

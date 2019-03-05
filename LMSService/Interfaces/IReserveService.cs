@@ -1,5 +1,5 @@
-﻿using LMSLibrary.Dto;
-using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Dto;
+using LMSRepository.Interfaces.Models;
 using LMSService.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,7 +20,7 @@ namespace LMSService.Interfaces
 
         Task<IEnumerable<ReserveForReturnDto>> GetReservesForMember(int userId);
 
-        Task<ResponseHandler> ReserveAsset(int userId, ReserveForCreationDto reserveforForCreationDto);
+        Task<ResponseHandler> ReserveAsset(int userId, int assetId);
 
         Task<IEnumerable<ReserveAsset>> Test();
     }

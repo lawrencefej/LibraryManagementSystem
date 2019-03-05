@@ -1,21 +1,19 @@
 ﻿using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Dto;
-using LMSRepository.Dto;
+using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.Dto;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
-    [ServiceFilter(typeof(LogUserActivity))]
-    [Route("api/{userId}/[controller]")]
-    [Authorize(Policy = "RequireLibrarianRole")]
+    //[ServiceFilter(typeof(LogUserActivity))]
+    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -30,23 +28,19 @@ namespace LibraryManagementSystem.Controllers
             _userService = userService;
         }
 
+        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet]
-        public async Task<ActionResult> GetUsers(int userId)
+        public async Task<ActionResult> GetUsers()
         {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
             var users = await _userService.GetUsers();
 
             return Ok(users);
         }
 
         [HttpGet("{id}", Name = "GetUser")]
-        public async Task<ActionResult> GetUser(int userId, int id)
+        public async Task<ActionResult> GetUser(int id)
         {
-            if (!IsCurrentuser(userId))
+            if (!IsCurrentuser(id))
             {
                 return Unauthorized();
             }
@@ -56,65 +50,35 @@ namespace LibraryManagementSystem.Controllers
             return Ok(user);
         }
 
+        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet("email/{email}")]
-        public async Task<IActionResult> GetUserByEmail(int userId, string email)
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
             var user = await _userService.GetUserByEmail(email);
 
             return Ok(user);
         }
 
+        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet("card/{cardId}")]
-        public async Task<IActionResult> GetUserByCarNumber(int userId, int cardId)
+        public async Task<IActionResult> GetUserByCarNumber(int cardId)
         {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
             var user = await _userService.GetUserByCardNumber(cardId);
 
             return Ok(user);
         }
 
-        [HttpGet("search/")]
-        public async Task<IActionResult> SearchUser(int userId, SearchUserDto searchUser)
-        {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
-            var user = await _userService.SearchUser(searchUser);
-
-            return Ok(user);
-        }
-
-        // PUT: api/Users/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
-            //TODO
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (!IsCurrentuser(id))
             {
                 return Unauthorized();
             }
 
-            var UserFromRepo = await _userRepo.GetUser(id);
+            await _userService.UpdateUser(userForUpdateDto);
 
-            _mapper.Map(userForUpdateDto, UserFromRepo);
-
-            if (await _userRepo.SaveAll())
-            {
-                return NoContent();
-            }
-
-            throw new Exception($"Updating user {id} failed on save");
+            return NoContent();
         }
 
         [HttpGet("{id}/checkouthistory")]
@@ -168,9 +132,20 @@ namespace LibraryManagementSystem.Controllers
             return Ok(reserveHistoryForReturn);
         }
 
+        [Authorize(Policy = Role.RequireLibrarianRole)]
+        [HttpGet("search/")]
+        public async Task<IActionResult> SearchUsers([FromQuery]string searchString)
+        {
+            var users = await _userService.SearchUsers(searchString);
+
+            return Ok(users);
+        }
+
         private bool IsCurrentuser(int id)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            var currentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (id != currentUser && !(User.IsInRole(Role.Librarian) || User.IsInRole(Role.Admin)))
             {
                 return false;
             }

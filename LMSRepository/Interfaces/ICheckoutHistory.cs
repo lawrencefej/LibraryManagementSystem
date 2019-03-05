@@ -1,7 +1,7 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using System.Collections.Generic;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces
 {
     public interface ICheckoutHistory
     {

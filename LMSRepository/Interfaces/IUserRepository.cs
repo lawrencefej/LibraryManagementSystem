@@ -1,9 +1,9 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces
 {
     public interface IUserRepository
     {
@@ -12,6 +12,8 @@ namespace LMSLibrary.DataAccess
         Task<User> GetUser(int id);
 
         Task<User> SearchUser(SearchUserDto searchUser);
+
+        Task<IEnumerable<User>> SearchUsers(string searchString);
 
         Task<IEnumerable<User>> GetUsers();
 

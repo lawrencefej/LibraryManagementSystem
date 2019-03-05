@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -6,8 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LMSRepository.Data;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces.DataAccess
 {
     public class LibraryAssetRepository : ILibraryAssetRepository
     {
@@ -107,14 +108,22 @@ namespace LMSLibrary.DataAccess
         public async Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString)
         {
             var assets = from asset in _context.LibraryAssets
+                        .Include(s => s.Author)
+                        .Include(s => s.AssetType)
                          select asset;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                assets = assets.Where(s => s.Title.Contains(searchString));
+                assets = assets
+                    .Where(s => s.Title.Contains(searchString)
+                    || s.Author.LastName.Contains(searchString)
+                    || s.Author.FirstName.Contains(searchString)
+                    || s.ISBN.Contains(searchString));
+
+                return await assets.ToListAsync();
             }
 
-            return await assets.ToListAsync();
+            return await GetLibraryAssets();
         }
 
         public void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset)

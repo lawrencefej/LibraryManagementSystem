@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Dto;
+﻿using LMSRepository.Interfaces.Dto;
 using LMSRepository.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,5 +16,9 @@ namespace LMSService.Interfaces
         Task<UserForDetailedDto> GetUserByCardNumber(int cardId);
 
         Task<UserForDetailedDto> SearchUser(SearchUserDto searchUser);
+
+        Task<IEnumerable<UserForListDto>> SearchUsers(string searchString);
+
+        Task UpdateUser(UserForUpdateDto userForUpdate);
     }
 }

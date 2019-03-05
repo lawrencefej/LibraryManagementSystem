@@ -1,5 +1,5 @@
-﻿using LMSLibrary.DataAccess;
-using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LMSRepository.Data;
 
 namespace LMSRepository.DataAccess
 {
@@ -49,6 +50,17 @@ namespace LMSRepository.DataAccess
             return checkoutHistory;
         }
 
+        public async Task<IEnumerable<Checkout>> GetCheckoutsForAsset(int libraryAssetId)
+        {
+            var checkouts = await _context.Checkouts
+                .Include(a => a.Status)
+                .Where(l => l.LibraryAssetId == libraryAssetId)
+                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
+                .ToListAsync();
+
+            return checkouts;
+        }
+
         public async Task<IEnumerable<Checkout>> GetCheckoutsForMember(int cardId)
         {
             var checkouts = await _context.Checkouts
@@ -83,6 +95,40 @@ namespace LMSRepository.DataAccess
                 .ToListAsync();
 
             return checkout;
+        }
+
+        public async Task<bool> IsAssetCurrentlyCheckedOutByMember(int assetId, int cardId)
+        {
+            var checkout = await _context.Checkouts.
+                Where(u => u.Status.Name == EnumStatus.Checkedout.ToString())
+                .Where(u => u.LibraryCardId == cardId)
+                .FirstOrDefaultAsync(u => u.LibraryAssetId == assetId);
+
+            if (checkout == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<IEnumerable<Checkout>> SearchCheckouts(string searchString)
+        {
+            var checkouts = from checkout in _context.Checkouts
+                        .Include(s => s.LibraryCard)
+                        .Include(s => s.LibraryAsset)
+                        .Include(s => s.Status)
+                            select checkout;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                checkouts = checkouts
+                    .Where(s => s.LibraryAsset.Title.Contains(searchString));
+
+                return await checkouts.ToListAsync();
+            }
+
+            return await GetAllCheckouts();
         }
     }
 }

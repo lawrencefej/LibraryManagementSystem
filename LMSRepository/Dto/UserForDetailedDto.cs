@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace LMSLibrary.Dto
+namespace LMSRepository.Interfaces.Dto
 {
     public class UserForDetailedDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Username { get; set; }
+        public string Email { get; set; }
         public string Gender { get; set; }
         public string Age { get; set; }
         public DateTime Created { get; set; }
@@ -19,5 +19,7 @@ namespace LMSLibrary.Dto
         public string PhotoUrl { get; set; }
         public int LibraryCardNumber { get; set; }
         public decimal Fees { get; set; }
+        public string Role { get; set; }
+        public string Token { get; set; }
     }
 }

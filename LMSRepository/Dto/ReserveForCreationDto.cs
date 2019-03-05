@@ -1,7 +1,7 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using System;
 
-namespace LMSLibrary.Dto
+namespace LMSRepository.Interfaces.Dto
 {
     public class ReserveForCreationDto
     {

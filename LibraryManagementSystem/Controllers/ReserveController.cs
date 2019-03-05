@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Dto;
+﻿using LibraryManagementSystem.API.Helpers;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
+    [Authorize]
     [Route("api/{userId}/[controller]")]
     [ApiController]
     public class ReserveController : ControllerBase
@@ -18,10 +19,48 @@ namespace LibraryManagementSystem.Controllers
             _reserveService = reserveService;
         }
 
-        // GET: api/Reserve
+        [HttpPut("{id}")]
+        public async Task<IActionResult> CancelReserve(int userId, int id)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            await _reserveService.CancelReserve(userId, id);
+
+            return NoContent();
+        }
+
+        [HttpGet("checkout/")]
+        public async Task<IActionResult> GetCheckoutsForMember(int userId)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            var checkouts = await _reserveService.GetCurrentCheckoutsForMember(userId);
+
+            return Ok(checkouts);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetReserveAsset(int userId, int id)
+        {
+            if (!IsCurrentuser(userId))
+            {
+                return Unauthorized();
+            }
+
+            var reserve = await _reserveService.GetReserveForMember(userId, id);
+
+            return Ok(reserve);
+        }
+
         [Route("api/[controller]")]
         [HttpGet]
-        [Authorize(Policy = "RequireLibrarianRole")]
+        [Authorize(Policy = Role.RequireLibrarianRole)]
         public async Task<ActionResult> GetReserveAssets()
         {
             var reserves = await _reserveService.GetAllReserves();
@@ -42,43 +81,15 @@ namespace LibraryManagementSystem.Controllers
             return Ok(reserves);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetReserveAsset(int userId, int id)
+        [HttpPost("{assetId}")]
+        public async Task<ActionResult> ReserveAsset(int userId, int assetId)
         {
             if (!IsCurrentuser(userId))
             {
                 return Unauthorized();
             }
 
-            var reserve = await _reserveService.GetReserveForMember(userId, id);
-
-            return Ok(reserve);
-        }
-
-        // PUT: api/Reserve/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> CancelReserve(int userId, int id)
-        {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
-            await _reserveService.CancelReserve(userId, id);
-
-            return NoContent();
-        }
-
-        // POST: api/Reserve
-        [HttpPost]
-        public async Task<ActionResult> ReserveAsset(int userId, ReserveForCreationDto reserveForCreation)
-        {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
-            var result = await _reserveService.ReserveAsset(userId, reserveForCreation);
+            var result = await _reserveService.ReserveAsset(userId, assetId);
 
             if (!result.Valid)
             {
@@ -88,23 +99,11 @@ namespace LibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        [AllowAnonymous]
-        [HttpGet("checkout/")]
-        public async Task<IActionResult> GetCheckoutsForMember(int userId)
-        {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
-            var checkouts = await _reserveService.GetCurrentCheckoutsForMember(userId);
-
-            return Ok(checkouts);
-        }
-
         private bool IsCurrentuser(int id)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            var currentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (id != currentUser && !(User.IsInRole(Role.Librarian) || User.IsInRole(Role.Admin)))
             {
                 return false;
             }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LMSLibrary.Dto;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces.Dto;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 
 namespace LibraryManagementSystem.API.Helpers
@@ -13,6 +13,10 @@ namespace LibraryManagementSystem.API.Helpers
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
+                     })
+                     .ForMember(dest => dest.LibraryCardNumber, opt =>
+                     {
+                         opt.MapFrom(src => src.LibraryCard.Id);
                      })
                      .ForMember(dest => dest.Age, opt =>
                      {
@@ -70,6 +74,7 @@ namespace LibraryManagementSystem.API.Helpers
                         opt.MapFrom(src => src.Author.FullName);
                     });
             CreateMap<LibraryAssetForCreationDto, LibraryAsset>().ReverseMap();
+            CreateMap<AuthorDto, Author>().ReverseMap();
             CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();
             CreateMap<Checkout, CheckoutForReturnDto>()
                      .ForMember(dest => dest.Title, opt =>
@@ -79,6 +84,10 @@ namespace LibraryManagementSystem.API.Helpers
                      .ForMember(dest => dest.Status, opt =>
                      {
                          opt.MapFrom(src => src.Status.Name);
+                     })
+                     .ForMember(dest => dest.LibraryCardNumber, opt =>
+                     {
+                         opt.MapFrom(src => src.LibraryCardId);
                      })
                      .ForMember(dest => dest.Id, opt =>
                      {

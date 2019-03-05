@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API.Helpers;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Helpers;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Helpers;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.DataAccess;
 using LMSRepository.Interfaces;
 using LMSService.Exceptions;
@@ -25,6 +25,8 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using Role = LibraryManagementSystem.API.Helpers.Role;
+using LMSRepository.Data;
 
 namespace LibraryManagementSystem.API
 {
@@ -52,10 +54,10 @@ namespace LibraryManagementSystem.API
                 opt.Password.RequireUppercase = false;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            builder = new IdentityBuilder(builder.UserType, typeof(LMSRepository.Interfaces.Models.Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
-            builder.AddRoleValidator<RoleValidator<Role>>();
-            builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddRoleValidator<RoleValidator<LMSRepository.Interfaces.Models.Role>>();
+            builder.AddRoleManager<RoleManager<LMSRepository.Interfaces.Models.Role>>();
             builder.AddSignInManager<SignInManager<User>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -72,9 +74,9 @@ namespace LibraryManagementSystem.API
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("RequireLibrarianRole", policy => policy.RequireRole("Admin", "Librarian"));
-                options.AddPolicy("RequireMemberRole", policy => policy.RequireRole("Member", "Admin", "Librarian"));
+                options.AddPolicy(Role.RequireAdminRole, policy => policy.RequireRole(Role.Admin));
+                options.AddPolicy(Role.RequireLibrarianRole, policy => policy.RequireRole(Role.Admin, Role.Librarian));
+                options.AddPolicy(Role.RequireMemberRole, policy => policy.RequireRole(Role.Admin, Role.Librarian, Role.Member));
             });
 
             services.AddMvc(Options =>
@@ -115,6 +117,9 @@ namespace LibraryManagementSystem.API
             services.AddScoped<IReserveRepository, ReserveRepository>();
             services.AddScoped<ILibraryAssestService, LibraryAssetService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+
             services.AddScoped<LogUserActivity>();
         }
 
