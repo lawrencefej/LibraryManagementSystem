@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMSRepository.Data;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Dto;

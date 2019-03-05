@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LMSRepository.Interfaces;
+using LMSRepository.Data;
 
 namespace LMSRepository.DataAccess
 {

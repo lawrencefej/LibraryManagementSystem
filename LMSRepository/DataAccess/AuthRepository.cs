@@ -1,4 +1,5 @@
-﻿using LMSRepository.Interfaces.Models;
+﻿using LMSRepository.Data;
+using LMSRepository.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
