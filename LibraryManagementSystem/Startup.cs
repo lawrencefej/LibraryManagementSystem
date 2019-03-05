@@ -26,6 +26,7 @@ using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
+using LMSRepository.Data;
 
 namespace LibraryManagementSystem.API
 {

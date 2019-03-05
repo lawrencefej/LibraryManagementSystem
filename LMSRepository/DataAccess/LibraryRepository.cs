@@ -1,11 +1,13 @@
-﻿using LMSRepository.Interfaces.Models;
+﻿using LMSRepository.Data;
+using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LMSRepository.Interfaces.DataAccess
+namespace LMSRepository.DataAccess
 {
     public class LibraryRepository : ILibraryRepository
     {
