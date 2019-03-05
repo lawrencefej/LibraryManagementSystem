@@ -1,7 +1,9 @@
 ﻿using CloudinaryDotNet;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Helpers;
-using LMSLibrary.Models;
+using LMSRepository.Data;
+using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Helpers;
+using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

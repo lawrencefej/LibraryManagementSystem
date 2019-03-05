@@ -1,12 +1,15 @@
-﻿using LMSLibrary.DataAccess;
-using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LMSRepository.Interfaces;
+using LMSRepository.Data;
 
 namespace LMSRepository.DataAccess
 {
@@ -23,12 +26,11 @@ namespace LMSRepository.DataAccess
 
         public async Task<User> GetUser(int id)
         {
-            var query = _context.Users
+            var user = await _userManager.Users
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
-                .AsQueryable();
-
-            var user = await query.FirstOrDefaultAsync(u => u.Id == id);
+                .Include(c => c.UserRoles)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
         }
@@ -129,13 +131,47 @@ namespace LMSRepository.DataAccess
             return reserveHistory;
         }
 
+        public async Task<IEnumerable<User>> SearchUsers(string searchString)
+        {
+            var users = from user in _userManager.Users
+                        .Include(s => s.LibraryCard)
+                        .Include(s => s.UserRoles)
+                        .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                        select user;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                users = users
+                    .Where(s => s.Email.Contains(searchString)
+                || s.FirstName.Contains(searchString)
+                || s.Lastname.Contains(searchString)
+                //|| Convert.ToString(s.PhoneNumber).Contains(searchString)
+                || Convert.ToString(s.LibraryCard.Id).Contains(searchString));
+
+                return await users.ToListAsync();
+            }
+
+            return await GetUsers();
+        }
+
         public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = await _userManager.GetUsersInRoleAsync(EnumRoles.Member.ToString());
-            //var users = await _context.Users.Include(p => p.ProfilePicture)
-            //    .Include(c => c.LibraryCard)
-            //    .Include(c => c.UserRoles)
-            //    .OrderBy(u => u.Lastname).ToListAsync();
+            var users = await _userManager.Users
+                .Include(p => p.ProfilePicture)
+                .Include(c => c.LibraryCard)
+                .Include(c => c.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                .OrderBy(u => u.Lastname).ToListAsync();
+
+            return users;
+        }
+
+        public async Task<IEnumerable<User>> GetAdmins()
+        {
+            var users = await _userManager.Users.Include(p => p.ProfilePicture)
+                .Include(c => c.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Role.Name != EnumRoles.Member.ToString()))
+                .OrderBy(u => u.Lastname).ToListAsync();
 
             return users;
         }

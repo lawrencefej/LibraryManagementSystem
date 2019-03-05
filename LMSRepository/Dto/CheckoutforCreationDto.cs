@@ -1,12 +1,13 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using System;
 
-namespace LMSLibrary.Dto
+namespace LMSRepository.Interfaces.Dto
 {
     public class CheckoutForCreationDto
     {
         public int LibraryAssetId { get; set; }
         public int LibraryCardId { get; set; }
+        public int userId { get; set; }
         public DateTime Since { get; set; }
         public DateTime Until { get; set; }
         public Status Status { get; set; }

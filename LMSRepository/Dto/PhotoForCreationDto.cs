@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 
-namespace LMSLibrary.Dto
+namespace LMSRepository.Interfaces.Dto
 {
     public class PhotoForCreationDto
     {

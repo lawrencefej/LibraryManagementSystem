@@ -1,9 +1,9 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces
 {
     public interface ILibraryAssetRepository
     {

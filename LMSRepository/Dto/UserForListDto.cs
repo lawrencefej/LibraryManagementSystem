@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LMSLibrary.Dto
+namespace LMSRepository.Interfaces.Dto
 {
     public class UserForListDto
     {
@@ -13,5 +13,6 @@ namespace LMSLibrary.Dto
         public DateTime Created { get; set; }
         public DateTime LastActive { get; set; }
         public string PhotoUrl { get; set; }
+        public int LibraryCardNumber { get; set; }
     }
 }

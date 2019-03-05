@@ -1,8 +1,8 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Interfaces.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces
 {
     public interface ILibraryCardRepository
     {
@@ -11,6 +11,6 @@ namespace LMSLibrary.DataAccess
 
         Task<LibraryCard> GetCard(int id);
 
-        Task<LibraryCard> GetMemberCard(int id);
+        Task<LibraryCard> GetMemberCard(int userId);
     }
 }

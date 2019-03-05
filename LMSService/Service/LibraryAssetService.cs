@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSService.Exceptions;
@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LMSRepository.Interfaces;
 
 namespace LMSService.Service
 {

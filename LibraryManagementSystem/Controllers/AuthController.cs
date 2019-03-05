@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Dto;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.Dto;
+using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -84,7 +84,14 @@ namespace LibraryManagementSystem.API.Controllers
                 var appUser = await _userManager.Users.Include(p => p.ProfilePicture)
                     .FirstOrDefaultAsync(u => u.NormalizedEmail == userForLoginDto.Email.ToUpper());
 
-                var userToReturn = _mapper.Map<UserForListDto>(appUser);
+                var userToReturn = _mapper.Map<UserForDetailedDto>(appUser);
+
+                var roles = await _userManager.GetRolesAsync(user);
+
+                foreach (var role in roles)
+                {
+                    userToReturn.Role = role;
+                }
 
                 return Ok(new
                 {

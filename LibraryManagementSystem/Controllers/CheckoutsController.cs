@@ -1,4 +1,4 @@
-﻿using LMSLibrary.Dto;
+﻿using LMSRepository.Interfaces.Dto;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
-    //[Route("api/catalog/{assetId}/[controller]")]
     [Authorize(Policy = "RequireLibrarianRole")]
     [Route("api/[controller]")]
-    //[AllowAnonymous]
     [ApiController]
     public class CheckoutsController : ControllerBase
     {
@@ -20,24 +18,6 @@ namespace LibraryManagementSystem.API.Controllers
             _checkoutService = checkoutService;
         }
 
-        // GET: api/Checkouts
-        [HttpGet]
-        public async Task<ActionResult> GetCheckouts()
-        {
-            var checkouts = await _checkoutService.GetAllCheckouts();
-
-            return Ok(checkouts);
-        }
-
-        // GET: api/Checkouts/5
-        [HttpGet("{id}", Name = "GetCheckout")]
-        public async Task<ActionResult> GetCheckout(int id)
-        {
-            var checkout = await _checkoutService.GetCheckout(id);
-
-            return Ok(checkout);
-        }
-
         // PUT: api/Checkouts/5
         [HttpPut("{id}")]
         public async Task<IActionResult> CheckInAsset(int id)
@@ -45,6 +25,21 @@ namespace LibraryManagementSystem.API.Controllers
             await _checkoutService.CheckInAsset(id);
 
             return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
+        {
+            var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+
+            if (!result.Valid)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return CreatedAtRoute("GetCheckout", new { id = result.Id }, result.Result);
+
+            //return NoContent();
         }
 
         [HttpPut("reserve/{id}")]
@@ -60,17 +55,46 @@ namespace LibraryManagementSystem.API.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
+        // GET: api/Checkouts/5
+        [HttpGet("{id}", Name = "GetCheckout")]
+        public async Task<ActionResult> GetCheckout(int id)
         {
-            var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+            var checkout = await _checkoutService.GetCheckout(id);
 
-            if (!result.Valid)
-            {
-                return BadRequest(result.Errors);
-            }
+            return Ok(checkout);
+        }
 
-            return NoContent();
+        // GET: api/Checkouts
+        [HttpGet]
+        public async Task<ActionResult> GetCheckouts()
+        {
+            var checkouts = await _checkoutService.GetAllCheckouts();
+
+            return Ok(checkouts);
+        }
+
+        [HttpGet("asset/{libraryAssetId}")]
+        public async Task<ActionResult> GetCheckoutsForAsset(int libraryAssetId)
+        {
+            var checkouts = await _checkoutService.GetCheckoutsForAsset(libraryAssetId);
+
+            return Ok(checkouts);
+        }
+
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult> GetCheckoutsForMember(int userId)
+        {
+            var checkouts = await _checkoutService.GetCheckoutsForMember(userId);
+
+            return Ok(checkouts);
+        }
+
+        [HttpGet("search/")]
+        public async Task<IActionResult> SearchCheckouts([FromQuery]string searchString)
+        {
+            var checkouts = await _checkoutService.SearchCheckouts(searchString);
+
+            return Ok(checkouts);
         }
     }
 }

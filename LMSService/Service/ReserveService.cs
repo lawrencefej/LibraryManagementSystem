@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using LMSLibrary.DataAccess;
-using LMSLibrary.Dto;
-using LMSLibrary.Models;
+using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Interfaces.Dto;
+using LMSRepository.Interfaces.Models;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSService.Exceptions;
@@ -130,21 +130,33 @@ namespace LMSService.Service
             return reservesToReturn;
         }
 
-        public async Task<ResponseHandler> ReserveAsset(int userId, ReserveForCreationDto reserveforForCreationDto)
+        public async Task<ResponseHandler> ReserveAsset(int userId, int assetId)
         {
+            // TODO refine this method and the validation
             var libraryCard = await _checkoutService.GetMemberLibraryCard(userId);
-            var libraryAsset = await _checkoutService.GetLibraryAsset(reserveforForCreationDto.LibraryAssetId);
+            var libraryAsset = await _checkoutService.GetLibraryAsset(assetId);
 
-            reserveforForCreationDto.AssetStatus = libraryAsset.Status.Name;
-            reserveforForCreationDto.Fees = libraryCard.Fees;
-            reserveforForCreationDto.LibraryCardId = libraryCard.Id;
-            reserveforForCreationDto.CurrentReserveCount = await _reserveRepo.GetMemberCurrentReserveAmount(libraryCard.Id);
+            var reserves = await _reserveRepo.GetReservesForMember(libraryCard.Id);
+
+            if (reserves.Any(a => a.LibraryAssetId == libraryAsset.Id))
+            {
+                throw new LMSValidationException($"you have already reserved {libraryAsset.Title}");
+            }
+
+            var reserve = new ReserveForCreationDto
+            {
+                LibraryAssetId = libraryAsset.Id,
+                AssetStatus = libraryAsset.Status.Name,
+                Fees = libraryCard.Fees,
+                LibraryCardId = libraryCard.Id,
+                CurrentReserveCount = await _reserveRepo.GetMemberCurrentReserveAmount(libraryCard.Id)
+            };
 
             var validate = new ReserveValidation();
-            var result = await validate.ValidateAsync(reserveforForCreationDto);
+            var result = await validate.ValidateAsync(reserve);
 
             var errors = new List<string>();
-            ResponseHandler response = new ResponseHandler(reserveforForCreationDto, errors);
+            ResponseHandler response = new ResponseHandler(reserve, errors);
 
             if (!result.IsValid)
             {
@@ -157,11 +169,11 @@ namespace LMSService.Service
 
             _checkoutService.ReduceAssetCopiesAvailable(libraryAsset);
 
-            var reserve = _mapper.Map<ReserveAsset>(reserveforForCreationDto);
+            var reserveAsset = _mapper.Map<ReserveAsset>(reserve);
 
-            reserve.StatusId = (int)EnumStatus.Reserved;
+            reserveAsset.StatusId = (int)EnumStatus.Reserved;
 
-            _libraryRepo.Add(reserve);
+            _libraryRepo.Add(reserveAsset);
 
             if (await _libraryRepo.SaveAll())
             {

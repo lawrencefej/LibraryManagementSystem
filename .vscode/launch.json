@@ -11,7 +11,7 @@
            "preLaunchTask": "build",
            "program": "${workspaceFolder}/LibraryManagementSystem/bin/Debug/netcoreapp2.2/LibraryManagementSystem.dll",
            "args": [],
-           "cwd": "${workspaceFolder}",
+           "cwd": "${workspaceFolder}/LibraryManagementSystem",
            "stopAtEntry": false,
            "console": "internalConsole"
        }

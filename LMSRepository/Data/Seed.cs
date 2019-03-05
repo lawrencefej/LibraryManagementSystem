@@ -1,10 +1,11 @@
-﻿using LMSLibrary.Models;
+﻿using LMSRepository.Data;
+using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LMSLibrary.DataAccess
+namespace LMSRepository.Interfaces.DataAccess
 {
     public class Seed
     {
