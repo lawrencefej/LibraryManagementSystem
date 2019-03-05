@@ -39,7 +39,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpDelete("{assetId}")]
-        public async Task<IActionResult> DeleteLibararyAsset(int userId, int assetId)
+        public async Task<IActionResult> DeleteLibraryAsset(int userId, int assetId)
         {
             if (!IsCurrentuser(userId))
             {
