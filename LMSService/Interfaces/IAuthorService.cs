@@ -8,7 +8,7 @@ namespace LMSService.Interfaces
 {
     public interface IAuthorService
     {
-        Task AddAuthor(AuthorDto authorDto);
+        Task<AuthorDto> AddAuthor(AuthorDto authorDto);
 
         Task DeleteAuthor(int authorId);
 

@@ -117,6 +117,9 @@ namespace LibraryManagementSystem.API
             services.AddScoped<IReserveRepository, ReserveRepository>();
             services.AddScoped<ILibraryAssestService, LibraryAssetService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+
             services.AddScoped<LogUserActivity>();
         }
 
