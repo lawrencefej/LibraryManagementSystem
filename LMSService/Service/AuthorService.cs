@@ -17,13 +17,16 @@ namespace LMSService.Service
         private readonly IMapper _mapper;
         private readonly ILibraryRepository _libraryRepository;
         private readonly ILogger<AuthorService> _logger;
+        private readonly ILibraryAssetRepository _libraryAssetRepository;
 
-        public AuthorService(IAuthorRepository authorRepository, IMapper mapper, ILibraryRepository libraryRepository, ILogger<AuthorService> logger)
+        public AuthorService(IAuthorRepository authorRepository, IMapper mapper, ILibraryRepository libraryRepository,
+            ILogger<AuthorService> logger, ILibraryAssetRepository libraryAssetRepository)
         {
             _authorRepository = authorRepository;
             _mapper = mapper;
             _libraryRepository = libraryRepository;
             _logger = logger;
+            _libraryAssetRepository = libraryAssetRepository;
         }
 
         public async Task<AuthorDto> AddAuthor(AuthorDto authorDto)
@@ -79,6 +82,11 @@ namespace LMSService.Service
             return;
         }
 
+        //public Task<LibraryAssetForListDto> GetAssetsForAuthor(int authorId)
+        //{
+        //    var assets = _libraryAssetRepository.get
+        //}
+
         public async Task<AuthorDto> GetAuthor(int authorId)
         {
             var author = await _authorRepository.GetAuthor(authorId);
@@ -97,7 +105,7 @@ namespace LMSService.Service
             return authorsToReturn;
         }
 
-        public async Task<IEnumerable<AuthorDto>> SearchLibraryAsset(string searchString)
+        public async Task<IEnumerable<AuthorDto>> SearchAuthors(string searchString)
         {
             var authors = await _authorRepository.SearchAuthor(searchString);
 

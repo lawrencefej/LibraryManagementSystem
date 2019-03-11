@@ -27,6 +27,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
 using LMSRepository.Data;
+using LibraryManagementSystem.Models;
 
 namespace LibraryManagementSystem.API
 {
@@ -119,8 +120,15 @@ namespace LibraryManagementSystem.API
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IAssetTypeService, AssetTypeService>();
+            services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
 
             services.AddScoped<LogUserActivity>();
+
+            services.AddDbContext<LibraryManagementSystemContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("LibraryManagementSystemContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

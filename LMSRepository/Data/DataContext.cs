@@ -21,6 +21,7 @@ namespace LMSRepository.Data
         public DbSet<LibraryCard> LibraryCards { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<Category> Category { get; set; }
         public DbSet<ReserveAsset> ReserveAssets { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<AssetPhoto> AssetPhotos { get; set; }

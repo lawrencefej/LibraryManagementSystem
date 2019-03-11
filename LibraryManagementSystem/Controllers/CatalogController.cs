@@ -22,20 +22,13 @@ namespace LibraryManagementSystem.API.Controllers
             _logger = logger;
         }
 
-        // DELETE: api/Catalog/5
-        [HttpPost("{userId}")]
-        public async Task<ActionResult> AddLibraryAsset(int userId, LibraryAssetForCreationDto libraryAssetForCreation)
+        [HttpPost]
+        public async Task<ActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
+            var asset = await _libraryAssestService.AddAsset(libraryAssetForCreation);
 
-            await _libraryAssestService.AddAsset(libraryAssetForCreation);
-
-            _logger.LogInformation($"{userId} added {libraryAssetForCreation.Title}");
-
-            return NoContent();
+            //_logger.LogInformation($"{userId} added {libraryAssetForCreation.Title}");
+            return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, asset);
         }
 
         [HttpDelete("{assetId}")]
@@ -64,9 +57,9 @@ namespace LibraryManagementSystem.API.Controllers
             return NoContent();
         }
 
-        // GET: api/Catalog/5
         [AllowAnonymous]
-        [HttpGet("{assetId}")]
+        //[HttpGet("{assetId}", Name = "GetAsset")]
+        [HttpGet("{assetId}", Name = nameof(GetLibraryAsset))]
         public async Task<ActionResult> GetLibraryAsset(int assetId)
         {
             var libraryAsset = await _libraryAssestService.GetAsset(assetId);
@@ -81,14 +74,13 @@ namespace LibraryManagementSystem.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("search/")]
-        public async Task<IActionResult> SearchLibraryAsset([FromQuery]string searchAsset)
+        public async Task<IActionResult> SearchLibraryAsset([FromQuery]string searchString)
         {
-            var assets = await _libraryAssestService.SearchLibraryAsset(searchAsset);
+            var assets = await _libraryAssestService.SearchLibraryAsset(searchString);
 
             return Ok(assets);
         }
 
-        // GET: api/Catalog
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult> GetLibraryAssets()
@@ -96,6 +88,19 @@ namespace LibraryManagementSystem.API.Controllers
             var assets = await _libraryAssestService.GetAllAssets();
 
             return Ok(assets);
+        }
+
+        [HttpGet("author/{authorId}")]
+        public async Task<ActionResult> GetAssetForAuthor(int authorId)
+        {
+            var libraryAsset = await _libraryAssestService.GetAssetsByAuthor(authorId);
+
+            if (libraryAsset == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(libraryAsset);
         }
 
         private bool IsCurrentuser(int id)
