@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
@@ -28,7 +27,7 @@ namespace LMSService.Service
             _logger = logger;
         }
 
-        public async Task AddAsset(LibraryAssetForCreationDto libraryAssetForCreation)
+        public async Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
             if (libraryAssetForCreation == null)
             {
@@ -47,8 +46,13 @@ namespace LMSService.Service
                 throw new Exception($"Creating {asset.Title} failed on save");
             }
 
+            //var assetToReturn = _mapper.Map<LibraryAssetForListDto>(asset);
+
+            var assetToReturn = await GetAsset(asset.Id);
+
             _logger.LogInformation($"added {libraryAssetForCreation.Title}");
-            return;
+
+            return assetToReturn;
         }
 
         public async Task DeleteAsset(int assetId)

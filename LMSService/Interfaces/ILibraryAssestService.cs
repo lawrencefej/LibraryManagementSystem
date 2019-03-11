@@ -6,7 +6,7 @@ namespace LMSService.Interfaces
 {
     public interface ILibraryAssestService
     {
-        Task AddAsset(LibraryAssetForCreationDto libraryAssetForCreation);
+        Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation);
 
         Task DeleteAsset(int assetId);
 

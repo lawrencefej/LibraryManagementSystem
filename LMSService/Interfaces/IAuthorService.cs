@@ -1,7 +1,5 @@
 ﻿using LMSRepository.Dto;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LMSService.Interfaces
@@ -18,6 +16,6 @@ namespace LMSService.Interfaces
 
         Task<AuthorDto> GetAuthor(int authorId);
 
-        Task<IEnumerable<AuthorDto>> SearchLibraryAsset(string searchString);
+        Task<IEnumerable<AuthorDto>> SearchAuthors(string searchString);
     }
 }

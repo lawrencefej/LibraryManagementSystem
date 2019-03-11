@@ -62,5 +62,13 @@ namespace LibraryManagementSystem.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("search/")]
+        public async Task<IActionResult> SearchAuthors([FromQuery]string searchString)
+        {
+            var assets = await _authorService.SearchAuthors(searchString);
+
+            return Ok(assets);
+        }
     }
 }
