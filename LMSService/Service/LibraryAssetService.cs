@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using LMSRepository.Interfaces.Models;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
+using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.Models;
 using LMSService.Exceptions;
 using LMSService.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LMSRepository.Interfaces;
 
 namespace LMSService.Service
 {

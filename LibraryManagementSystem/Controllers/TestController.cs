@@ -1,5 +1,4 @@
 ﻿using LMSRepository.Data;
-using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

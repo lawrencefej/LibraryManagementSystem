@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API.Helpers;
+using LibraryManagementSystem.Models;
+using LMSRepository.Data;
+using LMSRepository.DataAccess;
+using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Helpers;
 using LMSRepository.Interfaces.Models;
-using LMSRepository.DataAccess;
-using LMSRepository.Interfaces;
 using LMSService.Exceptions;
 using LMSService.Interfaces;
 using LMSService.Service;
@@ -26,8 +28,6 @@ using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
-using LMSRepository.Data;
-using LibraryManagementSystem.Models;
 
 namespace LibraryManagementSystem.API
 {

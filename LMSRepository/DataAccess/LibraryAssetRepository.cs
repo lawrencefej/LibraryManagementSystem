@@ -1,12 +1,12 @@
-﻿using LMSRepository.Interfaces.Models;
+﻿using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
+using LMSRepository.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LMSRepository.Data;
 
 namespace LMSRepository.Interfaces.DataAccess
 {
