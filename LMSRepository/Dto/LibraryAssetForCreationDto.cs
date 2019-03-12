@@ -11,6 +11,7 @@ namespace LMSRepository.Dto
         public int CopiesAvailable { get; set; }
         public decimal Cost { get; set; }
         public string Description { get; set; }
+        public string Isbn { get; set; }
         public int NumberOfCopies { get; set; }
         public string Title { get; set; }
         public int Year { get; set; }
