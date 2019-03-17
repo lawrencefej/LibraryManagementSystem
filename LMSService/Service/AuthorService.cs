@@ -82,11 +82,6 @@ namespace LMSService.Service
             return;
         }
 
-        //public Task<LibraryAssetForListDto> GetAssetsForAuthor(int authorId)
-        //{
-        //    var assets = _libraryAssetRepository.get
-        //}
-
         public async Task<AuthorDto> GetAuthor(int authorId)
         {
             var author = await _authorRepository.GetAuthor(authorId);

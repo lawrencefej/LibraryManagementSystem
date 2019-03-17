@@ -141,6 +141,15 @@ namespace LibraryManagementSystem.Controllers
             return Ok(users);
         }
 
+        [Authorize(Policy = Role.RequireLibrarianRole)]
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteAuthor(int userId)
+        {
+            await _userService.DeleteUser(userId);
+
+            return NoContent();
+        }
+
         private bool IsCurrentuser(int id)
         {
             var currentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

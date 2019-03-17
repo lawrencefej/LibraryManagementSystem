@@ -14,11 +14,13 @@ namespace LMSService.Service
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
+        private readonly ILibraryRepository _libraryRepository;
 
-        public UserService(IUserRepository userRepo, IMapper mapper)
+        public UserService(IUserRepository userRepo, IMapper mapper, ILibraryRepository libraryRepository)
         {
             _userRepo = userRepo;
             _mapper = mapper;
+            _libraryRepository = libraryRepository;
         }
 
         public async Task<UserForDetailedDto> GetUser(int userId)
@@ -92,6 +94,21 @@ namespace LMSService.Service
             }
 
             throw new Exception($"Updating user failed on save");
+        }
+
+        public async Task DeleteUser(int userId)
+        {
+            //TODO add logs
+            var user = await _userRepo.GetUser(userId);
+
+            _libraryRepository.Delete(user);
+
+            if (await _libraryRepository.SaveAll())
+            {
+                return;
+            }
+
+            throw new Exception($"Deleting {user.Id} failed on save");
         }
     }
 }

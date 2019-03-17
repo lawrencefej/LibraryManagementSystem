@@ -20,5 +20,7 @@ namespace LMSService.Interfaces
         Task<IEnumerable<UserForListDto>> SearchUsers(string searchString);
 
         Task UpdateUser(UserForUpdateDto userForUpdate);
+
+        Task DeleteUser(int userId);
     }
 }
