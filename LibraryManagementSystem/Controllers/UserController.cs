@@ -143,7 +143,7 @@ namespace LibraryManagementSystem.Controllers
 
         [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteAuthor(int userId)
+        public async Task<IActionResult> DeleteUser(int userId)
         {
             await _userService.DeleteUser(userId);
 
