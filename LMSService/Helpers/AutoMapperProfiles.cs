@@ -60,6 +60,10 @@ namespace LibraryManagementSystem.API.Helpers
                     {
                         opt.MapFrom(src => src.Status.Name);
                     })
+                    .ForMember(dest => dest.Category, opt =>
+                    {
+                        opt.MapFrom(src => src.Category.Name);
+                    })
                     .ForMember(dest => dest.AuthorName, opt =>
                     {
                         opt.MapFrom(src => src.Author.FullName);

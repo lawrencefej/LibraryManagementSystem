@@ -16,7 +16,9 @@ namespace LMSRepository.Dto
         public string Description { get; set; }
         public string AssetType { get; set; }
         public string AuthorName { get; set; }
+        public int AuthorId { get; set; }
         public string ISBN { get; set; }
         public string DeweyIndex { get; set; }
+        public string Category { get; set; }
     }
 }

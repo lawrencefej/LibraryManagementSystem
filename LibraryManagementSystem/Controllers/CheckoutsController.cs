@@ -18,7 +18,6 @@ namespace LibraryManagementSystem.API.Controllers
             _checkoutService = checkoutService;
         }
 
-        // PUT: api/Checkouts/5
         [HttpPut("{id}")]
         public async Task<IActionResult> CheckInAsset(int id)
         {
@@ -38,8 +37,6 @@ namespace LibraryManagementSystem.API.Controllers
             }
 
             return CreatedAtRoute("GetCheckout", new { id = result.Id }, result.Result);
-
-            //return NoContent();
         }
 
         [HttpPut("reserve/{id}")]
@@ -55,7 +52,6 @@ namespace LibraryManagementSystem.API.Controllers
             return BadRequest();
         }
 
-        // GET: api/Checkouts/5
         [HttpGet("{id}", Name = "GetCheckout")]
         public async Task<ActionResult> GetCheckout(int id)
         {
@@ -64,7 +60,6 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(checkout);
         }
 
-        // GET: api/Checkouts
         [HttpGet]
         public async Task<ActionResult> GetCheckouts()
         {
