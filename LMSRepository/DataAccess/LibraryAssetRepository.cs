@@ -25,6 +25,7 @@ namespace LMSRepository.Interfaces.DataAccess
         {
             var asset = await _context.LibraryAssets
                 .Include(p => p.Photo)
+                .Include(p => p.Category)
                 .Include(a => a.AssetType)
                 .Include(s => s.Status)
                 .Include(s => s.Author)

@@ -8,8 +8,10 @@ namespace LMSRepository.Interfaces.Models
         public LibraryAsset LibraryAsset { get; set; }
         public LibraryCard LibraryCard { get; set; }
         public DateTime Since { get; set; }
+
         public DateTime Until { get; set; }
         public int LibraryAssetId { get; set; }
+
         public int LibraryCardId { get; set; }
         public bool IsReturned { get; set; }
         public DateTime? DateReturned { get; set; }

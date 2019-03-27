@@ -75,6 +75,11 @@ namespace LMSService.Service
 
             _mapper.Map(libraryAssetForUpdate, asset);
 
+            if (asset.CopiesAvailable > 0)
+            {
+                asset.StatusId = (int)EnumStatus.Available;
+            }
+
             if (!await _libraryRepo.SaveAll())
             {
                 throw new Exception($"Updating {asset.Title} failed on save");

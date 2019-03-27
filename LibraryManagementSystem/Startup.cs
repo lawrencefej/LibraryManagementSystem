@@ -79,7 +79,6 @@ namespace LibraryManagementSystem.API
                 options.AddPolicy(Role.RequireLibrarianRole, policy => policy.RequireRole(Role.Admin, Role.Librarian));
                 options.AddPolicy(Role.RequireMemberRole, policy => policy.RequireRole(Role.Admin, Role.Librarian, Role.Member));
             });
-
             services.AddMvc(Options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -137,7 +136,7 @@ namespace LibraryManagementSystem.API
             if (env.IsDevelopment())
             {
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
                 //app.ConfigureCustomExceptionMiddleware();
             }
             else
