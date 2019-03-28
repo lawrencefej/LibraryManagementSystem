@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
+using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Dto;
 using LMSService.Interfaces;
@@ -79,6 +80,14 @@ namespace LibraryManagementSystem.Controllers
             await _userService.UpdateUser(userForUpdateDto);
 
             return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(MemberForCreation memberForCreation)
+        {
+            var member = await _userService.AddMember(memberForCreation);
+
+            return CreatedAtRoute("GetUser", new { id = member.Id }, member);
         }
 
         [HttpGet("{id}/checkouthistory")]

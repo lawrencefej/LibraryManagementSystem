@@ -17,6 +17,8 @@ namespace LMSRepository.Interfaces.Models
         public string Zipcode { get; set; }
         public UserProfilePhoto ProfilePicture { get; set; }
         public LibraryCard LibraryCard { get; set; }
+
+        //public int? LibraryCardId { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
     }
 }

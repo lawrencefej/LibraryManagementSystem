@@ -21,6 +21,8 @@ namespace LMSService.Interfaces
 
         Task UpdateUser(UserForUpdateDto userForUpdate);
 
+        Task<UserForDetailedDto> AddMember(MemberForCreation memberForCreation);
+
         Task DeleteUser(int userId);
     }
 }

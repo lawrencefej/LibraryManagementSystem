@@ -7,6 +7,7 @@ namespace LMSRepository.Interfaces.Dto
         public int CardNumber { get; set; }
         public decimal Fees { get; set; }
         public DateTime Created { get; set; }
+        public int UserId { get; set; }
 
         public LibraryCardForCreationDto()
         {
