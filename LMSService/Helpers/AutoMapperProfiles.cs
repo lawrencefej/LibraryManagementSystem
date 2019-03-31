@@ -2,6 +2,7 @@
 using LMSRepository.Dto;
 using LMSRepository.Interfaces.Dto;
 using LMSRepository.Interfaces.Models;
+using System.Linq;
 
 namespace LibraryManagementSystem.API.Helpers
 {
@@ -35,6 +36,10 @@ namespace LibraryManagementSystem.API.Helpers
                      {
                          opt.MapFrom(src => src.LibraryCard.Fees);
                      })
+                    //.ForMember(dest => dest.Role, opt =>
+                    //{
+                    //    opt.MapFrom(src => src.UserRoles);
+                    //})
                     .ForMember(dest => dest.Age, opt =>
                     {
                         opt.MapFrom(d => d.DateOfBirth.CalculateAge());
@@ -112,6 +117,20 @@ namespace LibraryManagementSystem.API.Helpers
                      {
                          opt.MapFrom(src => src.LibraryAsset.Title);
                      });
+            CreateMap<UserRole, UserRoleDto>()
+                    .ForMember(dest => dest.Id, opt =>
+                    {
+                        opt.MapFrom(src => src.Role.Id);
+                    })
+                    .ForMember(dest => dest.Name, opt =>
+                    {
+                        opt.MapFrom(src => src.Role.Name);
+                    })
+                    .ForMember(dest => dest.NormalizedName, opt =>
+                    {
+                        opt.MapFrom(src => src.Role.NormalizedName);
+                    });
+            CreateMap<RoleDto, Role>();
         }
     }
 }

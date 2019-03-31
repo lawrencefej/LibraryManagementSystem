@@ -123,6 +123,8 @@ namespace LibraryManagementSystem.API
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IAssetTypeService, AssetTypeService>();
             services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IAdminService, AdminService>();
 
             services.AddScoped<LogUserActivity>();
 

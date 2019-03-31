@@ -2,14 +2,21 @@
 using LMSRepository.Data;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Helpers;
-using LMSRepository.Interfaces.Models;
+using LMSService.Interfaces;
+using LibraryManagementSystem.API.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using LMSRepository.Interfaces.Models;
+using System.Linq;
+using LMSRepository.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.API.Controllers
 {
+    [Authorize(Policy = Helpers.Role.RequireLibrarianRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -19,12 +26,13 @@ namespace LibraryManagementSystem.API.Controllers
         private readonly IUserRepository _userRepo;
         private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
         private Cloudinary _cloudinary;
+        private readonly IAdminService _adminService;
 
         public AdminController(
             DataContext context,
             UserManager<User> userManager,
             IUserRepository userRepo,
-            IOptions<CloudinarySettings> cloudinaryConfig)
+            IOptions<CloudinarySettings> cloudinaryConfig, IAdminService adminService)
         {
             _context = context;
             _userManager = userManager;
@@ -38,13 +46,16 @@ namespace LibraryManagementSystem.API.Controllers
             );
 
             _cloudinary = new Cloudinary(acc);
+            _adminService = adminService;
         }
 
-        // GET: api/Admin
+        //[Authorize(Policy = Helpers.Role.RequireLibrarianRole)]
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var users = await _adminService.GetAdminUsers();
+
+            return Ok(users);
         }
 
         // GET: api/Admin/5
@@ -70,6 +81,36 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [HttpGet("admins")]
+        public async Task<IActionResult> GetAdmins()
+        {
+            //var users = await _userManager.Users
+            //    .Include(p => p.ProfilePicture)
+            //    .Include(c => c.UserRoles)
+            //        .ThenInclude(ur => ur.Role)
+            //    //.Where(u => u.UserRoles.Any(r => r.Role.Name. == (nameof(EnumRoles.Admin) || nameof(EnumRoles.Librarian))))
+            //    .Where(u => u.UserRoles.Any(r => r.Role.Name != (nameof(EnumRoles.Member))))
+            //    .OrderBy(u => u.Lastname).ToListAsync();
+
+            //return Ok(users);
+
+            var userList = await (from user in _context.Users
+                                  orderby user.UserName
+                                  select new
+                                  {
+                                      Id = user.Id,
+                                      UserName = user.UserName,
+                                      Test = (_context.UserRoles.Where(r => r.UserId == user.Id).Select(a => a.Role.Name)),
+                                      Roles = (from userRole in user.UserRoles
+                                               join role in _context.Roles
+                                               on userRole.RoleId
+                                               equals role.Id
+                                               select role.Name)
+                                  }).ToListAsync();
+
+            return Ok(userList);
         }
     }
 }
