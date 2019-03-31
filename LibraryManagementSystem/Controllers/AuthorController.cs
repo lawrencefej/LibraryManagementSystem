@@ -1,5 +1,5 @@
 ﻿using LMSRepository.Dto;
-using LMSService.Interfaces;
+using LMSService.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

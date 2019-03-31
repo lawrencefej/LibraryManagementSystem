@@ -1,6 +1,6 @@
 ﻿using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Models;
-using LMSService.Interfaces;
+using LMSService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

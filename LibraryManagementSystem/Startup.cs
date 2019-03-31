@@ -9,7 +9,7 @@ using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Helpers;
 using LMSRepository.Interfaces.Models;
 using LMSService.Exceptions;
-using LMSService.Interfaces;
+using LMSService.Dto;
 using LMSService.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

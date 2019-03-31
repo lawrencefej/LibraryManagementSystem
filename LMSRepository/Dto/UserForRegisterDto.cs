@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace LMSRepository.Interfaces.Dto
+namespace LMSRepository.Dto
 {
     public class UserForRegisterDto
     {

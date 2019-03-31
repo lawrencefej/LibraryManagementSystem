@@ -1,7 +1,7 @@
 ﻿using LMSRepository.Interfaces.Models;
 using System;
 
-namespace LMSRepository.Interfaces.Dto
+namespace LMSRepository.Dto
 {
     public class CheckoutForCreationDto
     {
