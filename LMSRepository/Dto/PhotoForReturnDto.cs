@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LMSRepository.Interfaces.Dto
+namespace LMSRepository.Dto
 {
     public class PhotoForReturnDto
     {

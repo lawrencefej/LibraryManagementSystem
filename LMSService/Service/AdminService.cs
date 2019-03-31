@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Dto;
-using LMSService.Interfaces;
+using LMSService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace LMSService.Service
             _mapper = mapper;
         }
 
-        public Task<UserForDetailedDto> CreateAdminUser()
+        public Task<UserForDetailedDto> CreateAdminUser(AddAdminDto addAdminDto)
         {
             throw new NotImplementedException();
         }
@@ -34,8 +34,6 @@ namespace LMSService.Service
         public async Task<IEnumerable<UserForDetailedDto>> GetAdminUsers()
         {
             var users = await _adminRepository.GetAdminUsers();
-
-            //var role = new RoleDto();
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
 

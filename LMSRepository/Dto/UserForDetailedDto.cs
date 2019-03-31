@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LMSRepository.Interfaces.Dto
+namespace LMSRepository.Dto
 {
     public class UserForDetailedDto
     {

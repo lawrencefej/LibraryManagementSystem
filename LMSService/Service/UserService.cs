@@ -5,7 +5,7 @@ using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Dto;
 using LMSRepository.Interfaces.Models;
 using LMSService.Exceptions;
-using LMSService.Interfaces;
+using LMSService.Dto;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿using LibraryManagementSystem.API.Helpers;
-using LMSService.Interfaces;
+using LMSService.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

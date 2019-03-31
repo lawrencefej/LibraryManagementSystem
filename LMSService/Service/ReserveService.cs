@@ -5,7 +5,7 @@ using LMSRepository.Interfaces.Dto;
 using LMSRepository.Interfaces.Models;
 using LMSService.Exceptions;
 using LMSService.Helpers;
-using LMSService.Interfaces;
+using LMSService.Dto;
 using LMSService.Validators;
 using Microsoft.Extensions.Logging;
 using System;
