@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LMSRepository.Dto;
+using System;
+using System.Collections.Generic;
 
 namespace LMSRepository.Interfaces.Dto
 {
@@ -22,5 +24,6 @@ namespace LMSRepository.Interfaces.Dto
         public decimal Fees { get; set; }
         public string Role { get; set; }
         public string Token { get; set; }
+        public ICollection<UserRoleDto> UserRoles { get; set; }
     }
 }
