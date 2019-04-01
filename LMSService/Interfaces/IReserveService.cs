@@ -1,4 +1,4 @@
-﻿using LMSRepository.Interfaces.Dto;
+﻿using LMSRepository.Dto;
 using LMSRepository.Interfaces.Models;
 using LMSService.Helpers;
 using System.Collections.Generic;

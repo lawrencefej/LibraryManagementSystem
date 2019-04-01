@@ -46,6 +46,7 @@ namespace LibraryManagementSystem.API.Helpers
                     });
             CreateMap<UserForUpdateDto, User>();
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<AddAdminDto, User>();
             CreateMap<MemberForCreation, User>();
             CreateMap<LibraryCardForCreationDto, LibraryCard>();
             CreateMap<Photo, PhotoForDetailedDto>();

@@ -13,6 +13,7 @@ using LMSRepository.Interfaces.Models;
 using System.Linq;
 using LMSRepository.Helpers;
 using Microsoft.EntityFrameworkCore;
+using LMSRepository.Dto;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -58,6 +59,14 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(users);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetTest(AddAdminDto addAdminDto)
+        {
+            var user = await _adminService.CreateUser(addAdminDto);
+
+            return CreatedAtRoute("Get", new { id = user.Id }, user);
+        }
+
         // GET: api/Admin/5
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
@@ -66,10 +75,10 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         // POST: api/Admin
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        //{
+        //}
 
         // PUT: api/Admin/5
         [HttpPut("{id}")]
