@@ -11,5 +11,7 @@ namespace LMSRepository.Interfaces
         Task<User> CreateAdminUser();
 
         Task<User> GetAdminUser(int userId);
+
+        Task CreateUser(User user, string password, string role);
     }
 }

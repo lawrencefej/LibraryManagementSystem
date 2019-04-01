@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Dto;
 using LMSService.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using LMSRepository.Dto;
+using LMSRepository.Interfaces.Models;
 
 namespace LMSService.Service
 {
@@ -21,9 +21,25 @@ namespace LMSService.Service
             _mapper = mapper;
         }
 
-        public Task<UserForDetailedDto> CreateAdminUser(AddAdminDto addAdminDto)
+        public async Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto)
         {
-            throw new NotImplementedException();
+            addAdminDto.UserName = addAdminDto.Email.ToLower();
+
+            addAdminDto.Password = CreatePassword(addAdminDto.FirstName, addAdminDto.LastName);
+
+            var userToCreate = _mapper.Map<User>(addAdminDto);
+
+            await _adminRepository.CreateUser(userToCreate, addAdminDto.Password, addAdminDto.Role);
+
+            //addAdminDto.Id = userToCreate.Id;
+
+            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+
+            var role = userToReturn.UserRoles.ElementAt(0);
+
+            userToReturn.Role = role.Name;
+
+            return userToReturn;
         }
 
         public Task<UserForDetailedDto> GetAdminUser(int userId)
@@ -44,6 +60,17 @@ namespace LMSService.Service
             }
 
             return usersToReturn;
+        }
+
+        private static string CreatePassword(string fname, string lname)
+        {
+            var test = fname.Substring(0, 1).ToUpper();
+
+            var second = lname.ToLower();
+
+            var password = string.Concat(test, second, DateTime.Today.Year.ToString());
+
+            return password;
         }
     }
 }

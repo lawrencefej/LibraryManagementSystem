@@ -38,11 +38,16 @@ namespace LMSRepository.DataAccess
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.UserRoles)
                     .ThenInclude(ur => ur.Role)
-                //.Where(u => u.UserRoles.Any(r => r.Role.Name. == (nameof(EnumRoles.Admin) || nameof(EnumRoles.Librarian))))
                 .Where(u => u.UserRoles.Any(r => r.Role.Name != (nameof(EnumRoles.Member))))
                 .OrderBy(u => u.Lastname).ToListAsync();
 
             return users;
+        }
+
+        public async Task CreateUser(User user, string password, string role)
+        {
+            await _userManager.CreateAsync(user, password);
+            await _userManager.AddToRoleAsync(user, role);
         }
     }
 }

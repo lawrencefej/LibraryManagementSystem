@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LMSRepository.Data;
+using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Dto;
 using LMSRepository.Interfaces.Models;
@@ -30,7 +31,6 @@ namespace LibraryManagementSystem.API.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Library
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult> GetCheckouts()
@@ -46,7 +46,6 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(usersToReturn);
         }
 
-        // GET: api/Library/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Checkout>> GetCheckout(int id)
         {
@@ -60,7 +59,6 @@ namespace LibraryManagementSystem.API.Controllers
             return checkout;
         }
 
-        // PUT: api/Library/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCheckout(int id, Checkout checkout)
         {
@@ -90,7 +88,6 @@ namespace LibraryManagementSystem.API.Controllers
             return NoContent();
         }
 
-        // POST: api/Library
         [HttpPost]
         public async Task<ActionResult<Checkout>> PostCheckout(Checkout checkout)
         {
@@ -100,7 +97,6 @@ namespace LibraryManagementSystem.API.Controllers
             return CreatedAtAction("GetCheckout", new { id = checkout.Id }, checkout);
         }
 
-        // DELETE: api/Library/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Checkout>> DeleteCheckout(int id)
         {

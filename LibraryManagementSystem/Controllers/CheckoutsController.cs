@@ -1,4 +1,4 @@
-﻿using LMSRepository.Interfaces.Dto;
+﻿using LMSRepository.Dto;
 using LMSService.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
