@@ -6,12 +6,12 @@ namespace LMSRepository.Interfaces
 {
     public interface IAdminRepository
     {
-        Task<IEnumerable<User>> GetAdminUsers();
-
-        Task<User> CreateAdminUser();
+        Task<IEnumerable<User>> GetUsers();
 
         Task<User> GetAdminUser(int userId);
 
         Task CreateUser(User user, string password, string role);
+
+        Task UpdateUser(User user, string newRole);
     }
 }

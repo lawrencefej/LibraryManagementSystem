@@ -82,7 +82,7 @@ namespace LMSService.Service
             return usersToReturn;
         }
 
-        public async Task UpdateUser(UserForUpdateDto userForUpdate)
+        public async Task UpdateMember(UserForUpdateDto userForUpdate)
         {
             var user = await _userRepo.GetUser(userForUpdate.Id);
 
@@ -93,7 +93,7 @@ namespace LMSService.Service
 
             _mapper.Map(userForUpdate, user);
 
-            if (await _userRepo.SaveAll())
+            if (await _libraryRepository.SaveAll())
             {
                 return;
             }

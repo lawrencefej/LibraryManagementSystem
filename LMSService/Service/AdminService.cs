@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using LMSRepository.Dto;
 using LMSRepository.Interfaces.Models;
+using LMSService.Exceptions;
 
 namespace LMSService.Service
 {
@@ -14,11 +15,13 @@ namespace LMSService.Service
     {
         private readonly IAdminRepository _adminRepository;
         private readonly IMapper _mapper;
+        private readonly ILibraryRepository _libraryRepository;
 
-        public AdminService(IAdminRepository adminRepository, IMapper mapper)
+        public AdminService(IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository)
         {
             _adminRepository = adminRepository;
             _mapper = mapper;
+            _libraryRepository = libraryRepository;
         }
 
         public async Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto)
@@ -42,14 +45,18 @@ namespace LMSService.Service
             return userToReturn;
         }
 
-        public Task<UserForDetailedDto> GetAdminUser(int userId)
+        public async Task<UserForDetailedDto> GetAdminUser(int userId)
         {
-            throw new NotImplementedException();
+            var user = await _adminRepository.GetAdminUser(userId);
+
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+
+            return userToReturn;
         }
 
         public async Task<IEnumerable<UserForDetailedDto>> GetAdminUsers()
         {
-            var users = await _adminRepository.GetAdminUsers();
+            var users = await _adminRepository.GetUsers();
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
 
@@ -64,13 +71,33 @@ namespace LMSService.Service
 
         private static string CreatePassword(string fname, string lname)
         {
-            var test = fname.Substring(0, 1).ToUpper();
+            var firstInitial = fname.Substring(0, 1).ToUpper();
 
-            var second = lname.ToLower();
+            var lastName = lname.ToLower();
 
-            var password = string.Concat(test, second, DateTime.Today.Year.ToString());
+            var password = string.Concat(firstInitial, lastName, DateTime.Today.Year.ToString());
 
             return password;
+        }
+
+        public async Task UpdateUser(UpdateAdminDto userforUpdate)
+        {
+            //var user = await _adminRepository.GetAdminUser(addAdminDto.Id);
+
+            //_mapper.Map(addAdminDto, user);
+
+            var user = await _adminRepository.GetAdminUser(userforUpdate.Id);
+
+            _mapper.Map(userforUpdate, user);
+
+            await _adminRepository.UpdateUser(user, userforUpdate.Role);
+
+            if (await _libraryRepository.SaveAll())
+            {
+                return;
+            }
+
+            throw new Exception($"Updating user failed on save");
         }
     }
 }

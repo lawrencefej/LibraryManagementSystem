@@ -10,6 +10,8 @@ namespace LMSService.Dto
 
         Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto);
 
+        Task UpdateUser(UpdateAdminDto userforUpdate);
+
         Task<UserForDetailedDto> GetAdminUser(int userId);
     }
 }

@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using LMSRepository.Dto;
-using LMSRepository.Interfaces.Dto;
 using LMSRepository.Interfaces.Models;
-using System.Linq;
 
 namespace LibraryManagementSystem.API.Helpers
 {
@@ -36,15 +34,12 @@ namespace LibraryManagementSystem.API.Helpers
                      {
                          opt.MapFrom(src => src.LibraryCard.Fees);
                      })
-                    //.ForMember(dest => dest.Role, opt =>
-                    //{
-                    //    opt.MapFrom(src => src.UserRoles);
-                    //})
                     .ForMember(dest => dest.Age, opt =>
                     {
                         opt.MapFrom(d => d.DateOfBirth.CalculateAge());
                     });
             CreateMap<UserForUpdateDto, User>();
+            CreateMap<UpdateAdminDto, User>();
             CreateMap<UserForRegisterDto, User>();
             CreateMap<AddAdminDto, User>();
             CreateMap<MemberForCreation, User>();
