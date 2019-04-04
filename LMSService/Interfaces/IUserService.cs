@@ -19,7 +19,7 @@ namespace LMSService.Dto
 
         Task<IEnumerable<UserForListDto>> SearchUsers(string searchString);
 
-        Task UpdateUser(UserForUpdateDto userForUpdate);
+        Task UpdateMember(UserForUpdateDto userForUpdate);
 
         Task<UserForDetailedDto> AddMember(MemberForCreation memberForCreation);
 

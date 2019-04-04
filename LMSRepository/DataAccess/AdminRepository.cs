@@ -22,17 +22,14 @@ namespace LMSRepository.DataAccess
             _userManager = userManager;
         }
 
-        public Task<User> CreateAdminUser()
+        public async Task<User> GetAdminUser(int userId)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            return user;
         }
 
-        public Task<User> GetAdminUser(int userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<User>> GetAdminUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
             var users = await _userManager.Users
                 .Include(p => p.ProfilePicture)
@@ -48,6 +45,24 @@ namespace LMSRepository.DataAccess
         {
             await _userManager.CreateAsync(user, password);
             await _userManager.AddToRoleAsync(user, role);
+        }
+
+        public async Task UpdateUser(User user, string newRole)
+        {
+            var isInRole = await _userManager.IsInRoleAsync(user, newRole);
+
+            if (!isInRole)
+            {
+                var roles = new List<string>()
+                {
+                    EnumRoles.Admin.ToString(),
+                    EnumRoles.Librarian.ToString()
+                };
+                await _userManager.RemoveFromRolesAsync(user, roles);
+                await _userManager.AddToRoleAsync(user, newRole);
+            }
+
+            await _userManager.UpdateAsync(user);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace LibraryManagementSystem.Controllers
                 return Unauthorized();
             }
 
-            await _userService.UpdateUser(userForUpdateDto);
+            await _userService.UpdateMember(userForUpdateDto);
 
             return NoContent();
         }

@@ -67,23 +67,28 @@ namespace LibraryManagementSystem.API.Controllers
             return CreatedAtRoute("Get", new { id = user.Id }, user);
         }
 
-        // GET: api/Admin/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var user = await _adminService.GetAdminUser(id);
+
+            return Ok(user);
         }
 
-        // POST: api/Admin
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
         // PUT: api/Admin/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<IActionResult> Put(UpdateAdminDto updateAdminDto)
         {
+            var user = await _adminService.GetAdminUser(updateAdminDto.Id);
+
+            if (user == null)
+            {
+                return BadRequest("User for not found");
+            }
+
+            await _adminService.UpdateUser(updateAdminDto);
+
+            return NoContent();
         }
 
         // DELETE: api/ApiWithActions/5
