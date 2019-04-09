@@ -28,6 +28,9 @@ using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using LMSService.Helpers;
+using Microsoft.IdentityModel.Logging;
 
 namespace LibraryManagementSystem.API
 {
@@ -44,6 +47,7 @@ namespace LibraryManagementSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
             services.AddDbContext<DataContext>(x => x.
                 UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -56,7 +60,7 @@ namespace LibraryManagementSystem.API
             });
 
             builder = new IdentityBuilder(builder.UserType, typeof(LMSRepository.Interfaces.Models.Role), builder.Services);
-            builder.AddEntityFrameworkStores<DataContext>();
+            builder.AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
             builder.AddRoleValidator<RoleValidator<LMSRepository.Interfaces.Models.Role>>();
             builder.AddRoleManager<RoleManager<LMSRepository.Interfaces.Models.Role>>();
             builder.AddSignInManager<SignInManager<User>>();
@@ -98,6 +102,8 @@ namespace LibraryManagementSystem.API
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
             services.AddCors();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddTransient<IEmailSender, EmailSender>();
             //Mapper.Reset();
             services.AddAutoMapper();
             services.AddSwaggerGen(c =>
@@ -128,8 +134,8 @@ namespace LibraryManagementSystem.API
 
             services.AddScoped<LogUserActivity>();
 
-            services.AddDbContext<LibraryManagementSystemContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("LibraryManagementSystemContext")));
+            //services.AddDbContext<LibraryManagementSystemContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("LibraryManagementSystemContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
