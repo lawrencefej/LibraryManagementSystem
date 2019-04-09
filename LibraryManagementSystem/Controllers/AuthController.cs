@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using LMSRepository.Dto;
+using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,17 +29,19 @@ namespace LibraryManagementSystem.API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILibraryRepository _libraryRepo;
+        private readonly IEmailSender _emailSender;
 
         public AuthController(IConfiguration config,
             IMapper mapper, ILibraryRepository libraryRepo,
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager, IEmailSender emailSender)
         {
             _config = config;
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _libraryRepo = libraryRepo;
+            _emailSender = emailSender;
         }
 
         [HttpPost("register")]
@@ -103,6 +107,40 @@ namespace LibraryManagementSystem.API.Controllers
             return Unauthorized();
         }
 
+        [HttpPost("forgotPassword")]
+        [AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ResetPassword resetPassword)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+                if (user == null || (await _userManager.IsInRoleAsync(user, nameof(EnumRoles.Member))))
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return Ok();
+                }
+
+                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+                // Send an email with this link
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var token = GenerateJwtToken(user, code);
+                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                //var callbackUrl = new Uri("http://localhost:4200/ResetPassword?userid=" + user.Id + "&code=" + code);
+                //var callbackUrl = new Uri(resetPassword.Url + "?userid=" + user.Id + "&code=" + code);
+                var callbackUrl = new Uri(resetPassword.Url + "/" + token);
+
+                await _emailSender.SendEmailAsync(resetPassword.Email, "Reset Password",
+                //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                //await _emailSender.SendEmailAsync(email.Email, "Reset Password",
+                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                return Ok(callbackUrl);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return NoContent();
+        }
+
         private async Task<string> GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
@@ -126,6 +164,33 @@ namespace LibraryManagementSystem.API.Controllers
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(30),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
+
+        private string GenerateJwtToken(User user, string code)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("ResetCode", code)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddHours(60),
                 SigningCredentials = creds
             };
 
