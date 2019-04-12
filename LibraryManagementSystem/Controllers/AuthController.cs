@@ -11,11 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -109,7 +111,6 @@ namespace LibraryManagementSystem.API.Controllers
 
         [HttpPost("forgotPassword")]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ResetPassword resetPassword)
         {
             if (ModelState.IsValid)
@@ -121,24 +122,56 @@ namespace LibraryManagementSystem.API.Controllers
                     return Ok();
                 }
 
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var token = GenerateJwtToken(user, code);
+
+                var encodedToken = HttpUtility.UrlEncode(code);
+
+                var token = GenerateJwtToken(user, encodedToken);
                 //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                 //var callbackUrl = new Uri("http://localhost:4200/ResetPassword?userid=" + user.Id + "&code=" + code);
                 //var callbackUrl = new Uri(resetPassword.Url + "?userid=" + user.Id + "&code=" + code);
                 var callbackUrl = new Uri(resetPassword.Url + "/" + token);
 
                 await _emailSender.SendEmailAsync(resetPassword.Email, "Reset Password",
-                //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                //await _emailSender.SendEmailAsync(email.Email, "Reset Password",
                    $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                return Ok(callbackUrl);
+
+                return Ok(encodedToken);
             }
 
-            // If we got this far, something failed, redisplay form
-            return NoContent();
+            return BadRequest("Something happened Please Try again later");
+        }
+
+        [HttpPost("resetpassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
+        {
+            //if (ModelState.IsValid)
+            //{
+            const string id = "nameid";
+            const string resetCode = "ResetCode";
+
+            var userId = GetResetCode(resetPassword.Token, id);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null || (await _userManager.IsInRoleAsync(user, nameof(EnumRoles.Member))))
+            {
+                return BadRequest("User does not exist");
+            }
+
+            var code = GetResetCode(resetPassword.Token, resetCode);
+
+            var decodedToken = HttpUtility.UrlDecode(code);
+
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPassword.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            //}
+
+            return BadRequest(result.Errors);
         }
 
         private async Task<string> GenerateJwtToken(User user)
@@ -179,7 +212,6 @@ namespace LibraryManagementSystem.API.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
                 new Claim("ResetCode", code)
             };
 
@@ -199,6 +231,19 @@ namespace LibraryManagementSystem.API.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        private string GetResetCode(string token, string key)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var payload = jwtToken.Payload;
+
+            payload.TryGetValue(key, out object value);
+
+            return value.ToString();
         }
     }
 }
