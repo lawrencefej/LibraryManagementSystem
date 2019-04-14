@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using EmailService;
+using EmailService.Configuration;
+using EmailService.Services;
 using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Data;
@@ -7,8 +10,10 @@ using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Helpers;
 using LMSRepository.Interfaces.Models;
-using LMSService.Exceptions;
 using LMSService.Dto;
+using LMSService.Exceptions;
+using LMSService.Helpers;
+using LMSService.Interfaces;
 using LMSService.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -22,17 +27,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
-using LMSService.Helpers;
-using Microsoft.IdentityModel.Logging;
-using EmailService.Services;
-using EmailService.Configuration;
-using EmailService;
-using LMSService.Interfaces;
 
 namespace LibraryManagementSystem.API
 {

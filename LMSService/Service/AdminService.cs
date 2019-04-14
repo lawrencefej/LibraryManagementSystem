@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
+using LMSRepository.Dto;
 using LMSRepository.Interfaces;
+using LMSRepository.Interfaces.Models;
 using LMSService.Dto;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using LMSRepository.Dto;
-using LMSRepository.Interfaces.Models;
+using System.Threading.Tasks;
 
 namespace LMSService.Service
 {

@@ -2,10 +2,9 @@
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Dto;
 using LMSRepository.Interfaces.Models;
-using LMSService.Exceptions;
 using LMSService.Dto;
+using LMSService.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
