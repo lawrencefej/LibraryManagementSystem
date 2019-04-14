@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
+using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Models;
+using LMSService.Dto;
 using LMSService.Exceptions;
 using LMSService.Helpers;
-using LMSService.Dto;
 using LMSService.Validators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LMSRepository.Dto;
 
 namespace LMSService.Service
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LMSRepository.Dto
+﻿namespace LMSRepository.Dto
 {
     public class RoleDto
     {

@@ -1,5 +1,4 @@
 ﻿using LMSRepository.Data;
-using LMSRepository.Dto;
 using LMSRepository.Interfaces.Models;
 using LMSService.Dto;
 using Microsoft.AspNetCore.Mvc;
