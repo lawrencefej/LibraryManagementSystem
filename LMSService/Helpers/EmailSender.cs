@@ -1,47 +1,43 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+﻿using EmailService;
+using EmailService.Configuration;
+using EmailService.Model;
+using LMSService.Interfaces;
 using System.Threading.Tasks;
 
 namespace LMSService.Helpers
 {
     public class EmailSender : IEmailSender
     {
-        public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor)
+        private readonly IEmailService _emailService;
+        private readonly ISmtpConfiguration _smtpConfiguration;
+
+        public EmailSender(IEmailService emailService, ISmtpConfiguration smtpConfiguration)
         {
-            Options = optionsAccessor.Value;
+            _emailService = emailService;
+            _smtpConfiguration = smtpConfiguration;
         }
 
-        public AuthMessageSenderOptions Options { get; } //set only via Secret Manager
-
-        public Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmail(string toAddress, string subject, string message)
         {
-            return Execute(Options.SendGridKey, subject, message, email);
-        }
-
-        public Task Execute(string apiKey, string subject, string message, string email)
-        {
-            var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage()
+            var settings = new EmailSettings
             {
-                From = new EmailAddress("lawrencefej2@gmail.com", "Lawrence Fejokwu"),
-                Subject = subject,
-                PlainTextContent = message,
-                HtmlContent = message
+                Host = _smtpConfiguration.Host,
+                Port = _smtpConfiguration.Port,
+                Username = _smtpConfiguration.Username,
+                Password = _smtpConfiguration.Password,
+                ApiKey = _smtpConfiguration.ApiKey
             };
-            msg.AddTo(new EmailAddress(email));
 
-            // Disable click tracking.
-            // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
-            msg.SetClickTracking(false, false);
+            var email = new Email
+            {
+                FromAddress = _smtpConfiguration.Email,
+                ToAddress = toAddress,
+                FromName = _smtpConfiguration.Name,
+                Subject = subject,
+                Content = message
+            };
 
-            return client.SendEmailAsync(msg);
+            await _emailService.SendEmail(settings, email);
         }
-
-        //public Task SendEmailAsync(string email, string subject, string htmlMessage)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

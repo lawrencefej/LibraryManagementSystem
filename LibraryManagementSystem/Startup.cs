@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API.Helpers;
-using LibraryManagementSystem.Models;
 using LMSRepository.Data;
 using LMSRepository.DataAccess;
 using LMSRepository.Interfaces;
@@ -28,9 +27,12 @@ using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using LMSService.Helpers;
 using Microsoft.IdentityModel.Logging;
+using EmailService.Services;
+using EmailService.Configuration;
+using EmailService;
+using LMSService.Interfaces;
 
 namespace LibraryManagementSystem.API
 {
@@ -103,6 +105,8 @@ namespace LibraryManagementSystem.API
             services.AddCors();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            //services.Configure<MailtrapSettings>(Configuration.GetSection("MailtrapSettings"));
+            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection("MailtrapSettings").Get<EmailSettings>());
             services.AddTransient<IEmailSender, EmailSender>();
             //Mapper.Reset();
             services.AddAutoMapper();
@@ -131,6 +135,7 @@ namespace LibraryManagementSystem.API
             services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IEmailService, MailtrapService>();
 
             services.AddScoped<LogUserActivity>();
 
