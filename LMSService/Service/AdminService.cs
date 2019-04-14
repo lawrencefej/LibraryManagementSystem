@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Linq;
 using LMSRepository.Dto;
 using LMSRepository.Interfaces.Models;
-using LMSService.Exceptions;
 
 namespace LMSService.Service
 {
@@ -27,6 +26,27 @@ namespace LMSService.Service
         public async Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto)
         {
             addAdminDto.UserName = addAdminDto.Email.ToLower();
+
+            addAdminDto.Password = CreatePassword(addAdminDto.FirstName, addAdminDto.LastName);
+
+            var userToCreate = _mapper.Map<User>(addAdminDto);
+
+            await _adminRepository.CreateUser(userToCreate, addAdminDto.Password, addAdminDto.Role);
+
+            //addAdminDto.Id = userToCreate.Id;
+
+            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+
+            var role = userToReturn.UserRoles.ElementAt(0);
+
+            userToReturn.Role = role.Name;
+
+            return userToReturn;
+        }
+
+        public async Task<UserForDetailedDto> CreateUser2(AddAdminDto addAdminDto)
+        {
+            addAdminDto.UserName = addAdminDto.Email;
 
             addAdminDto.Password = CreatePassword(addAdminDto.FirstName, addAdminDto.LastName);
 

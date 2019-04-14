@@ -3,15 +3,14 @@ using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Models;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -127,15 +126,20 @@ namespace LibraryManagementSystem.API.Controllers
                 var encodedToken = HttpUtility.UrlEncode(code);
 
                 var token = GenerateJwtToken(user, encodedToken);
-                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //var callbackUrl = new Uri("http://localhost:4200/ResetPassword?userid=" + user.Id + "&code=" + code);
-                //var callbackUrl = new Uri(resetPassword.Url + "?userid=" + user.Id + "&code=" + code);
+
                 var callbackUrl = new Uri(resetPassword.Url + "/" + token);
 
-                await _emailSender.SendEmailAsync(resetPassword.Email, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                //var body = "Hello User, <p>This is a test mail sent through Mailtrap SMTP</p><br>Thanks";
 
-                return Ok(encodedToken);
+                var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>";
+
+                //await _emailSender.SendEmailAsync(resetPassword.Email, "Reset Password",
+                //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+
+                await _emailSender.SendEmail(resetPassword.Email, "Reset Password",
+                   body);
+
+                return Ok();
             }
 
             return BadRequest("Something happened Please Try again later");
@@ -145,8 +149,6 @@ namespace LibraryManagementSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {
-            //if (ModelState.IsValid)
-            //{
             const string id = "nameid";
             const string resetCode = "ResetCode";
 
@@ -169,7 +171,6 @@ namespace LibraryManagementSystem.API.Controllers
             {
                 return Ok();
             }
-            //}
 
             return BadRequest(result.Errors);
         }
