@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API.Helpers;
-using LibraryManagementSystem.Models;
 using LMSRepository.Data;
 using LMSRepository.DataAccess;
 using LMSRepository.Interfaces;
@@ -28,6 +27,12 @@ using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
+using LMSService.Helpers;
+using Microsoft.IdentityModel.Logging;
+using EmailService.Services;
+using EmailService.Configuration;
+using EmailService;
+using LMSService.Interfaces;
 
 namespace LibraryManagementSystem.API
 {
@@ -44,6 +49,7 @@ namespace LibraryManagementSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
             services.AddDbContext<DataContext>(x => x.
                 UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -56,7 +62,7 @@ namespace LibraryManagementSystem.API
             });
 
             builder = new IdentityBuilder(builder.UserType, typeof(LMSRepository.Interfaces.Models.Role), builder.Services);
-            builder.AddEntityFrameworkStores<DataContext>();
+            builder.AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
             builder.AddRoleValidator<RoleValidator<LMSRepository.Interfaces.Models.Role>>();
             builder.AddRoleManager<RoleManager<LMSRepository.Interfaces.Models.Role>>();
             builder.AddSignInManager<SignInManager<User>>();
@@ -98,6 +104,10 @@ namespace LibraryManagementSystem.API
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
             services.AddCors();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+            //services.Configure<MailtrapSettings>(Configuration.GetSection("MailtrapSettings"));
+            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection("MailtrapSettings").Get<EmailSettings>());
+            services.AddTransient<IEmailSender, EmailSender>();
             //Mapper.Reset();
             services.AddAutoMapper();
             services.AddSwaggerGen(c =>
@@ -125,11 +135,12 @@ namespace LibraryManagementSystem.API
             services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IEmailService, MailtrapService>();
 
             services.AddScoped<LogUserActivity>();
 
-            services.AddDbContext<LibraryManagementSystemContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("LibraryManagementSystemContext")));
+            //services.AddDbContext<LibraryManagementSystemContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("LibraryManagementSystemContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

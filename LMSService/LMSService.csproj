@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
+    <PackageReference Include="Sendgrid" Version="9.10.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
@@ -19,6 +20,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LMSRepository\LMSRepository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EmailService">
+      <HintPath>..\..\SendGridEmailService\SendGridEmailService\bin\Debug\netcoreapp2.2\EmailService.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridEmailService">
+      <HintPath>..\..\SendGridEmailService\SendGridEmailService\bin\Debug\netcoreapp2.2\SendGridEmailService.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
