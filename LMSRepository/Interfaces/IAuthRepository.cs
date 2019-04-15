@@ -10,5 +10,7 @@ namespace LMSRepository.Interfaces
         Task<User> Login(string emailAddress, string password);
 
         Task<bool> UserExists(string username);
+
+        Task<string> ResetPassword(User user);
     }
 }

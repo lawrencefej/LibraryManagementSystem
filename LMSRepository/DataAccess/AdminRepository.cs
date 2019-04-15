@@ -46,6 +46,12 @@ namespace LMSRepository.DataAccess
             await _userManager.AddToRoleAsync(user, role);
         }
 
+        public async Task CreateUser(User user, string role)
+        {
+            await _userManager.CreateAsync(user);
+            await _userManager.AddToRoleAsync(user, role);
+        }
+
         public async Task UpdateUser(User user, string newRole)
         {
             var isInRole = await _userManager.IsInRoleAsync(user, newRole);

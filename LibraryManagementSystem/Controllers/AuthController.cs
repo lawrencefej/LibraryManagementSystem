@@ -129,12 +129,7 @@ namespace LibraryManagementSystem.API.Controllers
 
                 var callbackUrl = new Uri(resetPassword.Url + "/" + token);
 
-                //var body = "Hello User, <p>This is a test mail sent through Mailtrap SMTP</p><br>Thanks";
-
                 var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>";
-
-                //await _emailSender.SendEmailAsync(resetPassword.Email, "Reset Password",
-                //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
 
                 await _emailSender.SendEmail(resetPassword.Email, "Reset Password",
                    body);

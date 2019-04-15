@@ -3,10 +3,13 @@ using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Models;
 using LMSService.Dto;
+using LMSService.Helpers;
+using LMSService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace LMSService.Service
 {
@@ -15,25 +18,29 @@ namespace LMSService.Service
         private readonly IAdminRepository _adminRepository;
         private readonly IMapper _mapper;
         private readonly ILibraryRepository _libraryRepository;
+        private readonly IEmailSender _emailSender;
+        private readonly IAuthRepository _authRepository;
 
-        public AdminService(IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository)
+        public AdminService(IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository, IEmailSender emailSender, IAuthRepository authRepository)
         {
             _adminRepository = adminRepository;
             _mapper = mapper;
             _libraryRepository = libraryRepository;
+            _emailSender = emailSender;
+            _authRepository = authRepository;
         }
 
         public async Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto)
         {
-            addAdminDto.UserName = addAdminDto.Email.ToLower();
-
-            addAdminDto.Password = CreatePassword(addAdminDto.FirstName, addAdminDto.LastName);
+            addAdminDto.UserName = addAdminDto.Email;
 
             var userToCreate = _mapper.Map<User>(addAdminDto);
 
-            await _adminRepository.CreateUser(userToCreate, addAdminDto.Password, addAdminDto.Role);
+            await _adminRepository.CreateUser(userToCreate, addAdminDto.Role);
 
-            //addAdminDto.Id = userToCreate.Id;
+            var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
+
+            await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);
 
             var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
 
@@ -53,6 +60,10 @@ namespace LMSService.Service
             var userToCreate = _mapper.Map<User>(addAdminDto);
 
             await _adminRepository.CreateUser(userToCreate, addAdminDto.Password, addAdminDto.Role);
+
+            var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
+
+            await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);
 
             //addAdminDto.Id = userToCreate.Id;
 
@@ -118,6 +129,19 @@ namespace LMSService.Service
             }
 
             throw new Exception($"Updating user failed on save");
+        }
+
+        private async Task WelcomeMessage(string code, User user, string url)
+        {
+            var encodedToken = HttpUtility.UrlEncode(code);
+
+            var token = LmsTokens.GenerateJwtToken(user, encodedToken);
+
+            var callbackUrl = new Uri(url + "/" + token);
+
+            var body = $"Welcome {user.FirstName.ToLower()}, <p>An account has been created for you</p> Please create your new password by clicking here: <a href='{callbackUrl}'>link</a>";
+
+            await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
         }
     }
 }

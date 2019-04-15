@@ -1,15 +1,12 @@
-﻿using CloudinaryDotNet;
-using LMSRepository.Data;
+﻿using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Helpers;
 using LMSRepository.Interfaces.Models;
 using LMSService.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,28 +20,16 @@ namespace LibraryManagementSystem.API.Controllers
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepo;
-        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
-        private Cloudinary _cloudinary;
         private readonly IAdminService _adminService;
 
         public AdminController(
             DataContext context,
             UserManager<User> userManager,
-            IUserRepository userRepo,
-            IOptions<CloudinarySettings> cloudinaryConfig, IAdminService adminService)
+            IUserRepository userRepo, IAdminService adminService)
         {
             _context = context;
             _userManager = userManager;
             _userRepo = userRepo;
-            _cloudinaryConfig = cloudinaryConfig;
-
-            Account acc = new Account(
-                _cloudinaryConfig.Value.CloudName,
-                _cloudinaryConfig.Value.ApiKey,
-                _cloudinaryConfig.Value.ApiSecret
-            );
-
-            _cloudinary = new Cloudinary(acc);
             _adminService = adminService;
         }
 
@@ -58,7 +43,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetTest(AddAdminDto addAdminDto)
+        public async Task<IActionResult> CreateUser(AddAdminDto addAdminDto)
         {
             var user = await _adminService.CreateUser(addAdminDto);
 

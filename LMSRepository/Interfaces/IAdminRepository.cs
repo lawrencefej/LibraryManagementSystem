@@ -12,6 +12,8 @@ namespace LMSRepository.Interfaces
 
         Task CreateUser(User user, string password, string role);
 
+        Task CreateUser(User user, string role);
+
         Task UpdateUser(User user, string newRole);
     }
 }
