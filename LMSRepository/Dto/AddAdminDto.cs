@@ -24,6 +24,8 @@ namespace LMSRepository.Dto
 
         public DateTime Created { get; set; }
 
+        public string CallbackUrl { get; set; }
+
         public AddAdminDto()
         {
             UserName = Email;
