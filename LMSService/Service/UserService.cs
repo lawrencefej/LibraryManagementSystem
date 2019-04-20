@@ -5,9 +5,11 @@ using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Models;
 using LMSService.Dto;
 using LMSService.Exceptions;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace LMSService.Service
@@ -18,13 +20,16 @@ namespace LMSService.Service
         private readonly IUserRepository _userRepo;
         private readonly ILibraryRepository _libraryRepository;
         private readonly UserManager<User> _userManager;
+        private readonly IEmailSender _emailSender;
 
-        public UserService(IUserRepository userRepo, IMapper mapper, ILibraryRepository libraryRepository, UserManager<User> userManager)
+        public UserService(IUserRepository userRepo, IMapper mapper, ILibraryRepository libraryRepository,
+            UserManager<User> userManager, IEmailSender emailSender)
         {
             _userRepo = userRepo;
             _mapper = mapper;
             _libraryRepository = libraryRepository;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         public async Task<UserForDetailedDto> GetUser(int userId)
@@ -131,6 +136,8 @@ namespace LMSService.Service
 
                 MemberToReturn.LibraryCardNumber = await CreateNewCard(member.Id);
 
+                await MemberWelcomeMessage(MemberToReturn);
+
                 return MemberToReturn;
             }
 
@@ -152,6 +159,23 @@ namespace LMSService.Service
             }
 
             throw new Exception($"Adding member failed on save");
+        }
+
+        private async Task MemberWelcomeMessage(UserForDetailedDto user)
+        {
+            var body = $"Welcome {TitleCase(user.FirstName)}, " +
+                $"<p>A Sentinel Library account has been created for you.</p> " +
+                $"<p>Your Library Card Number is {user.LibraryCardNumber}</p> " +
+                $" " +
+                $"<p>Thanks.</p> " +
+                $"<p>Management</p>";
+
+            await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
+        }
+
+        public static string TitleCase(string strText)
+        {
+            return new CultureInfo("en").TextInfo.ToTitleCase(strText.ToLower());
         }
     }
 }

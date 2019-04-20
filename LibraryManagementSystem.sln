@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagementSystem", "LibraryManagementSystem\LibraryManagementSystem.csproj", "{C8590329-AD91-439E-88E8-37DE65B327E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagementSystem", "LibraryManagementSystem\LibraryManagementSystem.csproj", "{C8590329-AD91-439E-88E8-37DE65B327E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMSRepository", "LMSRepository\LMSRepository.csproj", "{5F86BB51-5307-486D-95DD-7EC5C94A764D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMSRepository", "LMSRepository\LMSRepository.csproj", "{5F86BB51-5307-486D-95DD-7EC5C94A764D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMSService", "LMSService\LMSService.csproj", "{476BDF85-6D0C-43F9-934B-49D4D491075F}"
 EndProject
