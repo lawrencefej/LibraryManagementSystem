@@ -21,7 +21,8 @@ namespace LMSService.Service
         private readonly IEmailSender _emailSender;
         private readonly IAuthRepository _authRepository;
 
-        public AdminService(IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository, IEmailSender emailSender, IAuthRepository authRepository)
+        public AdminService(IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository,
+            IEmailSender emailSender, IAuthRepository authRepository)
         {
             _adminRepository = adminRepository;
             _mapper = mapper;

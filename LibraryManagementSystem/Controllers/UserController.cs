@@ -82,7 +82,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(MemberForCreation memberForCreation)
+        public async Task<IActionResult> AddMember(MemberForCreation memberForCreation)
         {
             var member = await _userService.AddMember(memberForCreation);
 

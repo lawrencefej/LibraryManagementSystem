@@ -30,8 +30,5 @@
     <Reference Include="EmailService">
       <HintPath>..\..\SendGridEmailService\SendGridEmailService\bin\Debug\netcoreapp2.2\EmailService.dll</HintPath>
     </Reference>
-    <Reference Include="SendGridEmailService">
-      <HintPath>..\..\SendGridEmailService\SendGridEmailService\bin\Debug\netcoreapp2.2\SendGridEmailService.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

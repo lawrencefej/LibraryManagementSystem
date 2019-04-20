@@ -67,7 +67,7 @@ namespace LMSRepository.DataAccess
         public async Task<User> GetUserByEmail(string email)
         {
             // TODO try to optimize to one db trip
-            var users = await _userManager.GetUsersInRoleAsync(EnumRoles.Member.ToString());
+            var users = await _userManager.GetUsersInRoleAsync(nameof(EnumRoles.Member));
 
             var user = users.FirstOrDefault(u => u.Email == email);
 
