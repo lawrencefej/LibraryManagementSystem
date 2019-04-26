@@ -1,5 +1,6 @@
 ﻿using LMSRepository.Dto;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSService.Dto
@@ -13,6 +14,8 @@ namespace LMSService.Dto
         Task EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate);
 
         Task<IEnumerable<LibraryAssetForListDto>> GetAllAssets();
+
+        IQueryable<LibraryAssetForListDto> GetAll();
 
         Task<LibraryAssetForDetailedDto> GetAsset(int assetId);
 

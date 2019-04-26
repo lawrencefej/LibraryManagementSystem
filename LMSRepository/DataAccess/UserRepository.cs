@@ -34,23 +34,19 @@ namespace LMSRepository.DataAccess
             return user;
         }
 
-        public async Task<User> SearchUser(SearchUserDto searchUser)
+        public async Task<IEnumerable<User>> SearchUsers(SearchUserDto searchUser)
         {
-            User user = null;
+            var users = from user in _userManager.Users
+                        .Include(s => s.LibraryCard)
+                        .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                        select user;
 
-            if (searchUser != null)
-            {
-                if (searchUser.LibraryCard.HasValue)
-                {
-                    user = await GetUserByCardId(searchUser.LibraryCard);
-                }
-                else
-                {
-                    user = await GetUserByEmail(searchUser.Email);
-                }
-            }
+            users = users
+                .Where(s => s.Email == searchUser.Email
+            || s.FirstName.Contains(searchUser.FirstName)
+            || s.Lastname.Contains(searchUser.LastName));
 
-            return user;
+            return await users.ToListAsync();
         }
 
         public async Task<User> GetUserByCardId(int? cardId)

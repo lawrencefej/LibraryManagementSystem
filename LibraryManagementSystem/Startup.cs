@@ -3,6 +3,7 @@ using LibraryManagementSystem.DIHelpers;
 using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -37,6 +38,7 @@ namespace LibraryManagementSystem.API
 
             services.AddCombinedInterfaces();
             services.AddDevelopmentInterfaces();
+            services.AddOData();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,7 +82,12 @@ namespace LibraryManagementSystem.API
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseAuthentication();
-            app.UseMvc();
+            //app.UseMvc();
+            app.UseMvc(routeBuilder =>
+            {
+                routeBuilder.EnableDependencyInjection();
+                routeBuilder.Expand().Select().Count().OrderBy().Filter().MaxTop(null);
+            });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

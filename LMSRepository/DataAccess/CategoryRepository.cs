@@ -3,6 +3,7 @@ using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
@@ -22,6 +23,13 @@ namespace LMSRepository.DataAccess
 
             return categories;
         }
+
+        //public async Task<IEnumerable<Category>> GetAll()
+        //{
+        //    var categories = await _context.Category.AsQueryable();
+
+        //    return categories;
+        //}
 
         public async Task<Category> GetCategory(int categoryId)
         {
