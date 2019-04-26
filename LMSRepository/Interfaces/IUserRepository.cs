@@ -11,7 +11,7 @@ namespace LMSRepository.Interfaces
 
         Task<User> GetUser(int id);
 
-        Task<User> SearchUser(SearchUserDto searchUser);
+        Task<IEnumerable<User>> SearchUsers(SearchUserDto searchUser);
 
         Task<IEnumerable<User>> SearchUsers(string searchString);
 

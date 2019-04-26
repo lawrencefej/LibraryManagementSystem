@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
@@ -8,6 +9,7 @@ using LMSService.Exceptions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSService.Service
@@ -86,6 +88,17 @@ namespace LMSService.Service
             }
 
             return;
+        }
+
+        public IQueryable<LibraryAssetForListDto> GetAll()
+        {
+            var assets = _libraryAssetRepo.GetAll();
+
+            //var assetToReturn = assets.ProjectTo<LibraryAssetForListDto>();
+
+            var assetToReturn = _mapper.ProjectTo<LibraryAssetForListDto>(assets);
+
+            return assetToReturn;
         }
 
         public async Task<IEnumerable<LibraryAssetForListDto>> GetAllAssets()

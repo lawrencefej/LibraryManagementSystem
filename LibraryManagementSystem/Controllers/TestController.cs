@@ -1,5 +1,6 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Interfaces.Models;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,11 @@ namespace LibraryManagementSystem.Controllers
 
         // GET: api/Test
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReserveAsset>>> GetReserveAssets()
+        [EnableQuery()]
+        public async Task<ActionResult<IEnumerable<LibraryAsset>>> GetReserveAssets()
         {
-            Logger.LogError("Library asset was tested");
-            return await _context.ReserveAssets.ToListAsync();
+            //Logger.LogError("Library asset was tested");
+            return await _context.LibraryAssets.ToListAsync();
         }
 
         // GET: api/Test/5

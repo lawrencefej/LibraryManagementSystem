@@ -3,6 +3,7 @@ using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSService.Dto;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace LibraryManagementSystem.Controllers
 
         [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet]
+        [EnableQuery]
         public async Task<ActionResult> GetUsers()
         {
             var users = await _userService.GetUsers();
@@ -145,6 +147,15 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> SearchUsers([FromQuery]string searchString)
         {
             var users = await _userService.SearchUsers(searchString);
+
+            return Ok(users);
+        }
+
+        [Authorize(Policy = Role.RequireLibrarianRole)]
+        [HttpGet("searchMembers/")]
+        public async Task<IActionResult> SearchMembers(SearchUserDto searchUser)
+        {
+            var users = await _userService.SearchUsers(searchUser);
 
             return Ok(users);
         }

@@ -43,7 +43,7 @@ namespace LMSService.Service
 
         public async Task<UserForDetailedDto> SearchUser(SearchUserDto searchUser)
         {
-            var user = await _userRepo.SearchUser(searchUser);
+            var user = await _userRepo.SearchUsers(searchUser);
 
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
@@ -176,6 +176,15 @@ namespace LMSService.Service
         public static string TitleCase(string strText)
         {
             return new CultureInfo("en").TextInfo.ToTitleCase(strText.ToLower());
+        }
+
+        public async Task<IEnumerable<UserForDetailedDto>> SearchUsers(SearchUserDto searchUser)
+        {
+            var users = await _userRepo.SearchUsers(searchUser);
+
+            var usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
+
+            return usersToReturn;
         }
     }
 }

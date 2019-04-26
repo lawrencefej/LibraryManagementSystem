@@ -1,8 +1,11 @@
-﻿using LMSRepository.Dto;
+﻿using LMSRepository.Data;
+using LMSRepository.Dto;
 using LMSService.Dto;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -15,11 +18,13 @@ namespace LibraryManagementSystem.API.Controllers
     {
         private readonly ILibraryAssestService _libraryAssestService;
         private readonly ILogger<CatalogController> _logger;
+        private readonly DataContext _context;
 
-        public CatalogController(ILibraryAssestService libraryAssestService, ILogger<CatalogController> logger)
+        public CatalogController(ILibraryAssestService libraryAssestService, ILogger<CatalogController> logger, DataContext context)
         {
             _libraryAssestService = libraryAssestService;
             _logger = logger;
+            _context = context;
         }
 
         [HttpPost]
@@ -83,11 +88,22 @@ namespace LibraryManagementSystem.API.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult> GetLibraryAssets()
+        [EnableQuery()]
+        public async Task<IActionResult> GetLibraryAssets()
         {
             var assets = await _libraryAssestService.GetAllAssets();
 
             return Ok(assets);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("odata/")]
+        [EnableQuery]
+        public IQueryable<LibraryAssetForListDto> GetAssets()
+        {
+            var assets = _libraryAssestService.GetAll();
+
+            return assets;
         }
 
         [HttpGet("author/{authorId}")]

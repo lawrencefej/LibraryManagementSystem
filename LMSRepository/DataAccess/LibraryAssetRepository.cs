@@ -136,5 +136,18 @@ namespace LMSRepository.Interfaces.DataAccess
                 libraryAsset.StatusId = (int)EnumStatus.Unavailable;
             }
         }
+
+        public IQueryable<LibraryAsset> GetAll()
+        {
+            var assets = _context.LibraryAssets
+                .Include(p => p.Photo)
+                .Include(a => a.AssetType)
+                .Include(s => s.Status)
+                .Include(s => s.Author)
+                .OrderByDescending(o => o.Added)
+                .AsQueryable();
+
+            return assets;
+        }
     }
 }
