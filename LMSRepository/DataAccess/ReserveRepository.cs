@@ -1,6 +1,6 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

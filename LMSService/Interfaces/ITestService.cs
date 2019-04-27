@@ -1,12 +1,13 @@
 ﻿using LMSRepository.Dto;
 using LMSRepository.Helpers;
+using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LMSService.Dto
+namespace LMSService.Interfaces
 {
-    public interface ILibraryAssestService
+    public interface ITestService
     {
         Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation);
 
@@ -18,7 +19,7 @@ namespace LMSService.Dto
 
         IQueryable<LibraryAssetForListDto> GetAll();
 
-        Task<PagedList<LibraryAssetForListDto>> GetAllAssets(PaginationParams paginationParams);
+        Task<PagedList<LibraryAsset>> GetAllAssetsAsync(PaginationParams paginationParams);
 
         Task<LibraryAssetForDetailedDto> GetAsset(int assetId);
 

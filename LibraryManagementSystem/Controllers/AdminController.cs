@@ -1,7 +1,7 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using LMSService.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

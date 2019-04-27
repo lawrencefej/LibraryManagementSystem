@@ -1,7 +1,7 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -100,7 +100,7 @@ namespace LMSRepository.Interfaces.DataAccess
                 .Include(a => a.AssetType)
                 .Include(s => s.Status)
                 .Include(s => s.Author)
-                .OrderByDescending(o => o.Added)
+                .OrderByDescending(o => o.Title)
                 .ToListAsync();
 
             return assets;
@@ -144,10 +144,37 @@ namespace LMSRepository.Interfaces.DataAccess
                 .Include(a => a.AssetType)
                 .Include(s => s.Status)
                 .Include(s => s.Author)
-                .OrderByDescending(o => o.Added)
+                .OrderByDescending(o => o.Title)
                 .AsQueryable();
 
             return assets;
+        }
+
+        public async Task<PagedList<LibraryAsset>> GetPagedLibraryAssetsAsync(PaginationParams paginationParams)
+        {
+            var assets = _context.LibraryAssets
+                .Include(p => p.Photo)
+                .Include(a => a.AssetType)
+                .Include(s => s.Status)
+                .Include(s => s.Author)
+                .OrderByDescending(o => o.Title)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(paginationParams.OrderBy))
+            {
+                switch (paginationParams.OrderBy)
+                {
+                    case "created":
+                        assets = assets.OrderByDescending(u => u.Title);
+                        break;
+
+                    default:
+                        assets = assets.OrderByDescending(u => u.Author);
+                        break;
+                }
+            }
+
+            return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
         }
     }
 }

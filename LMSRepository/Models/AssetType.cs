@@ -1,4 +1,4 @@
-﻿namespace LMSRepository.Interfaces.Models
+﻿namespace LMSRepository.Models
 {
     public class AssetType
     {

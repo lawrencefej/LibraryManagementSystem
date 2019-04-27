@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using LMSService.Dto;
 using LMSService.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -21,7 +20,8 @@ namespace LMSService.Service
         private readonly IMapper _mapper;
         private readonly ILogger<LibraryAssetService> _logger;
 
-        public LibraryAssetService(ILibraryRepository libraryRepo, IMapper mapper, ILibraryAssetRepository libraryAssetRepo, ILogger<LibraryAssetService> logger)
+        public LibraryAssetService(ILibraryRepository libraryRepo, IMapper mapper,
+            ILibraryAssetRepository libraryAssetRepo, ILogger<LibraryAssetService> logger)
         {
             _libraryRepo = libraryRepo;
             _mapper = mapper;
@@ -106,6 +106,19 @@ namespace LMSService.Service
             var assets = await _libraryAssetRepo.GetLibraryAssets();
 
             var assetToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
+
+            return assetToReturn;
+        }
+
+        public async Task<PagedList<LibraryAssetForListDto>> GetAllAssets(PaginationParams paginationParams)
+        {
+            var assets = await _libraryAssetRepo.GetPagedLibraryAssetsAsync(paginationParams);
+
+            var assetToDto = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
+
+            //var assetToReturn = _mapper.Map<PagedList<LibraryAssetForListDto>>(assets);
+
+            var assetToReturn = (PagedList<LibraryAssetForListDto>)assetToDto;
 
             return assetToReturn;
         }

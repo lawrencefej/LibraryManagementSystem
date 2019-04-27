@@ -1,7 +1,7 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

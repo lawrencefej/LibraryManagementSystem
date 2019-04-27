@@ -1,5 +1,6 @@
 ﻿using LMSRepository.Dto;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Helpers;
+using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace LMSRepository.Interfaces
         Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId);
 
         Task<IEnumerable<LibraryAsset>> GetLibraryAssets();
+
+        Task<PagedList<LibraryAsset>> GetPagedLibraryAssetsAsync(PaginationParams paginationParams);
 
         IQueryable<LibraryAsset> GetAll();
 
