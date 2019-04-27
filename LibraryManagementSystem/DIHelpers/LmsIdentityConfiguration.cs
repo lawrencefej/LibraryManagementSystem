@@ -1,5 +1,5 @@
 ﻿using LMSRepository.Data;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,10 +21,10 @@ namespace LibraryManagementSystem.DIHelpers
                 opt.Password.RequireUppercase = false;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(LMSRepository.Interfaces.Models.Role), builder.Services);
+            builder = new IdentityBuilder(builder.UserType, typeof(LMSRepository.Models.Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
-            builder.AddRoleValidator<RoleValidator<LMSRepository.Interfaces.Models.Role>>();
-            builder.AddRoleManager<RoleManager<LMSRepository.Interfaces.Models.Role>>();
+            builder.AddRoleValidator<RoleValidator<LMSRepository.Models.Role>>();
+            builder.AddRoleManager<RoleManager<LMSRepository.Models.Role>>();
             builder.AddSignInManager<SignInManager<User>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

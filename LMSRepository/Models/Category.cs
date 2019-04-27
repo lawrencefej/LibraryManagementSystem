@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LMSRepository.Interfaces.Models
+namespace LMSRepository.Models
 {
     public class Category
     {

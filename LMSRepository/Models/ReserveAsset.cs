@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LMSRepository.Interfaces.Models
+namespace LMSRepository.Models
 {
     public class ReserveAsset
     {

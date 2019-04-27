@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace LMSRepository.Interfaces.Models
+namespace LMSRepository.Models
 {
     public class UserRole : IdentityUserRole<int>
     {

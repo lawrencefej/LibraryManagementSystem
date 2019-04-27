@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LMSRepository.Dto;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using LMSService.Dto;
 using LMSService.Helpers;
 using LMSService.Interfaces;

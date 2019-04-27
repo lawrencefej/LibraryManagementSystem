@@ -2,7 +2,7 @@
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using LMSService.Dto;
 using LMSService.Exceptions;
 using LMSService.Helpers;

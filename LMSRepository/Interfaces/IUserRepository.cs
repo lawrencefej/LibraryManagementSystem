@@ -1,5 +1,5 @@
 ﻿using LMSRepository.Dto;
-using LMSRepository.Interfaces.Models;
+using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

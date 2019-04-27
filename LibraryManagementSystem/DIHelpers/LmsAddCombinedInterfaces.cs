@@ -38,6 +38,8 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IEmailService, MailtrapService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<ITestService, TestService>();
+
             services.AddScoped<LogUserActivity>();
         }
     }

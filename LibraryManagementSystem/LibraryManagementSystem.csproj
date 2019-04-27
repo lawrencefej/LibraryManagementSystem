@@ -32,4 +32,8 @@
       <HintPath>..\..\SendGridEmailService\SendGridEmailService\bin\Debug\netcoreapp2.2\EmailService.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
 </Project>
