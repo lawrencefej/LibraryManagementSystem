@@ -91,7 +91,7 @@ namespace LibraryManagementSystem.Controllers
 
             var result = await _reserveService.ReserveAsset(userId, assetId);
 
-            if (!result.Valid)
+            if (!result.IsSuccessful)
             {
                 return BadRequest(result.Errors);
             }

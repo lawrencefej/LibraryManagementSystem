@@ -80,15 +80,13 @@ namespace LMSService.Service
             var validate = new CheckoutValidation();
             var result = await validate.ValidateAsync(checkoutForCreation);
 
-            ResponseHandler response = new ResponseHandler(checkoutForCreation, errors);
-
             if (!result.IsValid)
             {
                 foreach (var failure in result.Errors)
                 {
                     errors.Add($"{failure.ErrorMessage}");
                 }
-                return response;
+                return new ResponseHandler(errors);
             }
 
             ReduceAssetCopiesAvailable(libraryAsset);
@@ -101,12 +99,8 @@ namespace LMSService.Service
             if (await _libraryRepo.SaveAll())
             {
                 var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
-                checkoutToReturn.Status = EnumStatus.Checkedout.ToString();
-                response.Id = checkoutToReturn.Id;
-                response.Valid = true;
-                response.Result = checkoutToReturn;
-
-                return response;
+                checkoutToReturn.Status = nameof(EnumStatus.Checkedout);
+                return new ResponseHandler(checkoutToReturn, checkoutToReturn.Id);
             }
 
             throw new Exception("Failed to Checkout the asset on save");
@@ -132,7 +126,7 @@ namespace LMSService.Service
             if (await _libraryRepo.SaveAll())
             {
                 ResponseHandler response = new ResponseHandler();
-                response.Valid = true;
+                response.IsSuccessful = true;
                 return response;
             }
 

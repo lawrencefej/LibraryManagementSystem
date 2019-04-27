@@ -48,7 +48,7 @@ namespace LMSService.Service
             if (await _libraryRepo.SaveAll())
             {
                 ResponseHandler response = new ResponseHandler();
-                response.Valid = true;
+                response.IsSuccessful = true;
                 return response;
             }
 
@@ -64,7 +64,7 @@ namespace LMSService.Service
             if (await _libraryRepo.SaveAll())
             {
                 ResponseHandler response = new ResponseHandler();
-                response.Valid = true;
+                response.IsSuccessful = true;
                 return response;
             }
 
@@ -176,7 +176,7 @@ namespace LMSService.Service
 
             if (await _libraryRepo.SaveAll())
             {
-                response.Valid = true;
+                response.IsSuccessful = true;
                 return response;
             }
 
