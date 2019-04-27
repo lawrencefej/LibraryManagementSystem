@@ -140,7 +140,6 @@ namespace LMSRepository.DataAccess
                     .Where(s => s.Email.Contains(searchString)
                 || s.FirstName.Contains(searchString)
                 || s.Lastname.Contains(searchString)
-                //|| Convert.ToString(s.PhoneNumber).Contains(searchString)
                 || Convert.ToString(s.LibraryCard.Id).Contains(searchString));
 
                 return await users.ToListAsync();

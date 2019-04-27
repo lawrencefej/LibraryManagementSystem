@@ -10,7 +10,7 @@ namespace LMSRepository.Models
         public Status Status { get; set; }
         public int StatusId { get; set; }
         public decimal Cost { get; set; }
-        public DateTime Title { get; set; }
+        public DateTime Added { get; set; }
         public int NumberOfCopies { get; set; }
         public int CopiesAvailable { get; set; }
         public string Description { get; set; }

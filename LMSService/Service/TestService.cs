@@ -2,6 +2,7 @@
 using LMSRepository.DataAccess;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
+using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using LMSService.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,6 @@ namespace LMSService.Service
                 .Include(s => s.Status)
                 .Include(s => s.Author)
                 .OrderByDescending(o => o.Title);
-            //.AsQueryable();
 
             if (!string.IsNullOrEmpty(paginationParams.OrderBy))
             {

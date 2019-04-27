@@ -31,7 +31,7 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
 
-            if (!result.Valid)
+            if (!result.IsSuccessful)
             {
                 return BadRequest(result.Errors);
             }
@@ -44,7 +44,7 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var checkout = await _checkoutService.CheckoutReservedAsset(id);
 
-            if (checkout.Valid)
+            if (checkout.IsSuccessful)
             {
                 return NoContent();
             }
