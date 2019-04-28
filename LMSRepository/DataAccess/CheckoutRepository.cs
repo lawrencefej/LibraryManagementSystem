@@ -129,5 +129,12 @@ namespace LMSRepository.DataAccess
 
             return await GetAllCheckouts();
         }
+
+        public IQueryable<Checkout> GetAll()
+        {
+            var checkouts = _context.Checkouts.AsQueryable();
+
+            return checkouts;
+        }
     }
 }

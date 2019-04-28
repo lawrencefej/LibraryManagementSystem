@@ -82,12 +82,12 @@ namespace LibraryManagementSystem.Controllers
         {
             var authors = await _authorService.GetAllAsync(paginationParams);
 
-            var membersToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+            var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
 
             Response.AddPagination(authors.CurrentPage, authors.PageSize,
                  authors.TotalCount, authors.TotalPages);
 
-            return Ok(membersToReturn);
+            return Ok(authorsToReturn);
         }
     }
 }

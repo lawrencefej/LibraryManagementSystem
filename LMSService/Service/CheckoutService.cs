@@ -271,5 +271,12 @@ namespace LMSService.Service
 
             return checkout;
         }
+
+        public async Task<PagedList<Checkout>> GetAllAsync(PaginationParams paginationParams)
+        {
+            var checkouts = _checkoutRepo.GetAll();
+
+            return await PagedList<Checkout>.CreateAsync(checkouts, paginationParams.PageNumber, paginationParams.PageSize);
+        }
     }
 }

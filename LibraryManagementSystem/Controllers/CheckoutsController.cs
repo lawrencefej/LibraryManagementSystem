@@ -1,7 +1,11 @@
-﻿using LMSRepository.Dto;
+﻿using AutoMapper;
+using LibraryManagementSystem.API.Helpers;
+using LMSRepository.Dto;
+using LMSRepository.Helpers;
 using LMSService.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
@@ -12,10 +16,12 @@ namespace LibraryManagementSystem.API.Controllers
     public class CheckoutsController : ControllerBase
     {
         private readonly ICheckoutService _checkoutService;
+        private readonly IMapper _mapper;
 
-        public CheckoutsController(ICheckoutService checkoutService)
+        public CheckoutsController(ICheckoutService checkoutService, IMapper mapper)
         {
             _checkoutService = checkoutService;
+            _mapper = mapper;
         }
 
         [HttpPut("{id}")]
@@ -90,6 +96,19 @@ namespace LibraryManagementSystem.API.Controllers
             var checkouts = await _checkoutService.SearchCheckouts(searchString);
 
             return Ok(checkouts);
+        }
+
+        [HttpGet("pagination/")]
+        public async Task<IActionResult> GetAll([FromQuery]PaginationParams paginationParams)
+        {
+            var checkouts = await _checkoutService.GetAllAsync(paginationParams);
+
+            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+
+            Response.AddPagination(checkouts.CurrentPage, checkouts.PageSize,
+                 checkouts.TotalCount, checkouts.TotalPages);
+
+            return Ok(checkoutsToReturn);
         }
     }
 }
