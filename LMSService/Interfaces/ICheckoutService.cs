@@ -1,4 +1,5 @@
 ﻿using LMSRepository.Dto;
+using LMSRepository.Helpers;
 using LMSRepository.Models;
 using LMSService.Helpers;
 using System.Collections.Generic;
@@ -31,5 +32,7 @@ namespace LMSService.Dto
         void ReduceAssetCopiesAvailable(LibraryAsset asset);
 
         Task<IEnumerable<CheckoutForReturnDto>> SearchCheckouts(string searchString);
+
+        Task<PagedList<Checkout>> GetAllAsync(PaginationParams paginationParams);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LMSRepository.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSRepository.Interfaces
@@ -25,5 +26,7 @@ namespace LMSRepository.Interfaces
         Task<IEnumerable<Checkout>> GetMemberCurrentCheckouts(int cardId);
 
         Task<bool> IsAssetCurrentlyCheckedOutByMember(int assetId, int cardId);
+
+        IQueryable<Checkout> GetAll();
     }
 }
