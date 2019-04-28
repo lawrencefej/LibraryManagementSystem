@@ -132,7 +132,10 @@ namespace LMSRepository.DataAccess
 
         public IQueryable<Checkout> GetAll()
         {
-            var checkouts = _context.Checkouts.AsQueryable();
+            var checkouts = _context.Checkouts
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.Status)
+                .AsQueryable();
 
             return checkouts;
         }
