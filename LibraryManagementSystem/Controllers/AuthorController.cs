@@ -1,7 +1,11 @@
-﻿using LMSRepository.Dto;
+﻿using AutoMapper;
+using LibraryManagementSystem.API.Helpers;
+using LMSRepository.Dto;
+using LMSRepository.Helpers;
 using LMSService.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
@@ -12,10 +16,12 @@ namespace LibraryManagementSystem.Controllers
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
+        private readonly IMapper _mapper;
 
-        public AuthorController(IAuthorService authorService)
+        public AuthorController(IAuthorService authorService, IMapper mapper)
         {
             _authorService = authorService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -69,6 +75,19 @@ namespace LibraryManagementSystem.Controllers
             var assets = await _authorService.SearchAuthors(searchString);
 
             return Ok(assets);
+        }
+
+        [HttpGet("pagination/")]
+        public async Task<IActionResult> GetAll([FromQuery]PaginationParams paginationParams)
+        {
+            var authors = await _authorService.GetAllAsync(paginationParams);
+
+            var membersToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+
+            Response.AddPagination(authors.CurrentPage, authors.PageSize,
+                 authors.TotalCount, authors.TotalPages);
+
+            return Ok(membersToReturn);
         }
     }
 }

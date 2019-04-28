@@ -1,5 +1,6 @@
 ﻿using LMSRepository.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSRepository.Interfaces
@@ -11,5 +12,7 @@ namespace LMSRepository.Interfaces
         Task<IEnumerable<Author>> GetAuthors();
 
         Task<IEnumerable<Author>> SearchAuthor(string searchString);
+
+        IQueryable<Author> GetAll();
     }
 }

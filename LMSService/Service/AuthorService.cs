@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LMSRepository.Dto;
+using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using LMSService.Dto;
@@ -107,6 +108,13 @@ namespace LMSService.Service
             var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
 
             return authorsToReturn;
+        }
+
+        public async Task<PagedList<Author>> GetAllAsync(PaginationParams paginationParams)
+        {
+            var authors = _authorRepository.GetAll();
+
+            return await PagedList<Author>.CreateAsync(authors, paginationParams.PageNumber, paginationParams.PageSize);
         }
     }
 }

@@ -17,6 +17,13 @@ namespace LMSRepository.DataAccess
             _context = context;
         }
 
+        public IQueryable<Author> GetAll()
+        {
+            var authors = _context.Authors.AsQueryable();
+
+            return authors;
+        }
+
         public async Task<Author> GetAuthor(int authorId)
         {
             var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);

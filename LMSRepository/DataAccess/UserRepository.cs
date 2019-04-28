@@ -131,7 +131,7 @@ namespace LMSRepository.DataAccess
             var users = from user in _userManager.Users
                         .Include(s => s.LibraryCard)
                         .Include(s => s.UserRoles)
-                        .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                        .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
                         select user;
 
             if (!string.IsNullOrEmpty(searchString))
@@ -154,7 +154,7 @@ namespace LMSRepository.DataAccess
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
                 .OrderBy(u => u.Lastname).ToListAsync();
 
             return users;
