@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Dto;
+using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSService.Dto;
 using Microsoft.AspNet.OData;
@@ -179,6 +180,19 @@ namespace LibraryManagementSystem.Controllers
             }
 
             return true;
+        }
+
+        [HttpGet("pagination/")]
+        public async Task<IActionResult> GetLibraryAssets([FromQuery]PaginationParams paginationParams)
+        {
+            var members = await _userService.GetAllMembersAsync(paginationParams);
+
+            var membersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(members);
+
+            Response.AddPagination(members.CurrentPage, members.PageSize,
+                 members.TotalCount, members.TotalPages);
+
+            return Ok(membersToReturn);
         }
     }
 }
