@@ -1,4 +1,6 @@
 ﻿using LMSRepository.Dto;
+using LMSRepository.Helpers;
+using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,5 +19,7 @@ namespace LMSService.Dto
         Task<AuthorDto> GetAuthor(int authorId);
 
         Task<IEnumerable<AuthorDto>> SearchAuthors(string searchString);
+
+        Task<PagedList<Author>> GetAllAsync(PaginationParams paginationParams);
     }
 }

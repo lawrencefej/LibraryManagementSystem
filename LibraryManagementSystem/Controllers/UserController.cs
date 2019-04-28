@@ -183,7 +183,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("pagination/")]
-        public async Task<IActionResult> GetLibraryAssets([FromQuery]PaginationParams paginationParams)
+        public async Task<IActionResult> GetAll([FromQuery]PaginationParams paginationParams)
         {
             var members = await _userService.GetAllMembersAsync(paginationParams);
 
