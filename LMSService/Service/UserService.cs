@@ -7,9 +7,11 @@ using LMSService.Dto;
 using LMSService.Exceptions;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSService.Service
@@ -185,6 +187,13 @@ namespace LMSService.Service
             var usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
 
             return usersToReturn;
+        }
+
+        public async Task<PagedList<User>> GetAllMembersAsync(PaginationParams paginationParams)
+        {
+            var users = _userRepo.GetAll();
+
+            return await PagedList<User>.CreateAsync(users, paginationParams.PageNumber, paginationParams.PageSize);
         }
     }
 }

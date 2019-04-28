@@ -1,6 +1,7 @@
 ﻿using LMSRepository.Dto;
 using LMSRepository.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSRepository.Interfaces
@@ -30,5 +31,7 @@ namespace LMSRepository.Interfaces
         Task<IEnumerable<ReserveAsset>> GetUserCurrentReservedAssets(int id);
 
         Task<LibraryCard> GetUserLibraryCard(int id);
+
+        IQueryable<User> GetAll();
     }
 }

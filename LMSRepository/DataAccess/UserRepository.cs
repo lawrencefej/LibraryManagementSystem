@@ -160,6 +160,18 @@ namespace LMSRepository.DataAccess
             return users;
         }
 
+        public IQueryable<User> GetAll()
+        {
+            var users = _userManager.Users
+                .Include(p => p.ProfilePicture)
+                .Include(c => c.LibraryCard)
+                .Include(c => c.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
+                .OrderBy(u => u.Lastname).AsQueryable();
+
+            return users;
+        }
+
         public async Task<IEnumerable<User>> GetAdmins()
         {
             var users = await _userManager.Users.Include(p => p.ProfilePicture)

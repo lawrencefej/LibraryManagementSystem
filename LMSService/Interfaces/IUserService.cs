@@ -1,4 +1,6 @@
 ﻿using LMSRepository.Dto;
+using LMSRepository.Helpers;
+using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,5 +25,7 @@ namespace LMSService.Dto
         Task<UserForDetailedDto> AddMember(MemberForCreation memberForCreation);
 
         Task DeleteUser(int userId);
+
+        Task<PagedList<User>> GetAllMembersAsync(PaginationParams paginationParams);
     }
 }
