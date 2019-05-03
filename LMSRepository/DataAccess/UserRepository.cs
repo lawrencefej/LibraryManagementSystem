@@ -176,7 +176,7 @@ namespace LMSRepository.DataAccess
         {
             var users = await _userManager.Users.Include(p => p.ProfilePicture)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name != EnumRoles.Member.ToString()))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name != nameof(EnumRoles.Member)))
                 .OrderBy(u => u.Lastname).ToListAsync();
 
             return users;

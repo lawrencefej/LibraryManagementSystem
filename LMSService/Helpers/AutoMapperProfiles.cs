@@ -46,6 +46,8 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<LibraryCardForCreationDto, LibraryCard>();
             CreateMap<Photo, PhotoForDetailedDto>();
             CreateMap<Photo, PhotoForReturnDto>();
+            CreateMap<UserPhotoDto, UserProfilePhoto>();
+            CreateMap<AssetPhotoDto, AssetPhoto>();
             CreateMap<Status, StatusToReturnDto>();
             CreateMap<AssetType, AssetTypeForReturn>();
             CreateMap<LibraryAssetForUpdateDto, LibraryAsset>();

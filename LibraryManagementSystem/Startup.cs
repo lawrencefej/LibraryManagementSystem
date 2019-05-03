@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
+using PhotoLibrary.Configuration;
 using Serilog;
 
 namespace LibraryManagementSystem.API
@@ -34,6 +35,7 @@ namespace LibraryManagementSystem.API
             services.AddMvcConfiguration();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection("EmailSettings").Get<EmailSettings>());
+            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection("CloudinarySettings").Get<PhotoSettings>());
             services.AddThirdPartyConfiguration();
 
             services.AddCombinedInterfaces();
