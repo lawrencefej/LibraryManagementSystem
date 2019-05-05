@@ -3,6 +3,8 @@ using EmailService;
 using EmailService.Services;
 using LMSRepository.Interfaces.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
+using PhotoLibrary;
+using PhotoLibrary.Service;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace LibraryManagementSystem.DIHelpers
@@ -12,6 +14,7 @@ namespace LibraryManagementSystem.DIHelpers
         public static void AddProductionInterfaces(this IServiceCollection services)
         {
             services.AddScoped<IEmailService, SendGridService>();
+            services.AddScoped<IPhotoLibraryService, CloudinaryService>();
         }
 
         public static void AddThirdPartyConfiguration(this IServiceCollection services)
@@ -26,6 +29,7 @@ namespace LibraryManagementSystem.DIHelpers
         public static void AddDevelopmentInterfaces(this IServiceCollection services)
         {
             services.AddScoped<IEmailService, MailtrapService>();
+            services.AddScoped<IPhotoLibraryService, CloudinaryService>();
             services.AddTransient<Seed>();
         }
     }
