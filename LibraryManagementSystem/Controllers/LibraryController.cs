@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using LMSRepository.Data;
-using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,21 +25,6 @@ namespace LibraryManagementSystem.API.Controllers
             _userManager = userManager;
             _libraryRepo = libraryRepo;
             _mapper = mapper;
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<ActionResult> GetCheckouts()
-        {
-            //var test = await _context.Users.Where(u => u.UserRoles.Any(r => r.RoleId == 2)).ToListAsync();
-
-            //var test = await _userManager.GetUsersInRoleAsync("librarian");
-            var test = await _libraryRepo.GetAdmins();
-            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(test);
-
-            //var usertoreturn = _mapper.Map<>
-
-            return Ok(usersToReturn);
         }
 
         [HttpGet("{id}")]

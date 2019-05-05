@@ -2,7 +2,6 @@
 using LMSRepository.DataAccess;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
-using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using LMSService.Interfaces;
 using Microsoft.EntityFrameworkCore;
