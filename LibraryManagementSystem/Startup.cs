@@ -43,6 +43,22 @@ namespace LibraryManagementSystem.API
             services.AddOData();
         }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            IdentityModelEventSource.ShowPII = true;
+            services.AddDataAccessServices(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddIdentityConfiguration(Configuration.GetSection("AppSettings:Token").Value);
+            services.AddMvcConfiguration();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection("EmailSettings").Get<EmailSettings>());
+            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection("CloudinarySettings").Get<PhotoSettings>());
+            services.AddThirdPartyConfiguration();
+
+            services.AddCombinedInterfaces();
+            services.AddDevelopmentInterfaces();
+            services.AddOData();
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder, ILoggerFactory loggerFactory)
         {
