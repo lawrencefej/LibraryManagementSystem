@@ -24,25 +24,6 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            //var test = await _context.Checkouts
-            //    .Where(d => d.Since > DateTime.Today.AddMonths(-1))
-            //    .GroupBy(d => new { day = d.Since })
-            //    .Select(x => new { count = x.Count(), day = x.Key.day })
-            //    .ToListAsync();
-
-            //var test = await _context.LibraryAssets
-            //    .GroupBy(d => d.AssetType.Name)
-            //    .Select(x => new { Typee = x.Key, TypeCount = x.Count() })
-            //    .ToListAsync();
-
-            //var test = new TotalsReport();
-
-            //test.TotalItems = await _context.LibraryAssets.CountAsync();
-            //test.TotalMembers = _context.Users.Count();
-            //test.TotalCheckouts = _context.Checkouts.Count();
-            //test.TotalAuthors = _context.Authors.Count();
-
-            //return Ok(test);
             var category = await _categoryService.GetCategories();
 
             return Ok(category);
