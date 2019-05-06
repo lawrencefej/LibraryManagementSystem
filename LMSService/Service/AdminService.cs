@@ -66,8 +66,6 @@ namespace LMSService.Service
 
             await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);
 
-            //addAdminDto.Id = userToCreate.Id;
-
             var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
 
             var role = userToReturn.UserRoles.ElementAt(0);
@@ -114,10 +112,6 @@ namespace LMSService.Service
 
         public async Task UpdateUser(UpdateAdminDto userforUpdate)
         {
-            //var user = await _adminRepository.GetAdminUser(addAdminDto.Id);
-
-            //_mapper.Map(addAdminDto, user);
-
             var user = await _adminRepository.GetAdminUser(userforUpdate.Id);
 
             _mapper.Map(userforUpdate, user);

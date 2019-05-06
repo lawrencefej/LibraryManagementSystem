@@ -83,16 +83,6 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("admins")]
         public async Task<IActionResult> GetAdmins()
         {
-            //var users = await _userManager.Users
-            //    .Include(p => p.ProfilePicture)
-            //    .Include(c => c.UserRoles)
-            //        .ThenInclude(ur => ur.Role)
-            //    //.Where(u => u.UserRoles.Any(r => r.Role.Name. == (nameof(EnumRoles.Admin) || nameof(EnumRoles.Librarian))))
-            //    .Where(u => u.UserRoles.Any(r => r.Role.Name != (nameof(EnumRoles.Member))))
-            //    .OrderBy(u => u.Lastname).ToListAsync();
-
-            //return Ok(users);
-
             var userList = await (from user in _context.Users
                                   orderby user.UserName
                                   select new
