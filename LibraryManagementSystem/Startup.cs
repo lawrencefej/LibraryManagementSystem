@@ -1,6 +1,7 @@
 ﻿using EmailService.Configuration;
 using LibraryManagementSystem.DIHelpers;
 using LMSRepository.Interfaces.DataAccess;
+using LMSRepository.Data;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
 using Microsoft.AspNet.OData.Extensions;
@@ -39,7 +40,7 @@ namespace LibraryManagementSystem.API
             services.AddThirdPartyConfiguration();
 
             services.AddCombinedInterfaces();
-            services.AddDevelopmentInterfaces();
+            services.AddProductionInterfaces();
             services.AddOData();
         }
 
@@ -60,7 +61,7 @@ namespace LibraryManagementSystem.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -90,9 +91,9 @@ namespace LibraryManagementSystem.API
             }
 
             loggerFactory.AddSerilog();
-            seeder.SeedUsers();
-            seeder.SeedAuthors();
-            seeder.SeedAssets();
+            // seeder.SeedUsers();
+            // seeder.SeedAuthors();
+            // seeder.SeedAssets();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
