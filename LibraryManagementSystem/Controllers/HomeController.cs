@@ -1,6 +1,7 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class HomeController : ControllerBase
@@ -24,9 +26,11 @@ namespace LibraryManagementSystem.API.Controllers
 
         // GET: api/Home
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Checkout>>> GetCheckouts()
+        public IActionResult GetCheckouts()
         {
-            return await _context.Checkouts.ToListAsync();
+            var url = this.Request.Host.Value;
+
+            return Ok(url);
         }
 
         // GET: api/Home/5
