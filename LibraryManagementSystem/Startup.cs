@@ -95,15 +95,21 @@ namespace LibraryManagementSystem.API
             // seeder.SeedAuthors();
             // seeder.SeedAssets();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseAuthentication();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             //app.UseMvc();
             app.UseMvc(routeBuilder =>
             {
+                routeBuilder.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Fallback", action = "Index" }
+                    );
                 routeBuilder.EnableDependencyInjection();
                 routeBuilder.Expand().Select().Count().OrderBy().Filter().MaxTop(null);
             });

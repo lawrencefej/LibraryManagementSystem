@@ -105,7 +105,8 @@ namespace LibraryManagementSystem.API.Controllers
                 });
             }
 
-            return Unauthorized();
+            //return Unauthorized();
+            return BadRequest("Email or Password does not match");
         }
 
         [HttpPost("forgotPassword")]
@@ -126,6 +127,8 @@ namespace LibraryManagementSystem.API.Controllers
                 var encodedToken = HttpUtility.UrlEncode(code);
 
                 var token = GenerateJwtToken(user, encodedToken);
+
+                var url = Request.Host.Value;
 
                 var callbackUrl = new Uri(resetPassword.Url + "/" + token);
 

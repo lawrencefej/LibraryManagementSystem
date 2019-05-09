@@ -33,5 +33,10 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 WORKDIR /publish
  
 COPY --from=build-image /publish .
+
+# ENV ASPNETCORE_URLS=http://*:80
+
+# EXPOSE 5000
+# EXPOSE 5000
  
 ENTRYPOINT ["dotnet", "LibraryManagementSystem.dll"]
