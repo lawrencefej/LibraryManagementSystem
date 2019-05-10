@@ -44,7 +44,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(AddAdminDto addAdminDto)
         {
-            addAdminDto.CallbackUrl = Request.Host.Value;
+            addAdminDto.CallbackUrl = (Request.Scheme + "://" + Request.Host + "/resetpassword/");
 
             var user = await _adminService.CreateUser(addAdminDto);
 

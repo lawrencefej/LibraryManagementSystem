@@ -4,7 +4,7 @@ using LMSRepository.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,9 +28,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet]
         public IActionResult GetCheckouts()
         {
-            var url = this.Request.Host.Value;
+            var callbackUrl = new Uri(Request.Scheme + "://" + Request.Host);
 
-            return Ok(url);
+            return Ok(callbackUrl);
         }
 
         // GET: api/Home/5
