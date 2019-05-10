@@ -35,16 +35,12 @@ namespace LibraryManagementSystem.API.Controllers
 
         // GET: api/Home/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Checkout>> GetCheckout(int id)
+        public IActionResult GetCheckout(int id)
         {
-            var checkout = await _context.Checkouts.FindAsync(id);
+            //var ip = Request.HttpContext.Connection.RemoteIpAddress;
+            var ip = this.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
 
-            if (checkout == null)
-            {
-                return NotFound();
-            }
-
-            return checkout;
+            return Ok(ip);
         }
 
         // PUT: api/Home/5

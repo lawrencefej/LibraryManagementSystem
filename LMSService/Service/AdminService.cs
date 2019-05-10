@@ -52,28 +52,28 @@ namespace LMSService.Service
             return userToReturn;
         }
 
-        public async Task<UserForDetailedDto> CreateUser2(AddAdminDto addAdminDto)
-        {
-            addAdminDto.UserName = addAdminDto.Email;
+        //public async Task<UserForDetailedDto> CreateUser2(AddAdminDto addAdminDto)
+        //{
+        //    addAdminDto.UserName = addAdminDto.Email;
 
-            addAdminDto.Password = CreatePassword(addAdminDto.FirstName, addAdminDto.LastName);
+        //    addAdminDto.Password = CreatePassword(addAdminDto.FirstName, addAdminDto.LastName);
 
-            var userToCreate = _mapper.Map<User>(addAdminDto);
+        //    var userToCreate = _mapper.Map<User>(addAdminDto);
 
-            await _adminRepository.CreateUser(userToCreate, addAdminDto.Password, addAdminDto.Role);
+        //    await _adminRepository.CreateUser(userToCreate, addAdminDto.Password, addAdminDto.Role);
 
-            var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
+        //    var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
 
-            await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);
+        //    await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+        //    var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
 
-            var role = userToReturn.UserRoles.ElementAt(0);
+        //    var role = userToReturn.UserRoles.ElementAt(0);
 
-            userToReturn.Role = role.Name;
+        //    userToReturn.Role = role.Name;
 
-            return userToReturn;
-        }
+        //    return userToReturn;
+        //}
 
         public async Task<UserForDetailedDto> GetAdminUser(int userId)
         {

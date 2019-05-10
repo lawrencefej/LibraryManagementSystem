@@ -130,9 +130,9 @@ namespace LibraryManagementSystem.API.Controllers
 
                 var url = Request.Host.Value;
 
-                var callbackUrl = new Uri(resetPassword.Url + "/" + token);
+                var callbackUrl = new Uri(url + "/" + token);
 
-                var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>";
+                var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking here: <a href='{url}'>link</a>";
 
                 await _emailSender.SendEmail(resetPassword.Email, "Reset Password",
                    body);
