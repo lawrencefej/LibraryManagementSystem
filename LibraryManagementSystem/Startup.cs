@@ -31,7 +31,7 @@ namespace LibraryManagementSystem.API
         public void ConfigureServices(IServiceCollection services)
         {
             IdentityModelEventSource.ShowPII = true;
-            services.AddDataAccessServices(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddDataAccessServices(Configuration.GetConnectionString("ConnectionString"));
             services.AddIdentityConfiguration(Configuration.GetSection("AppSettings:Token").Value);
             services.AddMvcConfiguration();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
