@@ -1,14 +1,16 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class HomeController : ControllerBase
@@ -24,23 +26,21 @@ namespace LibraryManagementSystem.API.Controllers
 
         // GET: api/Home
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Checkout>>> GetCheckouts()
+        public IActionResult GetCheckouts()
         {
-            return await _context.Checkouts.ToListAsync();
+            var callbackUrl = new Uri(Request.Scheme + "://" + Request.Host);
+
+            return Ok(callbackUrl);
         }
 
         // GET: api/Home/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Checkout>> GetCheckout(int id)
+        public IActionResult GetCheckout(int id)
         {
-            var checkout = await _context.Checkouts.FindAsync(id);
+            //var ip = Request.HttpContext.Connection.RemoteIpAddress;
+            var ip = this.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
 
-            if (checkout == null)
-            {
-                return NotFound();
-            }
-
-            return checkout;
+            return Ok(ip);
         }
 
         // PUT: api/Home/5
