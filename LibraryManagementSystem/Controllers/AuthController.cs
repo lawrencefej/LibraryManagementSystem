@@ -105,7 +105,8 @@ namespace LibraryManagementSystem.API.Controllers
                 });
             }
 
-            return Unauthorized();
+            //return Unauthorized();
+            return BadRequest("Email or Password does not match");
         }
 
         [HttpPost("forgotPassword")]
@@ -125,14 +126,11 @@ namespace LibraryManagementSystem.API.Controllers
 
                 var encodedToken = HttpUtility.UrlEncode(code);
 
-                var token = GenerateJwtToken(user, encodedToken);
+                var callbackUrl = new Uri(Request.Scheme + "://" + Request.Host + "/resetpassword/" + user.Id + "/" + encodedToken);
 
-                var callbackUrl = new Uri(resetPassword.Url + "/" + token);
+                var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking <a href='{callbackUrl}'>here</a>:";
 
-                var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>";
-
-                await _emailSender.SendEmail(resetPassword.Email, "Reset Password",
-                   body);
+                await _emailSender.SendEmail(resetPassword.Email, "Reset Password", body);
 
                 return Ok();
             }
@@ -144,23 +142,18 @@ namespace LibraryManagementSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {
-            const string id = "nameid";
-            const string resetCode = "ResetCode";
-
-            var userId = GetResetCode(resetPassword.Token, id);
-
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(resetPassword.UserId.ToString());
 
             if (user == null || (await _userManager.IsInRoleAsync(user, nameof(EnumRoles.Member))))
             {
                 return BadRequest("User does not exist");
             }
 
-            var code = GetResetCode(resetPassword.Token, resetCode);
+            //var code = GetResetCode(resetPassword.Token, resetCode);
 
-            var decodedToken = HttpUtility.UrlDecode(code);
+            var decodedToken = HttpUtility.UrlDecode(resetPassword.Code);
 
-            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPassword.Password);
+            var result = await _userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.Password);
 
             if (result.Succeeded)
             {

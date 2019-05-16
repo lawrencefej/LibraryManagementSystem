@@ -3,7 +3,6 @@ using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using LMSService.Dto;
-using LMSService.Helpers;
 using LMSService.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -38,29 +37,6 @@ namespace LMSService.Service
             var userToCreate = _mapper.Map<User>(addAdminDto);
 
             await _adminRepository.CreateUser(userToCreate, addAdminDto.Role);
-
-            var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
-
-            await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);
-
-            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
-
-            var role = userToReturn.UserRoles.ElementAt(0);
-
-            userToReturn.Role = role.Name;
-
-            return userToReturn;
-        }
-
-        public async Task<UserForDetailedDto> CreateUser2(AddAdminDto addAdminDto)
-        {
-            addAdminDto.UserName = addAdminDto.Email;
-
-            addAdminDto.Password = CreatePassword(addAdminDto.FirstName, addAdminDto.LastName);
-
-            var userToCreate = _mapper.Map<User>(addAdminDto);
-
-            await _adminRepository.CreateUser(userToCreate, addAdminDto.Password, addAdminDto.Role);
 
             var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
 
@@ -130,11 +106,9 @@ namespace LMSService.Service
         {
             var encodedToken = HttpUtility.UrlEncode(code);
 
-            var token = LmsTokens.GenerateJwtToken(user, encodedToken);
+            var callbackUrl = new Uri(url + user.Id + "/" + encodedToken);
 
-            var callbackUrl = new Uri(url + "/" + token);
-
-            var body = $"Welcome {user.FirstName.ToLower()}, <p>An account has been created for you</p> Please create your new password by clicking here: <a href='{callbackUrl}'>link</a>";
+            var body = $"Welcome {user.FirstName.ToLower()}, <p>An account has been created for you</p> Please create your new password by clicking <a href='{callbackUrl}'>here</a>:";
 
             await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
         }

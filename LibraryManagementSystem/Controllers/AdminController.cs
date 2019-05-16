@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
-    [Authorize(Policy = Helpers.Role.RequireLibrarianRole)]
+    [Authorize(Policy = Helpers.Role.RequireAdminRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -33,7 +33,6 @@ namespace LibraryManagementSystem.API.Controllers
             _adminService = adminService;
         }
 
-        //[Authorize(Policy = Helpers.Role.RequireLibrarianRole)]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -45,6 +44,8 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(AddAdminDto addAdminDto)
         {
+            addAdminDto.CallbackUrl = (Request.Scheme + "://" + Request.Host + "/resetpassword/");
+
             var user = await _adminService.CreateUser(addAdminDto);
 
             return CreatedAtRoute("Get", new { id = user.Id }, user);

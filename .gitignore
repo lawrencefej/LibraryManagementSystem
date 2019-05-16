@@ -332,3 +332,5 @@ ASALocalRun/
 .mfractor/
 /LibraryManagementSystem/appsettings.json
 /LibraryManagementSystem/appsettings.Production.json
+/docker-compose.yml
+/Test
