@@ -334,3 +334,4 @@ ASALocalRun/
 /LibraryManagementSystem/appsettings.Production.json
 /docker-compose.yml
 /Test
+/LibraryManagementSystem/appsettings.Staging.json

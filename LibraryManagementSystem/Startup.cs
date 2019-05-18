@@ -1,7 +1,5 @@
 ﻿using EmailService.Configuration;
 using LibraryManagementSystem.DIHelpers;
-using LMSRepository.Interfaces.DataAccess;
-using LMSRepository.Data;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
 using Microsoft.AspNet.OData.Extensions;
