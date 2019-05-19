@@ -30,7 +30,7 @@ namespace LibraryManagementSystem.DIHelpers
         {
             services.AddScoped<IEmailService, MailtrapService>();
             services.AddScoped<IPhotoLibraryService, CloudinaryService>();
-            services.AddTransient<Seed>();
+            // services.AddTransient<Seed>();
         }
     }
 }

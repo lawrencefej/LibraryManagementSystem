@@ -20,6 +20,7 @@ namespace LMSRepository.Dto
 
         public string Password { get; set; }
 
+        [Required]
         public string Role { get; set; }
 
         public DateTime Created { get; set; }

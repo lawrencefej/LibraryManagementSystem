@@ -70,7 +70,6 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [AllowAnonymous]
-        //[HttpGet("{assetId}", Name = "GetAsset")]
         [HttpGet("{assetId}", Name = nameof(GetLibraryAsset))]
         public async Task<IActionResult> GetLibraryAsset(int assetId)
         {
