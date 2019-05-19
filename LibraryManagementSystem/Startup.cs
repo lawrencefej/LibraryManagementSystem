@@ -1,6 +1,5 @@
 ﻿using EmailService.Configuration;
 using LibraryManagementSystem.DIHelpers;
-using LMSRepository.Interfaces.DataAccess;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
 using Microsoft.AspNet.OData.Extensions;
@@ -30,6 +29,22 @@ namespace LibraryManagementSystem.API
         public void ConfigureServices(IServiceCollection services)
         {
             IdentityModelEventSource.ShowPII = true;
+            services.AddDataAccessServices(Configuration.GetConnectionString("ConnectionString"));
+            services.AddIdentityConfiguration(Configuration.GetSection("AppSettings:Token").Value);
+            services.AddMvcConfiguration();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection("EmailSettings").Get<EmailSettings>());
+            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection("CloudinarySettings").Get<PhotoSettings>());
+            services.AddThirdPartyConfiguration();
+
+            services.AddCombinedInterfaces();
+            services.AddProductionInterfaces();
+            services.AddOData();
+        }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            IdentityModelEventSource.ShowPII = true;
             services.AddDataAccessServices(Configuration.GetConnectionString("DefaultConnection"));
             services.AddIdentityConfiguration(Configuration.GetSection("AppSettings:Token").Value);
             services.AddMvcConfiguration();
@@ -44,7 +59,7 @@ namespace LibraryManagementSystem.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -74,19 +89,25 @@ namespace LibraryManagementSystem.API
             }
 
             loggerFactory.AddSerilog();
-            seeder.SeedUsers();
-            seeder.SeedAuthors();
-            seeder.SeedAssets();
+            // seeder.SeedUsers();
+            // seeder.SeedAuthors();
+            // seeder.SeedAssets();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseAuthentication();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             //app.UseMvc();
             app.UseMvc(routeBuilder =>
             {
+                routeBuilder.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Fallback", action = "Index" }
+                    );
                 routeBuilder.EnableDependencyInjection();
                 routeBuilder.Expand().Select().Count().OrderBy().Filter().MaxTop(null);
             });

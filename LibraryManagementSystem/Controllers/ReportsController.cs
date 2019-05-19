@@ -265,10 +265,6 @@ namespace LibraryManagementSystem.Controllers
         {
             var startDate = DateTime.Today.AddMonths(-12);
 
-            //var emptyData = Enumerable.Range(1, 12)
-            //    .Select(i => DateTime.Today.AddMonths(i - 12).Month)
-            //    .ToList();
-
             var emptyData = Enumerable.Range(1, 12).Select(i =>
                 new DataDto
                 {

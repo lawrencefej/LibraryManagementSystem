@@ -331,3 +331,7 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /LibraryManagementSystem/appsettings.json
+/LibraryManagementSystem/appsettings.Production.json
+/docker-compose.yml
+/Test
+/LibraryManagementSystem/appsettings.Staging.json

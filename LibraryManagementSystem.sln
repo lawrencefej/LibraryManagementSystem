@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMSRepository", "LMSReposit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMSService", "LMSService\LMSService.csproj", "{476BDF85-6D0C-43F9-934B-49D4D491075F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoLibrary", "..\Photo-Manager-Library\PhotoService\PhotoLibrary.csproj", "{1A25BE21-023A-40D3-B988-297474DF0645}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{892CDAA8-4D78-4BD7-983C-7E22CBDF4D59}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{511F4FAC-3766-4390-BDC1-30F9EACE5CFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +31,10 @@ Global
 		{476BDF85-6D0C-43F9-934B-49D4D491075F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{476BDF85-6D0C-43F9-934B-49D4D491075F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{476BDF85-6D0C-43F9-934B-49D4D491075F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A25BE21-023A-40D3-B988-297474DF0645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A25BE21-023A-40D3-B988-297474DF0645}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A25BE21-023A-40D3-B988-297474DF0645}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A25BE21-023A-40D3-B988-297474DF0645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511F4FAC-3766-4390-BDC1-30F9EACE5CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511F4FAC-3766-4390-BDC1-30F9EACE5CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511F4FAC-3766-4390-BDC1-30F9EACE5CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511F4FAC-3766-4390-BDC1-30F9EACE5CFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

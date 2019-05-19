@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LMSRepository.Interfaces.DataAccess
+namespace LMSRepository.Data
 {
     public class Seed
     {

@@ -14,8 +14,6 @@ namespace LMSRepository.Dto
         public string Description { get; set; }
         public DateTime DateAdded { get; set; }
         public string PublicId { get; set; }
-
-        [Required]
         public int UserId { get; set; }
 
         public UserPhotoDto()
