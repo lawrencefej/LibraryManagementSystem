@@ -1,5 +1,6 @@
 ﻿using EmailService.Configuration;
 using LibraryManagementSystem.DIHelpers;
+using LibraryManagementSystem.Helpers;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
 using Microsoft.AspNet.OData.Extensions;
@@ -28,13 +29,15 @@ namespace LibraryManagementSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
+            var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
             IdentityModelEventSource.ShowPII = true;
-            services.AddDataAccessServices(Configuration.GetConnectionString("ConnectionString"));
-            services.AddIdentityConfiguration(Configuration.GetSection("AppSettings:Token").Value);
+            services.AddDataAccessServices(appSettings.ConnectionString);
+            services.AddIdentityConfiguration(appSettings.Token);
             services.AddMvcConfiguration();
-            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
-            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection("EmailSettings").Get<EmailSettings>());
-            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection("CloudinarySettings").Get<PhotoSettings>());
+            services.Configure<CloudinarySettings>(Configuration.GetSection(nameof(CloudinarySettings)));
+            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
+            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection(nameof(CloudinarySettings)).Get<PhotoSettings>());
             services.AddThirdPartyConfiguration();
 
             services.AddCombinedInterfaces();
@@ -44,13 +47,20 @@ namespace LibraryManagementSystem.API
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
+            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
             IdentityModelEventSource.ShowPII = true;
-            services.AddDataAccessServices(Configuration.GetConnectionString("DefaultConnection"));
-            services.AddIdentityConfiguration(Configuration.GetSection("AppSettings:Token").Value);
+            var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+            //services.AddSingleton(resolver =>
+            //resolver.GetRequiredService<AppSettings>());
+            //services.AddSingleton<IValidatable>(resolver =>
+            //        resolver.GetRequiredService<AppSettings>());
+            services.AddDataAccessServices(appSettings.ConnectionString);
+            services.AddIdentityConfiguration(appSettings.Token);
             services.AddMvcConfiguration();
-            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
-            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection("EmailSettings").Get<EmailSettings>());
-            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection("CloudinarySettings").Get<PhotoSettings>());
+
+            services.Configure<CloudinarySettings>(Configuration.GetSection(nameof(CloudinarySettings)));
+            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
+            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection(nameof(CloudinarySettings)).Get<PhotoSettings>());
             services.AddThirdPartyConfiguration();
 
             services.AddCombinedInterfaces();
