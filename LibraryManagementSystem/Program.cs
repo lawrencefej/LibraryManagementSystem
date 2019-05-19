@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace LibraryManagementSystem.API
 {
@@ -15,6 +17,18 @@ namespace LibraryManagementSystem.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddSerilog();
+                })
+                //.UseSerilog((ctx, config) =>
+                //{
+                //    config
+                //        .MinimumLevel.Information()
+                //        .Enrich.FromLogContext()
+                //        .WriteTo.Console();
+                //})
                 .UseStartup<Startup>();
     }
 }
