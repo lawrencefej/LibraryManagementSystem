@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LibraryManagementSystem.Helpers;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -31,10 +33,11 @@ namespace LibraryManagementSystem.API.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILibraryRepository _libraryRepo;
         private readonly IEmailSender _emailSender;
+        private readonly AppSettings _appSettings;
 
         public AuthController(IConfiguration config,
             IMapper mapper, ILibraryRepository libraryRepo,
-            UserManager<User> userManager,
+            UserManager<User> userManager, IOptions<AppSettings> appSettings,
             SignInManager<User> signInManager, IEmailSender emailSender)
         {
             _config = config;
@@ -43,6 +46,7 @@ namespace LibraryManagementSystem.API.Controllers
             _signInManager = signInManager;
             _libraryRepo = libraryRepo;
             _emailSender = emailSender;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost("register")]
@@ -178,7 +182,8 @@ namespace LibraryManagementSystem.API.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection(nameof(AppSettings)).Value));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Token));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -204,7 +209,8 @@ namespace LibraryManagementSystem.API.Controllers
                 new Claim("ResetCode", code)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Token));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
