@@ -113,6 +113,8 @@ namespace LibraryManagementSystem.API.Controllers
             Response.AddPagination(assets.CurrentPage, assets.PageSize,
                  assets.TotalCount, assets.TotalPages);
 
+            _logger.LogCritical("Test log");
+
             return Ok(assetsToReturn);
         }
 
