@@ -29,6 +29,7 @@ namespace LibraryManagementSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
             var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
             IdentityModelEventSource.ShowPII = true;
             services.AddDataAccessServices(appSettings.ConnectionString);
@@ -46,11 +47,17 @@ namespace LibraryManagementSystem.API
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
             IdentityModelEventSource.ShowPII = true;
+            var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+            //services.AddSingleton(resolver =>
+            //resolver.GetRequiredService<AppSettings>());
+            //services.AddSingleton<IValidatable>(resolver =>
+            //        resolver.GetRequiredService<AppSettings>());
             services.AddDataAccessServices(appSettings.ConnectionString);
             services.AddIdentityConfiguration(appSettings.Token);
             services.AddMvcConfiguration();
+
             services.Configure<CloudinarySettings>(Configuration.GetSection(nameof(CloudinarySettings)));
             services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
             services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection(nameof(CloudinarySettings)).Get<PhotoSettings>());
