@@ -22,13 +22,6 @@ namespace LibraryManagementSystem.API
                     logging.ClearProviders();
                     logging.AddSerilog();
                 })
-                //.UseSerilog((ctx, config) =>
-                //{
-                //    config
-                //        .MinimumLevel.Information()
-                //        .Enrich.FromLogContext()
-                //        .WriteTo.Console();
-                //})
                 .UseStartup<Startup>();
     }
 }

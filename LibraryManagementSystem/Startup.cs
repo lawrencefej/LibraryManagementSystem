@@ -18,13 +18,15 @@ namespace LibraryManagementSystem.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
+            CurrentEnv = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment CurrentEnv { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -39,42 +41,26 @@ namespace LibraryManagementSystem.API
             services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
             services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection(nameof(CloudinarySettings)).Get<PhotoSettings>());
             services.AddThirdPartyConfiguration();
-
             services.AddCombinedInterfaces();
-            services.AddProductionInterfaces();
-            services.AddOData();
-        }
 
-        public void ConfigureDevelopmentServices(IServiceCollection services)
-        {
-            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
-            IdentityModelEventSource.ShowPII = true;
-            var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
-            //services.AddSingleton(resolver =>
-            //resolver.GetRequiredService<AppSettings>());
-            //services.AddSingleton<IValidatable>(resolver =>
-            //        resolver.GetRequiredService<AppSettings>());
-            services.AddDataAccessServices(appSettings.ConnectionString);
-            services.AddIdentityConfiguration(appSettings.Token);
-            services.AddMvcConfiguration();
-
-            services.Configure<CloudinarySettings>(Configuration.GetSection(nameof(CloudinarySettings)));
-            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
-            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection(nameof(CloudinarySettings)).Get<PhotoSettings>());
-            services.AddThirdPartyConfiguration();
-
-            services.AddCombinedInterfaces();
-            services.AddDevelopmentInterfaces();
+            if (CurrentEnv.IsProduction() || CurrentEnv.IsStaging())
+            {
+                services.AddProductionInterfaces();
+            }
+            else
+            {
+                services.AddDevelopmentInterfaces();
+            }
             services.AddOData();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Integration"))
             {
-                app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-                //app.UseDeveloperExceptionPage();
+                //app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+                app.UseDeveloperExceptionPage();
                 //app.ConfigureCustomExceptionMiddleware();
             }
             else
