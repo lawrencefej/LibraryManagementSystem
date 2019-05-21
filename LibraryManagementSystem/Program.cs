@@ -20,7 +20,7 @@ namespace LibraryManagementSystem.API
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.AddSerilog();
+                    //logging.AddSerilog();
                 })
                 .UseStartup<Startup>();
     }

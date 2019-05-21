@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -34,8 +35,9 @@ namespace LibraryManagementSystem.API.Controllers
         private readonly ILibraryRepository _libraryRepo;
         private readonly IEmailSender _emailSender;
         private readonly AppSettings _appSettings;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IConfiguration config,
+        public AuthController(IConfiguration config, ILogger<AuthController> logger,
             IMapper mapper, ILibraryRepository libraryRepo,
             UserManager<User> userManager, IOptions<AppSettings> appSettings,
             SignInManager<User> signInManager, IEmailSender emailSender)
@@ -47,69 +49,76 @@ namespace LibraryManagementSystem.API.Controllers
             _libraryRepo = libraryRepo;
             _emailSender = emailSender;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
-        {
-            const string role = "Member";
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+        //{
+        //    const string role = "Member";
 
-            userForRegisterDto.UserName = userForRegisterDto.Email;
+        //    userForRegisterDto.UserName = userForRegisterDto.Email;
 
-            var userToCreate = _mapper.Map<User>(userForRegisterDto);
+        //    var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
-            var libraryCardDto = new LibraryCardForCreationDto();
+        //    var libraryCardDto = new LibraryCardForCreationDto();
 
-            var newIdCard = _mapper.Map<LibraryCard>(libraryCardDto);
+        //    var newIdCard = _mapper.Map<LibraryCard>(libraryCardDto);
 
-            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
+        //    var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+        //    var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
 
-            newIdCard.UserId = userToReturn.Id;
+        //    newIdCard.UserId = userToReturn.Id;
 
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(userToCreate, role);
+        //    if (result.Succeeded)
+        //    {
+        //        await _userManager.AddToRoleAsync(userToCreate, role);
 
-                _libraryRepo.Add(newIdCard);
+        //        _libraryRepo.Add(newIdCard);
 
-                return CreatedAtRoute("GetUser",
-                    new { Controller = "Users", id = userToCreate.Id }, userToReturn);
-            }
+        //        return CreatedAtRoute("GetUser",
+        //            new { Controller = "Users", id = userToCreate.Id }, userToReturn);
+        //    }
 
-            return BadRequest(result.Errors);
-        }
+        //    return BadRequest(result.Errors);
+        //}
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             var user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
-
-            if (result.Succeeded)
+            if (user != null)
             {
-                var appUser = await _userManager.Users.Include(p => p.ProfilePicture)
-                    .FirstOrDefaultAsync(u => u.NormalizedEmail == userForLoginDto.Email.ToUpper());
+                var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
 
-                var userToReturn = _mapper.Map<UserForDetailedDto>(appUser);
-
-                var roles = await _userManager.GetRolesAsync(user);
-
-                foreach (var role in roles)
+                if (result.Succeeded)
                 {
-                    userToReturn.Role = role;
+                    var appUser = await _userManager.Users.Include(p => p.ProfilePicture)
+                        .FirstOrDefaultAsync(u => u.NormalizedEmail == userForLoginDto.Email.ToUpper());
+
+                    var userToReturn = _mapper.Map<UserForDetailedDto>(appUser);
+
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    foreach (var role in roles)
+                    {
+                        userToReturn.Role = role;
+                    }
+
+                    _logger.LogInformation("Successful Login by Id: {0}, Email: {1}", user.Id, user.Email);
+
+                    return Ok(new
+                    {
+                        token = GenerateJwtToken(appUser).Result,
+                        user = userToReturn
+                    });
                 }
-
-                return Ok(new
-                {
-                    token = GenerateJwtToken(appUser).Result,
-                    user = userToReturn
-                });
             }
 
             //return Unauthorized();
+            _logger.LogWarning("Unsuccessful login by user: {0}", userForLoginDto.Email);
             return BadRequest("Email or Password does not match");
         }
 

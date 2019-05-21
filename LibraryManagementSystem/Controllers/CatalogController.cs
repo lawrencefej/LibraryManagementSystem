@@ -73,10 +73,13 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("{assetId}", Name = nameof(GetLibraryAsset))]
         public async Task<IActionResult> GetLibraryAsset(int assetId)
         {
+            var userId = LoggedInUserID();
+            _logger.LogInformation("User {0} requested Asset {1}", userId, assetId);
             var libraryAsset = await _libraryAssestService.GetAsset(assetId);
 
             if (libraryAsset == null)
             {
+                _logger.LogWarning("Asset {0} was not found", assetId);
                 return NoContent();
             }
 
@@ -147,6 +150,13 @@ namespace LibraryManagementSystem.API.Controllers
             }
 
             return true;
+        }
+
+        private int LoggedInUserID()
+        {
+            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            return id;
         }
     }
 }

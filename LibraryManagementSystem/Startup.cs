@@ -32,7 +32,12 @@ namespace LibraryManagementSystem.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
-            var appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+
+            var appSettingsSection = Configuration.GetSection(nameof(AppSettings));
+
+            services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
+
             IdentityModelEventSource.ShowPII = true;
             services.AddDataAccessServices(appSettings.ConnectionString);
             services.AddIdentityConfiguration(appSettings.Token);
