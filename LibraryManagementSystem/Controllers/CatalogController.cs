@@ -109,7 +109,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("pagination/")]
         public async Task<IActionResult> GetLibraryAssets([FromQuery]PaginationParams paginationParams)
         {
-            var assets = await _testService.GetAllAssetsAsync(paginationParams);
+            var assets = await _libraryAssestService.GetAllAsync(paginationParams);
 
             var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
 

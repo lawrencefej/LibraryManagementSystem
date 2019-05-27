@@ -46,10 +46,6 @@ namespace LMSRepository.Data
                     .IsRequired();
             });
 
-            //builder.Entity<AssetType>()
-            //    .HasMany(c => c.LibraryAssets)
-            //    .WithOne(l => l.AssetType);
-
             builder.Entity<Role>().HasData(
                     new Role { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
                     new Role { Id = 2, Name = "Admin", NormalizedName = "ADMIN" },
@@ -64,7 +60,8 @@ namespace LMSRepository.Data
                 new Status { Id = 5, Name = "Canceled", Description = "" },
                 new Status { Id = 6, Name = "Returned", Description = "" },
                 new Status { Id = 7, Name = "Expired", Description = "" },
-                new Status { Id = 8, Name = "Canceled", Description = "" }
+                new Status { Id = 8, Name = "Canceled", Description = "" },
+                new Status { Id = 9, Name = "Late", Description = "" }
                 );
 
             builder.Entity<AssetType>().HasData(

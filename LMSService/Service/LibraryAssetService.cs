@@ -110,6 +110,13 @@ namespace LMSService.Service
             return assetToReturn;
         }
 
+        public async Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams)
+        {
+            var assets = _libraryAssetRepo.GetAll();
+
+            return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
+        }
+
         public async Task<PagedList<LibraryAssetForListDto>> GetAllAssets(PaginationParams paginationParams)
         {
             var assets = await _libraryAssetRepo.GetPagedLibraryAssetsAsync(paginationParams);

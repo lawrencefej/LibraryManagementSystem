@@ -59,7 +59,6 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(user);
         }
 
-        // PUT: api/Admin/5
         [HttpPut]
         public async Task<IActionResult> Put(UpdateAdminDto updateAdminDto)
         {
@@ -75,7 +74,6 @@ namespace LibraryManagementSystem.API.Controllers
             return NoContent();
         }
 
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

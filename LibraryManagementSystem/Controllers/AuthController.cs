@@ -117,7 +117,6 @@ namespace LibraryManagementSystem.API.Controllers
                 }
             }
 
-            //return Unauthorized();
             _logger.LogWarning("Unsuccessful login by user: {0}", userForLoginDto.Email);
             return BadRequest("Email or Password does not match");
         }

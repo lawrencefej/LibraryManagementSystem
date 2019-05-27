@@ -1,12 +1,8 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Dto;
-using LMSRepository.Models;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers

@@ -42,7 +42,6 @@ namespace LibraryManagementSystem.Controllers
             return Ok(assetType);
         }
 
-        // PUT: api/AssetType/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAssetType(int id, AssetType assetType)
         {
@@ -72,7 +71,6 @@ namespace LibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        // POST: api/AssetType
         [HttpPost]
         public async Task<ActionResult<AssetType>> PostAssetType(AssetType assetType)
         {
@@ -82,7 +80,6 @@ namespace LibraryManagementSystem.Controllers
             return CreatedAtAction("GetAssetType", new { id = assetType.Id }, assetType);
         }
 
-        // DELETE: api/AssetType/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<AssetType>> DeleteAssetType(int id)
         {

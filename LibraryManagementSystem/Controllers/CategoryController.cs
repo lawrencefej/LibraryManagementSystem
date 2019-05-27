@@ -42,7 +42,6 @@ namespace LibraryManagementSystem.Controllers
             return category;
         }
 
-        // PUT: api/Category/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
@@ -72,7 +71,6 @@ namespace LibraryManagementSystem.Controllers
             return NoContent();
         }
 
-        // POST: api/Category
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
@@ -82,7 +80,6 @@ namespace LibraryManagementSystem.Controllers
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
-        // DELETE: api/Category/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {

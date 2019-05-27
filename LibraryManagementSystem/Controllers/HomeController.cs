@@ -24,7 +24,6 @@ namespace LibraryManagementSystem.API.Controllers
             _libraryAssetRepo = libraryAssetRepo;
         }
 
-        // GET: api/Home
         [HttpGet]
         public IActionResult GetCheckouts()
         {
@@ -33,7 +32,6 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(callbackUrl);
         }
 
-        // GET: api/Home/5
         [HttpGet("{id}")]
         public IActionResult GetCheckout(int id)
         {
@@ -43,7 +41,6 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(ip);
         }
 
-        // PUT: api/Home/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCheckout(int id, Checkout checkout)
         {
@@ -73,7 +70,6 @@ namespace LibraryManagementSystem.API.Controllers
             return NoContent();
         }
 
-        // POST: api/Home
         [HttpPost]
         public async Task<ActionResult<Checkout>> PostCheckout(Checkout checkout)
         {
@@ -83,7 +79,6 @@ namespace LibraryManagementSystem.API.Controllers
             return CreatedAtAction("GetCheckout", new { id = checkout.Id }, checkout);
         }
 
-        // DELETE: api/Home/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Checkout>> DeleteCheckout(int id)
         {

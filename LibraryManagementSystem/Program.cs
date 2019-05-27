@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Configuration;
 using Serilog;
 
 namespace LibraryManagementSystem.API
@@ -20,7 +21,6 @@ namespace LibraryManagementSystem.API
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    //logging.AddSerilog();
                 })
                 .UseStartup<Startup>();
     }

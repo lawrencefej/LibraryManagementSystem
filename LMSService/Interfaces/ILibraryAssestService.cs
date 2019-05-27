@@ -1,5 +1,6 @@
 ﻿using LMSRepository.Dto;
 using LMSRepository.Helpers;
+using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,5 +30,7 @@ namespace LMSService.Dto
         Task<IEnumerable<LibraryAssetForListDto>> SearchLibraryAsset(string searchString);
 
         Task<IEnumerable<LibraryAssetForListDto>> SearchLibraryAsset(SearchAssetDto searchAsset);
+
+        Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams);
     }
 }
