@@ -10,6 +10,7 @@ using LMSService.Validators;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMSService.Service
@@ -275,6 +276,8 @@ namespace LMSService.Service
         public async Task<PagedList<Checkout>> GetAllAsync(PaginationParams paginationParams)
         {
             var checkouts = _checkoutRepo.GetAll();
+
+            checkouts = checkouts.OrderByDescending(a => a.Since);
 
             return await PagedList<Checkout>.CreateAsync(checkouts, paginationParams.PageNumber, paginationParams.PageSize);
         }
