@@ -7,6 +7,7 @@ using LMSService.Dto;
 using LMSService.Exceptions;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,15 +22,19 @@ namespace LMSService.Service
         private readonly ILibraryRepository _libraryRepository;
         private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly ILibraryCardRepository _libraryCardRepository;
+        private readonly ILogger<UserService> _logger;
 
         public UserService(IUserRepository userRepo, IMapper mapper, ILibraryRepository libraryRepository,
-            UserManager<User> userManager, IEmailSender emailSender)
+            UserManager<User> userManager, IEmailSender emailSender, ILibraryCardRepository libraryCardRepository, ILogger<UserService> logger)
         {
             _userRepo = userRepo;
             _mapper = mapper;
             _libraryRepository = libraryRepository;
             _userManager = userManager;
             _emailSender = emailSender;
+            _libraryCardRepository = libraryCardRepository;
+            _logger = logger;
         }
 
         public async Task<UserForDetailedDto> GetUser(int userId)
@@ -105,19 +110,29 @@ namespace LMSService.Service
             throw new Exception($"Updating user failed on save");
         }
 
-        public async Task DeleteUser(int userId)
+        public async Task DeleteUser(int memberId)
         {
-            //TODO add logs
-            var user = await _userRepo.GetUser(userId);
+            var member = await _userRepo.GetUser(memberId);
 
-            _libraryRepository.Delete(user);
+            if (member == null)
+            {
+                _logger.LogWarning($"memberID: {memberId} was not found");
+                throw new NoValuesFoundException($"memberID: {memberId} was not found");
+            }
+
+            //var libraryCard = await _libraryCardRepository.GetMemberCard(member.Id);
+
+            _libraryRepository.Delete(member.LibraryCard);
+            _libraryRepository.Delete(member);
 
             if (await _libraryRepository.SaveAll())
             {
+                _logger.LogInformation($"memberID: {member.Id} was deleted");
                 return;
             }
 
-            throw new Exception($"Deleting {user.Id} failed on save");
+            _logger.LogCritical($"Deleting memberID: {member.Id} failed on save");
+            throw new Exception($"Deleting {member.Id} failed on save");
         }
 
         public async Task<UserForDetailedDto> AddMember(MemberForCreation memberForCreation)

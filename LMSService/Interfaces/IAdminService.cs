@@ -12,6 +12,8 @@ namespace LMSService.Dto
 
         Task UpdateUser(UpdateAdminDto userforUpdate);
 
+        Task DeleteUser(int userId);
+
         Task<UserForDetailedDto> GetAdminUser(int userId);
     }
 }

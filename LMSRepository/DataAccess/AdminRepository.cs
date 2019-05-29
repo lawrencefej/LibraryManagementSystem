@@ -69,5 +69,10 @@ namespace LMSRepository.DataAccess
 
             await _userManager.UpdateAsync(user);
         }
+
+        public Task DeleteUser(User user, string newRole)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

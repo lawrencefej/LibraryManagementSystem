@@ -75,28 +75,11 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-        }
+            await _adminService.DeleteUser(id);
 
-        [HttpGet("admins")]
-        public async Task<IActionResult> GetAdmins()
-        {
-            var userList = await (from user in _context.Users
-                                  orderby user.UserName
-                                  select new
-                                  {
-                                      Id = user.Id,
-                                      UserName = user.UserName,
-                                      Test = (_context.UserRoles.Where(r => r.UserId == user.Id).Select(a => a.Role.Name)),
-                                      Roles = (from userRole in user.UserRoles
-                                               join role in _context.Roles
-                                               on userRole.RoleId
-                                               equals role.Id
-                                               select role.Name)
-                                  }).ToListAsync();
-
-            return Ok(userList);
+            return NoContent();
         }
     }
 }
