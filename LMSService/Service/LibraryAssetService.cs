@@ -63,7 +63,7 @@ namespace LMSService.Service
 
             _libraryRepo.Delete(asset);
 
-            if (await _libraryRepo.SaveAll())
+            if (!await _libraryRepo.SaveAll())
             {
                 throw new Exception($"Deleting {asset.Title} failed on save");
             }
