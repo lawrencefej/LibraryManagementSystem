@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  librarymanagementsystem:
+    image: lawrencefej/projects
+    volumes:
+      - /home/lawrence/test/appsettings.json:/publish/appsettings.json
+    container_name: librarymanagementsystem
+    expose:
+      - 80
+    environment:
+      VIRTUAL_HOST: local.docker.lms.net
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
