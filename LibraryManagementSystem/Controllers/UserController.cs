@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
-    //[ServiceFilter(typeof(LogUserActivity))]
+    [Authorize(Policy = Role.RequireLibrarianRole)]
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
@@ -30,7 +30,6 @@ namespace LibraryManagementSystem.Controllers
             _userService = userService;
         }
 
-        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet]
         [EnableQuery]
         public async Task<ActionResult> GetUsers()
@@ -53,7 +52,6 @@ namespace LibraryManagementSystem.Controllers
             return Ok(user);
         }
 
-        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet("email/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
@@ -143,7 +141,6 @@ namespace LibraryManagementSystem.Controllers
             return Ok(reserveHistoryForReturn);
         }
 
-        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet("search/")]
         public async Task<IActionResult> SearchUsers([FromQuery]string searchString)
         {
@@ -152,7 +149,6 @@ namespace LibraryManagementSystem.Controllers
             return Ok(users);
         }
 
-        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpGet("searchMembers/")]
         public async Task<IActionResult> SearchMembers(SearchUserDto searchUser)
         {
@@ -161,7 +157,6 @@ namespace LibraryManagementSystem.Controllers
             return Ok(users);
         }
 
-        [Authorize(Policy = Role.RequireLibrarianRole)]
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(int userId)
         {

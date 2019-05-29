@@ -61,13 +61,21 @@ namespace LMSService.Service
         {
             var asset = await _libraryAssetRepo.GetAsset(assetId);
 
+            if (asset == null)
+            {
+                _logger.LogWarning($"assetId: {assetId} was not found");
+                throw new NoValuesFoundException($"assetId: {assetId} was not found");
+            }
+
             _libraryRepo.Delete(asset);
 
             if (!await _libraryRepo.SaveAll())
             {
+                _logger.LogCritical($"Deleting userID: {asset.Id} failed on save");
                 throw new Exception($"Deleting {asset.Title} failed on save");
             }
 
+            _logger.LogInformation($"assetId: {asset.Id} was deleted");
             return;
         }
 

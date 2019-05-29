@@ -13,5 +13,11 @@ namespace LMSRepository.Models
         public int UserId { get; set; }
         public ICollection<Checkout> Checkouts { get; set; }
         public ICollection<ReserveAsset> ReservedAssets { get; set; }
+
+        public LibraryCard()
+        {
+            Created = DateTime.Now;
+            Fees = 0;
+        }
     }
 }

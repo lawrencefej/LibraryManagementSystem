@@ -3,7 +3,9 @@ using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using LMSService.Dto;
+using LMSService.Exceptions;
 using LMSService.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +21,17 @@ namespace LMSService.Service
         private readonly ILibraryRepository _libraryRepository;
         private readonly IEmailSender _emailSender;
         private readonly IAuthRepository _authRepository;
+        private readonly ILogger<AdminService> _logger;
 
         public AdminService(IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository,
-            IEmailSender emailSender, IAuthRepository authRepository)
+            IEmailSender emailSender, IAuthRepository authRepository, ILogger<AdminService> logger)
         {
             _adminRepository = adminRepository;
             _mapper = mapper;
             _libraryRepository = libraryRepository;
             _emailSender = emailSender;
             _authRepository = authRepository;
+            _logger = logger;
         }
 
         public async Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto)
@@ -68,22 +72,12 @@ namespace LMSService.Service
 
             foreach (var user in usersToReturn)
             {
+                //Add the role to the user
                 var role = user.UserRoles.ElementAtOrDefault(0);
                 user.Role = role.Name;
             }
 
             return usersToReturn;
-        }
-
-        private static string CreatePassword(string fname, string lname)
-        {
-            var firstInitial = fname.Substring(0, 1).ToUpper();
-
-            var lastName = lname.ToLower();
-
-            var password = string.Concat(firstInitial, lastName, DateTime.Today.Year.ToString());
-
-            return password;
         }
 
         public async Task UpdateUser(UpdateAdminDto userforUpdate)
@@ -111,6 +105,28 @@ namespace LMSService.Service
             var body = $"Welcome {user.FirstName.ToLower()}, <p>An account has been created for you</p> Please create your new password by clicking <a href='{callbackUrl}'>here</a>:";
 
             await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
+        }
+
+        public async Task DeleteUser(int userId)
+        {
+            var user = await _adminRepository.GetAdminUser(userId);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"userID: {userId} was not found");
+                throw new NoValuesFoundException($"userID: {userId} was not found");
+            }
+
+            _libraryRepository.Delete(user);
+
+            if (await _libraryRepository.SaveAll())
+            {
+                _logger.LogInformation($"userID: {user.Id} was deleted");
+                return;
+            }
+
+            _logger.LogCritical($"Deleting userID: {user.Id} failed on save");
+            throw new Exception($"Deleting userID: {user.Id} failed on save");
         }
     }
 }
