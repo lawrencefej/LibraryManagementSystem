@@ -344,3 +344,4 @@ ASALocalRun/
 # /LibraryManagementSystem/appsettings.Integration.json
 # /LibraryManagementSystem/appsettings.json
 /LibraryManagementSystem/appsettings.json
+/LibraryManagementSystem/test/docker-compose.yml
