@@ -4,7 +4,7 @@ using LibraryManagementSystem.API.Helpers;
 using LMSRepository.DataAccess;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.DataAccess;
-using LMSService.Dto;
+using LMSService.Interfacees;
 using LMSService.Helpers;
 using LMSService.Interfaces;
 using LMSService.Service;
@@ -25,7 +25,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IReserveService, ReserveService>();
             services.AddScoped<ICheckoutRepository, CheckoutRepository>();
             services.AddScoped<IReserveRepository, ReserveRepository>();
-            services.AddScoped<ILibraryAssestService, LibraryAssetService>();
+            services.AddScoped<ILibraryAssetService, LibraryAssetService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();

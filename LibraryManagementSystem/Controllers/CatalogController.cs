@@ -2,14 +2,13 @@
 using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
-using LMSService.Dto;
-using LMSService.Interfaces;
+using LMSRepository.Models;
+using LMSService.Interfacees;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -20,59 +19,59 @@ namespace LibraryManagementSystem.API.Controllers
     [ApiController]
     public class CatalogController : ControllerBase
     {
-        private readonly ILibraryAssestService _libraryAssestService;
+        private readonly ILibraryAssetService _libraryAssestService;
         private readonly ILogger<CatalogController> _logger;
-        private readonly ITestService _testService;
         private readonly IMapper _mapper;
 
-        public CatalogController(ILibraryAssestService libraryAssestService, ILogger<CatalogController> logger,
-            ITestService testService, IMapper mapper)
+        public CatalogController(ILibraryAssetService libraryAssestService, ILogger<CatalogController> logger,
+            IMapper mapper)
         {
             _libraryAssestService = libraryAssestService;
             _logger = logger;
-            _testService = testService;
             _mapper = mapper;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
-            var asset = await _libraryAssestService.AddAsset(libraryAssetForCreation);
+            var assetForCreation = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
-            //_logger.LogInformation($"{userId} added {libraryAssetForCreation.Title}");
-            return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, asset);
+            var asset = await _libraryAssestService.AddAsset(assetForCreation);
+
+            var assetToReturn = _mapper.Map<LibraryAssetForListDto>(asset);
+
+            return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, assetToReturn);
         }
 
         [HttpDelete("{assetId}")]
-        public async Task<IActionResult> DeleteLibraryAsset(int userId, int assetId)
+        public async Task<IActionResult> DeleteLibraryAsset(int assetId)
         {
-            if (!IsCurrentuser(userId))
-            {
-                return Unauthorized();
-            }
-
             await _libraryAssestService.DeleteAsset(assetId);
 
             return NoContent();
         }
 
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> EditAsset(int userId, LibraryAssetForUpdateDto libraryAssetForUpdate)
+        [HttpPut]
+        public async Task<IActionResult> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
-            if (!IsCurrentuser(userId))
+            var asset = await _libraryAssestService.GetAsset(libraryAssetForUpdate.Id);
+
+            if (asset == null)
             {
-                return Unauthorized();
+                return BadRequest("Item not found");
             }
 
-            await _libraryAssestService.EditAsset(libraryAssetForUpdate);
+            _mapper.Map(libraryAssetForUpdate, asset);
+
+            await _libraryAssestService.EditAsset(asset);
 
             return NoContent();
         }
 
-        [AllowAnonymous]
         [HttpGet("{assetId}", Name = nameof(GetLibraryAsset))]
         public async Task<IActionResult> GetLibraryAsset(int assetId)
         {
+            // TODO decide if you want this
             var userId = LoggedInUserID();
             _logger.LogInformation("User {0} requested Asset {1}", userId, assetId);
             var libraryAsset = await _libraryAssestService.GetAsset(assetId);
@@ -83,29 +82,21 @@ namespace LibraryManagementSystem.API.Controllers
                 return NoContent();
             }
 
-            return Ok(libraryAsset);
+            var assetToReturn = _mapper.Map<LibraryAssetForDetailedDto>(libraryAsset);
+
+            return Ok(assetToReturn);
         }
 
-        [AllowAnonymous]
         [HttpGet("search/")]
         public async Task<IActionResult> SearchLibraryAsset([FromQuery]string searchString)
         {
             var assets = await _libraryAssestService.SearchLibraryAsset(searchString);
 
-            return Ok(assets);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
+
+            return Ok(assetsToReturn);
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        [EnableQuery()]
-        public async Task<IActionResult> GetLibraryAssets()
-        {
-            var assets = await _libraryAssestService.GetAllAssets();
-
-            return Ok(assets);
-        }
-
-        [AllowAnonymous]
         [HttpGet("pagination/")]
         public async Task<IActionResult> GetLibraryAssets([FromQuery]PaginationParams paginationParams)
         {
@@ -119,16 +110,6 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(assetsToReturn);
         }
 
-        [AllowAnonymous]
-        [HttpGet("odata/")]
-        [EnableQuery]
-        public IQueryable<LibraryAssetForListDto> GetAssets()
-        {
-            var assets = _libraryAssestService.GetAll();
-
-            return assets;
-        }
-
         [HttpGet("author/{authorId}")]
         public async Task<IActionResult> GetAssetForAuthor(int authorId)
         {
@@ -139,7 +120,9 @@ namespace LibraryManagementSystem.API.Controllers
                 return NoContent();
             }
 
-            return Ok(libraryAsset);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(libraryAsset);
+
+            return Ok(assetsToReturn);
         }
 
         private bool IsCurrentuser(int id)
