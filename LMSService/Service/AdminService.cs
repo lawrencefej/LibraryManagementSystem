@@ -2,7 +2,7 @@
 using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
-using LMSService.Dto;
+using LMSService.Interfacees;
 using LMSService.Exceptions;
 using LMSService.Interfaces;
 using Microsoft.Extensions.Logging;

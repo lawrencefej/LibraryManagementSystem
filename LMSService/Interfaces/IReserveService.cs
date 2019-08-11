@@ -4,7 +4,7 @@ using LMSService.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSService.Dto
+namespace LMSService.Interfacees
 {
     public interface IReserveService
     {
