@@ -1,114 +1,224 @@
 ﻿using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
-using LMSRepository.Data;
-using LMSRepository.Dto;
-using LMSRepository.Interfaces;
+using LMSRepository.Helpers;
 using LMSRepository.Models;
 using LMSService.Exceptions;
-using LMSService.Interfacees;
 using LMSService.Service;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace LibraryManagementSystem.Tests.Services
 {
-    public class LibraryAssetServiceShould : TestBase
+    public class LibraryAssetServiceShould 
     {
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly Mapper _mapper;
+        private TestDataContextFactory _factory;
 
         public LibraryAssetServiceShould()
         {
             _logger = new NullLogger<LibraryAssetService>();
             _mapper = new Mapper(new MapperConfiguration(cfg
                 => cfg.AddProfile(new AutoMapperProfiles())));
+            _factory = new TestDataContextFactory();
+        }
+
+        private static IEnumerable<LibraryAsset> GetAllAssets()
+        {
+            return new List<LibraryAsset>
+            {
+                new LibraryAsset
+                {
+                    Id = 1,
+                    Title = "Test",
+                    Year = 1992,
+                    StatusId = 1,
+                    NumberOfCopies = 10,
+                    CopiesAvailable = 10,
+                    AssetTypeId = 1,
+                    AuthorId = 1,
+                    CategoryId = 1
+                },
+                new LibraryAsset{Id = 2, AuthorId = 1, StatusId = 1, AssetTypeId = 1, CategoryId = 1},
+                new LibraryAsset{Id = 3, AuthorId = 1, StatusId = 1, AssetTypeId = 1, CategoryId = 1}
+            };
+        }
+
+        private static LibraryAsset GetAsset()
+        {
+            return new LibraryAsset { Id = 4, Title = "Test", Year = 1992, NumberOfCopies = 10, AssetTypeId = 1, AuthorId = 2, CategoryId = 1};
+        }
+
+        private static Author GetAuthor()
+        {
+            return new Author { Id = 1 };
         }
 
         [Fact]
-        public async void AddASSet_AddNewAsset_ShouldAddNewAsset()
+        public async Task AddAsset_ValidAsset_ShouldAddNewAsset()
         {
-            using (var context = GetDbContext())
+            using (var context = _factory.UseInMemory())
             {
+                // Arrange
                 var service = new LibraryAssetService(context, _logger);
 
-                var asset = await service.AddAsset(new LibraryAsset
-                {
-                    Id = 40,
-                    NumberOfCopies = 20
-                });
+                // Act
+                await service.AddAsset(GetAsset());
+                var actual = context.LibraryAssets.Single();
+                var expected = GetAsset();
+                expected.StatusId = (int)EnumStatus.Available;
 
-                var actual = context.LibraryAssets.ToList();
-
-                Assert.Equal(40, actual.Single().Id);
-                Assert.Equal(1, actual.Single().StatusId);
-                Assert.Equal(asset.NumberOfCopies, actual.Single().CopiesAvailable);
-                Assert.Single(actual);
+                // Assert
+                Assert.NotNull(actual);
+                Assert.Equal(expected.NumberOfCopies, actual.CopiesAvailable);
+                Assert.Equal(expected.StatusId, actual.StatusId);
+                Assert.Equal(expected.Id, actual.Id);
+                Assert.Single(context.LibraryAssets.ToList());
             }
         }
 
-        //[Fact]
-        //public void AddAsset_NullAsset_ShouldThrowAnException()
-        //{
-        //    var service = new LibraryAssetService();
-        //    LibraryAssetForCreationDto asset = null;
-        //    Assert.ThrowsAsync<NoValuesFoundException>(() => service.AddAsset(asset));
-        //}
-
-        //[Fact]
-        //public void AddAsset_NullAsset_ShouldThrowAnException()
-        //{
-        //    var service = new LibraryAssetService();
-        //    LibraryAssetForCreationDto asset = null;
-        //    Assert.ThrowsAsync<NoValuesFoundException>(() => service.AddAsset(asset));
-        //}
-
-        //[Fact]
-        //public async void GetAssetById_ExistingAsset_ReturnAsset()
-        //{
-        //    ILogger<LibraryAssetService> logger = new NullLogger<LibraryAssetService>();
-        //    var asset = new LibraryAsset
-        //    {
-        //        Id = 1,
-        //        Title = "Test Title",
-        //        Year = 1992
-        //    };
-
-        //    const int id = 1;
-        //    //var asset = new LibraryAss
-        //    var mock = new Mock<ILibraryAssetRepository>();
-        //    var mock2 = new Mock<ILibraryRepository>();
-
-        //    mock.Setup(x => x.GetAsset(id))
-        //        .ReturnsAsync(asset);
-
-        //    var cls = new LibraryAssetService(mock2.Object, _mapper, mock.Object, logger);
-        //    var actual = await cls.GetAsset(1);
-        //    Assert.Equal(asset.Id, actual.Id);
-        //}
-
-        private DbContext InitAndGetDbContext()
+        [Fact]
+        public async Task AddAsset_ExistingAsset_ShouldDeleteAsset()
         {
-            var context = GetDbContext();
-
-            context.Add(new LibraryAsset
+            using (var context = _factory.UseInMemory())
             {
-                Id = 1,
-                Title = "",
-                Year = 1992
-            });
-            context.Add(new LibraryAsset
-            {
-                Id = 2,
-                Title = "",
-                Year = 2016
-            });
+                // Arrange
+                var service = new LibraryAssetService(context, _logger);
+                context.Add(GetAsset());
+                context.SaveChanges();
 
-            context.SaveChanges();
-            return context;
+                // Act
+                await service.DeleteAsset(GetAsset().Id);
+
+                // Assert
+                Assert.Equal(0, context.LibraryAssets.Count());
+            }
+        }
+
+        [Fact]
+        public async Task AddAsset_NonExistingAsset_ShouldDeleteAsset()
+        {
+            using (var context = _factory.UseInMemory())
+            {
+                // Arrange
+                var service = new LibraryAssetService(context, _logger);
+
+                // Assert
+                await Assert.ThrowsAsync<NoValuesFoundException>(() => service.DeleteAsset(GetAsset().Id));
+            }
+        }
+
+        [Fact]
+        public async Task EditAsset_ValidAsset_ShouldEditAsset()
+        {
+            using (var context = _factory.UseInMemory())
+            {
+                // Arrange
+                var service = new LibraryAssetService(context, _logger);
+                var asset = GetAsset();
+                context.Add(asset);
+                context.SaveChanges();
+                asset.Year = 2000;
+
+                // Act
+                await service.EditAsset(asset);
+                var actual = context.LibraryAssets.Single();
+                var expected = asset;
+
+                // Assert
+                Assert.Equal(expected.Year, actual.Year);
+            }
+        }
+
+        [Fact]
+        public async Task EditAsset_UnAvailableAsset_ShouldMakeAssetVailable()
+        {
+            using (var context = _factory.UseInMemory())
+            {
+                // Arrange
+                var service = new LibraryAssetService(context, _logger);
+                var asset = GetAsset();
+                asset.StatusId = (int)EnumStatus.Unavailable;
+                asset.CopiesAvailable = 0;
+                context.Add(asset);
+                context.SaveChanges();
+                asset.CopiesAvailable = 10;
+
+                // Act
+                await service.EditAsset(asset);
+                var actual = context.LibraryAssets.Single();
+                var expected = asset;
+
+                // Assert
+                Assert.Equal(expected.StatusId, actual.StatusId);
+                Assert.Equal(asset.CopiesAvailable, actual.CopiesAvailable);
+            }
+        }
+
+        [Fact]
+        public async void GetAllAsync_PaginatedList_ReturnsPaginatedList()
+        {
+            using (var context = _factory.UseSqlite())
+            {
+                ILogger<LibraryAssetService> logger = new NullLogger<LibraryAssetService>();
+
+                context.AddRange(GetAllAssets());
+                context.Add(GetAuthor());
+                context.SaveChanges();
+
+                var service = new LibraryAssetService(context, _logger);
+                var paginationParams = new PaginationParams();
+                var actual = await service.GetAllAsync(paginationParams);
+                var assets = GetAllAssets().ToList();
+
+                Assert.Equal(actual.Count, assets.Count);
+            }
+        }
+
+        [Fact]
+        public async void GetAssetById_ExistingAsset_ReturnAsset()
+        {
+            using (var context = _factory.UseSqlite())
+            {
+                ILogger<LibraryAssetService> logger = new NullLogger<LibraryAssetService>();
+
+                context.AddRange(GetAllAssets());
+                context.Add(GetAuthor());
+                context.SaveChanges();
+
+                var service = new LibraryAssetService(context, _logger);
+                var actual = await service.GetAsset(1);
+                var expected = GetAllAssets().FirstOrDefault();
+
+                Assert.Equal(expected.Id, actual.Id);
+                Assert.Equal(GetAuthor().Id, actual.Author.Id);
+                Assert.Equal(expected.Title, actual.Title);
+            }
+        }
+
+        [Fact]
+        public async void GetAssetsByAuthor_ValidAuthor_ReturnsAllAssetsByAuthor()
+        {
+            using (var context = _factory.UseSqlite())
+            {
+                ILogger<LibraryAssetService> logger = new NullLogger<LibraryAssetService>();
+
+                context.AddRange(GetAllAssets());
+                context.Add(GetAsset());
+                context.Add(GetAuthor());
+                context.Add(new Author { Id = 2});
+                context.SaveChanges();
+
+                var service = new LibraryAssetService(context, _logger);
+                var actual = await service.GetAssetsByAuthor(GetAuthor().Id);
+                var assets = GetAllAssets().ToList();
+
+                Assert.Equal(3, actual.ToList().Count);
+            }
         }
     }
 }

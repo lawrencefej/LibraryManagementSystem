@@ -129,8 +129,9 @@ namespace LibraryManagementSystem.API.Helpers
                         opt.MapFrom(src => src.Role.NormalizedName);
                     });
             CreateMap<RoleDto, Role>();
-            Mapper.Initialize(cfg =>
-            cfg.CreateMap<LibraryAsset, LibraryAssetForListDto>());
+            CreateMap<LibraryAsset, LibraryAssetForListDto>();
+            //Mapper.Initialize(cfg =>
+            //cfg.CreateMap<LibraryAssetDto, LibraryAssetForListDto>());
         }
     }
 }

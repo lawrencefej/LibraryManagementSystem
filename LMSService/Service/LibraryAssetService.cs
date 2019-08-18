@@ -22,10 +22,6 @@ namespace LMSService.Service
             _context = context;
         }
 
-        public LibraryAssetService()
-        {
-        }
-
         public async Task<LibraryAsset> AddAsset(LibraryAsset asset)
         {
             asset.StatusId = (int)EnumStatus.Available;
@@ -66,7 +62,6 @@ namespace LMSService.Service
                 libraryAssetForUpdate.StatusId = (int)EnumStatus.Available;
             }
 
-            //_context.Update(libraryAssetForUpdate);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
             return;

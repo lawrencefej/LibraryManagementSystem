@@ -4,13 +4,13 @@ using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Models;
 using LMSService.Interfacees;
-using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
 
 namespace LibraryManagementSystem.API.Controllers
 {

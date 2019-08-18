@@ -39,10 +39,6 @@ namespace LMSService.Service
             _reserveRepo = reserveRepo;
         }
 
-        public CheckoutService()
-        {
-        }
-
         public async Task<CheckoutForReturnDto> CheckInAsset(int id)
         {
             var checkout = await ValidateCheckin(id);
