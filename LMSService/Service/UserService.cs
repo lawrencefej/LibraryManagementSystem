@@ -3,9 +3,8 @@ using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
-using LMSService.Interfacees;
-using LMSService.Exceptions;
 using LMSService.Interfaces;
+using LMSService.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
@@ -102,7 +101,7 @@ namespace LMSService.Service
 
             _mapper.Map(userForUpdate, user);
 
-            if (await _libraryRepository.SaveAll())
+            if (await _libraryRepository.SaveAll()) 
             {
                 return;
             }

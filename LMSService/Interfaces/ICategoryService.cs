@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSService.Interfacees
+namespace LMSService.Interfaces
 {
     public interface ICategoryService
     {
         Task<Category> AddCategory(Category category);
 
-        Task DeleteCategory(int categoryId);
-
-        Task EditCategory(Category category);
+        Task DeleteCategory(Category category);
 
         Task<IEnumerable<Category>> GetCategories();
 

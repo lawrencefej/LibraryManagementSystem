@@ -30,10 +30,8 @@ namespace LibraryManagementSystem.Controllers
                {
                    Count = x.Count(),
                    Month = x.Key.Month,
-                   //Name = x.Key.Month.ToString("MMMM")
                    Name = GetMonthName(x.Key.Month)
                })
-               //.OrderBy(r => r.Month)
                .ToListAsync();
 
             var result = ParseData(test);
@@ -102,7 +100,6 @@ namespace LibraryManagementSystem.Controllers
                    Day = x.Key.Date.DayOfWeek,
                    Name = x.Key.Date.ToString("ddd")
                })
-               //.OrderBy(r => r.Date)
                .ToListAsync();
 
             var days = GetDays(30);
@@ -198,7 +195,6 @@ namespace LibraryManagementSystem.Controllers
                    Month = x.Key.DateReturned.Value.Month,
                    Name = GetMonthName(x.Key.DateReturned.Value.Month)
                })
-               //.OrderBy(r => r.Month)
                .ToListAsync();
 
             var result = ParseData(data);
@@ -255,7 +251,6 @@ namespace LibraryManagementSystem.Controllers
             var result = dataDtos.Union(
                 emptyData.Where(e => !dataDtos
                     .Select(x => x.Date).Contains(e.Date)))
-                //.OrderBy(x => x.Date)
                 .ToList();
 
             return result;
@@ -277,7 +272,6 @@ namespace LibraryManagementSystem.Controllers
             var result = dataDtos.Union(
                 emptyData.Where(e => !dataDtos
                     .Select(x => x.Month).Contains(e.Month)))
-                //.OrderBy(x => x.Date)
                 .ToList();
 
             return result;

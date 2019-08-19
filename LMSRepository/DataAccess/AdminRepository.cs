@@ -1,5 +1,4 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Helpers;
+﻿using LMSRepository.Helpers;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using Microsoft.AspNetCore.Identity;
@@ -12,12 +11,10 @@ namespace LMSRepository.DataAccess
 {
     public class AdminRepository : IAdminRepository
     {
-        private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
 
-        public AdminRepository(DataContext context, UserManager<User> userManager)
+        public AdminRepository(UserManager<User> userManager)
         {
-            _context = context;
             _userManager = userManager;
         }
 
@@ -30,6 +27,7 @@ namespace LMSRepository.DataAccess
 
         public async Task<IEnumerable<User>> GetUsers()
         {
+            // TODO see if this should be users or members
             var users = await _userManager.Users
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.UserRoles)
@@ -38,12 +36,6 @@ namespace LMSRepository.DataAccess
                 .OrderBy(u => u.Lastname).ToListAsync();
 
             return users;
-        }
-
-        public async Task CreateUser(User user, string password, string role)
-        {
-            await _userManager.CreateAsync(user, password);
-            await _userManager.AddToRoleAsync(user, role);
         }
 
         public async Task CreateUser(User user, string role)

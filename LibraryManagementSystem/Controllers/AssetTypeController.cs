@@ -1,9 +1,7 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Models;
-using LMSService.Interfacees;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
@@ -12,12 +10,10 @@ namespace LibraryManagementSystem.Controllers
     [ApiController]
     public class AssetTypeController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IAssetTypeService _assetTypeService;
 
-        public AssetTypeController(DataContext context, IAssetTypeService assetTypeService)
+        public AssetTypeController(IAssetTypeService assetTypeService)
         {
-            _context = context;
             _assetTypeService = assetTypeService;
         }
 
@@ -42,40 +38,10 @@ namespace LibraryManagementSystem.Controllers
             return Ok(assetType);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAssetType(int id, AssetType assetType)
-        {
-            if (id != assetType.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(assetType).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AssetTypeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         [HttpPost]
-        public async Task<ActionResult<AssetType>> PostAssetType(AssetType assetType)
+        public async Task<IActionResult> AddAssetType(AssetType assetType)
         {
-            _context.AssetTypes.Add(assetType);
-            await _context.SaveChangesAsync();
+            assetType = await _assetTypeService.AddAssetType(assetType);
 
             return CreatedAtAction("GetAssetType", new { id = assetType.Id }, assetType);
         }
@@ -83,21 +49,16 @@ namespace LibraryManagementSystem.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<AssetType>> DeleteAssetType(int id)
         {
-            var assetType = await _context.AssetTypes.FindAsync(id);
+            var assetType = await _assetTypeService.GetAssetType(id);
+
             if (assetType == null)
             {
                 return NotFound();
             }
 
-            _context.AssetTypes.Remove(assetType);
-            await _context.SaveChangesAsync();
+            await _assetTypeService.DeleteAssetType(assetType);
 
-            return assetType;
-        }
-
-        private bool AssetTypeExists(int id)
-        {
-            return _context.AssetTypes.Any(e => e.Id == id);
+            return NoContent();
         }
     }
 }

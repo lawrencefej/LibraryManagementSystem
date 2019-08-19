@@ -2,20 +2,21 @@
 using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
-using LMSService.Interfacees;
-using LMSService.Exceptions;
 using LMSService.Interfaces;
+using LMSService.Exceptions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Identity;
 
 namespace LMSService.Service
 {
     public class AdminService : IAdminService
     {
+        private readonly UserManager<User> _userManager;
         private readonly IAdminRepository _adminRepository;
         private readonly IMapper _mapper;
         private readonly ILibraryRepository _libraryRepository;
@@ -23,9 +24,10 @@ namespace LMSService.Service
         private readonly IAuthRepository _authRepository;
         private readonly ILogger<AdminService> _logger;
 
-        public AdminService(IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository,
+        public AdminService(UserManager<User> userManager, IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository,
             IEmailSender emailSender, IAuthRepository authRepository, ILogger<AdminService> logger)
         {
+            _userManager = userManager;
             _adminRepository = adminRepository;
             _mapper = mapper;
             _libraryRepository = libraryRepository;
@@ -38,10 +40,13 @@ namespace LMSService.Service
         {
             addAdminDto.UserName = addAdminDto.Email;
 
+            // TODO Move mapper to controller
             var userToCreate = _mapper.Map<User>(addAdminDto);
 
-            await _adminRepository.CreateUser(userToCreate, addAdminDto.Role);
+            await _userManager.CreateAsync(userToCreate);
+            await _userManager.AddToRoleAsync(userToCreate, addAdminDto.Role);
 
+            // TODO remove dependency on auth repository
             var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
 
             await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);

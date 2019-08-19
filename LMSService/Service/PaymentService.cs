@@ -1,6 +1,8 @@
-﻿using LMSRepository.Interfaces;
+﻿using LMSRepository.Data;
+using LMSRepository.Interfaces;
 using LMSService.Exceptions;
 using LMSService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -9,13 +11,15 @@ namespace LMSService.Service
 {
     public class PaymentService : IPaymentService
     {
+        private readonly DataContext _context;
         private readonly ILibraryCardRepository _libraryCardRepository;
         private readonly ILogger<PaymentService> _logger;
         private readonly ILibraryRepository _libraryRepository;
 
-        public PaymentService(ILibraryCardRepository libraryCardRepository, ILogger<PaymentService> logger,
+        public PaymentService(DataContext context ,ILibraryCardRepository libraryCardRepository, ILogger<PaymentService> logger,
                                 ILibraryRepository libraryRepository)
         {
+            _context = context;
             _libraryCardRepository = libraryCardRepository;
             _logger = logger;
             _libraryRepository = libraryRepository;
@@ -23,7 +27,8 @@ namespace LMSService.Service
 
         public async Task PayFees(int libraryCardID)
         {
-            var card = await _libraryCardRepository.GetCard(libraryCardID);
+            var card = await _context.LibraryCards
+                .FirstOrDefaultAsync(p => p.Id == libraryCardID);
 
             if (card == null)
             {
@@ -32,6 +37,8 @@ namespace LMSService.Service
             }
 
             card.Fees = 0;
+
+            await _context.SaveChangesAsync();
 
             if (await _libraryRepository.SaveAll())
             {

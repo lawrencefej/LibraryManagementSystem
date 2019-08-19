@@ -1,6 +1,6 @@
 ﻿using LMSRepository.Helpers;
 using LMSRepository.Models;
-using LMSService.Interfacees;
+using LMSService.Interfaces;
 using LMSService.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;

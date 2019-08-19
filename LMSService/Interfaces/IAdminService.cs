@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSService.Interfacees
+namespace LMSService.Interfaces
 {
     public interface IAdminService
     {

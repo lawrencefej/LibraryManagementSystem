@@ -1,7 +1,7 @@
-﻿using LMSRepository.Interfaces;
+﻿using LMSRepository.Data;
 using LMSRepository.Models;
-using LMSService.Interfacees;
-using System;
+using LMSService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,40 +9,39 @@ namespace LMSService.Service
 {
     public class AssetTypeService : IAssetTypeService
     {
-        private readonly IAssetTypeRepository _assetTypeRepository;
+        private readonly DataContext _context;
 
-        public AssetTypeService(IAssetTypeRepository assetTypeRepository)
+        public AssetTypeService(DataContext context)
         {
-            _assetTypeRepository = assetTypeRepository;
+            _context = context;
         }
 
-        public Task<AssetType> AddAssetType(AssetType assetType)
+        public async Task<AssetType> AddAssetType(AssetType assetType)
         {
-            throw new NotImplementedException();
+            await _context.AddAsync(assetType);
+            await _context.SaveChangesAsync();
+
+            return assetType;
         }
 
-        public Task DeleteAssetType(int assetTypeId)
+        public async Task DeleteAssetType(AssetType assetType)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task EditAuthor(AssetType assetType)
-        {
-            throw new NotImplementedException();
+            _context.Remove(assetType);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<AssetType> GetAssetType(int assetTypeId)
         {
-            var assetTypeToReturn = await _assetTypeRepository.Get(assetTypeId);
+            var assetType = await _context.AssetTypes.FirstOrDefaultAsync(x => x.Id == assetTypeId);
 
-            return assetTypeToReturn;
+            return assetType;
         }
 
         public async Task<IEnumerable<AssetType>> GetAssetTypes()
         {
-            var assetTypesToReturn = await _assetTypeRepository.GetAll();
+            var assetTypes = await _context.AssetTypes.ToListAsync();
 
-            return assetTypesToReturn;
+            return assetTypes;
         }
     }
 }

@@ -29,5 +29,11 @@ namespace LMSRepository.DataAccess
 
             return assetTypes;
         }
+
+        public async Task Add(AssetType assetType)
+        {
+            _context.Add(assetType);
+            await _context.SaveChangesAsync();
+        }
     }
 }

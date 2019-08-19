@@ -4,9 +4,8 @@ using LibraryManagementSystem.API.Helpers;
 using LMSRepository.DataAccess;
 using LMSRepository.Interfaces;
 using LMSRepository.Interfaces.DataAccess;
-using LMSService.Interfacees;
-using LMSService.Helpers;
 using LMSService.Interfaces;
+using LMSService.Helpers;
 using LMSService.Service;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,9 +21,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILibraryCardRepository, LibraryCardRepository>();
             services.AddScoped<ICheckoutService, CheckoutService>();
-            services.AddScoped<IReserveService, ReserveService>();
             services.AddScoped<ICheckoutRepository, CheckoutRepository>();
-            services.AddScoped<IReserveRepository, ReserveRepository>();
             services.AddScoped<ILibraryAssetService, LibraryAssetService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
@@ -40,7 +37,6 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPhotoService, LMSService.Service.PhotoService>();
-            services.AddScoped<ITestService, TestService>();
             services.AddScoped<LogUserActivity>();
         }
     }

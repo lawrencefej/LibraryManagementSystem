@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Interfaces;
 using LMSRepository.Models;
@@ -14,6 +15,7 @@ namespace LMSService.Service
 {
     public class PhotoService : IPhotoService
     {
+        private readonly DataContext _context;
         private readonly ILibraryRepository _libraryRepository;
         private readonly IPhotoLibraryService _photoLibrary;
         private readonly IUserRepository _userRepository;
@@ -21,10 +23,11 @@ namespace LMSService.Service
         private readonly IPhotoConfiguration _photoConfiguration;
         private readonly IMapper _mapper;
 
-        public PhotoService(ILibraryRepository libraryRepository, IPhotoLibraryService photoLibrary,
+        public PhotoService(DataContext context ,ILibraryRepository libraryRepository, IPhotoLibraryService photoLibrary,
             IUserRepository userRepository, ILibraryAssetRepository libraryAssetRepository,
             IPhotoConfiguration photoConfiguration, IMapper mapper)
         {
+            _context = context;
             _libraryRepository = libraryRepository;
             _photoLibrary = photoLibrary;
             _userRepository = userRepository;
