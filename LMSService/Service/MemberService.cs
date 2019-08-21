@@ -77,7 +77,9 @@ namespace LMSService.Service
 
         public async Task DeleteMember(User user)
         {
+            // TODO Test
             _context.Remove(user);
+            _context.Remove(user.LibraryCard);
             await _context.SaveChangesAsync();
         }
 
