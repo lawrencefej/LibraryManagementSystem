@@ -1,11 +1,10 @@
-﻿using LMSRepository.Data;
+﻿using AutoMapper;
 using LMSRepository.Dto;
-using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
@@ -15,20 +14,13 @@ namespace LibraryManagementSystem.API.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly DataContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly IUserRepository _userRepo;
         private readonly IAdminService _adminService;
+        private readonly IMapper _mapper;
 
-        public AdminController(
-            DataContext context,
-            UserManager<User> userManager,
-            IUserRepository userRepo, IAdminService adminService)
+        public AdminController(IMapper mapper, IAdminService adminService)
         {
-            _context = context;
-            _userManager = userManager;
-            _userRepo = userRepo;
             _adminService = adminService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -36,7 +28,11 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var users = await _adminService.GetAdminUsers();
 
-            return Ok(users);
+            var usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
+
+            usersToReturn = _adminService.AddRoleToUsers(usersToReturn);
+
+            return Ok(usersToReturn);
         }
 
         [HttpPost]
@@ -44,9 +40,15 @@ namespace LibraryManagementSystem.API.Controllers
         {
             addAdminDto.CallbackUrl = (Request.Scheme + "://" + Request.Host + "/resetpassword/");
 
-            var user = await _adminService.CreateUser(addAdminDto);
+            var user = _mapper.Map<User>(addAdminDto);
 
-            return CreatedAtRoute("Get", new { id = user.Id }, user);
+            user = await _adminService.CreateUser(user, addAdminDto.Role, addAdminDto.CallbackUrl);
+
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+
+            userToReturn = _adminService.AddRoleToUser(userToReturn);
+
+            return CreatedAtRoute("Get", new { id = userToReturn.Id }, userToReturn);
         }
 
         [HttpGet("{id}", Name = "Get")]
@@ -54,7 +56,9 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var user = await _adminService.GetAdminUser(id);
 
-            return Ok(user);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+
+            return Ok(userToReturn);
         }
 
         [HttpPut]
@@ -67,7 +71,7 @@ namespace LibraryManagementSystem.API.Controllers
                 return BadRequest("User for not found");
             }
 
-            await _adminService.UpdateUser(updateAdminDto);
+            await _adminService.UpdateUser(user, updateAdminDto.Role);
 
             return NoContent();
         }
@@ -75,7 +79,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _adminService.DeleteUser(id);
+            var user = await _adminService.GetAdminUser(id);
+
+            if (user == null)
+            {
+                NoContent();
+            }
+
+            await _adminService.DeleteUser(user);
 
             return NoContent();
         }

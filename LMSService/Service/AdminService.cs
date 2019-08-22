@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using LMSRepository.Dto;
-using LMSRepository.Interfaces;
+﻿using LMSRepository.Dto;
 using LMSRepository.Models;
 using LMSService.Interfaces;
-using LMSService.Exceptions;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,94 +8,98 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using LMSRepository.Helpers;
+using LMSRepository.Data;
 
 namespace LMSService.Service
 {
     public class AdminService : IAdminService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IAdminRepository _adminRepository;
-        private readonly IMapper _mapper;
-        private readonly ILibraryRepository _libraryRepository;
         private readonly IEmailSender _emailSender;
-        private readonly IAuthRepository _authRepository;
         private readonly ILogger<AdminService> _logger;
+        private readonly DataContext _context;
 
-        public AdminService(UserManager<User> userManager, IAdminRepository adminRepository, IMapper mapper, ILibraryRepository libraryRepository,
-            IEmailSender emailSender, IAuthRepository authRepository, ILogger<AdminService> logger)
+        public AdminService(DataContext context, UserManager<User> userManager,
+            IEmailSender emailSender, ILogger<AdminService> logger)
         {
             _userManager = userManager;
-            _adminRepository = adminRepository;
-            _mapper = mapper;
-            _libraryRepository = libraryRepository;
             _emailSender = emailSender;
-            _authRepository = authRepository;
             _logger = logger;
+            _context = context;
         }
 
-        public async Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto)
+        public async Task<User> CreateUser(User newUser, string newRole, string callbackUrl)
         {
-            addAdminDto.UserName = addAdminDto.Email;
+            newUser.UserName = newUser.Email;
 
-            // TODO Move mapper to controller
-            var userToCreate = _mapper.Map<User>(addAdminDto);
+            await _userManager.CreateAsync(newUser);
+            await _userManager.AddToRoleAsync(newUser, newRole);
 
-            await _userManager.CreateAsync(userToCreate);
-            await _userManager.AddToRoleAsync(userToCreate, addAdminDto.Role);
+            var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(newUser);
 
-            // TODO remove dependency on auth repository
-            var resetPasswordToken = await _authRepository.ResetPassword(userToCreate);
+            await WelcomeMessage(resetPasswordToken, newUser, callbackUrl);
 
-            await WelcomeMessage(resetPasswordToken, userToCreate, addAdminDto.CallbackUrl);
-
-            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
-
-            var role = userToReturn.UserRoles.ElementAt(0);
-
-            userToReturn.Role = role.Name;
-
-            return userToReturn;
+            return newUser;
         }
 
-        public async Task<UserForDetailedDto> GetAdminUser(int userId)
+        public UserForDetailedDto AddRoleToUser(UserForDetailedDto user)
         {
-            var user = await _adminRepository.GetAdminUser(userId);
+            var role = user.UserRoles.ElementAtOrDefault(0);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            user.Role = role.Name;
 
-            return userToReturn;
+            return user;
         }
 
-        public async Task<IEnumerable<UserForDetailedDto>> GetAdminUsers()
+        public IEnumerable<UserForDetailedDto> AddRoleToUsers(IEnumerable<UserForDetailedDto> users)
         {
-            var users = await _adminRepository.GetUsers();
-
-            var usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
-
-            foreach (var user in usersToReturn)
+            foreach (var user in users)
             {
-                //Add the role to the user
                 var role = user.UserRoles.ElementAtOrDefault(0);
                 user.Role = role.Name;
             }
 
-            return usersToReturn;
+            return users;
         }
 
-        public async Task UpdateUser(UpdateAdminDto userforUpdate)
+        public async Task<User> GetAdminUser(int userId)
         {
-            var user = await _adminRepository.GetAdminUser(userforUpdate.Id);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-            _mapper.Map(userforUpdate, user);
+            return user;
+        }
 
-            await _adminRepository.UpdateUser(user, userforUpdate.Role);
+        public async Task<IEnumerable<User>> GetAdminUsers()
+        {
+            var users = await _userManager.Users
+                .Include(p => p.ProfilePicture)
+                .Include(c => c.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .Where(u => u.UserRoles.Any(r => r.Role.Name != (nameof(EnumRoles.Member))))
+                .OrderBy(u => u.Lastname).ToListAsync();
 
-            if (await _libraryRepository.SaveAll())
+            return users;
+        }
+
+        public async Task UpdateUser(User userforUpdate, string role)
+        {
+            var isInRole = await _userManager.IsInRoleAsync(userforUpdate, role);
+
+            if (!isInRole)
             {
-                return;
+                var roles = new List<string>()
+                {
+                    nameof(EnumRoles.Admin),
+                    nameof(EnumRoles.Librarian)
+                };
+                await _userManager.RemoveFromRolesAsync(userforUpdate, roles);
+                await _userManager.AddToRoleAsync(userforUpdate, role);
             }
 
-            throw new Exception($"Updating user failed on save");
+            await _userManager.UpdateAsync(userforUpdate);
+            await _context.SaveChangesAsync();
         }
 
         private async Task WelcomeMessage(string code, User user, string url)
@@ -112,26 +113,13 @@ namespace LMSService.Service
             await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
         }
 
-        public async Task DeleteUser(int userId)
+        public async Task DeleteUser(User user)
         {
-            var user = await _adminRepository.GetAdminUser(userId);
+            _context.Remove(user);
 
-            if (user == null)
-            {
-                _logger.LogWarning($"userID: {userId} was not found");
-                throw new NoValuesFoundException($"userID: {userId} was not found");
-            }
+            await _context.SaveChangesAsync();
 
-            _libraryRepository.Delete(user);
-
-            if (await _libraryRepository.SaveAll())
-            {
-                _logger.LogInformation($"userID: {user.Id} was deleted");
-                return;
-            }
-
-            _logger.LogCritical($"Deleting userID: {user.Id} failed on save");
-            throw new Exception($"Deleting userID: {user.Id} failed on save");
+            _logger.LogInformation($"userID: {user.Id} was deleted");
         }
     }
 }

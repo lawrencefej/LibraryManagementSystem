@@ -27,6 +27,7 @@ namespace LMSService.Service
 
         public async Task<User> AddMember(User member)
         {
+            // TODO Member does not login
             member.UserName = member.Email;
 
             var result = await _userManager.CreateAsync(member);
