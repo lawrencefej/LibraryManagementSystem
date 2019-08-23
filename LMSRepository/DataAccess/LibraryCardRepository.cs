@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.Interfaces.DataAccess
 {
-    public class LibraryCardRepository : ILibraryCardRepository
+    public class LibraryCardRepository
     {
         private readonly DataContext _context;
 

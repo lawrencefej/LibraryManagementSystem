@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class AssetTypeRepository : IAssetTypeRepository
+    public class AssetTypeRepository /*: IAssetTypeRepository*/
     {
         private readonly DataContext _context;
 

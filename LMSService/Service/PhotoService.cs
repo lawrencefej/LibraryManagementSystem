@@ -17,16 +17,15 @@ namespace LMSService.Service
     public class PhotoService : IPhotoService
     {
         private readonly DataContext _context;
-        private readonly ILibraryRepository _libraryRepository;
+
         private readonly IPhotoLibraryService _photoLibrary;
         private readonly IPhotoConfiguration _photoConfiguration;
         private readonly IMapper _mapper;
 
-        public PhotoService(DataContext context, ILibraryRepository libraryRepository, IPhotoLibraryService photoLibrary,
+        public PhotoService(DataContext context, IPhotoLibraryService photoLibrary,
             IPhotoConfiguration photoConfiguration, IMapper mapper)
         {
             _context = context;
-            _libraryRepository = libraryRepository;
             _photoLibrary = photoLibrary;
             _photoConfiguration = photoConfiguration;
             _mapper = mapper;
@@ -96,14 +95,10 @@ namespace LMSService.Service
 
             user.ProfilePicture = photo;
 
-            if (await _libraryRepository.SaveAll())
-            {
-                var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+            await _context.SaveChangesAsync();
 
-                return new ResponseHandler(photoToreturn, photo.Id);
-            }
-
-            throw new Exception("Adding Photo failed on save");
+            var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+            return new ResponseHandler(photoToreturn, photo.Id);
         }
 
         private async Task<bool> DeletePhoto(PhotoSettings settings, Photo photo)
@@ -111,12 +106,7 @@ namespace LMSService.Service
             if (_photoLibrary.DeletePhoto(settings, photo.PublicId))
             {
                 _context.Remove(photo);
-
-                if (await _libraryRepository.SaveAll())
-                {
-                    return true;
-                }
-                throw new Exception("Deleting Photo failed on save");
+                await _context.AddRangeAsync();
             }
 
             throw new Exception($"Cloud delete failed, please try again later");

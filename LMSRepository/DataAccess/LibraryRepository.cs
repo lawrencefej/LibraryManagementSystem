@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class LibraryRepository : ILibraryRepository
+    public class LibraryRepository /*: ILibraryRepository*/
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;

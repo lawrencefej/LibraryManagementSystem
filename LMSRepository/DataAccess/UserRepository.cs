@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;

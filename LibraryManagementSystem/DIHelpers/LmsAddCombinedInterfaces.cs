@@ -15,29 +15,18 @@ namespace LibraryManagementSystem.DIHelpers
     {
         public static void AddCombinedInterfaces(this IServiceCollection services)
         {
-            services.AddScoped<ILibraryCardRepository, LibraryCardRepository>();
-            services.AddScoped<ILibraryAssetRepository, LibraryAssetRepository>();
-            services.AddScoped<ILibraryRepository, LibraryRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ILibraryCardRepository, LibraryCardRepository>();
             services.AddScoped<ICheckoutService, CheckoutService>();
-            services.AddScoped<ICheckoutRepository, CheckoutRepository>();
             services.AddScoped<ILibraryAssetService, LibraryAssetService>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
-            services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IAssetTypeService, AssetTypeService>();
-            services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
-            services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IPhotoService, LMSService.Service.PhotoService>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
         }
     }

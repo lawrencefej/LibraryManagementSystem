@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class AdminRepository : IAdminRepository
+    public class AdminRepository /*: IAdminRepository*/
     {
         private readonly UserManager<User> _userManager;
 

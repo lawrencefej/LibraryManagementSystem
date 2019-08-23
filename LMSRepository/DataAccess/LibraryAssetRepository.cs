@@ -10,171 +10,171 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.Interfaces.DataAccess
 {
-    public class LibraryAssetRepository : ILibraryAssetRepository
-    {
-        private readonly DataContext _context;
-        private readonly ILibraryRepository _libraryRepo;
+    //public class LibraryAssetRepository : ILibraryAssetRepository
+    //{
+    //    private readonly DataContext _context;
+    //    private readonly ILibraryRepository _libraryRepo;
 
-        public LibraryAssetRepository(DataContext context, ILibraryRepository libraryRepo)
-        {
-            _context = context;
-            _libraryRepo = libraryRepo;
-        }
+    //    public LibraryAssetRepository(DataContext context, ILibraryRepository libraryRepo)
+    //    {
+    //        _context = context;
+    //        _libraryRepo = libraryRepo;
+    //    }
 
-        public async Task<LibraryAsset> GetAsset(int id)
-        {
-            var asset = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(p => p.Category)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .FirstOrDefaultAsync(a => a.Id == id);
+    //    public async Task<LibraryAsset> GetAsset(int id)
+    //    {
+    //        var asset = await _context.LibraryAssets
+    //            .Include(p => p.Photo)
+    //            .Include(p => p.Category)
+    //            .Include(a => a.AssetType)
+    //            .Include(s => s.Status)
+    //            .Include(s => s.Author)
+    //            .FirstOrDefaultAsync(a => a.Id == id);
 
-            return asset;
-        }
+    //        return asset;
+    //    }
 
-        public async Task<LibraryAsset> GetAssetByIsbn(string isbn)
-        {
-            var assets = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .FirstOrDefaultAsync(a => a.ISBN == isbn);
+    //    public async Task<LibraryAsset> GetAssetByIsbn(string isbn)
+    //    {
+    //        var assets = await _context.LibraryAssets
+    //            .Include(p => p.Photo)
+    //            .Include(a => a.AssetType)
+    //            .Include(s => s.Status)
+    //            .Include(s => s.Author)
+    //            .FirstOrDefaultAsync(a => a.ISBN == isbn);
 
-            return assets;
-        }
+    //        return assets;
+    //    }
 
-        public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId)
-        {
-            var assets = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .Where(s => s.AuthorId == authorId).ToListAsync();
+    //    public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId)
+    //    {
+    //        var assets = await _context.LibraryAssets
+    //            .Include(p => p.Photo)
+    //            .Include(a => a.AssetType)
+    //            .Include(s => s.Status)
+    //            .Include(s => s.Author)
+    //            .Where(s => s.AuthorId == authorId).ToListAsync();
 
-            return assets;
-        }
+    //        return assets;
+    //    }
 
-        public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthorName(string name)
-        {
-            var assets = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .Where(s => s.Author.FullName == name).ToListAsync();
+    //    public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthorName(string name)
+    //    {
+    //        var assets = await _context.LibraryAssets
+    //            .Include(p => p.Photo)
+    //            .Include(a => a.AssetType)
+    //            .Include(s => s.Status)
+    //            .Include(s => s.Author)
+    //            .Where(s => s.Author.FullName == name).ToListAsync();
 
-            return assets;
-        }
+    //        return assets;
+    //    }
 
-        public async Task<IEnumerable<LibraryAsset>> SearchAssets(SearchAssetDto searchAsset)
-        {
-            var assets = from asset in _context.LibraryAssets
-                         .Include(a => a.Author)
-                         select asset;
+    //    public async Task<IEnumerable<LibraryAsset>> SearchAssets(SearchAssetDto searchAsset)
+    //    {
+    //        var assets = from asset in _context.LibraryAssets
+    //                     .Include(a => a.Author)
+    //                     select asset;
 
-            if (searchAsset != null)
-            {
-                if (!string.IsNullOrEmpty(searchAsset.Title))
-                {
-                    assets = assets.Where(a => a.Title.Contains(searchAsset.Title, StringComparison.OrdinalIgnoreCase));
-                    return await assets.ToListAsync();
-                }
-                else if (!string.IsNullOrEmpty(searchAsset.AuthorName))
-                {
-                    assets = assets.Where(a => a.Author.FullName.Contains(searchAsset.AuthorName, StringComparison.OrdinalIgnoreCase));
-                    return await assets.ToListAsync();
-                }
-            }
+    //        if (searchAsset != null)
+    //        {
+    //            if (!string.IsNullOrEmpty(searchAsset.Title))
+    //            {
+    //                assets = assets.Where(a => a.Title.Contains(searchAsset.Title, StringComparison.OrdinalIgnoreCase));
+    //                return await assets.ToListAsync();
+    //            }
+    //            else if (!string.IsNullOrEmpty(searchAsset.AuthorName))
+    //            {
+    //                assets = assets.Where(a => a.Author.FullName.Contains(searchAsset.AuthorName, StringComparison.OrdinalIgnoreCase));
+    //                return await assets.ToListAsync();
+    //            }
+    //        }
 
-            return null;
-        }
+    //        return null;
+    //    }
 
-        public async Task<IEnumerable<LibraryAsset>> GetLibraryAssets()
-        {
-            var assets = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .OrderByDescending(o => o.Title)
-                .ToListAsync();
+    //    public async Task<IEnumerable<LibraryAsset>> GetLibraryAssets()
+    //    {
+    //        var assets = await _context.LibraryAssets
+    //            .Include(p => p.Photo)
+    //            .Include(a => a.AssetType)
+    //            .Include(s => s.Status)
+    //            .Include(s => s.Author)
+    //            .OrderByDescending(o => o.Title)
+    //            .ToListAsync();
 
-            return assets;
-        }
+    //        return assets;
+    //    }
 
-        public async Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString)
-        {
-            var assets = from asset in _context.LibraryAssets
-                        .Include(s => s.Author)
-                        .Include(s => s.AssetType)
-                         select asset;
+    //    public async Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString)
+    //    {
+    //        var assets = from asset in _context.LibraryAssets
+    //                    .Include(s => s.Author)
+    //                    .Include(s => s.AssetType)
+    //                     select asset;
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                assets = assets
-                    .Where(s => s.Title.Contains(searchString)
-                    || s.Author.LastName.Contains(searchString)
-                    || s.Author.FirstName.Contains(searchString)
-                    || s.ISBN.Contains(searchString));
+    //        if (!string.IsNullOrEmpty(searchString))
+    //        {
+    //            assets = assets
+    //                .Where(s => s.Title.Contains(searchString)
+    //                || s.Author.LastName.Contains(searchString)
+    //                || s.Author.FirstName.Contains(searchString)
+    //                || s.ISBN.Contains(searchString));
 
-                return await assets.ToListAsync();
-            }
+    //            return await assets.ToListAsync();
+    //        }
 
-            return await GetLibraryAssets();
-        }
+    //        return await GetLibraryAssets();
+    //    }
 
-        public void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset)
-        {
-            libraryAsset.CopiesAvailable--;
+    //    public void ReduceAssetCopiesAvailable(LibraryAsset libraryAsset)
+    //    {
+    //        libraryAsset.CopiesAvailable--;
 
-            if (libraryAsset.CopiesAvailable == 0)
-            {
-                libraryAsset.StatusId = (int)EnumStatus.Unavailable;
-            }
-        }
+    //        if (libraryAsset.CopiesAvailable == 0)
+    //        {
+    //            libraryAsset.StatusId = (int)EnumStatus.Unavailable;
+    //        }
+    //    }
 
-        public IQueryable<LibraryAsset> GetAll()
-        {
-            var assets = _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .OrderByDescending(o => o.Title)
-                .AsQueryable();
+    //    public IQueryable<LibraryAsset> GetAll()
+    //    {
+    //        var assets = _context.LibraryAssets
+    //            .Include(p => p.Photo)
+    //            .Include(a => a.AssetType)
+    //            .Include(s => s.Status)
+    //            .Include(s => s.Author)
+    //            .OrderByDescending(o => o.Title)
+    //            .AsQueryable();
 
-            return assets;
-        }
+    //        return assets;
+    //    }
 
-        public async Task<PagedList<LibraryAsset>> GetPagedLibraryAssetsAsync(PaginationParams paginationParams)
-        {
-            var assets = _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .OrderByDescending(o => o.Title)
-                .AsQueryable();
+    //    public async Task<PagedList<LibraryAsset>> GetPagedLibraryAssetsAsync(PaginationParams paginationParams)
+    //    {
+    //        var assets = _context.LibraryAssets
+    //            .Include(p => p.Photo)
+    //            .Include(a => a.AssetType)
+    //            .Include(s => s.Status)
+    //            .Include(s => s.Author)
+    //            .OrderByDescending(o => o.Title)
+    //            .AsQueryable();
 
-            if (!string.IsNullOrEmpty(paginationParams.OrderBy))
-            {
-                switch (paginationParams.OrderBy)
-                {
-                    case "created":
-                        assets = assets.OrderByDescending(u => u.Title);
-                        break;
+    //        if (!string.IsNullOrEmpty(paginationParams.OrderBy))
+    //        {
+    //            switch (paginationParams.OrderBy)
+    //            {
+    //                case "created":
+    //                    assets = assets.OrderByDescending(u => u.Title);
+    //                    break;
 
-                    default:
-                        assets = assets.OrderByDescending(u => u.Author);
-                        break;
-                }
-            }
+    //                default:
+    //                    assets = assets.OrderByDescending(u => u.Author);
+    //                    break;
+    //            }
+    //        }
 
-            return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
-        }
-    }
+    //        return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
+    //    }
+    //}
 }

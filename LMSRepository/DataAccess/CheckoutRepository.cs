@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class CheckoutRepository : ICheckoutRepository
+    public class CheckoutRepository /*: ICheckoutRepository*/
     {
         private readonly DataContext _context;
 

@@ -2,7 +2,6 @@
 using EmailService;
 using EmailService.Services;
 using LibraryManagementSystem.API.Helpers;
-using LMSRepository.Interfaces.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using PhotoLibrary;
 using PhotoLibrary.Service;

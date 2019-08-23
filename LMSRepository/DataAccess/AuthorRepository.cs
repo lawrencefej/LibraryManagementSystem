@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class AuthorRepository : IAuthorRepository
+    public class AuthorRepository /*: IAuthorRepository*/
     {
         private readonly DataContext _context;
 
