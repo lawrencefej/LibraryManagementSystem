@@ -67,13 +67,13 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("card/{cardId}")]
-        public async Task<IActionResult> GetUserByCardNumber(int cardId)
+        public async Task<IActionResult> GetMemberByCardNumber(int cardId)
         {
             var user = await _memberService.GetMemberByCardNumber(cardId);
 
             return Ok(user);
         }
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMember(UserForUpdateDto userForUpdateDto)
         {

@@ -32,7 +32,8 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<IEmailService, MailtrapService>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IMemberService, MemberService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
