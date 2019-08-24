@@ -2,9 +2,10 @@
 using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
-using LMSService.Interfacees;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,11 +18,13 @@ namespace LibraryManagementSystem.API.Controllers
     {
         private readonly ICheckoutService _checkoutService;
         private readonly IMapper _mapper;
+        private readonly ILogger<CheckoutsController> _logger;
 
-        public CheckoutsController(ICheckoutService checkoutService, IMapper mapper)
+        public CheckoutsController(ICheckoutService checkoutService, IMapper mapper, ILogger<CheckoutsController> logger)
         {
             _checkoutService = checkoutService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPut("{id}")]
@@ -45,33 +48,12 @@ namespace LibraryManagementSystem.API.Controllers
             return CreatedAtRoute("GetCheckout", new { id = result.Id }, result.Result);
         }
 
-        [HttpPut("reserve/{id}")]
-        public async Task<IActionResult> CheckOutReserve(int id)
-        {
-            var checkout = await _checkoutService.CheckoutReservedAsset(id);
-
-            if (checkout.IsSuccessful)
-            {
-                return NoContent();
-            }
-
-            return BadRequest();
-        }
-
         [HttpGet("{id}", Name = "GetCheckout")]
         public async Task<ActionResult> GetCheckout(int id)
         {
             var checkout = await _checkoutService.GetCheckout(id);
 
             return Ok(checkout);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetCheckouts()
-        {
-            var checkouts = await _checkoutService.GetAllCheckouts();
-
-            return Ok(checkouts);
         }
 
         [HttpGet("asset/{libraryAssetId}")]
@@ -101,7 +83,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("pagination/")]
         public async Task<IActionResult> GetAll([FromQuery]PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutService.GetAllAsync(paginationParams);
+            var checkouts = await _checkoutService.GetAllCheckouts(paginationParams);
 
             var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 

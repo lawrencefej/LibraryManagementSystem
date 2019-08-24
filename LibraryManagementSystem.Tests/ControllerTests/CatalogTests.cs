@@ -4,7 +4,7 @@ using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Models;
-using LMSService.Interfacees;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,7 @@ using Xunit;
 
 namespace LibraryManagementSystem.Tests.ControllerTests
 {
-    public class CatalogTests 
+    public class CatalogTests
     {
         private readonly ILogger<CatalogController> _logger;
         private readonly Mapper _mapper;
@@ -65,7 +65,7 @@ namespace LibraryManagementSystem.Tests.ControllerTests
 
             return new ControllerContext()
             {
-                HttpContext = new DefaultHttpContext { User = user}
+                HttpContext = new DefaultHttpContext { User = user }
             };
         }
 

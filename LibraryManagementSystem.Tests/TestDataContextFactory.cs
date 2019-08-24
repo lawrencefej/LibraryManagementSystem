@@ -10,12 +10,13 @@ namespace LibraryManagementSystem.Tests
         private readonly DbContextOptions<DataContext> _options;
 
         public DataContext UseInMemory() => new DataContext(_options);
+      
         public DataContext UseSqlite()
         {
             useSqlite = true;
             return new DataContext(_options);
         }
-        
+
         private bool useSqlite;
 
         public TestDataContextFactory()
@@ -42,3 +43,4 @@ namespace LibraryManagementSystem.Tests
         }
     }
 }
+

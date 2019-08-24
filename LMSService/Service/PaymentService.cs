@@ -1,29 +1,27 @@
-﻿using LMSRepository.Interfaces;
+﻿using LMSRepository.Data;
 using LMSService.Exceptions;
 using LMSService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace LMSService.Service
 {
     public class PaymentService : IPaymentService
     {
-        private readonly ILibraryCardRepository _libraryCardRepository;
+        private readonly DataContext _context;
         private readonly ILogger<PaymentService> _logger;
-        private readonly ILibraryRepository _libraryRepository;
 
-        public PaymentService(ILibraryCardRepository libraryCardRepository, ILogger<PaymentService> logger,
-                                ILibraryRepository libraryRepository)
+        public PaymentService(DataContext context, ILogger<PaymentService> logger)
         {
-            _libraryCardRepository = libraryCardRepository;
+            _context = context;
             _logger = logger;
-            _libraryRepository = libraryRepository;
         }
 
         public async Task PayFees(int libraryCardID)
         {
-            var card = await _libraryCardRepository.GetCard(libraryCardID);
+            var card = await _context.LibraryCards
+                .FirstOrDefaultAsync(p => p.Id == libraryCardID);
 
             if (card == null)
             {
@@ -33,13 +31,8 @@ namespace LMSService.Service
 
             card.Fees = 0;
 
-            if (await _libraryRepository.SaveAll())
-            {
-                _logger.LogInformation($"Fees were paid for Library Card {libraryCardID}");
-                return;
-            }
-
-            throw new Exception($"Unsuccessful payment for card {libraryCardID} failed on save");
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Fees were paid for Library Card {libraryCardID}");
         }
     }
 }

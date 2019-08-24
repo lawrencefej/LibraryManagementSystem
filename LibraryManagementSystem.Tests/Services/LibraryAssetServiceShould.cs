@@ -13,7 +13,7 @@ using Xunit;
 
 namespace LibraryManagementSystem.Tests.Services
 {
-    public class LibraryAssetServiceShould 
+    public class LibraryAssetServiceShould
     {
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly Mapper _mapper;
@@ -50,7 +50,7 @@ namespace LibraryManagementSystem.Tests.Services
 
         private static LibraryAsset GetAsset()
         {
-            return new LibraryAsset { Id = 4, Title = "Test", Year = 1992, NumberOfCopies = 10, AssetTypeId = 1, AuthorId = 2, CategoryId = 1};
+            return new LibraryAsset { Id = 4, Title = "Test", Year = 1992, NumberOfCopies = 10, AssetTypeId = 1, AuthorId = 2, CategoryId = 1 };
         }
 
         private static Author GetAuthor()
@@ -210,7 +210,7 @@ namespace LibraryManagementSystem.Tests.Services
                 context.AddRange(GetAllAssets());
                 context.Add(GetAsset());
                 context.Add(GetAuthor());
-                context.Add(new Author { Id = 2});
+                context.Add(new Author { Id = 2 });
                 context.SaveChanges();
 
                 var service = new LibraryAssetService(context, _logger);

@@ -1,5 +1,4 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Models;
+﻿using LMSRepository.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using System.Collections.Generic;

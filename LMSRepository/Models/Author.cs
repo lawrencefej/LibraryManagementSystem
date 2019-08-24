@@ -9,7 +9,6 @@ namespace LMSRepository.Models
         public string LastName { get; set; }
         public ICollection<LibraryAsset> Assets { get; set; }
 
-        //public int AssetId { get; set; }
         public string FullName
         {
             get

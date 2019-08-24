@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using LMSRepository.Data;
 using LMSRepository.Dto;
-using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using LMSService.Helpers;
 using LMSService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using PhotoLibrary;
 using PhotoLibrary.Configuration;
 using PhotoLibrary.Model;
@@ -14,28 +15,24 @@ namespace LMSService.Service
 {
     public class PhotoService : IPhotoService
     {
-        private readonly ILibraryRepository _libraryRepository;
+        private readonly DataContext _context;
+
         private readonly IPhotoLibraryService _photoLibrary;
-        private readonly IUserRepository _userRepository;
-        private readonly ILibraryAssetRepository _libraryAssetRepository;
         private readonly IPhotoConfiguration _photoConfiguration;
         private readonly IMapper _mapper;
 
-        public PhotoService(ILibraryRepository libraryRepository, IPhotoLibraryService photoLibrary,
-            IUserRepository userRepository, ILibraryAssetRepository libraryAssetRepository,
+        public PhotoService(DataContext context, IPhotoLibraryService photoLibrary,
             IPhotoConfiguration photoConfiguration, IMapper mapper)
         {
-            _libraryRepository = libraryRepository;
+            _context = context;
             _photoLibrary = photoLibrary;
-            _userRepository = userRepository;
-            _libraryAssetRepository = libraryAssetRepository;
             _photoConfiguration = photoConfiguration;
             _mapper = mapper;
         }
 
         public async Task<ResponseHandler> AddPhotoForAsset(AssetPhotoDto assetPhotoDto)
         {
-            var asset = await _libraryAssetRepository.GetAsset(assetPhotoDto.LibraryAssetId);
+            var asset = await _context.LibraryAssets.FirstOrDefaultAsync(x => x.Id == assetPhotoDto.LibraryAssetId);
 
             PhotoSettings settings = CloudinarySettings();
 
@@ -61,19 +58,16 @@ namespace LMSService.Service
 
             asset.Photo = photo;
 
-            if (await _libraryRepository.SaveAll())
-            {
-                var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+            await _context.SaveChangesAsync();
 
-                return new ResponseHandler(photoToreturn, photo.Id);
-            }
+            var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
 
-            throw new Exception($"Adding Photo failed on save");
+            return new ResponseHandler(photoToreturn, photo.Id);
         }
 
         public async Task<ResponseHandler> AddPhotoForUser(UserPhotoDto userPhotoDto)
         {
-            var user = await _userRepository.GetUser(userPhotoDto.UserId);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userPhotoDto.UserId);
 
             PhotoSettings settings = CloudinarySettings();
 
@@ -100,27 +94,18 @@ namespace LMSService.Service
 
             user.ProfilePicture = photo;
 
-            if (await _libraryRepository.SaveAll())
-            {
-                var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+            await _context.SaveChangesAsync();
 
-                return new ResponseHandler(photoToreturn, photo.Id);
-            }
-
-            throw new Exception("Adding Photo failed on save");
+            var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+            return new ResponseHandler(photoToreturn, photo.Id);
         }
 
         private async Task<bool> DeletePhoto(PhotoSettings settings, Photo photo)
         {
             if (_photoLibrary.DeletePhoto(settings, photo.PublicId))
             {
-                _libraryRepository.Delete(photo);
-
-                if (await _libraryRepository.SaveAll())
-                {
-                    return true;
-                }
-                throw new Exception("Deleting Photo failed on save");
+                _context.Remove(photo);
+                await _context.AddRangeAsync();
             }
 
             throw new Exception($"Cloud delete failed, please try again later");

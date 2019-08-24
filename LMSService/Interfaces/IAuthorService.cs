@@ -1,24 +1,21 @@
-﻿using LMSRepository.Dto;
-using LMSRepository.Helpers;
+﻿using LMSRepository.Helpers;
 using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSService.Interfacees
+namespace LMSService.Interfaces
 {
     public interface IAuthorService
     {
-        Task<AuthorDto> AddAuthor(AuthorDto authorDto);
+        Task<Author> AddAuthor(Author author);
 
-        Task DeleteAuthor(int authorId);
+        Task DeleteAuthor(Author author);
 
-        Task EditAuthor(AuthorDto authorDto);
+        Task EditAuthor(Author author);
 
-        Task<IEnumerable<AuthorDto>> GetAuthors();
+        Task<Author> GetAuthor(int authorId);
 
-        Task<AuthorDto> GetAuthor(int authorId);
-
-        Task<IEnumerable<AuthorDto>> SearchAuthors(string searchString);
+        Task<IEnumerable<Author>> SearchAuthors(string searchString);
 
         Task<PagedList<Author>> GetAllAsync(PaginationParams paginationParams);
     }

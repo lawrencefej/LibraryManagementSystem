@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSService.Interfacees
+namespace LMSService.Interfaces
 {
     public interface IAssetTypeService
     {
         Task<AssetType> AddAssetType(AssetType assetType);
 
-        Task DeleteAssetType(int assetTypeId);
-
-        Task EditAuthor(AssetType assetType);
+        Task DeleteAssetType(AssetType assetType);
 
         Task<IEnumerable<AssetType>> GetAssetTypes();
 

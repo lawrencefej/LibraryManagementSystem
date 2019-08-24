@@ -1,9 +1,6 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Models;
-using LMSService.Interfacees;
+﻿using LMSRepository.Models;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
@@ -12,12 +9,10 @@ namespace LibraryManagementSystem.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(DataContext context, ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService)
         {
-            _context = context;
             _categoryService = categoryService;
         }
 
@@ -30,7 +25,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("{categoryId}")]
-        public async Task<ActionResult<Category>> GetCategory(int categoryId)
+        public async Task<IActionResult> GetCategory(int categoryId)
         {
             var category = await _categoryService.GetCategory(categoryId);
 
@@ -39,43 +34,13 @@ namespace LibraryManagementSystem.Controllers
                 return NotFound();
             }
 
-            return category;
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
-        {
-            if (id != category.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(category).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(category);
         }
 
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
+            category = await _categoryService.AddCategory(category);
 
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
@@ -83,21 +48,16 @@ namespace LibraryManagementSystem.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-            var category = await _context.Category.FindAsync(id);
+            var category = await _categoryService.GetCategory(id);
+
             if (category == null)
             {
                 return NotFound();
             }
 
-            _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
+            await _categoryService.DeleteCategory(category);
 
             return category;
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return _context.Category.Any(e => e.Id == id);
         }
     }
 }

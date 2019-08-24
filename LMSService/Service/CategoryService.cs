@@ -1,7 +1,7 @@
-﻿using LMSRepository.Interfaces;
+﻿using LMSRepository.Data;
 using LMSRepository.Models;
-using LMSService.Interfacees;
-using System;
+using LMSService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,40 +9,39 @@ namespace LMSService.Service
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly DataContext _context;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(DataContext context)
         {
-            _categoryRepository = categoryRepository;
+            _context = context;
         }
 
-        public Task<Category> AddCategory(Category category)
+        public async Task<Category> AddCategory(Category category)
         {
-            throw new NotImplementedException();
+            await _context.AddAsync(category);
+            await _context.SaveChangesAsync();
+
+            return category;
         }
 
-        public Task DeleteCategory(int categoryId)
+        public async Task DeleteCategory(Category category)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task EditCategory(Category category)
-        {
-            throw new NotImplementedException();
+            _context.Remove(category);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategories()
         {
-            var assetTypesToReturn = await _categoryRepository.GetAll();
+            var categories = await _context.Category.ToListAsync();
 
-            return assetTypesToReturn;
+            return categories;
         }
 
         public async Task<Category> GetCategory(int categoryId)
         {
-            var assetTypeToReturn = await _categoryRepository.GetCategory(categoryId);
+            var category = await _context.Category.FirstOrDefaultAsync(x => x.Id == categoryId);
 
-            return assetTypeToReturn;
+            return category;
         }
     }
 }

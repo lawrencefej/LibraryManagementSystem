@@ -2,7 +2,8 @@
 using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
-using LMSService.Interfacees;
+using LMSRepository.Models;
+using LMSService.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -24,14 +25,6 @@ namespace LibraryManagementSystem.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAuthors()
-        {
-            var authors = await _authorService.GetAuthors();
-
-            return Ok(authors);
-        }
-
         [HttpGet("{authorId}", Name = "GetAuthor")]
         public async Task<IActionResult> GetAuthor(int authorId)
         {
@@ -42,13 +35,24 @@ namespace LibraryManagementSystem.Controllers
                 return NotFound();
             }
 
-            return Ok(author);
+            var authorToReturn = _mapper.Map<AuthorDto>(author);
+
+            return Ok(authorToReturn);
         }
 
         [HttpPut]
         public async Task<IActionResult> EditAuthor(AuthorDto authorDto)
         {
-            await _authorService.EditAuthor(authorDto);
+            var author = await _authorService.GetAuthor(authorDto.Id);
+
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(authorDto, author);
+
+            await _authorService.EditAuthor(author);
 
             return NoContent();
         }
@@ -56,15 +60,26 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAuthor(AuthorDto authorDto)
         {
-            var author = await _authorService.AddAuthor(authorDto);
+            var author = _mapper.Map<Author>(authorDto);
 
-            return CreatedAtRoute("GetAuthor", new { authorId = author.Id }, author);
+            author = await _authorService.AddAuthor(author);
+
+            var authorToReturn = _mapper.Map<AuthorDto>(author);
+
+            return CreatedAtRoute("GetAuthor", new { authorId = author.Id }, authorToReturn);
         }
 
         [HttpDelete("{authorId}")]
         public async Task<IActionResult> DeleteAuthor(int authorId)
         {
-            await _authorService.DeleteAuthor(authorId);
+            var author = await _authorService.GetAuthor(authorId);
+
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            await _authorService.DeleteAuthor(author);
 
             return NoContent();
         }
@@ -72,9 +87,11 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("search/")]
         public async Task<IActionResult> SearchAuthors([FromQuery]string searchString)
         {
-            var assets = await _authorService.SearchAuthors(searchString);
+            var authors = await _authorService.SearchAuthors(searchString);
 
-            return Ok(assets);
+            var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+
+            return Ok(authorsToReturn);
         }
 
         [HttpGet("pagination/")]

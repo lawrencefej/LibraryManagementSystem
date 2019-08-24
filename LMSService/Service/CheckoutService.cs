@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
-using LMSRepository.Interfaces;
 using LMSRepository.Models;
-using LMSService.Interfacees;
 using LMSService.Exceptions;
 using LMSService.Helpers;
+using LMSService.Interfaces;
 using LMSService.Validators;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,31 +18,21 @@ namespace LMSService.Service
 {
     public class CheckoutService : ICheckoutService
     {
-        protected readonly ILibraryAssetRepository _assetRepo;
-        protected readonly ILibraryCardRepository _cardRepo;
-        protected readonly ICheckoutRepository _checkoutRepo;
-        protected readonly ILibraryRepository _libraryRepo;
+        private readonly DataContext _context;
         private readonly ILogger<CheckoutService> _logger;
         private readonly IMapper _mapper;
-        private readonly IReserveRepository _reserveRepo;
         private List<string> errors = new List<string>();
 
-        public CheckoutService(ICheckoutRepository checkoutRepo, ILibraryRepository libraryRepo,
-            ILibraryCardRepository CardRepo, ILibraryAssetRepository AssetRepo, IMapper mapper,
-            ILogger<CheckoutService> logger, IReserveRepository reserveRepo)
+        public CheckoutService(DataContext context, IMapper mapper, ILogger<CheckoutService> logger)
         {
-            _checkoutRepo = checkoutRepo;
-            _libraryRepo = libraryRepo;
-            _cardRepo = CardRepo;
-            _assetRepo = AssetRepo;
+            _context = context;
             _mapper = mapper;
             _logger = logger;
-            _reserveRepo = reserveRepo;
         }
 
-        public async Task<CheckoutForReturnDto> CheckInAsset(int id)
+        public async Task CheckInAsset(int checkoutId)
         {
-            var checkout = await ValidateCheckin(id);
+            var checkout = await ValidateCheckin(checkoutId);
 
             checkout.StatusId = (int)EnumStatus.Returned;
 
@@ -51,18 +42,14 @@ namespace LMSService.Service
 
             libraryAsset.CopiesAvailable++;
 
-            if (await _libraryRepo.SaveAll())
-            {
-                var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
+            await _context.SaveChangesAsync();
 
-                return checkoutToReturn;
-            }
-
-            throw new Exception($"returning {checkout.Id} failed on save");
+            return;
         }
 
         public async Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreation)
         {
+            // TODO Fix this
             var libraryCard = await GetMemberLibraryCard(checkoutForCreation.userId);
 
             await IsAssetCurrentlyCheckedOutByMember(checkoutForCreation.LibraryAssetId, libraryCard.Id);
@@ -72,7 +59,8 @@ namespace LMSService.Service
             checkoutForCreation.AssetStatus = libraryAsset.Status.Name;
             checkoutForCreation.LibraryCardId = libraryCard.Id;
             checkoutForCreation.Fees = libraryCard.Fees;
-            checkoutForCreation.CurrentCheckoutCount = await _checkoutRepo.GetMemberCurrentCheckoutAmount(libraryCard.Id);
+            // TODO Create helper for this
+            checkoutForCreation.CurrentCheckoutCount = await GetMemberCurrentCheckoutAmount(libraryCard.Id);
 
             var validate = new CheckoutValidation();
             var result = await validate.ValidateAsync(checkoutForCreation);
@@ -91,60 +79,30 @@ namespace LMSService.Service
             var checkout = _mapper.Map<Checkout>(checkoutForCreation);
             checkout.StatusId = (int)EnumStatus.Checkedout;
 
-            _libraryRepo.Add(checkout);
+            await _context.AddAsync(checkout);
+            await _context.SaveChangesAsync();
 
-            if (await _libraryRepo.SaveAll())
-            {
-                var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
-                checkoutToReturn.Status = nameof(EnumStatus.Checkedout);
-                return new ResponseHandler(checkoutToReturn, checkoutToReturn.Id);
-            }
-
-            throw new Exception("Failed to Checkout the asset on save");
+            var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
+            checkoutToReturn.Status = nameof(EnumStatus.Checkedout);
+            return new ResponseHandler(checkoutToReturn, checkoutToReturn.Id);
         }
 
-        public async Task<ResponseHandler> CheckoutReservedAsset(int id)
+        public async Task<int> GetMemberCurrentCheckoutAmount(int cardId)
         {
-            ReserveAsset reserve = await GetCurrentReserve(id);
+            var count = await _context.Checkouts
+                .Where(l => l.LibraryCard.Id == cardId)
+                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
+                .CountAsync();
 
-            reserve.StatusId = (int)EnumStatus.Checkedout;
-            reserve.DateCheckedOut = DateTime.Now;
-
-            var checkout = new CheckoutForCreationDto()
-            {
-                LibraryAssetId = reserve.LibraryAssetId,
-                LibraryCardId = reserve.LibraryCardId
-            };
-
-            var checkoutForCreation = _mapper.Map<Checkout>(checkout);
-
-            _libraryRepo.Add(checkout);
-
-            if (await _libraryRepo.SaveAll())
-            {
-                ResponseHandler response = new ResponseHandler();
-                response.IsSuccessful = true;
-                return response;
-            }
-
-            throw new Exception("Failed to Checkout the item");
+            return count;
         }
 
-        public async Task<IEnumerable<CheckoutForReturnDto>> GetAllCheckouts()
+        public async Task<CheckoutForReturnDto> GetCheckout(int checkoutId)
         {
-            var checkouts = await _checkoutRepo.GetAllCheckouts();
-
-            if (checkouts == null)
-            {
-                throw new NoValuesFoundException("There are no checkouts available");
-            }
-
-            return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
-        }
-
-        public async Task<CheckoutForReturnDto> GetCheckout(int id)
-        {
-            var checkout = await _checkoutRepo.GetCheckout(id);
+            var checkout = await _context.Checkouts
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.Status)
+                .FirstOrDefaultAsync(a => a.Id == checkoutId);
 
             if (checkout == null)
             {
@@ -156,7 +114,11 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForAsset(int libraryAssetId)
         {
-            var checkouts = await _checkoutRepo.GetCheckoutsForAsset(libraryAssetId);
+            var checkouts = await _context.Checkouts
+                .Include(a => a.Status)
+                .Where(l => l.LibraryAssetId == libraryAssetId)
+                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
+                .ToListAsync();
 
             return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
         }
@@ -165,41 +127,25 @@ namespace LMSService.Service
         {
             var card = await GetMemberLibraryCard(userId);
 
-            var checkouts = await _checkoutRepo.GetMemberCurrentCheckouts(card.Id);
+            var checkouts = await _context.Checkouts
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.Status)
+                .Where(l => l.LibraryCard.Id == card.Id)
+                .Where(l => l.DateReturned == null)
+                .ToListAsync();
 
             return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
         }
 
-        public async Task<ReserveAsset> GetCurrentReserve(int id)
-        {
-            var reserve = await _reserveRepo.GetReserve(id);
-
-            if (reserve == null)
-            {
-                throw new NoValuesFoundException("Reserve was not found");
-            }
-
-            if (reserve.StatusId == (int)EnumStatus.Checkedout)
-            {
-                throw new LMSValidationException($"{reserve.Id} has already been checked out");
-            }
-
-            if (reserve.StatusId == (int)EnumStatus.Expired)
-            {
-                throw new LMSValidationException($"{reserve.Id} has expired");
-            }
-
-            if (reserve.StatusId == (int)EnumStatus.Canceled)
-            {
-                throw new LMSValidationException($"{reserve.Id} has been canceled");
-            }
-
-            return reserve;
-        }
-
         public async Task<LibraryAsset> GetLibraryAsset(int id)
         {
-            var asset = await _assetRepo.GetAsset(id);
+            var asset = await _context.LibraryAssets
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
+                .Include(a => a.AssetType)
+                .Include(s => s.Status)
+                .Include(s => s.Author)
+                .FirstOrDefaultAsync(a => a.Id == id);
 
             if (asset == null)
             {
@@ -212,7 +158,7 @@ namespace LMSService.Service
 
         public async Task<LibraryCard> GetMemberLibraryCard(int userId)
         {
-            var card = await _cardRepo.GetMemberCard(userId);
+            var card = await _context.LibraryCards.FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (card == null)
             {
@@ -235,7 +181,15 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<CheckoutForReturnDto>> SearchCheckouts(string searchString)
         {
-            var checkouts = await _checkoutRepo.SearchCheckouts(searchString);
+            var query = _context.Checkouts
+                .Include(s => s.LibraryCard)
+                .Include(s => s.LibraryAsset)
+                .Include(s => s.Status)
+                .AsQueryable();
+
+            query = query.Where(s => s.LibraryAsset.Title.Contains(searchString));
+
+            var checkouts = await query.ToListAsync();
 
             var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 
@@ -244,15 +198,21 @@ namespace LMSService.Service
 
         private async Task IsAssetCurrentlyCheckedOutByMember(int assetId, int cardId)
         {
-            if (await _checkoutRepo.IsAssetCurrentlyCheckedOutByMember(assetId, cardId))
+            var checkout = await _context.Checkouts.
+                Where(u => u.Status.Name == EnumStatus.Checkedout.ToString())
+                .Where(u => u.LibraryCardId == cardId)
+                .FirstOrDefaultAsync(u => u.LibraryAssetId == assetId);
+
+            if (checkout != null)
             {
                 throw new LMSValidationException("This asset is currently checked out by this member");
             }
         }
 
-        private async Task<Checkout> ValidateCheckin(int id)
+        private async Task<Checkout> ValidateCheckin(int checkoutId)
         {
-            var checkout = await _checkoutRepo.GetCheckout(id);
+            var checkout = await _context.Checkouts
+                .FirstOrDefaultAsync(x => x.Id == checkoutId);
 
             if (checkout == null)
             {
@@ -269,9 +229,12 @@ namespace LMSService.Service
             return checkout;
         }
 
-        public async Task<PagedList<Checkout>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<PagedList<Checkout>> GetAllCheckouts(PaginationParams paginationParams)
         {
-            var checkouts = _checkoutRepo.GetAll();
+            var checkouts = _context.Checkouts
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.Status)
+                .AsQueryable();
 
             checkouts = checkouts.OrderByDescending(a => a.Since);
 

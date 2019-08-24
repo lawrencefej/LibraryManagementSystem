@@ -1,7 +1,6 @@
 ﻿using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
-using LMSRepository.Interfaces;
 using LMSRepository.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;

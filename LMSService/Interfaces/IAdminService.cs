@@ -1,19 +1,26 @@
 ﻿using LMSRepository.Dto;
+using LMSRepository.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LMSService.Interfacees
+namespace LMSService.Interfaces
 {
     public interface IAdminService
     {
-        Task<IEnumerable<UserForDetailedDto>> GetAdminUsers();
+        Task<IEnumerable<User>> GetAdminUsers();
 
-        Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto);
+        //Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto);
 
-        Task UpdateUser(UpdateAdminDto userforUpdate);
+        Task<User> CreateUser(User newUser, string newRole, string callbackUrl);
 
-        Task DeleteUser(int userId);
+        IEnumerable<UserForDetailedDto> AddRoleToUsers(IEnumerable<UserForDetailedDto> users);
 
-        Task<UserForDetailedDto> GetAdminUser(int userId);
+        UserForDetailedDto AddRoleToUser(UserForDetailedDto user);
+
+        Task UpdateUser(User userforUpdate, string role);
+
+        Task DeleteUser(User user);
+
+        Task<User> GetAdminUser(int userId);
     }
 }
