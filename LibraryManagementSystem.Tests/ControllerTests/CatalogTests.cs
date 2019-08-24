@@ -18,7 +18,7 @@ using Xunit;
 
 namespace LibraryManagementSystem.Tests.ControllerTests
 {
-    public class CatalogTests 
+    public class CatalogTests
     {
         private readonly ILogger<CatalogController> _logger;
         private readonly Mapper _mapper;
@@ -65,7 +65,7 @@ namespace LibraryManagementSystem.Tests.ControllerTests
 
             return new ControllerContext()
             {
-                HttpContext = new DefaultHttpContext { User = user}
+                HttpContext = new DefaultHttpContext { User = user }
             };
         }
 

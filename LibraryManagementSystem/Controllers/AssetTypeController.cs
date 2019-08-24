@@ -1,5 +1,4 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Models;
+﻿using LMSRepository.Models;
 using LMSService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

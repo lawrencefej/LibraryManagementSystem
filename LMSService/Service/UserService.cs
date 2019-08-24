@@ -1,19 +1,4 @@
-﻿using AutoMapper;
-using LMSRepository.Dto;
-using LMSRepository.Helpers;
-using LMSRepository.Interfaces;
-using LMSRepository.Models;
-using LMSService.Interfaces;
-using LMSService.Exceptions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using LMSRepository.Data;
-
-namespace LMSService.Service
+﻿namespace LMSService.Service
 {
     //public class UserService /*: IUserService*/
     //{

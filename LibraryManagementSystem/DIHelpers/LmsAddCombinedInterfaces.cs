@@ -1,11 +1,6 @@
-﻿using EmailService;
-using EmailService.Services;
-using LibraryManagementSystem.API.Helpers;
-using LMSRepository.DataAccess;
-using LMSRepository.Interfaces;
-using LMSRepository.Interfaces.DataAccess;
-using LMSService.Interfaces;
+﻿using LibraryManagementSystem.API.Helpers;
 using LMSService.Helpers;
+using LMSService.Interfaces;
 using LMSService.Service;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,9 +19,9 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<LogUserActivity>();
         }
     }

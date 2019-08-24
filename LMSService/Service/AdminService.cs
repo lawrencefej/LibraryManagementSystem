@@ -1,16 +1,16 @@
-﻿using LMSRepository.Dto;
+﻿using LMSRepository.Data;
+using LMSRepository.Dto;
+using LMSRepository.Helpers;
 using LMSRepository.Models;
 using LMSService.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using LMSRepository.Helpers;
-using LMSRepository.Data;
 
 namespace LMSService.Service
 {

@@ -1,7 +1,4 @@
-﻿using LMSRepository.Interfaces;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Helpers

@@ -1,13 +1,13 @@
-﻿using LMSRepository.Helpers;
+﻿using LMSRepository.Data;
+using LMSRepository.Helpers;
 using LMSRepository.Models;
-using LMSService.Interfaces;
 using LMSService.Exceptions;
+using LMSService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LMSRepository.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace LMSService.Service
 {
