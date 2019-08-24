@@ -97,7 +97,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("pagination/")]
         public async Task<IActionResult> GetAll([FromQuery]PaginationParams paginationParams)
         {
-            var authors = await _authorService.GetAllAsync(paginationParams);
+            var authors = await _authorService.GetPaginatedAuthors(paginationParams);
 
             var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
 
