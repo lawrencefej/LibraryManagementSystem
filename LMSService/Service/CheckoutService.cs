@@ -81,7 +81,7 @@ namespace LMSService.Service
             var checkout = _mapper.Map<Checkout>(checkoutForCreation);
             checkout.StatusId = (int)EnumStatus.Checkedout;
 
-            await _context.AddAsync(checkout);
+            _context.Add(checkout);
             await _context.SaveChangesAsync();
 
             var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
