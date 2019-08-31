@@ -36,6 +36,8 @@ namespace LMSService.Service
 
             checkout.StatusId = (int)EnumStatus.Returned;
 
+            checkout.IsReturned = true;
+
             checkout.DateReturned = DateTime.Today;
 
             var libraryAsset = await GetLibraryAsset(checkout.LibraryAssetId);
@@ -109,6 +111,7 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("This checkout does not exist");
             }
 
+            // TODO move mapper to the controller
             return _mapper.Map<CheckoutForReturnDto>(checkout);
         }
 
@@ -120,6 +123,7 @@ namespace LMSService.Service
                 .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
                 .ToListAsync();
 
+            // TODO move mapper to the controller
             return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
         }
 
@@ -133,7 +137,7 @@ namespace LMSService.Service
                 .Where(l => l.LibraryCard.Id == card.Id)
                 .Where(l => l.DateReturned == null)
                 .ToListAsync();
-
+            // TODO move mapper to the controller
             return _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
         }
 
@@ -191,6 +195,7 @@ namespace LMSService.Service
 
             var checkouts = await query.ToListAsync();
 
+            // TODO move mapper to the controller
             var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 
             return checkoutsToReturn;
@@ -220,7 +225,7 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("Checkout does not exist");
             }
 
-            if (checkout.StatusId == (int)EnumStatus.Returned || checkout.DateReturned != null)
+            if (checkout.StatusId == (int)EnumStatus.Returned || checkout.IsReturned)
             {
                 _logger.LogError("Checkout has already been returned");
                 throw new LMSValidationException("Checkout has already been returned");

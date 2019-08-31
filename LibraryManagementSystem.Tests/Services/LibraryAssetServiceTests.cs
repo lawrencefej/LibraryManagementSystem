@@ -100,7 +100,7 @@ namespace LibraryManagementSystem.Tests.Services
         }
 
         [Fact]
-        public async Task AddAsset_NonExistingAsset_ShouldDeleteAsset()
+        public async Task AddAsset_NonExistingAsset_ShouldThrowNoValuesfoundException()
         {
             using (var context = _factory.UseInMemory())
             {
