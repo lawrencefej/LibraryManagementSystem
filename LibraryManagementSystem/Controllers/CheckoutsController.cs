@@ -40,12 +40,7 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
 
-            if (!result.IsSuccessful)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return CreatedAtRoute("GetCheckout", new { id = result.Id }, result.Result);
+            return CreatedAtRoute("GetCheckout", new { id = result.Id }, result);
         }
 
         [HttpGet("{id}", Name = "GetCheckout")]
@@ -53,7 +48,14 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var checkout = await _checkoutService.GetCheckout(id);
 
-            return Ok(checkout);
+            if (checkout == null)
+            {
+                return NotFound();
+            }
+
+            var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
+
+            return Ok(checkoutToReturn);
         }
 
         [HttpGet("asset/{libraryAssetId}")]
@@ -61,7 +63,9 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var checkouts = await _checkoutService.GetCheckoutsForAsset(libraryAssetId);
 
-            return Ok(checkouts);
+            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+
+            return Ok(checkoutsToReturn);
         }
 
         [HttpGet("user/{userId}")]
@@ -69,7 +73,9 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var checkouts = await _checkoutService.GetCheckoutsForMember(userId);
 
-            return Ok(checkouts);
+            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+
+            return Ok(checkoutsToReturn);
         }
 
         [HttpGet("search/")]
@@ -77,7 +83,9 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var checkouts = await _checkoutService.SearchCheckouts(searchString);
 
-            return Ok(checkouts);
+            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+
+            return Ok(checkoutsToReturn);
         }
 
         [HttpGet("pagination/")]

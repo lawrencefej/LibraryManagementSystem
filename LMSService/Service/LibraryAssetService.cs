@@ -56,7 +56,6 @@ namespace LMSService.Service
 
         public async Task EditAsset(LibraryAsset libraryAssetForUpdate)
         {
-            // TODO potentially make central
             if (libraryAssetForUpdate.CopiesAvailable > 0)
             {
                 libraryAssetForUpdate.StatusId = (int)EnumStatus.Available;
