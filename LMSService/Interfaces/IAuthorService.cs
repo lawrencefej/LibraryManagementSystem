@@ -17,6 +17,6 @@ namespace LMSService.Interfaces
 
         Task<IEnumerable<Author>> SearchAuthors(string searchString);
 
-        Task<PagedList<Author>> GetAllAsync(PaginationParams paginationParams);
+        Task<PagedList<Author>> GetPaginatedAuthors(PaginationParams paginationParams);
     }
 }

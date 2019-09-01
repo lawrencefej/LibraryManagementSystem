@@ -18,7 +18,7 @@ namespace LMSService.Service
 
         public async Task<AssetType> AddAssetType(AssetType assetType)
         {
-            await _context.AddAsync(assetType);
+            _context.Add(assetType);
             await _context.SaveChangesAsync();
 
             return assetType;

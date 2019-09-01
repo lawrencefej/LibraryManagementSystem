@@ -1,7 +1,6 @@
 ﻿using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Models;
-using LMSService.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,24 +10,18 @@ namespace LMSService.Interfaces
     {
         Task CheckInAsset(int checkoutId);
 
-        Task<ResponseHandler> CheckoutAsset(CheckoutForCreationDto checkoutForCreation);
+        Task<CheckoutForReturnDto> CheckoutAsset(CheckoutForCreationDto checkoutForCreation);
 
-        //Task<IEnumerable<CheckoutForReturnDto>> GetAllCheckouts();
+        Task<Checkout> GetCheckout(int checkoutId);
 
-        Task<CheckoutForReturnDto> GetCheckout(int checkoutId);
+        Task<IEnumerable<Checkout>> GetCheckoutsForAsset(int libraryAssetId);
 
-        Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForAsset(int libraryAssetId);
-
-        Task<IEnumerable<CheckoutForReturnDto>> GetCheckoutsForMember(int userId);
+        Task<IEnumerable<Checkout>> GetCheckoutsForMember(int userId);
 
         Task<LibraryAsset> GetLibraryAsset(int id);
 
-        Task<LibraryCard> GetMemberLibraryCard(int userId);
+        Task<IEnumerable<Checkout>> SearchCheckouts(string searchString);
 
-        void ReduceAssetCopiesAvailable(LibraryAsset asset);
-
-        Task<IEnumerable<CheckoutForReturnDto>> SearchCheckouts(string searchString);
-
-        Task<PagedList<Checkout>> GetAllCheckouts(PaginationParams paginationParams);
+        Task<PagedList<Checkout>> GetAllCurrentCheckouts(PaginationParams paginationParams);
     }
 }

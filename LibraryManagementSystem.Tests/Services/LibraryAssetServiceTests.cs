@@ -13,13 +13,13 @@ using Xunit;
 
 namespace LibraryManagementSystem.Tests.Services
 {
-    public class LibraryAssetServiceShould
+    public class LibraryAssetServiceTest
     {
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly Mapper _mapper;
-        private TestDataContextFactory _factory;
+        private readonly TestDataContextFactory _factory;
 
-        public LibraryAssetServiceShould()
+        public LibraryAssetServiceTest()
         {
             _logger = new NullLogger<LibraryAssetService>();
             _mapper = new Mapper(new MapperConfiguration(cfg
@@ -100,7 +100,7 @@ namespace LibraryManagementSystem.Tests.Services
         }
 
         [Fact]
-        public async Task AddAsset_NonExistingAsset_ShouldDeleteAsset()
+        public async Task AddAsset_NonExistingAsset_ShouldThrowNoValuesfoundException()
         {
             using (var context = _factory.UseInMemory())
             {
@@ -164,17 +164,20 @@ namespace LibraryManagementSystem.Tests.Services
         {
             using (var context = _factory.UseSqlite())
             {
+                //Arrange
                 ILogger<LibraryAssetService> logger = new NullLogger<LibraryAssetService>();
 
                 context.AddRange(GetAllAssets());
                 context.Add(GetAuthor());
                 context.SaveChanges();
 
+                //Act
                 var service = new LibraryAssetService(context, _logger);
                 var paginationParams = new PaginationParams();
                 var actual = await service.GetAllAsync(paginationParams);
                 var assets = GetAllAssets().ToList();
 
+                //Assert
                 Assert.Equal(actual.Count, assets.Count);
             }
         }
@@ -184,16 +187,19 @@ namespace LibraryManagementSystem.Tests.Services
         {
             using (var context = _factory.UseSqlite())
             {
+                //Arrange
                 ILogger<LibraryAssetService> logger = new NullLogger<LibraryAssetService>();
 
                 context.AddRange(GetAllAssets());
                 context.Add(GetAuthor());
                 context.SaveChanges();
 
+                // Act
                 var service = new LibraryAssetService(context, _logger);
                 var actual = await service.GetAsset(1);
                 var expected = GetAllAssets().FirstOrDefault();
 
+                //Assert
                 Assert.Equal(expected.Id, actual.Id);
                 Assert.Equal(GetAuthor().Id, actual.Author.Id);
                 Assert.Equal(expected.Title, actual.Title);
@@ -205,6 +211,7 @@ namespace LibraryManagementSystem.Tests.Services
         {
             using (var context = _factory.UseSqlite())
             {
+                //Arrange
                 ILogger<LibraryAssetService> logger = new NullLogger<LibraryAssetService>();
 
                 context.AddRange(GetAllAssets());
@@ -213,10 +220,12 @@ namespace LibraryManagementSystem.Tests.Services
                 context.Add(new Author { Id = 2 });
                 context.SaveChanges();
 
+                //Act
                 var service = new LibraryAssetService(context, _logger);
                 var actual = await service.GetAssetsByAuthor(GetAuthor().Id);
                 var assets = GetAllAssets().ToList();
 
+                //Assert
                 Assert.Equal(3, actual.ToList().Count);
             }
         }

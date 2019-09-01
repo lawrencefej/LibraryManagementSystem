@@ -27,7 +27,7 @@ namespace LMSService.Service
             asset.StatusId = (int)EnumStatus.Available;
             asset.CopiesAvailable = asset.NumberOfCopies;
 
-            await _context.AddAsync(asset);
+            _context.Add(asset);
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
@@ -56,7 +56,6 @@ namespace LMSService.Service
 
         public async Task EditAsset(LibraryAsset libraryAssetForUpdate)
         {
-            // TODO potentially make central
             if (libraryAssetForUpdate.CopiesAvailable > 0)
             {
                 libraryAssetForUpdate.StatusId = (int)EnumStatus.Available;

@@ -18,7 +18,7 @@ namespace LMSService.Service
 
         public async Task<Category> AddCategory(Category category)
         {
-            await _context.AddAsync(category);
+            _context.Add(category);
             await _context.SaveChangesAsync();
 
             return category;
