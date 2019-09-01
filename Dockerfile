@@ -20,7 +20,7 @@ COPY LibraryManagementSystem/LibraryManagementSystem.csproj LibraryManagementSys
 COPY LMSService/LMSService.csproj LMSService/
 COPY LMSRepository/LMSRepository.csproj LMSRepository/
 COPY LibraryManagementSystem.Tests/LibraryManagementSystem.Tests.csproj Tests/
- 
+
 RUN dotnet restore LibraryManagementSystem/LibraryManagementSystem.csproj
  
 COPY . .
