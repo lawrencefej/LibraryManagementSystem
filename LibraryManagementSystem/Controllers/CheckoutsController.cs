@@ -91,7 +91,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("pagination/")]
         public async Task<IActionResult> GetAll([FromQuery]PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutService.GetAllCheckouts(paginationParams);
+            var checkouts = await _checkoutService.GetAllCurrentCheckouts(paginationParams);
 
             var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 

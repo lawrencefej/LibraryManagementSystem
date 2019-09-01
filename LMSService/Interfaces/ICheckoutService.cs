@@ -22,6 +22,6 @@ namespace LMSService.Interfaces
 
         Task<IEnumerable<Checkout>> SearchCheckouts(string searchString);
 
-        Task<PagedList<Checkout>> GetAllCheckouts(PaginationParams paginationParams);
+        Task<PagedList<Checkout>> GetAllCurrentCheckouts(PaginationParams paginationParams);
     }
 }

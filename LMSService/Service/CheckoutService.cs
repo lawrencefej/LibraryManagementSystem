@@ -217,7 +217,7 @@ namespace LMSService.Service
             return checkout;
         }
 
-        public async Task<PagedList<Checkout>> GetAllCheckouts(PaginationParams paginationParams)
+        public async Task<PagedList<Checkout>> GetAllCurrentCheckouts(PaginationParams paginationParams)
         {
             var checkouts = _context.Checkouts
                 .Include(a => a.LibraryAsset)
