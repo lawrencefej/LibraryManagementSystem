@@ -19,7 +19,7 @@ WORKDIR /home/app
 COPY LibraryManagementSystem/LibraryManagementSystem.csproj LibraryManagementSystem/
 COPY LMSService/LMSService.csproj LMSService/
 COPY LMSRepository/LMSRepository.csproj LMSRepository/
-COPY LibraryManagementSystem.Tests.csproj Tests/
+COPY LibraryManagementSystem.Tests/LibraryManagementSystem.Tests.csproj Tests/
  
 RUN dotnet restore LibraryManagementSystem/LibraryManagementSystem.csproj
  
