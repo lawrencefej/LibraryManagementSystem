@@ -19,12 +19,13 @@ WORKDIR /home/app
 COPY LibraryManagementSystem/LibraryManagementSystem.csproj LibraryManagementSystem/
 COPY LMSService/LMSService.csproj LMSService/
 COPY LMSRepository/LMSRepository.csproj LMSRepository/
+COPY LibraryManagementSystem/LibraryManagementSystem.Tests.csproj Tests/
  
 RUN dotnet restore LibraryManagementSystem/LibraryManagementSystem.csproj
  
 COPY . .
  
-# RUN dotnet test ./Tests/Tests.csproj
+RUN dotnet test ./Tests/LibraryManagementSystem.Tests.csproj
  
 RUN dotnet publish ./LibraryManagementSystem/LibraryManagementSystem.csproj -o /publish/
  
