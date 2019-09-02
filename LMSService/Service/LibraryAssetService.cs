@@ -68,7 +68,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams)
         {
-            var assets = _context.LibraryAssets
+            var assets = _context.LibraryAssets.AsNoTracking()
                 .Include(a => a.AssetType)
                 .Include(s => s.Author)
                 .AsQueryable();
@@ -110,7 +110,7 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId)
         {
-            var assets = await _context.LibraryAssets
+            var assets = await _context.LibraryAssets.AsNoTracking()
                 .Include(a => a.AssetType)
                 .Include(s => s.Author)
                 .Where(x => x.AuthorId == authorId)
@@ -122,7 +122,7 @@ namespace LMSService.Service
         public async Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString)
         {
             // TODO make sure it is case insensitive
-            var assets = _context.LibraryAssets
+            var assets = _context.LibraryAssets.AsNoTracking()
                         .Include(s => s.Author)
                         .Include(s => s.AssetType)
                         .AsQueryable();

@@ -39,7 +39,7 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<AssetType>> GetAssetTypes()
         {
-            var assetTypes = await _context.AssetTypes.ToListAsync();
+            var assetTypes = await _context.AssetTypes.AsNoTracking().ToListAsync();
 
             return assetTypes;
         }

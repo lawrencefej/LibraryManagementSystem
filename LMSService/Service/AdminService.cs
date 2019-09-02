@@ -73,12 +73,12 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<User>> GetAdminUsers()
         {
-            var users = await _userManager.Users
+            var users = await _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.UserRoles)
                     .ThenInclude(ur => ur.Role)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name != (nameof(EnumRoles.Member))))
-                .OrderBy(u => u.Lastname).ToListAsync();
+                .OrderBy(u => u.FirstName).ToListAsync();
 
             return users;
         }

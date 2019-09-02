@@ -86,7 +86,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<User>> GetAllMembers(PaginationParams paginationParams)
         {
-            var users = _userManager.Users
+            var users = _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
@@ -120,7 +120,7 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<User>> SearchMembers()
         {
-            var users = await _userManager.Users
+            var users = await _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
