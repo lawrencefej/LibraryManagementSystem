@@ -20,7 +20,7 @@ namespace LMSService.Service
 
         public async Task<ChartDto> GetAssetsDistributionReport()
         {
-            var data = await _context.LibraryAssets
+            var data = await _context.LibraryAssets.AsNoTracking()
                .GroupBy(d => new { d.AssetType.Name })
                .Select(x => new DataDto
                {
@@ -40,7 +40,7 @@ namespace LMSService.Service
 
         public async Task<ChartDto> GetCategoryDistributionReport()
         {
-            var data = await _context.LibraryAssets
+            var data = await _context.LibraryAssets.AsNoTracking()
                .GroupBy(d => new { d.Category.Name })
                .Select(x => new DataDto
                {
@@ -60,7 +60,7 @@ namespace LMSService.Service
 
         public async Task<ChartDto> GetCheckoutsByDayReport()
         {
-            var data = await _context.Checkouts
+            var data = await _context.Checkouts.AsNoTracking()
                .Where(d => d.Since > DateTime.Today.AddDays(-7))
                .GroupBy(d => new { Date = d.Since })
                .Select(x => new DataDto
@@ -87,7 +87,7 @@ namespace LMSService.Service
 
         public async Task<ChartDto> GetCheckoutsByMonthReport()
         {
-            var data = await _context.Checkouts
+            var data = await _context.Checkouts.AsNoTracking()
                .Where(d => d.Since > DateTime.Today.AddMonths(-12))
                .GroupBy(d => new { d.Since.Month })
                .Select(x => new DataDto
@@ -111,7 +111,7 @@ namespace LMSService.Service
 
         public async Task<ChartDto> GetReturnsByDayReport()
         {
-            var data = await _context.Checkouts
+            var data = await _context.Checkouts.AsNoTracking()
                 .Where(d => d.DateReturned > DateTime.Today.AddDays(-7))
                .GroupBy(d => new { Date = d.DateReturned })
                .Select(x => new DataDto
@@ -137,7 +137,7 @@ namespace LMSService.Service
 
         public async Task<ChartDto> GetReturnsByMonthReport()
         {
-            var data = await _context.Checkouts
+            var data = await _context.Checkouts.AsNoTracking()
                .Where(d => d.DateReturned > DateTime.Today.AddMonths(-12))
                .GroupBy(d => new { d.DateReturned })
                .Select(x => new DataDto
@@ -163,10 +163,10 @@ namespace LMSService.Service
         {
             var Totals = new TotalsReport
             {
-                TotalAuthors = await _context.Authors.CountAsync(),
-                TotalCheckouts = await _context.Checkouts.CountAsync(),
-                TotalItems = await _context.LibraryAssets.CountAsync(),
-                TotalMembers = await _context.LibraryCards.CountAsync()
+                TotalAuthors = await _context.Authors.AsNoTracking().CountAsync(),
+                TotalCheckouts = await _context.Checkouts.AsNoTracking().CountAsync(),
+                TotalItems = await _context.LibraryAssets.AsNoTracking().CountAsync(),
+                TotalMembers = await _context.LibraryCards.AsNoTracking().CountAsync()
             };
 
             return Totals;

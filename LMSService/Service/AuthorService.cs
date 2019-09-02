@@ -47,7 +47,7 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<Author>> SearchAuthors(string searchString)
         {
-            var authors = _context.Authors.AsQueryable();
+            var authors = _context.Authors.AsNoTracking().AsQueryable();
             // TODO make this case insensitive
             authors = authors.Where(s => s.FirstName.Contains(searchString)
                     || s.LastName.Contains(searchString));
@@ -57,7 +57,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<Author>> GetPaginatedAuthors(PaginationParams paginationParams)
         {
-            var authors = _context.Authors.AsQueryable();
+            var authors = _context.Authors.AsNoTracking().AsQueryable();
 
             return await PagedList<Author>.CreateAsync(authors, paginationParams.PageNumber, paginationParams.PageSize);
         }

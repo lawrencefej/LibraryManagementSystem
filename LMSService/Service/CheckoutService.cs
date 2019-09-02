@@ -84,7 +84,7 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<Checkout>> GetCheckoutsForAsset(int libraryAssetId)
         {
-            var checkouts = await _context.Checkouts
+            var checkouts = await _context.Checkouts.AsNoTracking()
                 .Include(a => a.Status)
                 .Where(l => l.LibraryAssetId == libraryAssetId)
                 .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
@@ -97,11 +97,11 @@ namespace LMSService.Service
         {
             var card = await GetMemberLibraryCard(userId);
 
-            var checkouts = await _context.Checkouts
+            var checkouts = await _context.Checkouts.AsNoTracking()
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.Status)
                 .Where(l => l.LibraryCard.Id == card.Id)
-                .Where(l => l.DateReturned == null)
+                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
                 .ToListAsync();
 
             return checkouts;
@@ -184,7 +184,7 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<Checkout>> SearchCheckouts(string searchString)
         {
-            var query = _context.Checkouts
+            var query = _context.Checkouts.AsNoTracking()
                 .Include(s => s.LibraryCard)
                 .Include(s => s.LibraryAsset)
                 .Include(s => s.Status)
@@ -219,7 +219,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<Checkout>> GetAllCurrentCheckouts(PaginationParams paginationParams)
         {
-            var checkouts = _context.Checkouts
+            var checkouts = _context.Checkouts.AsNoTracking()
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.Status)
                 .Where(x => x.StatusId == (int)EnumStatus.Checkedout)
