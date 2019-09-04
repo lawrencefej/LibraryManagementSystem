@@ -29,7 +29,7 @@ namespace LibraryManagementSystem.Controllers
 
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult> GetUsers()
+        public async Task<ActionResult> GetMembers()
         {
             var users = await _memberService.SearchMembers();
 
@@ -39,7 +39,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("pagination/")]
-        public async Task<IActionResult> GetMembers([FromQuery]PaginationParams paginationParams)
+        public async Task<IActionResult> GetpaginatedMembers([FromQuery]PaginationParams paginationParams)
         {
             var members = await _memberService.GetAllMembers(paginationParams);
 
@@ -52,7 +52,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetMember(int id)
         {
             var user = await _memberService.GetMembers(id);
 
@@ -71,7 +71,9 @@ namespace LibraryManagementSystem.Controllers
         {
             var user = await _memberService.GetMemberByCardNumber(cardId);
 
-            return Ok(user);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+
+            return Ok(userToReturn);
         }
 
         [HttpPut("{id}")]

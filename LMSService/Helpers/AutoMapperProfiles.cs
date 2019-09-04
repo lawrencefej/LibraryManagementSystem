@@ -132,7 +132,6 @@ namespace LibraryManagementSystem.API.Helpers
 
             //CreateMap<LibraryAsset, LibraryAssetForListDto>();
             //CreateMap<LibraryAsset, LibraryAssetForListDto>();
-    
         }
     }
 }

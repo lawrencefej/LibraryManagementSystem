@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.API
 {
-
     public class Program
     {
         public static void Main(string[] args)

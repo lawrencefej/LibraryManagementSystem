@@ -64,17 +64,15 @@ namespace LibraryManagementSystem.API
         {
             if (env.IsDevelopment() || env.IsEnvironment("Integration"))
             {
-                //app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-                app.UseDeveloperExceptionPage();
-                //app.ConfigureCustomExceptionMiddleware();
+                app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+                //app.UseDeveloperExceptionPage();
             }
             else
             {
-                //app.ConfigureCustomExceptionMiddleware();
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
+                app.UseHsts();
             }
 
             loggerFactory.AddSerilog();
@@ -82,7 +80,7 @@ namespace LibraryManagementSystem.API
             // seeder.SeedAuthors();
             // seeder.SeedAssets();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -90,7 +88,6 @@ namespace LibraryManagementSystem.API
             app.UseAuthentication();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            //app.UseMvc();
             app.UseMvc(routeBuilder =>
             {
                 routeBuilder.MapSpaFallbackRoute(
