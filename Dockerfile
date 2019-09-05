@@ -11,6 +11,9 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 as build-image
  
 WORKDIR /home/app
+
+EXPOSE 80
+EXPOSE 443
  
 # COPY ./*.sln ./
 # COPY ./*/*.csproj ./
