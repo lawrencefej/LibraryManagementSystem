@@ -32,7 +32,7 @@ namespace LMSService.Service
 
         public async Task<ResponseHandler> AddPhotoForAsset(AssetPhotoDto assetPhotoDto)
         {
-            var asset = await _context.LibraryAssets.FirstOrDefaultAsync(x => x.Id == assetPhotoDto.LibraryAssetId);
+            var asset = await _context.LibraryAssets.Include(x => x.Photo).FirstOrDefaultAsync(x => x.Id == assetPhotoDto.LibraryAssetId);
 
             PhotoSettings settings = CloudinarySettings();
 
@@ -67,7 +67,7 @@ namespace LMSService.Service
 
         public async Task<ResponseHandler> AddPhotoForUser(UserPhotoDto userPhotoDto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userPhotoDto.UserId);
+            var user = await _context.Users.Include(x => x.ProfilePicture).FirstOrDefaultAsync(x => x.Id == userPhotoDto.UserId);
 
             PhotoSettings settings = CloudinarySettings();
 
@@ -100,12 +100,13 @@ namespace LMSService.Service
             return new ResponseHandler(photoToreturn, photo.Id);
         }
 
-        private async Task<bool> DeletePhoto(PhotoSettings settings, Photo photo)
+        private async Task DeletePhoto(PhotoSettings settings, Photo photo)
         {
             if (_photoLibrary.DeletePhoto(settings, photo.PublicId))
             {
                 _context.Remove(photo);
-                await _context.AddRangeAsync();
+                await _context.SaveChangesAsync();
+                return;
             }
 
             throw new Exception($"Cloud delete failed, please try again later");
