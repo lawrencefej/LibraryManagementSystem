@@ -13,5 +13,7 @@
         }
 
         public string OrderBy { get; set; }
+        public string SortDirection { get; set; }
+        public string SearchString { get; set; }
     }
 }

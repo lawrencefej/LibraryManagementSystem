@@ -73,24 +73,42 @@ namespace LMSService.Service
                 .Include(s => s.Author)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(paginationParams.OrderBy))
+            if (!string.IsNullOrEmpty(paginationParams.SearchString))
             {
-                // TODO make this cleaner
-                switch (paginationParams.OrderBy)
-                {
-                    case "created":
-                        assets = assets.OrderByDescending(u => u.Title);
-                        break;
+                assets = assets.Where(x => x.Title.Contains(paginationParams.SearchString));
+            }
 
-                    default:
-                        assets = assets.OrderByDescending(u => u.Author);
-                        break;
-                }
+            if (paginationParams.SortDirection == "asc")
+            {
+                assets = assets.OrderBy(x => x.Title);
+            }
+            else if (paginationParams.SortDirection == "desc")
+            {
+                assets = assets.OrderByDescending(x => x.Title);
             }
             else
             {
                 assets = assets.OrderBy(x => x.Title);
             }
+
+            //if (!string.IsNullOrEmpty(paginationParams.OrderBy))
+            //{
+            //    // TODO make this cleaner
+            //    switch (paginationParams.OrderBy)
+            //    {
+            //        case "created":
+            //            assets = assets.OrderByDescending(u => u.Title);
+            //            break;
+
+            //        default:
+            //            assets = assets.OrderByDescending(u => u.Author);
+            //            break;
+            //    }
+            //}
+            //else
+            //{
+            //    assets = assets.OrderBy(x => x.Title);
+            //}
 
             return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
         }
