@@ -69,7 +69,10 @@ namespace LMSService.Service
         public async Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams)
         {
             var assets = _context.LibraryAssets.AsNoTracking()
+                .Include(p => p.Photo)
+                .Include(p => p.Category)
                 .Include(a => a.AssetType)
+                .Include(s => s.Status)
                 .Include(s => s.Author)
                 .AsQueryable();
 

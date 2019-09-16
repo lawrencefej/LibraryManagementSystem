@@ -33,6 +33,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
+            // TODO decide if this should accept models instead of Id's
             var assetForCreation = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
             var asset = await _libraryAssestService.AddAsset(assetForCreation);
@@ -101,7 +102,8 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var assets = await _libraryAssestService.GetAllAsync(paginationParams);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
+            //var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 
             Response.AddPagination(assets.CurrentPage, assets.PageSize,
                  assets.TotalCount, assets.TotalPages);
