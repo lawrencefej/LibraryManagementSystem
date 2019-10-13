@@ -43,7 +43,7 @@ namespace LibraryManagementSystem.Controllers
         {
             var members = await _memberService.GetAllMembers(paginationParams);
 
-            var membersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(members);
+            var membersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(members);
 
             Response.AddPagination(members.CurrentPage, members.PageSize,
                  members.TotalCount, members.TotalPages);
@@ -51,10 +51,20 @@ namespace LibraryManagementSystem.Controllers
             return Ok(membersToReturn);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("advancedSearch/")]
+        public async Task<IActionResult> AdvancedmemberSearch([FromQuery]UserForDetailedDto member)
+        {
+            var members = await _memberService.AdvancedMemberSearch(member);
+
+            var membersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(members);
+
+            return Ok(membersToReturn);
+        }
+
+        [HttpGet("{id}", Name = nameof(GetMember))]
         public async Task<IActionResult> GetMember(int id)
         {
-            var user = await _memberService.GetMembers(id);
+            var user = await _memberService.GetMember(id);
 
             if (user == null)
             {
@@ -76,10 +86,10 @@ namespace LibraryManagementSystem.Controllers
             return Ok(userToReturn);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateMember(UserForUpdateDto userForUpdateDto)
         {
-            var user = await _memberService.GetMembers(userForUpdateDto.Id);
+            var user = await _memberService.GetMember(userForUpdateDto.Id);
 
             if (user == null)
             {
@@ -98,19 +108,33 @@ namespace LibraryManagementSystem.Controllers
         {
             var member = _mapper.Map<User>(memberForCreation);
 
-            member = await _memberService.AddMember(member);
+            member.UserName = member.Email;
 
-            var MemberToReturn = _mapper.Map<UserForDetailedDto>(member);
+            var result = await _memberService.CreateMember(member);
 
-            MemberToReturn.LibraryCardNumber = member.LibraryCard.Id;
+            if (result.Succeeded)
+            {
+                member = await _memberService.CompleteAddMember(member);
 
-            return CreatedAtAction("GetUser", new { id = MemberToReturn.Id }, MemberToReturn);
+                var MemberToReturn = _mapper.Map<UserForDetailedDto>(member);
+
+                MemberToReturn.LibraryCardNumber = member.LibraryCard.Id;
+
+                return CreatedAtAction(nameof(GetMember), new { id = MemberToReturn.Id }, MemberToReturn);
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _memberService.GetMembers(id);
+            var user = await _memberService.GetMember(id);
 
             if (user == null)
             {

@@ -1,7 +1,9 @@
 ﻿namespace LMSRepository.Dto
 {
-    public class AssetTypeForReturn
+    public class AssetTypeDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
     }
 }

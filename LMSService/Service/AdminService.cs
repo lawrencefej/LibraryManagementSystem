@@ -30,11 +30,13 @@ namespace LMSService.Service
             _context = context;
         }
 
-        public async Task<User> CreateUser(User newUser, string newRole, string callbackUrl)
+        public async Task<IdentityResult> CreateUser(User user)
         {
-            newUser.UserName = newUser.Email;
+            return await _userManager.CreateAsync(user);
+        }
 
-            await _userManager.CreateAsync(newUser);
+        public async Task<User> CompleteUserCreation(User newUser, string newRole, string callbackUrl)
+        {
             await _userManager.AddToRoleAsync(newUser, newRole);
 
             var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(newUser);

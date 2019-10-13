@@ -18,7 +18,7 @@ namespace LMSService.Helpers
                 new Claim("ResetCode", resetCode)
             };
 
-            var tokenKey = user.FirstName + user.Lastname + user.Created + user.Email;
+            var tokenKey = user.FirstName + user.Email + user.Created + user.Email;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
 

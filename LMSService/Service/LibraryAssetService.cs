@@ -27,6 +27,10 @@ namespace LMSService.Service
             asset.StatusId = (int)EnumStatus.Available;
             asset.CopiesAvailable = asset.NumberOfCopies;
 
+            asset.AssetType = null;
+            asset.Author = null;
+            asset.Category = null;
+
             _context.Add(asset);
             await _context.SaveChangesAsync();
 
@@ -61,6 +65,8 @@ namespace LMSService.Service
                 libraryAssetForUpdate.StatusId = (int)EnumStatus.Available;
             }
 
+            _context.Update(libraryAssetForUpdate);
+
             await _context.SaveChangesAsync();
             _logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
             return;
@@ -94,25 +100,6 @@ namespace LMSService.Service
                 assets = assets.OrderBy(x => x.Title);
             }
 
-            //if (!string.IsNullOrEmpty(paginationParams.OrderBy))
-            //{
-            //    // TODO make this cleaner
-            //    switch (paginationParams.OrderBy)
-            //    {
-            //        case "created":
-            //            assets = assets.OrderByDescending(u => u.Title);
-            //            break;
-
-            //        default:
-            //            assets = assets.OrderByDescending(u => u.Author);
-            //            break;
-            //    }
-            //}
-            //else
-            //{
-            //    assets = assets.OrderBy(x => x.Title);
-            //}
-
             return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
         }
 
@@ -140,13 +127,16 @@ namespace LMSService.Service
             return assets;
         }
 
-        public async Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString)
+        public async Task<IEnumerable<LibraryAsset>> SearchAvalableLibraryAsset(string searchString)
         {
             // TODO make sure it is case insensitive
             var assets = _context.LibraryAssets.AsNoTracking()
+                        .Include(p => p.Photo)
                         .Include(s => s.Author)
                         .Include(s => s.AssetType)
                         .AsQueryable();
+
+            assets = assets.Where(x => x.StatusId == (int)EnumStatus.Available);
 
             assets = assets
                 .Where(s => s.Title.Contains(searchString)

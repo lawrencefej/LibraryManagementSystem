@@ -1,4 +1,5 @@
 ﻿using LMSRepository.Data;
+using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Models;
 using LMSService.Interfaces;
@@ -25,25 +26,20 @@ namespace LMSService.Service
             _emailSender = emailSender;
         }
 
-        public async Task<User> AddMember(User member)
+        public async Task<IdentityResult> CreateMember(User user)
         {
-            // TODO Member does not login
-            member.UserName = member.Email;
+            return await _userManager.CreateAsync(user);
+        }
 
-            var result = await _userManager.CreateAsync(member);
+        public async Task<User> CompleteAddMember(User member)
+        {
+            await _userManager.AddToRoleAsync(member, nameof(EnumRoles.Member));
 
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(member, nameof(EnumRoles.Member));
+            member.LibraryCard = await CreateNewCard(member.Id);
 
-                member.LibraryCard = await CreateNewCard(member.Id);
+            await MemberWelcomeMessage(member);
 
-                await MemberWelcomeMessage(member);
-
-                return member;
-            }
-
-            throw new Exception($"Adding member failed on save");
+            return member;
         }
 
         private async Task<LibraryCard> CreateNewCard(int memberId)
@@ -86,17 +82,80 @@ namespace LMSService.Service
 
         public async Task<PagedList<User>> GetAllMembers(PaginationParams paginationParams)
         {
-            var users = _userManager.Users.AsNoTracking()
+            var members = _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
-                .OrderBy(u => u.Lastname).AsQueryable();
+                .OrderBy(u => u.Email).AsQueryable();
 
-            return await PagedList<User>.CreateAsync(users, paginationParams.PageNumber, paginationParams.PageSize);
+            if (!string.IsNullOrEmpty(paginationParams.SearchString))
+            {
+                members = members
+                    .Where(x => x.FirstName.Contains(paginationParams.SearchString)
+                    || x.Email.Contains(paginationParams.SearchString)
+                    || x.Email.Contains(paginationParams.SearchString)
+                    );
+            }
+
+            if (paginationParams.SortDirection == "asc")
+            {
+                if (string.Equals(paginationParams.OrderBy, "email", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    members = members.OrderBy(x => x.Email);
+                }
+                else if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    members = members.OrderBy(x => x.FirstName);
+                }
+                else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    members = members.OrderBy(x => x.Email);
+                }
+            }
+            else if (paginationParams.SortDirection == "desc")
+            {
+                if (string.Equals(paginationParams.OrderBy, "email", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    members = members.OrderByDescending(x => x.Email);
+                }
+                else if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    members = members.OrderByDescending(x => x.FirstName);
+                }
+                else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    members = members.OrderByDescending(x => x.Email);
+                }
+            }
+            else
+            {
+                members = members.OrderBy(x => x.Email);
+            }
+
+            return await PagedList<User>.CreateAsync(members, paginationParams.PageNumber, paginationParams.PageSize);
         }
 
-        public async Task<User> GetMembers(int memberID)
+        public async Task<IEnumerable<User>> AdvancedMemberSearch(UserForDetailedDto member)
+        {
+            var members = _userManager.Users.AsNoTracking()
+                .Include(p => p.ProfilePicture)
+                .Include(c => c.LibraryCard)
+                .Include(c => c.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
+                .OrderBy(u => u.Email).AsQueryable();
+
+            members = members
+                .Where(x => x.FirstName.Contains(member.FirstName)
+                || x.Email.Contains(member.LastName)
+                || x.Email.Contains(member.Email)
+                || x.PhoneNumber.Contains(member.PhoneNumber)
+                );
+
+            return await members.ToListAsync();
+        }
+
+        public async Task<User> GetMember(int memberID)
         {
             var user = await _userManager.Users
                 .Include(p => p.ProfilePicture)
@@ -125,7 +184,7 @@ namespace LMSService.Service
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
-                .OrderBy(u => u.Lastname).ToListAsync();
+                .OrderBy(u => u.Email).ToListAsync();
 
             return users;
         }
@@ -139,6 +198,14 @@ namespace LMSService.Service
         {
             _context.Update(member);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> DoesMemberExist(string email)
+        {
+            var user = await _context.Users.AsNoTracking()
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
+                .FirstOrDefaultAsync(x => x.Email == email);
+            return user != null;
         }
     }
 }

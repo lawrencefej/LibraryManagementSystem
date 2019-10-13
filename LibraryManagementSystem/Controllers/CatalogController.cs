@@ -88,11 +88,11 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet("search/")]
-        public async Task<IActionResult> SearchLibraryAsset([FromQuery]string searchString)
+        public async Task<IActionResult> SearchAvailableLibraryAsset([FromQuery]string searchString)
         {
-            var assets = await _libraryAssestService.SearchLibraryAsset(searchString);
+            var assets = await _libraryAssestService.SearchAvalableLibraryAsset(searchString);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 
             return Ok(assetsToReturn);
         }
@@ -102,7 +102,6 @@ namespace LibraryManagementSystem.API.Controllers
         {
             var assets = await _libraryAssestService.GetAllAsync(paginationParams);
 
-            //var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(assets);
             var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 
             Response.AddPagination(assets.CurrentPage, assets.PageSize,
@@ -121,7 +120,7 @@ namespace LibraryManagementSystem.API.Controllers
                 return NoContent();
             }
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForListDto>>(libraryAsset);
+            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(libraryAsset);
 
             return Ok(assetsToReturn);
         }

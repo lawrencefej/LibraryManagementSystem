@@ -35,12 +35,24 @@ namespace LibraryManagementSystem.API.Controllers
             return NoContent();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
-        {
-            var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+        //[HttpPost]
+        //public async Task<IActionResult> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
+        //{
+        //    var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
 
-            return CreatedAtRoute("GetCheckout", new { id = result.Id }, result);
+        //    return CreatedAtRoute("GetCheckout", new { id = result.Id }, result);
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> CheckoutAsset(IEnumerable<CheckoutForCreationDto> checkoutForCreationDto)
+        {
+            //var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+
+            //return CreatedAtRoute("GetCheckout", new { id = result.Id }, result);
+
+            await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+
+            return Ok();
         }
 
         [HttpGet("{id}", Name = "GetCheckout")]

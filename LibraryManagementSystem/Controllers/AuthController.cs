@@ -60,7 +60,7 @@ namespace LibraryManagementSystem.API.Controllers
             return BadRequest("Email or Password does not match");
         }
 
-        [HttpPost("forgotPassword")]
+        [HttpPost("forgot-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(ResetPassword resetPassword)
         {
@@ -78,7 +78,7 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok();
         }
 
-        [HttpPost("resetpassword")]
+        [HttpPost("reset-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {

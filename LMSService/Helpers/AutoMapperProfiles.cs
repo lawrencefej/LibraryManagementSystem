@@ -49,29 +49,34 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<UserPhotoDto, UserProfilePhoto>();
             CreateMap<AssetPhotoDto, AssetPhoto>();
             CreateMap<Status, StatusToReturnDto>();
-            CreateMap<AssetType, AssetTypeForReturn>();
+            CreateMap<AssetType, AssetTypeDto>().ReverseMap();
+            CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<LibraryAssetForUpdateDto, LibraryAsset>();
+            //.ForMember(dest => dest.AuthorId, opt =>
+            //{
+            //    opt.MapFrom(src => src.Author.Id);
+            //});
             CreateMap<LibraryAsset, LibraryAssetForDetailedDto>()
                     .ForMember(dest => dest.PhotoUrl, opt =>
                     {
                         opt.MapFrom(src => src.Photo.Url);
                     })
-                    .ForMember(dest => dest.AssetType, opt =>
-                    {
-                        opt.MapFrom(src => src.AssetType.Name);
-                    })
+                    //.ForMember(dest => dest.AssetType, opt =>
+                    //{
+                    //    opt.MapFrom(src => src.AssetType.Name);
+                    //})
                     .ForMember(dest => dest.Status, opt =>
                     {
                         opt.MapFrom(src => src.Status.Name);
-                    })
-                    .ForMember(dest => dest.Category, opt =>
-                    {
-                        opt.MapFrom(src => src.Category.Name);
-                    })
-                    .ForMember(dest => dest.AuthorName, opt =>
-                    {
-                        opt.MapFrom(src => src.Author.FullName);
                     });
+            //.ForMember(dest => dest.Category, opt =>
+            //{
+            //    opt.MapFrom(src => src.Category.Name);
+            //})
+            //.ForMember(dest => dest.AuthorName, opt =>
+            //{
+            //    opt.MapFrom(src => src.Author.FullName);
+            //});
             CreateMap<LibraryAsset, LibraryAssetForListDto>()
                     .ForMember(dest => dest.AssetType, opt =>
                     {
@@ -81,7 +86,19 @@ namespace LibraryManagementSystem.API.Helpers
                     {
                         opt.MapFrom(src => src.Author.FullName);
                     });
-            CreateMap<LibraryAssetForCreationDto, LibraryAsset>().ReverseMap();
+            CreateMap<LibraryAssetForCreationDto, LibraryAsset>()
+                      .ForMember(dest => dest.AuthorId, opt =>
+                      {
+                          opt.MapFrom(src => src.Author.Id);
+                      });
+            // .ForMember(dest => dest.AssetTypeId, opt =>
+            // {
+            //     opt.MapFrom(src => src.AssetType.Id);
+            // })
+            //.ForMember(dest => dest.CategoryId, opt =>
+            //{
+            //    opt.MapFrom(src => src.Category.Id);
+            //});
             CreateMap<AuthorDto, Author>().ReverseMap();
             CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();
             CreateMap<Checkout, CheckoutForReturnDto>()

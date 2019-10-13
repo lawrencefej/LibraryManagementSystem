@@ -51,7 +51,7 @@ namespace LMSService.Service
             var libraryCard = await GetMemberLibraryCard(checkoutForCreation.userId);
             DoesMemberHaveFees(libraryCard.Fees);
 
-            IsAssetCurrentlyCheckedOutByMember(libraryCard.Checkouts.ToList(), checkoutForCreation.LibraryAssetId);
+            IsAssetCurrentlyCheckedOutByMember(libraryCard.Checkouts.ToList(), checkoutForCreation.LibraryAssetId, 0);
 
             var libraryAsset = await GetLibraryAsset(checkoutForCreation.LibraryAssetId);
 
@@ -70,6 +70,28 @@ namespace LMSService.Service
             var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
             checkoutToReturn.Status = nameof(EnumStatus.Checkedout);
             return checkoutToReturn;
+        }
+
+        public async Task CheckoutAsset(IEnumerable<CheckoutForCreationDto> checkoutsForCreation)
+        {
+            var libraryCard = await GetMemberLibraryCard(checkoutsForCreation.First().userId);
+            DoesMemberHaveFees(libraryCard.Fees);
+
+            foreach (var item in checkoutsForCreation)
+            {
+                IsAssetCurrentlyCheckedOutByMember(libraryCard.Checkouts.ToList(), item.LibraryAssetId, checkoutsForCreation.Count());
+            }
+
+            foreach (var item in checkoutsForCreation)
+            {
+                item.LibraryCardId = libraryCard.Id;
+                IsAssetAvailable(item.Asset);
+            }
+
+            var checkouts = _mapper.Map<IEnumerable<Checkout>>(checkoutsForCreation);
+
+            _context.AddRange(checkouts);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Checkout> GetCheckout(int checkoutId)
@@ -137,6 +159,21 @@ namespace LMSService.Service
             return card;
         }
 
+        private async void IsAssetAvailable(LibraryAssetForDetailedDto asset)
+        {
+            var libraryAsset = await _context.LibraryAssets
+                .Include(s => s.Status)
+                .Where(x => x.StatusId == (int)EnumStatus.Available)
+                .FirstOrDefaultAsync(x => x.Id == asset.Id);
+
+            if (libraryAsset == null)
+            {
+                throw new LMSValidationException($"{asset.Title} Is not available at this time, try again later");
+            }
+
+            ReduceAssetCopiesAvailable(libraryAsset);
+        }
+
         private void DoesMemberHaveFees(decimal fees)
         {
             if (fees > 0)
@@ -146,14 +183,19 @@ namespace LMSService.Service
             }
         }
 
-        private void IsAssetCurrentlyCheckedOutByMember(List<Checkout> checkouts, int assetId)
+        private void IsAssetCurrentlyCheckedOutByMember(List<Checkout> checkouts, int assetId, int newCheckoutCount)
         {
             checkouts = checkouts.Where(x => x.StatusId == (int)EnumStatus.Checkedout).ToList();
 
-            if (checkouts.Count > 5)
+            if (checkouts.Count >= 5)
             {
                 // TODO move count to appsetting
                 throw new LMSValidationException("This Member has reached the max amount of checkouts");
+            }
+
+            if ((checkouts.Count + newCheckoutCount) > 5)
+            {
+                throw new LMSValidationException($"{newCheckoutCount} checkouts puts this Member above the maximum amount of checkouts allowed");
             }
 
             if (checkouts.Exists(x => x.LibraryAssetId == assetId))
@@ -217,15 +259,62 @@ namespace LMSService.Service
             return checkout;
         }
 
+        //public async Task<PagedList<Checkout>> GetAllCurrentCheckouts(PaginationParams paginationParams)
+        //{
+        //    var checkouts = _context.Checkouts.AsNoTracking()
+        //        .Include(a => a.LibraryAsset)
+        //        .Include(a => a.Status)
+        //        .Where(x => x.StatusId == (int)EnumStatus.Checkedout)
+        //        .AsQueryable();
+
+        //    checkouts = checkouts.OrderByDescending(a => a.Since);
+
+        //    return await PagedList<Checkout>.CreateAsync(checkouts, paginationParams.PageNumber, paginationParams.PageSize);
+        //}
+
         public async Task<PagedList<Checkout>> GetAllCurrentCheckouts(PaginationParams paginationParams)
         {
             var checkouts = _context.Checkouts.AsNoTracking()
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.Status)
-                .Where(x => x.StatusId == (int)EnumStatus.Checkedout)
+                //.Where(x => x.StatusId == (int)EnumStatus.Checkedout)
                 .AsQueryable();
 
-            checkouts = checkouts.OrderByDescending(a => a.Since);
+            if (string.Equals(paginationParams.SearchString, "returned", StringComparison.CurrentCultureIgnoreCase))
+            {
+                checkouts = checkouts.Where(x => x.StatusId == (int)EnumStatus.Returned);
+            }
+            else if (string.Equals(paginationParams.SearchString, "checkedout", StringComparison.CurrentCultureIgnoreCase))
+            {
+                checkouts = checkouts.Where(x => x.StatusId == (int)EnumStatus.Checkedout);
+            }
+
+            if (paginationParams.SortDirection == "asc")
+            {
+                if (string.Equals(paginationParams.OrderBy, "since", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    checkouts = checkouts.OrderBy(x => x.Since);
+                }
+                else if (string.Equals(paginationParams.OrderBy, "until", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    checkouts = checkouts.OrderBy(x => x.Until);
+                }
+            }
+            else if (paginationParams.SortDirection == "desc")
+            {
+                if (string.Equals(paginationParams.OrderBy, "since", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    checkouts = checkouts.OrderByDescending(x => x.Since);
+                }
+                else if (string.Equals(paginationParams.OrderBy, "until", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    checkouts = checkouts.OrderByDescending(x => x.Until);
+                }
+            }
+            else
+            {
+                checkouts = checkouts.OrderByDescending(x => x.Since);
+            }
 
             return await PagedList<Checkout>.CreateAsync(checkouts, paginationParams.PageNumber, paginationParams.PageSize);
         }

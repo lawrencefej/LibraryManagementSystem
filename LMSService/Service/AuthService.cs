@@ -125,12 +125,7 @@ namespace LMSService.Service
 
         public async Task<bool> IsResetEligible(User user)
         {
-            if (user == null || (await _userManager.IsInRoleAsync(user, nameof(EnumRoles.Member))))
-            {
-                return false;
-            }
-
-            return true;
+            return user != null && !await _userManager.IsInRoleAsync(user, nameof(EnumRoles.Member));
         }
     }
 }

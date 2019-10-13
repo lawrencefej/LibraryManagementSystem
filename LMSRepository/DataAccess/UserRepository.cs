@@ -43,7 +43,7 @@ namespace LMSRepository.DataAccess
             users = users
                 .Where(s => s.Email == searchUser.Email
             || s.FirstName.Contains(searchUser.FirstName)
-            || s.Lastname.Contains(searchUser.LastName));
+            || s.Email.Contains(searchUser.LastName));
 
             return await users.ToListAsync();
         }
@@ -138,7 +138,7 @@ namespace LMSRepository.DataAccess
                 users = users
                     .Where(s => s.Email.Contains(searchString)
                 || s.FirstName.Contains(searchString)
-                || s.Lastname.Contains(searchString)
+                || s.Email.Contains(searchString)
                 || Convert.ToString(s.LibraryCard.Id).Contains(searchString));
 
                 return await users.ToListAsync();
@@ -154,7 +154,7 @@ namespace LMSRepository.DataAccess
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
-                .OrderBy(u => u.Lastname).ToListAsync();
+                .OrderBy(u => u.Email).ToListAsync();
 
             return users;
         }
@@ -166,7 +166,7 @@ namespace LMSRepository.DataAccess
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
-                .OrderBy(u => u.Lastname).AsQueryable();
+                .OrderBy(u => u.Email).AsQueryable();
 
             return users;
         }
@@ -176,7 +176,7 @@ namespace LMSRepository.DataAccess
             var users = await _userManager.Users.Include(p => p.ProfilePicture)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name != nameof(EnumRoles.Member)))
-                .OrderBy(u => u.Lastname).ToListAsync();
+                .OrderBy(u => u.Email).ToListAsync();
 
             return users;
         }

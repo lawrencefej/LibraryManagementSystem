@@ -65,7 +65,7 @@ namespace LibraryManagementSystem.API
             if (env.IsDevelopment() || env.IsEnvironment("Integration"))
             {
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -79,7 +79,8 @@ namespace LibraryManagementSystem.API
             // seeder.SeedUsers();
             // seeder.SeedAuthors();
             // seeder.SeedAssets();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
             app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {

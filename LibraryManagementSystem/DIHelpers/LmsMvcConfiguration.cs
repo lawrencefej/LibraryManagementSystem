@@ -12,6 +12,7 @@ namespace LibraryManagementSystem.DIHelpers
     {
         public static void AddMvcConfiguration(this IServiceCollection services)
         {
+            services.AddCors();
             services.AddMvc(Options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -27,7 +28,6 @@ namespace LibraryManagementSystem.DIHelpers
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             })
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
-            services.AddCors();
         }
     }
 }

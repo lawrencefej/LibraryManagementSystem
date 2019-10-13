@@ -17,7 +17,7 @@ namespace LMSService.Interfaces
 
         Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId);
 
-        Task<IEnumerable<LibraryAsset>> SearchLibraryAsset(string searchString);
+        Task<IEnumerable<LibraryAsset>> SearchAvalableLibraryAsset(string searchString);
 
         Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams);
     }

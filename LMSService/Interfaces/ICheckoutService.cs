@@ -12,6 +12,8 @@ namespace LMSService.Interfaces
 
         Task<CheckoutForReturnDto> CheckoutAsset(CheckoutForCreationDto checkoutForCreation);
 
+        Task CheckoutAsset(IEnumerable<CheckoutForCreationDto> checkoutsForCreation);
+
         Task<Checkout> GetCheckout(int checkoutId);
 
         Task<IEnumerable<Checkout>> GetCheckoutsForAsset(int libraryAssetId);

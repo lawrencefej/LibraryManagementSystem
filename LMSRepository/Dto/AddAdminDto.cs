@@ -5,8 +5,6 @@ namespace LMSRepository.Dto
 {
     public class AddAdminDto
     {
-        public int Id { get; set; }
-
         [Required]
         public string FirstName { get; set; }
 

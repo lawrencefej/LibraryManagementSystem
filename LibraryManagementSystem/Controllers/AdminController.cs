@@ -42,13 +42,27 @@ namespace LibraryManagementSystem.API.Controllers
 
             var user = _mapper.Map<User>(addAdminDto);
 
-            user = await _adminService.CreateUser(user, addAdminDto.Role, addAdminDto.CallbackUrl);
+            user.UserName = user.Email;
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            var result = await _adminService.CreateUser(user);
 
-            userToReturn = _adminService.AddRoleToUser(userToReturn);
+            if (result.Succeeded)
+            {
+                user = await _adminService.CompleteUserCreation(user, addAdminDto.Role, addAdminDto.CallbackUrl);
 
-            return CreatedAtRoute("Get", new { id = userToReturn.Id }, userToReturn);
+                var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+
+                userToReturn = _adminService.AddRoleToUser(userToReturn);
+
+                return CreatedAtRoute("Get", new { id = userToReturn.Id }, userToReturn);
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpGet("{id}", Name = "Get")]

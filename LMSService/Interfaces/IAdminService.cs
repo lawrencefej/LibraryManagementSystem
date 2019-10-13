@@ -1,5 +1,6 @@
 ﻿using LMSRepository.Dto;
 using LMSRepository.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,9 +10,9 @@ namespace LMSService.Interfaces
     {
         Task<IEnumerable<User>> GetAdminUsers();
 
-        //Task<UserForDetailedDto> CreateUser(AddAdminDto addAdminDto);
+        Task<IdentityResult> CreateUser(User user);
 
-        Task<User> CreateUser(User newUser, string newRole, string callbackUrl);
+        Task<User> CompleteUserCreation(User newUser, string newRole, string callbackUrl);
 
         IEnumerable<UserForDetailedDto> AddRoleToUsers(IEnumerable<UserForDetailedDto> users);
 
