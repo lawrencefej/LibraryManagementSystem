@@ -79,7 +79,10 @@ namespace LibraryManagementSystem.API
             // seeder.SeedUsers();
             // seeder.SeedAuthors();
             // seeder.SeedAssets();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(x => x.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            //.AllowCredentials());
             //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
             app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
