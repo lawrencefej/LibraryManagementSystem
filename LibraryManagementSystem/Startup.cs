@@ -72,7 +72,7 @@ namespace LibraryManagementSystem.API
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
+                app.UseHsts();
             }
 
             loggerFactory.AddSerilog();
@@ -84,7 +84,7 @@ namespace LibraryManagementSystem.API
                 .AllowAnyHeader());
             //.AllowCredentials());
             //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
