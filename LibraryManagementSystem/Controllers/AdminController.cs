@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LibraryManagementSystem.API.Helpers;
 using LMSRepository.Dto;
 using LMSRepository.Models;
 using LMSService.Interfaces;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
-    [Authorize(Policy = Helpers.Role.RequireAdminRole)]
+    [Authorize(Policy = PolicyRole.RequireAdminRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -38,6 +39,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(AddAdminDto addAdminDto)
         {
+            // TODO fix url
             addAdminDto.CallbackUrl = (Request.Scheme + "://" + Request.Host + "/resetpassword/");
 
             var user = _mapper.Map<User>(addAdminDto);

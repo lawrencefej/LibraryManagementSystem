@@ -65,7 +65,7 @@ namespace LibraryManagementSystem.API
             if (env.IsDevelopment() || env.IsEnvironment("Integration"))
             {
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
             }
             else
             {

@@ -13,6 +13,7 @@ namespace LibraryManagementSystem.Controllers
         public ReportsController(IReportService reportService)
         {
             _reportService = reportService;
+            // TODO add authorization
         }
 
         [HttpGet("byMonth")]

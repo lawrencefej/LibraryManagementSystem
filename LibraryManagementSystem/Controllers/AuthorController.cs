@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace LibraryManagementSystem.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "RequireLibrarianRole")]
+    [Authorize(Policy = PolicyRole.RequireLibrarianRole)]
     [ApiController]
     public class AuthorController : ControllerBase
     {

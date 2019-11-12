@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
-    [Authorize(Policy = Role.RequireLibrarianRole)]
+    [Authorize(Policy = PolicyRole.RequireLibrarianRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class FeeController : ControllerBase

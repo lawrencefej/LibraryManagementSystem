@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace LibraryManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "RequireLibrarianRole")]
+    [Authorize(Policy = PolicyRole.RequireLibrarianRole)]
     [ApiController]
     public class CatalogController : ControllerBase
     {

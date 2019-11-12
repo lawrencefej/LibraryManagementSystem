@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Role = LibraryManagementSystem.API.Helpers.Role;
+using PolicyRole = LibraryManagementSystem.API.Helpers.PolicyRole;
 
 namespace LibraryManagementSystem.DIHelpers
 {
@@ -41,9 +41,9 @@ namespace LibraryManagementSystem.DIHelpers
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Role.RequireAdminRole, policy => policy.RequireRole(Role.Admin));
-                options.AddPolicy(Role.RequireLibrarianRole, policy => policy.RequireRole(Role.Admin, Role.Librarian));
-                options.AddPolicy(Role.RequireMemberRole, policy => policy.RequireRole(Role.Admin, Role.Librarian, Role.Member));
+                options.AddPolicy(PolicyRole.RequireAdminRole, policy => policy.RequireRole(PolicyRole.Admin));
+                options.AddPolicy(PolicyRole.RequireLibrarianRole, policy => policy.RequireRole(PolicyRole.Admin, PolicyRole.Librarian));
+                options.AddPolicy(PolicyRole.RequireMemberRole, policy => policy.RequireRole(PolicyRole.Admin, PolicyRole.Librarian, PolicyRole.Member));
             });
         }
     }

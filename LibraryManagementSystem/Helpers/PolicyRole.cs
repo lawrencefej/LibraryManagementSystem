@@ -1,6 +1,6 @@
 ﻿namespace LibraryManagementSystem.API.Helpers
 {
-    public static class Role
+    public static class PolicyRole
     {
         public const string Admin = "Admin";
         public const string Member = "Member";
