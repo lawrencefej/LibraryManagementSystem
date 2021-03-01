@@ -3,6 +3,7 @@ using EmailService;
 using EmailService.Services;
 using LibraryManagementSystem.API.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using PhotoLibrary;
 using PhotoLibrary.Service;
 using Swashbuckle.AspNetCore.Swagger;
@@ -22,7 +23,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddAutoMapper(typeof(AutoMapperProfiles));
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Library Management System", Version = "V1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Library Management System", Version = "V1" });
             });
         }
 

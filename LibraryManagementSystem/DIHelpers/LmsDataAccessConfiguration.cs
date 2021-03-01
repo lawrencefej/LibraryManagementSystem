@@ -13,8 +13,9 @@ namespace LibraryManagementSystem.DIHelpers
             IdentityModelEventSource.ShowPII = true;
             services.AddDbContext<DataContext>(x => x
                 .UseMySql(connectionString)
-                .ConfigureWarnings(t => t
-                .Ignore(CoreEventId.IncludeIgnoredWarning)));
+                //.ConfigureWarnings(t => t
+                //.Ignore(CoreEventId.IncludeIgnoredWarning))
+                );
         }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Logging;
+using Microsoft.Extensions.Hosting;
 using PhotoLibrary.Configuration;
 using Serilog;
 
@@ -18,7 +18,7 @@ namespace LibraryManagementSystem.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
@@ -26,7 +26,7 @@ namespace LibraryManagementSystem.API
         }
 
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment CurrentEnv { get; }
+        public IWebHostEnvironment CurrentEnv { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,7 +38,7 @@ namespace LibraryManagementSystem.API
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
 
-            IdentityModelEventSource.ShowPII = true;
+            //IdentityModelEventSource.ShowPII = true;
             services.AddDataAccessServices(appSettings.ConnectionString);
             services.AddIdentityConfiguration(appSettings.Token);
             services.AddMvcConfiguration();
@@ -56,11 +56,12 @@ namespace LibraryManagementSystem.API
             {
                 services.AddDevelopmentInterfaces();
             }
-            services.AddOData();
+            //services.AddOData();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment() || env.IsEnvironment("Integration"))
             {
@@ -79,9 +80,12 @@ namespace LibraryManagementSystem.API
             // seeder.SeedUsers();
             // seeder.SeedAuthors();
             // seeder.SeedAssets();
-            app.UseCors(x => x.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseStaticFiles();
+            app.UseRouting();
+            //app.UseCors(x => x.AllowAnyOrigin()
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader());
+            app.UseCors("CorsPolicy");
             //.AllowCredentials());
             //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
             app.UseHttpsRedirection();
@@ -90,21 +94,24 @@ namespace LibraryManagementSystem.API
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseMvc(routeBuilder =>
-            {
-                routeBuilder.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Fallback", action = "Index" }
-                    );
-                routeBuilder.EnableDependencyInjection();
-                routeBuilder.Expand().Select().Count().OrderBy().Filter().MaxTop(null);
-            });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library Management System V1");
+            });
+            //app.UseMvc(routeBuilder =>
+            //{
+            //    routeBuilder.MapSpaFallbackRoute(
+            //        name: "spa-fallback",
+            //        defaults: new { controller = "Fallback", action = "Index" }
+            //        );
+            //    routeBuilder.EnableDependencyInjection();
+            //    routeBuilder.Expand().Select().Count().OrderBy().Filter().MaxTop(null);
+            //});
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
             });
         }
     }

@@ -12,22 +12,28 @@ namespace LibraryManagementSystem.DIHelpers
     {
         public static void AddMvcConfiguration(this IServiceCollection services)
         {
-            services.AddCors();
-            services.AddMvc(Options =>
+            services.AddCors(options => 
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    //.AllowCredentials()
+                    );
+            });
+            services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
-                Options.Filters.Add(new AuthorizeFilter(policy));
-                Options.Filters.Add(typeof(ValidateModelAttribute));
+                options.Filters.Add(new AuthorizeFilter(policy));
+                options.Filters.Add(typeof(ValidateModelAttribute));
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-            .AddJsonOptions(opt =>
-            {
-                opt.SerializerSettings.ReferenceLoopHandling =
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            })
-            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+            .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<Startup>());
         }
     }
 }
