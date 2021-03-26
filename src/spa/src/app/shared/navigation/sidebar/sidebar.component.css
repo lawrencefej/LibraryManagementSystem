@@ -1,0 +1,14 @@
+.active {
+  background-color: lightgray !important;
+  color: rgb(255, 64, 129);
+  font-weight: bold !important;
+}
+
+.nav-caption {
+  margin-left: 20px;
+}
+
+a:hover {
+  color: rgb(255, 64, 129);
+  font-weight: bold !important;
+}

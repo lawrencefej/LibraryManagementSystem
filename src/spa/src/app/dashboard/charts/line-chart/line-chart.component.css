@@ -1,0 +1,8 @@
+mat-card-header {
+    background-color: rgb(44, 62, 80);
+    color: white;
+}
+
+mat-card-content {
+    min-height: 340px;
+}
