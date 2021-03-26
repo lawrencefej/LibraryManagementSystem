@@ -12,15 +12,15 @@ namespace LibraryManagementSystem.DIHelpers
     {
         public static void AddMvcConfiguration(this IServiceCollection services)
         {
-            // services.AddCors(options =>
-            // {
-            //     options.AddPolicy("CorsPolicy",
-            //         builder => builder.AllowAnyOrigin()
-            //         .AllowAnyMethod()
-            //         .AllowAnyHeader()
-            //         //.AllowCredentials()
-            //         );
-            // });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    //.AllowCredentials()
+                    );
+            });
             services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()

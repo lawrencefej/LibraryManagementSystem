@@ -94,7 +94,7 @@ namespace LibraryManagementSystem.API
             //app.UseCors(x => x.AllowAnyOrigin()
             //    .AllowAnyMethod()
             //    .AllowAnyHeader());
-            // app.UseCors("CorsPolicy");
+            app.UseCors("CorsPolicy");
             //.AllowCredentials());
             //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
             app.UseHttpsRedirection();
@@ -129,8 +129,11 @@ namespace LibraryManagementSystem.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                // endpoints.MapFallbackToController("Index", "Fallback");
-                endpoints.MapFallbackToFile("index.html");
+                if (!env.IsDevelopment())
+                {
+                    endpoints.MapFallbackToController("Index", "Fallback");
+                    // endpoints.MapFallbackToFile("index.html");
+                }
             });
 
             app.UseSpa(spa =>
