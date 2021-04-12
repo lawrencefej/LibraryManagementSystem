@@ -1,0 +1,10 @@
+p {
+  margin: 5px;
+  color: rgb(63, 81, 181);
+}
+
+.container {
+  background-color: rgb(212, 212, 212);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

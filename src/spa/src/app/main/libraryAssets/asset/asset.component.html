@@ -1,0 +1,136 @@
+<div fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button matSuffix mat-icon-button tabIndex="-1" aria-label="clear" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <h2>
+    {{ assetForm.controls['id'].value ? 'Edit Item' : 'Add New Item' }}
+  </h2>
+</div>
+
+<mat-dialog-content>
+  <form fxLayout="column" [formGroup]="assetForm" (ngSubmit)="onSubmit()">
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <input matInput type="text" placeholder="Title" formControlName="title" required autocomplete="test" />
+        <mat-error *ngFor="let validation of validationMessages.title">
+          <mat-error *ngIf="
+            assetForm.get('title').hasError(validation.type) &&
+                  (assetForm.get('title').dirty || assetForm.get('title').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <input matInput placeholder="Search Author" formControlName="author" required [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" autoActiveFirstOption>
+          <mat-option *ngFor="let author of authors" [value]="author">
+            {{author.fullName}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngFor="let validation of validationMessages.author">
+          <mat-error *ngIf="
+            assetForm.get('author').hasError(validation.type) &&
+                  (assetForm.get('author').dirty || assetForm.get('author').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <textarea matInput type="text" placeholder="Description" formControlName="description" required></textarea>
+        <mat-error *ngFor="let validation of validationMessages.description">
+          <mat-error *ngIf="
+            assetForm.get('description').hasError(validation.type) &&
+                (assetForm.get('description').dirty || assetForm.get('description').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select [(value)]="selectedCategory" placeholder="Category" formControlName="categoryId" required>
+          <ng-container>
+            <mat-option *ngFor="let category of (categories$ | async)" [value]="category.id">
+              {{category.name}}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+        <mat-error *ngFor="let validation of validationMessages.categoryId">
+          <mat-error *ngIf="
+            assetForm.get('categoryId').hasError(validation.type) &&
+                  (assetForm.get('categoryId').dirty || assetForm.get('categoryId').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <input matInput type="text" placeholder="Year" formControlName="year" required maxlength="4"
+          autocomplete="test" />
+        <mat-error *ngFor="let validation of validationMessages.year">
+          <mat-error *ngIf="
+            assetForm.get('year').hasError(validation.type) &&
+                  (assetForm.get('year').dirty || assetForm.get('year').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <mat-select [(value)]="selectedAssetType" (valueChange)="onItemChange($event)" placeholder="Type"
+          formControlName="assetTypeId" required>
+          <ng-container *ngFor="let type of (assetTypes$ | async)">
+            <mat-option [value]="type.id">{{type.name}}</mat-option>
+          </ng-container>
+        </mat-select>
+        <mat-error *ngFor="let validation of validationMessages.assetTypeId">
+          <mat-error *ngIf="
+            assetForm.get('assetTypeId').hasError(validation.type) &&
+                  (assetForm.get('assetTypeId').dirty || assetForm.get('assetTypeId').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <input matInput type="number" placeholder="Number of Copies" formControlName="numberOfCopies" required min="1">
+        <mat-error *ngFor="let validation of validationMessages.assetTypeId">
+          <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <input matInput type="text" placeholder="ISBN" formControlName="isbn" required>
+        <mat-error *ngFor="let validation of validationMessages.isbn">
+          <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <div class="add-bottom-padding" fxLayout.lt-sm="column" fxFlex>
+        <mat-form-field *ngIf="showRevert" class="full-width-input">
+          <input matInput type="number" placeholder="Current Copies Available" formControlName="copiesAvailable"
+            required min="1">
+          <mat-error
+            *ngIf="assetForm.get('numberOfCopies').hasError('required') && (assetForm.get('numberOfCopies').dirty || assetForm.get('numberOfCopies').touched)">
+            Number of copies is required</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="button-row" fxLayoutAlign="space-between center" fxFlex>
+        <button mat-raised-button color="primary" type="submit"
+          [disabled]="assetForm.invalid || assetForm.pristine">Submit</button>
+        <button mat-raised-button color="accent" type="button" *ngIf="showRevert" (click)="revert()"
+          [disabled]="assetForm.invalid || assetForm.pristine">Reset</button>
+        <button mat-raised-button color="warn" type="button" (click)="closeDialog()">Cancel</button>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
