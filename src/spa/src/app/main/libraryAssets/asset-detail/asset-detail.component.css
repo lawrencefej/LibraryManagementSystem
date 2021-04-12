@@ -1,0 +1,25 @@
+.photo-container {
+  margin-top: 10px;
+  margin-left: 10px;
+  border-radius: 5%;
+}
+
+b {
+  margin-right: 10px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.container {
+  margin: 20px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  min-height: 200px;
+  padding-right: 10px;
+  border-radius: 5%;
+}

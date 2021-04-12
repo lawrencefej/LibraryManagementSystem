@@ -1,0 +1,11 @@
+.filter-input {
+    margin-left: 20px;
+}
+
+.create-button {
+    margin-left: 100px;
+}
+
+mat-select {
+    font-size: 12px;
+}
