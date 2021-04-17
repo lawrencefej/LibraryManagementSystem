@@ -20,11 +20,11 @@ namespace LibraryManagementSystem.API
                 {
                     logging.ClearProviders();
                 });
-                //.ConfigureLogging(logging =>
-                //{
-                //    logging.ClearProviders();
-                //})
-                //.UseStartup<Startup>();
-                // Todo Fix login
+        //.ConfigureLogging(logging =>
+        //{
+        //    logging.ClearProviders();
+        //})
+        //.UseStartup<Startup>();
+        // Todo Fix login
     }
 }

@@ -1,20 +1,19 @@
 ﻿using EmailService.Configuration;
 using LibraryManagementSystem.DIHelpers;
 using LibraryManagementSystem.Helpers;
+using LMSRepository.Data;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using PhotoLibrary.Configuration;
 using Serilog;
-using LMSRepository.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.API
 {

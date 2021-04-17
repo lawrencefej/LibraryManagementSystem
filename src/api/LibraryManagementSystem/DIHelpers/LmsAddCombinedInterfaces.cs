@@ -23,7 +23,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IReportService, ReportService>();
-            services.AddScoped<LogUserActivity>();
+            // services.AddScoped<LogUserActivity>();
         }
     }
 }
