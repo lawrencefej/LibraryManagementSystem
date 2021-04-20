@@ -1,11 +1,12 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Dto;
-using LMSService.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LMSEntities.DataTransferObjects;
+using LMSRepository.Data;
+using LMSRepository.Dto;
+using LMSService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMSService.Service
 {

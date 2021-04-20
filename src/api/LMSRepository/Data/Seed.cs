@@ -1,8 +1,8 @@
-﻿using LMSRepository.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LMSEntities.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LMSRepository.Data
 {

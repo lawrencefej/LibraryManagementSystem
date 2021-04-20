@@ -1,17 +1,37 @@
-﻿using LMSRepository.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Models;
+using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
 using LMSRepository.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LMSRepository.DataAccess
 {
-    public class UserRepository
+    public class NewBaseType
+    {
+        public async Task<IEnumerable<User>> SearchUsers(SearchUserDto searchUser)
+        {
+            var users = from user in _userManager.Users
+                        .Include(s => s.LibraryCard)
+                        .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
+                        select user;
+
+            users = users
+                .Where(s => s.Email == searchUser.Email
+            || s.FirstName.Contains(searchUser.FirstName)
+            || s.Email.Contains(searchUser.LastName));
+
+            return await users.ToListAsync();
+        }
+    }
+
+    public class UserRepository : NewBaseType
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
@@ -31,21 +51,6 @@ namespace LMSRepository.DataAccess
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
-        }
-
-        public async Task<IEnumerable<User>> SearchUsers(SearchUserDto searchUser)
-        {
-            var users = from user in _userManager.Users
-                        .Include(s => s.LibraryCard)
-                        .Where(u => u.UserRoles.Any(r => r.Role.Name == EnumRoles.Member.ToString()))
-                        select user;
-
-            users = users
-                .Where(s => s.Email == searchUser.Email
-            || s.FirstName.Contains(searchUser.FirstName)
-            || s.Email.Contains(searchUser.LastName));
-
-            return await users.ToListAsync();
         }
 
         public async Task<User> GetUserByCardId(int? cardId)

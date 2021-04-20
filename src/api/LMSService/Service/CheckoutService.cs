@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using LMSRepository.Data;
 using LMSRepository.Dto;
 using LMSRepository.Helpers;
@@ -7,10 +11,6 @@ using LMSService.Exceptions;
 using LMSService.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LMSService.Service
 {

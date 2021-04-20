@@ -18,7 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.5.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.12" />
+    <!-- <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.12" /> -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.12">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -36,6 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LMSService\LMSService.csproj" />
-    <ProjectReference Include="..\LMSRepository\LMSRepository.csproj" />
+    <!-- <ProjectReference Include="..\LMSRepository\LMSRepository.csproj" /> -->
   </ItemGroup>
 </Project>
