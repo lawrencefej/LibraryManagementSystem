@@ -16,7 +16,7 @@
             "allowedCommonJsDependencies": [
               "chart.js"
             ],
-            "outputPath": "../LibraryManagementAPI/LibraryManagementSystem/wwwroot",
+            "outputPath": "../api/LibraryManagementSystem/wwwroot",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
