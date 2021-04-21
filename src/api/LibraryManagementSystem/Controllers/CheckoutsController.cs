@@ -1,13 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
-using LMSRepository.Dto;
-using LMSRepository.Helpers;
-using LMSService.Interfaces;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -91,7 +91,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet("search/")]
-        public async Task<IActionResult> SearchCheckouts([FromQuery]string searchString)
+        public async Task<IActionResult> SearchCheckouts([FromQuery] string searchString)
         {
             var checkouts = await _checkoutService.SearchCheckouts(searchString);
 
@@ -101,7 +101,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet("pagination/")]
-        public async Task<IActionResult> GetAll([FromQuery]PaginationParams paginationParams)
+        public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
             var checkouts = await _checkoutService.GetAllCurrentCheckouts(paginationParams);
 

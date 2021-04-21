@@ -29,6 +29,7 @@
 		"mtxr.sqltools-driver-mysql",
 		"formulahendry.dotnet-test-explorer",
 		"jmrog.vscode-nuget-package-manager",
+		"kreativ-software.csharpextensions",
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [

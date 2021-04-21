@@ -1,9 +1,9 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Dto;
-using LMSService.Interfaces;
+﻿using System.Threading.Tasks;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSRepository.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -22,7 +22,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost("userphoto")]
-        public async Task<IActionResult> AddPhotoForUser([FromForm]UserPhotoDto userPhotoDto)
+        public async Task<IActionResult> AddPhotoForUser([FromForm] UserPhotoDto userPhotoDto)
         {
             var result = await _photoService.AddPhotoForUser(userPhotoDto);
 
@@ -36,7 +36,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost("assetphoto")]
-        public async Task<IActionResult> AddPhotoForAsset([FromForm]AssetPhotoDto assetPhotoDto)
+        public async Task<IActionResult> AddPhotoForAsset([FromForm] AssetPhotoDto assetPhotoDto)
         {
             var result = await _photoService.AddPhotoForAsset(assetPhotoDto);
 

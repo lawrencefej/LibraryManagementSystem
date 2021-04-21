@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using LMSRepository.Dto;
-using LMSRepository.Models;
-using LMSService.Interfaces;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {

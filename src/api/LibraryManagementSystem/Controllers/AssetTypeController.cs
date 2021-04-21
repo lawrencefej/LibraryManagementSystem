@@ -1,7 +1,7 @@
-﻿using LMSRepository.Models;
-using LMSService.Interfaces;
+﻿using System.Threading.Tasks;
+using LMSContracts.Interfaces;
+using LMSEntities.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {

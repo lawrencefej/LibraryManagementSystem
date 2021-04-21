@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using LMSRepository.Dto;
-using LMSRepository.Models;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Models;
 
 namespace LibraryManagementSystem.API.Helpers
 {

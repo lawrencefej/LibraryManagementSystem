@@ -1,15 +1,15 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
-using LMSRepository.Dto;
-using LMSRepository.Helpers;
-using LMSRepository.Models;
-using LMSService.Interfaces;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
+using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -88,7 +88,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet("search/")]
-        public async Task<IActionResult> SearchAvailableLibraryAsset([FromQuery]string searchString)
+        public async Task<IActionResult> SearchAvailableLibraryAsset([FromQuery] string searchString)
         {
             var assets = await _libraryAssestService.SearchAvalableLibraryAsset(searchString);
 
@@ -98,7 +98,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet("pagination/")]
-        public async Task<IActionResult> GetLibraryAssets([FromQuery]PaginationParams paginationParams)
+        public async Task<IActionResult> GetLibraryAssets([FromQuery] PaginationParams paginationParams)
         {
             var assets = await _libraryAssestService.GetAllAsync(paginationParams);
 

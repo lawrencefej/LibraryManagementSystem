@@ -1,15 +1,16 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Dto;
-using LMSRepository.Helpers;
-using LMSRepository.Models;
-using LMSService.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Enumerations;
+using LMSEntities.Helpers;
+using LMSEntities.Models;
+using LMSRepository.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMSService.Service
 {
@@ -33,7 +34,7 @@ namespace LMSService.Service
 
         public async Task<User> CompleteAddMember(User member)
         {
-            await _userManager.AddToRoleAsync(member, nameof(EnumRoles.Member));
+            await _userManager.AddToRoleAsync(member, nameof(RolesEnum.Member));
 
             member.LibraryCard = await CreateNewCard(member.Id);
 
@@ -86,7 +87,7 @@ namespace LMSService.Service
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(RolesEnum.Member)))
                 .OrderBy(u => u.Email).AsQueryable();
 
             if (!string.IsNullOrEmpty(paginationParams.SearchString))
@@ -142,7 +143,7 @@ namespace LMSService.Service
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(RolesEnum.Member)))
                 .OrderBy(u => u.Email).AsQueryable();
 
             members = members
@@ -183,7 +184,7 @@ namespace LMSService.Service
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(RolesEnum.Member)))
                 .OrderBy(u => u.Email).ToListAsync();
 
             return users;
@@ -203,7 +204,7 @@ namespace LMSService.Service
         public async Task<bool> DoesMemberExist(string email)
         {
             var user = await _context.Users.AsNoTracking()
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(EnumRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(RolesEnum.Member)))
                 .FirstOrDefaultAsync(x => x.Email == email);
             return user != null;
         }

@@ -1,15 +1,15 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Threading.Tasks;
+using AutoMapper;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
+using LMSEntities.Models;
 using LMSRepository.Data;
-using LMSRepository.Dto;
-using LMSRepository.Models;
-using LMSService.Helpers;
-using LMSService.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using PhotoLibrary;
 using PhotoLibrary.Configuration;
 using PhotoLibrary.Model;
-using System;
-using System.Threading.Tasks;
 
 namespace LMSService.Service
 {
