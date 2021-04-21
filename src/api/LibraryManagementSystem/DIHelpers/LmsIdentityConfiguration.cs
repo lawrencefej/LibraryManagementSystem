@@ -1,10 +1,10 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Models;
+﻿using System.Text;
+using LMSEntities.Models;
+using LMSRepository.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Role = LibraryManagementSystem.API.Helpers.Role;
 
 namespace LibraryManagementSystem.DIHelpers
@@ -21,10 +21,11 @@ namespace LibraryManagementSystem.DIHelpers
                 opt.Password.RequireUppercase = false;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(LMSRepository.Models.Role), builder.Services);
+            builder = new IdentityBuilder(builder.UserType, typeof(LMSEntities.Models.Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
-            builder.AddRoleValidator<RoleValidator<LMSRepository.Models.Role>>();
-            builder.AddRoleManager<RoleManager<LMSRepository.Models.Role>>();
+            builder.AddRoleValidator<RoleValidator<LMSEntities.Models.Role>>();
+            // TODO: Fix role naming issue
+            builder.AddRoleManager<RoleManager<LMSEntities.Models.Role>>();
             builder.AddSignInManager<SignInManager<User>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -41,6 +42,7 @@ namespace LibraryManagementSystem.DIHelpers
 
             services.AddAuthorization(options =>
             {
+                // TODO: Fix role naming issue
                 options.AddPolicy(Role.RequireAdminRole, policy => policy.RequireRole(Role.Admin));
                 options.AddPolicy(Role.RequireLibrarianRole, policy => policy.RequireRole(Role.Admin, Role.Librarian));
                 options.AddPolicy(Role.RequireMemberRole, policy => policy.RequireRole(Role.Admin, Role.Librarian, Role.Member));

@@ -1,8 +1,8 @@
-﻿using EmailService;
+﻿using System.Threading.Tasks;
+using EmailService;
 using EmailService.Configuration;
 using EmailService.Model;
-using LMSService.Interfaces;
-using System.Threading.Tasks;
+using LMSContracts.Interfaces;
 
 namespace LMSService.Helpers
 {

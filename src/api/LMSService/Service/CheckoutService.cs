@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Enumerations;
+using LMSEntities.Helpers;
+using LMSEntities.Models;
 using LMSRepository.Data;
-using LMSRepository.Dto;
-using LMSRepository.Helpers;
-using LMSRepository.Models;
 using LMSService.Exceptions;
-using LMSService.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +32,7 @@ namespace LMSService.Service
         {
             var checkout = await ValidateCheckin(checkoutId);
 
-            checkout.StatusId = (int)EnumStatus.Returned;
+            checkout.StatusId = (int)StatusEnum.Returned;
 
             checkout.IsReturned = true;
 
@@ -62,13 +63,13 @@ namespace LMSService.Service
             ReduceAssetCopiesAvailable(libraryAsset);
 
             var checkout = _mapper.Map<Checkout>(checkoutForCreation);
-            checkout.StatusId = (int)EnumStatus.Checkedout;
+            checkout.StatusId = (int)StatusEnum.Checkedout;
 
             _context.Add(checkout);
             await _context.SaveChangesAsync();
 
             var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
-            checkoutToReturn.Status = nameof(EnumStatus.Checkedout);
+            checkoutToReturn.Status = nameof(StatusEnum.Checkedout);
             return checkoutToReturn;
         }
 
@@ -109,7 +110,7 @@ namespace LMSService.Service
             var checkouts = await _context.Checkouts.AsNoTracking()
                 .Include(a => a.Status)
                 .Where(l => l.LibraryAssetId == libraryAssetId)
-                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
+                .Where(l => l.StatusId == (int)StatusEnum.Checkedout)
                 .ToListAsync();
 
             return checkouts;
@@ -123,7 +124,7 @@ namespace LMSService.Service
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.Status)
                 .Where(l => l.LibraryCard.Id == card.Id)
-                .Where(l => l.StatusId == (int)EnumStatus.Checkedout)
+                .Where(l => l.StatusId == (int)StatusEnum.Checkedout)
                 .ToListAsync();
 
             return checkouts;
@@ -163,7 +164,7 @@ namespace LMSService.Service
         {
             var libraryAsset = await _context.LibraryAssets
                 .Include(s => s.Status)
-                .Where(x => x.StatusId == (int)EnumStatus.Available)
+                .Where(x => x.StatusId == (int)StatusEnum.Available)
                 .FirstOrDefaultAsync(x => x.Id == asset.Id);
 
             if (libraryAsset == null)
@@ -185,7 +186,7 @@ namespace LMSService.Service
 
         private void IsAssetCurrentlyCheckedOutByMember(List<Checkout> checkouts, int assetId, int newCheckoutCount)
         {
-            checkouts = checkouts.Where(x => x.StatusId == (int)EnumStatus.Checkedout).ToList();
+            checkouts = checkouts.Where(x => x.StatusId == (int)StatusEnum.Checkedout).ToList();
 
             if (checkouts.Count >= 5)
             {
@@ -210,7 +211,7 @@ namespace LMSService.Service
 
             if (asset.CopiesAvailable == 0)
             {
-                asset.StatusId = (int)EnumStatus.Unavailable;
+                asset.StatusId = (int)StatusEnum.Unavailable;
             }
         }
 
@@ -218,9 +219,9 @@ namespace LMSService.Service
         {
             asset.CopiesAvailable++;
 
-            if (asset.StatusId == (int)EnumStatus.Unavailable)
+            if (asset.StatusId == (int)StatusEnum.Unavailable)
             {
-                asset.StatusId = (int)EnumStatus.Available;
+                asset.StatusId = (int)StatusEnum.Available;
             }
         }
 
@@ -250,7 +251,7 @@ namespace LMSService.Service
                 throw new NoValuesFoundException("Checkout does not exist");
             }
 
-            if (checkout.StatusId == (int)EnumStatus.Returned || checkout.IsReturned)
+            if (checkout.StatusId == (int)StatusEnum.Returned || checkout.IsReturned)
             {
                 _logger.LogError("Checkout has already been returned");
                 throw new LMSValidationException("Checkout has already been returned");
@@ -264,7 +265,7 @@ namespace LMSService.Service
         //    var checkouts = _context.Checkouts.AsNoTracking()
         //        .Include(a => a.LibraryAsset)
         //        .Include(a => a.Status)
-        //        .Where(x => x.StatusId == (int)EnumStatus.Checkedout)
+        //        .Where(x => x.StatusId == (int)StatusEnum.Checkedout)
         //        .AsQueryable();
 
         //    checkouts = checkouts.OrderByDescending(a => a.Since);
@@ -277,16 +278,16 @@ namespace LMSService.Service
             var checkouts = _context.Checkouts.AsNoTracking()
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.Status)
-                //.Where(x => x.StatusId == (int)EnumStatus.Checkedout)
+                //.Where(x => x.StatusId == (int)StatusEnum.Checkedout)
                 .AsQueryable();
 
             if (string.Equals(paginationParams.SearchString, "returned", StringComparison.CurrentCultureIgnoreCase))
             {
-                checkouts = checkouts.Where(x => x.StatusId == (int)EnumStatus.Returned);
+                checkouts = checkouts.Where(x => x.StatusId == (int)StatusEnum.Returned);
             }
             else if (string.Equals(paginationParams.SearchString, "checkedout", StringComparison.CurrentCultureIgnoreCase))
             {
-                checkouts = checkouts.Where(x => x.StatusId == (int)EnumStatus.Checkedout);
+                checkouts = checkouts.Where(x => x.StatusId == (int)StatusEnum.Checkedout);
             }
 
             if (paginationParams.SortDirection == "asc")

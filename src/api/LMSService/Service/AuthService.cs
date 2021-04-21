@@ -1,18 +1,18 @@
-﻿using LMSRepository.Dto;
-using LMSRepository.Helpers;
-using LMSRepository.Models;
-using LMSService.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Enumerations;
+using LMSEntities.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LMSService.Service
 {
@@ -125,7 +125,7 @@ namespace LMSService.Service
 
         public async Task<bool> IsResetEligible(User user)
         {
-            return user != null && !await _userManager.IsInRoleAsync(user, nameof(EnumRoles.Member));
+            return user != null && !await _userManager.IsInRoleAsync(user, nameof(RolesEnum.Member));
         }
     }
 }

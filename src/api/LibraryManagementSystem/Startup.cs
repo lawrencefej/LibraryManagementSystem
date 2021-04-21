@@ -1,6 +1,7 @@
 ﻿using EmailService.Configuration;
 using LibraryManagementSystem.DIHelpers;
 using LibraryManagementSystem.Helpers;
+using LMSEntities.Helpers;
 using LMSRepository.Data;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;

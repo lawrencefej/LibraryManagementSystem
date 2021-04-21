@@ -1,9 +1,9 @@
-﻿using LMSRepository.Data;
+﻿using System.Threading.Tasks;
+using LMSContracts.Interfaces;
+using LMSRepository.Data;
 using LMSService.Exceptions;
-using LMSService.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace LMSService.Service
 {

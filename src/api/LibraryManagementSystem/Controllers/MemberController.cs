@@ -1,14 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
-using LMSRepository.Dto;
-using LMSRepository.Helpers;
-using LMSRepository.Models;
-using LMSService.Interfaces;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
+using LMSEntities.Models;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -39,7 +39,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("pagination/")]
-        public async Task<IActionResult> GetpaginatedMembers([FromQuery]PaginationParams paginationParams)
+        public async Task<IActionResult> GetpaginatedMembers([FromQuery] PaginationParams paginationParams)
         {
             var members = await _memberService.GetAllMembers(paginationParams);
 
@@ -52,7 +52,7 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("advancedSearch/")]
-        public async Task<IActionResult> AdvancedmemberSearch([FromQuery]UserForDetailedDto member)
+        public async Task<IActionResult> AdvancedmemberSearch([FromQuery] UserForDetailedDto member)
         {
             var members = await _memberService.AdvancedMemberSearch(member);
 

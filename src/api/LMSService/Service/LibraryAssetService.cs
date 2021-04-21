@@ -1,13 +1,14 @@
-﻿using LMSRepository.Data;
-using LMSRepository.Helpers;
-using LMSRepository.Models;
-using LMSService.Exceptions;
-using LMSService.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LMSContracts.Interfaces;
+using LMSEntities.Enumerations;
+using LMSEntities.Helpers;
+using LMSEntities.Models;
+using LMSRepository.Data;
+using LMSService.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
@@ -24,7 +25,7 @@ namespace LMSService.Service
 
         public async Task<LibraryAsset> AddAsset(LibraryAsset asset)
         {
-            asset.StatusId = (int)EnumStatus.Available;
+            asset.StatusId = (int)StatusEnum.Available;
             asset.CopiesAvailable = asset.NumberOfCopies;
 
             asset.AssetType = null;
@@ -62,7 +63,7 @@ namespace LMSService.Service
         {
             if (libraryAssetForUpdate.CopiesAvailable > 0)
             {
-                libraryAssetForUpdate.StatusId = (int)EnumStatus.Available;
+                libraryAssetForUpdate.StatusId = (int)StatusEnum.Available;
             }
 
             _context.Update(libraryAssetForUpdate);
@@ -136,7 +137,7 @@ namespace LMSService.Service
                         .Include(s => s.AssetType)
                         .AsQueryable();
 
-            assets = assets.Where(x => x.StatusId == (int)EnumStatus.Available);
+            assets = assets.Where(x => x.StatusId == (int)StatusEnum.Available);
 
             assets = assets
                 .Where(s => s.Title.Contains(searchString)

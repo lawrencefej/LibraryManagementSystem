@@ -1,6 +1,5 @@
-﻿using LibraryManagementSystem.API.Helpers;
+﻿using LMSContracts.Interfaces;
 using LMSService.Helpers;
-using LMSService.Interfaces;
 using LMSService.Service;
 using Microsoft.Extensions.DependencyInjection;
 

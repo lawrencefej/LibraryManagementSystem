@@ -1,8 +1,8 @@
-﻿using LibraryManagementSystem.API.Helpers;
-using LMSService.Interfaces;
+﻿using System.Threading.Tasks;
+using LibraryManagementSystem.API.Helpers;
+using LMSContracts.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.Controllers
 {
