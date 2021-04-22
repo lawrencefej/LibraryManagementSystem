@@ -27,7 +27,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LMSContracts\LMSContracts.csproj" />
-    <ProjectReference Include="..\LMSEntities\LMSEntities.csproj" />
+    <!-- TODO: Remove? -->
+    <!-- <ProjectReference Include="..\LMSEntities\LMSEntities.csproj" /> -->
   </ItemGroup>
 
 </Project>
