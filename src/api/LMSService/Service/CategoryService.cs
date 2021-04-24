@@ -1,47 +1,42 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
+using LMSContracts.Repository;
 using LMSEntities.Models;
-using LMSRepository.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace LMSService.Service
 {
     public class CategoryService : ICategoryService
     {
-        private readonly DataContext _context;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CategoryService(DataContext context)
+        public CategoryService(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Category> AddCategory(Category category)
         {
-            _context.Add(category);
-            await _context.SaveChangesAsync();
+            unitOfWork.Category.AddCategory(category);
+            await unitOfWork.SaveChangesAsync();
 
             return category;
         }
 
         public async Task DeleteCategory(Category category)
         {
-            _context.Remove(category);
-            await _context.SaveChangesAsync();
+            unitOfWork.Category.DeleteCategory(category);
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategories()
         {
-            var categories = await _context.Category.ToListAsync();
-
-            return categories;
+            return await unitOfWork.Category.GetCategories();
         }
 
         public async Task<Category> GetCategory(int categoryId)
         {
-            var category = await _context.Category.FirstOrDefaultAsync(x => x.Id == categoryId);
-
-            return category;
+            return await unitOfWork.Category.GetCategoryById(categoryId);
         }
     }
 }

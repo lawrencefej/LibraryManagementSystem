@@ -16,7 +16,7 @@ namespace LMSRepository.Repositories
 
         public async Task<IEnumerable<AssetType>> GetAssetTypes()
         {
-            return await FindAll().OrderBy(asset => asset.Name).AsNoTracking().ToListAsync();
+            return await FindAll().OrderBy(asset => asset.Name).ToListAsync();
         }
 
         public async Task<AssetType> GetAssetType(int assetTypeId)

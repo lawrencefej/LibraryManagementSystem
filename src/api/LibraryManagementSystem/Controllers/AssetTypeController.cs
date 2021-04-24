@@ -25,7 +25,7 @@ namespace LibraryManagementSystem.Controllers
             return Ok(assetTypes);
         }
 
-        [HttpGet("{assetTypeId}")]
+        [HttpGet("{assetTypeId}", Name = nameof(GetAssetType))]
         public async Task<IActionResult> GetAssetType(int assetTypeId)
         {
             AssetType assetType = await assetTypeService.GetAssetType(assetTypeId);
@@ -43,7 +43,7 @@ namespace LibraryManagementSystem.Controllers
         {
             assetType = await assetTypeService.AddAssetType(assetType);
 
-            return CreatedAtAction("GetAssetType", new { id = assetType.Id }, assetType);
+            return CreatedAtAction(nameof(GetAssetType), new { assetTypeId = assetType.Id }, assetType);
         }
 
         [HttpDelete("{id}")]

@@ -8,6 +8,7 @@ namespace LMSRepository.Repositories
     {
         private readonly DataContext dataContext;
         private IAssetTypeRepository assetType;
+        private ICategoryRepository category;
         public IAssetTypeRepository AssetType
         {
             get
@@ -18,6 +19,19 @@ namespace LMSRepository.Repositories
                 }
 
                 return assetType;
+            }
+        }
+
+        public ICategoryRepository Category
+        {
+            get
+            {
+                if (category == null)
+                {
+                    category = new CategoryRepository(dataContext);
+                }
+
+                return category;
             }
         }
         public UnitOfWork(DataContext dataContext)

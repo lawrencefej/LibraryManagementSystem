@@ -6,6 +6,7 @@ namespace LMSContracts.Repository
     {
         // ILibraryAssetRepository LibraryAsset { get; }
         IAssetTypeRepository AssetType { get; }
+        ICategoryRepository Category { get; }
         Task SaveChangesAsync();
     }
 }

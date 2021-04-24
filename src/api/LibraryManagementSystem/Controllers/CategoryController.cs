@@ -9,25 +9,25 @@ namespace LibraryManagementSystem.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryService categoryService;
 
         public CategoryController(ICategoryService categoryService)
         {
-            _categoryService = categoryService;
+            this.categoryService = categoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            var category = await _categoryService.GetCategories();
+            var category = await categoryService.GetCategories();
 
             return Ok(category);
         }
 
-        [HttpGet("{categoryId}")]
+        [HttpGet("{categoryId}", Name = nameof(GetCategory))]
         public async Task<IActionResult> GetCategory(int categoryId)
         {
-            var category = await _categoryService.GetCategory(categoryId);
+            Category category = await categoryService.GetCategory(categoryId);
 
             if (category == null)
             {
@@ -40,22 +40,22 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            category = await _categoryService.AddCategory(category);
+            category = await categoryService.AddCategory(category);
 
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            return CreatedAtAction(nameof(GetCategory), new { categoryId = category.Id }, category);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-            var category = await _categoryService.GetCategory(id);
+            Category category = await categoryService.GetCategory(id);
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            await _categoryService.DeleteCategory(category);
+            await categoryService.DeleteCategory(category);
 
             return category;
         }
