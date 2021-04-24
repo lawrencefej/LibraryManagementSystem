@@ -15,6 +15,5 @@ namespace LMSContracts.Repository
         T Update(T entity);
         void Delete(T entity);
         Task SaveChanges();
-
     }
 }

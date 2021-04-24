@@ -4,7 +4,8 @@ namespace LMSContracts.Repository
 {
     public interface IUnitOfWork
     {
-        ILibraryAssetRepository LibraryAsset { get; }
+        // ILibraryAssetRepository LibraryAsset { get; }
+        IAssetTypeRepository AssetType { get; }
         Task SaveChangesAsync();
     }
 }

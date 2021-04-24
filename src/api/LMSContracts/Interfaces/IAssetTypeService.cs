@@ -6,12 +6,15 @@ namespace LMSContracts.Interfaces
 {
     public interface IAssetTypeService
     {
-        Task<AssetType> AddAssetType(AssetType assetType);
-
-        Task DeleteAssetType(AssetType assetType);
-
         Task<IEnumerable<AssetType>> GetAssetTypes();
 
         Task<AssetType> GetAssetType(int assetTypeId);
+
+        Task<AssetType> AddAssetType(AssetType assetType);
+
+        Task<AssetType> UpdateAssetType(AssetType assetType);
+
+        Task DeleteAssetType(AssetType assetType);
+
     }
 }

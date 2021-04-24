@@ -1,47 +1,48 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
+using LMSContracts.Repository;
 using LMSEntities.Models;
-using LMSRepository.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace LMSService.Service
 {
     public class AssetTypeService : IAssetTypeService
     {
-        private readonly DataContext _context;
+        private readonly IUnitOfWork unitOfWork;
 
-        public AssetTypeService(DataContext context)
+        public AssetTypeService(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<AssetType> AddAssetType(AssetType assetType)
         {
-            _context.Add(assetType);
-            await _context.SaveChangesAsync();
+            _ = unitOfWork.AssetType.AddAssetType(assetType);
+            await unitOfWork.SaveChangesAsync();
+            return assetType;
+        }
 
+        public async Task<AssetType> GetAssetType(int assetTypeId)
+        {
+            return await unitOfWork.AssetType.GetAssetType(assetTypeId);
+        }
+
+        public async Task<IEnumerable<AssetType>> GetAssetTypes()
+        {
+            return await unitOfWork.AssetType.GetAssetTypes();
+        }
+
+        public async Task<AssetType> UpdateAssetType(AssetType assetType)
+        {
+            _ = unitOfWork.AssetType.UpdateAssetType(assetType);
+            await unitOfWork.SaveChangesAsync();
             return assetType;
         }
 
         public async Task DeleteAssetType(AssetType assetType)
         {
-            _context.Remove(assetType);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<AssetType> GetAssetType(int assetTypeId)
-        {
-            var assetType = await _context.AssetTypes.FirstOrDefaultAsync(x => x.Id == assetTypeId);
-
-            return assetType;
-        }
-
-        public async Task<IEnumerable<AssetType>> GetAssetTypes()
-        {
-            var assetTypes = await _context.AssetTypes.AsNoTracking().ToListAsync();
-
-            return assetTypes;
+            unitOfWork.AssetType.DeleteAssetType(assetType);
+            await unitOfWork.SaveChangesAsync();
         }
     }
 }

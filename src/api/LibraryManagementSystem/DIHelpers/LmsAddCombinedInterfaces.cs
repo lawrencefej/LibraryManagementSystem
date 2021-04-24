@@ -1,4 +1,6 @@
 ﻿using LMSContracts.Interfaces;
+using LMSContracts.Repository;
+using LMSRepository.Repositories;
 using LMSService.Helpers;
 using LMSService.Service;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             // services.AddScoped<LogUserActivity>();
         }
     }

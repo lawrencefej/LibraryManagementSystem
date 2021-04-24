@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LMSContracts.Interfaces;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,17 +10,17 @@ namespace LibraryManagementSystem.Controllers
     [ApiController]
     public class AssetTypeController : ControllerBase
     {
-        private readonly IAssetTypeService _assetTypeService;
+        private readonly IAssetTypeService assetTypeService;
 
         public AssetTypeController(IAssetTypeService assetTypeService)
         {
-            _assetTypeService = assetTypeService;
+            this.assetTypeService = assetTypeService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAssetTypes()
         {
-            var assetTypes = await _assetTypeService.GetAssetTypes();
+            IEnumerable<AssetType> assetTypes = await assetTypeService.GetAssetTypes();
 
             return Ok(assetTypes);
         }
@@ -27,7 +28,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("{assetTypeId}")]
         public async Task<IActionResult> GetAssetType(int assetTypeId)
         {
-            var assetType = await _assetTypeService.GetAssetType(assetTypeId);
+            AssetType assetType = await assetTypeService.GetAssetType(assetTypeId);
 
             if (assetType == null)
             {
@@ -40,7 +41,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAssetType(AssetType assetType)
         {
-            assetType = await _assetTypeService.AddAssetType(assetType);
+            assetType = await assetTypeService.AddAssetType(assetType);
 
             return CreatedAtAction("GetAssetType", new { id = assetType.Id }, assetType);
         }
@@ -48,14 +49,14 @@ namespace LibraryManagementSystem.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<AssetType>> DeleteAssetType(int id)
         {
-            var assetType = await _assetTypeService.GetAssetType(id);
+            AssetType assetType = await assetTypeService.GetAssetType(id);
 
             if (assetType == null)
             {
                 return NotFound();
             }
 
-            await _assetTypeService.DeleteAssetType(assetType);
+            await assetTypeService.DeleteAssetType(assetType);
 
             return NoContent();
         }

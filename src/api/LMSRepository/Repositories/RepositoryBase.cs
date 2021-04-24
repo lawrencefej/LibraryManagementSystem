@@ -27,21 +27,6 @@ namespace LMSRepository.Repositories
         {
             return context.Set<T>().Where(expression).AsNoTracking();
         }
-        // public void Create(T entity)
-        // {
-        //     context.Set<T>().Add(entity);
-        // }
-
-        // public T Update(T entity)
-        // {
-        //     return context.Set<T>().Update(entity).Entity;
-        // }
-
-        public void Delete(T entity)
-        {
-            context.Set<T>().Remove(entity);
-        }
-
 
         public virtual async Task<T> GetByID(Guid id)
         {
@@ -53,18 +38,19 @@ namespace LMSRepository.Repositories
             return await context.Set<T>().FindAsync(id);
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await context.Set<T>().AsQueryable().ToListAsync();
-        }
         public virtual T Create(T entity)
         {
-            return context.Add(entity).Entity;
+            return context.Set<T>().Add(entity).Entity;
         }
 
         public virtual T Update(T entity)
         {
-            return context.Update(entity).Entity;
+            return context.Set<T>().Update(entity).Entity;
+        }
+
+        public void Delete(T entity)
+        {
+            context.Set<T>().Remove(entity);
         }
 
         public async Task SaveChanges()
