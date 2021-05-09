@@ -17,15 +17,10 @@ services:
 
     volumes:
       - .:/workspace:cached
-      # - ${HOME}/.zsh_history:/home/vscode/.zsh_history:cached
-      # - ${HOME}/.config/.dotfiles/zsh/.zshrc:/home/vscode/.zshrc:cached
-      # - ${HOME}/.config/.dotfiles/zsh/.p10k.zsh:/home/vscode/.p10k.zsh:cached
-      # - ${HOME}/.oh-my-zsh/custom:/home/vscode/.oh-my-zsh/custom:cached
       - ${HOME}/.microsoft/usersecrets:/home/vscode/.microsoft/usersecrets:cached
       - api-extensions-data:/home/vscode/.vscode-server/extensions
     environment:
       MACHINE_TYPE: computer
-      INSTALL_DOTNET_TOOLS: "true"
       AppSettings__Token: unmoving-dole-outskirts-debunk
       AppSettings__Host: localhost
       AppSettings__Port: 3306
@@ -52,8 +47,9 @@ services:
 
     volumes:
       - .:/workspace:cached
-      - ~:${HOME}:cached
       - spa-extensions-data:/home/node/.vscode-server/extensions
+    environment:
+      MACHINE_TYPE: computer
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
