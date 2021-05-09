@@ -30,6 +30,7 @@
 		"formulahendry.dotnet-test-explorer",
 		"jmrog.vscode-nuget-package-manager",
 		"kreativ-software.csharpextensions",
+		"patcx.vscode-nuget-gallery"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [

@@ -5,13 +5,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LMSRepository.Data
 {
-    public class DataContext : IdentityDbContext<User, Role, int,
+    public class DataContext : IdentityDbContext<AppUser, Role, int,
         IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>,
         IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
+
+        public DataContext()
+        {
+
+        }
+
+        public DbSet<LibraryUser> LibraryUser { get; set; }
+        public DbSet<MemberUser> MemberUser { get; set; }
 
         public DbSet<AssetType> AssetTypes { get; set; }
         public DbSet<Checkout> Checkouts { get; set; }
