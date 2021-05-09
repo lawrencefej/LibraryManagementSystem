@@ -1,7 +1,8 @@
 # See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.163.1/containers/dotnet/.devcontainer/base.Dockerfile
 
 # [Choice] .NET version: 5.0, 3.1, 2.1
-ARG VARIANT="3.1"
+ARG VARIANT="5.0"
+# ARG VARIANT="3.1"
 FROM mcr.microsoft.com/vscode/devcontainers/dotnetcore:0-${VARIANT}
 
 # [Option] Install Node.js
@@ -27,9 +28,15 @@ RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
     && chown -R $USERNAME \
     /home/$USERNAME/.vscode-server
 
+
+# Install ef core tools
+RUN su $USERNAME -c "dotnet tool install --global dotnet-ef"
+
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
 # [Optional] Uncomment this line to install global node packages.
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+
+
