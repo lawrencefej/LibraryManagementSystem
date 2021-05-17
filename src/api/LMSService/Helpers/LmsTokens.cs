@@ -10,7 +10,7 @@ namespace LMSService.Helpers
 {
     public static class LmsTokens
     {
-        public static string GenerateJwtToken(User user, string resetCode)
+        public static string GenerateJwtToken(AppUser user, string resetCode)
         {
             var claims = new List<Claim>
             {
@@ -38,7 +38,7 @@ namespace LMSService.Helpers
             return tokenHandler.WriteToken(token);
         }
 
-        public static string GenerateJwtToken(User user, string role, string secret)
+        public static string GenerateJwtToken(AppUser user, string role, string secret)
         {
             var claims = new List<Claim>
             {

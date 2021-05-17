@@ -8,7 +8,7 @@ namespace LibraryManagementSystem.API.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<User, UserForListDto>()
+            CreateMap<MemberUser, UserForListDto>()
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
@@ -16,12 +16,12 @@ namespace LibraryManagementSystem.API.Helpers
                      .ForMember(dest => dest.LibraryCardNumber, opt =>
                      {
                          opt.MapFrom(src => src.LibraryCard.Id);
-                     })
-                     .ForMember(dest => dest.Age, opt =>
-                     {
-                         opt.MapFrom(d => d.DateOfBirth.CalculateAge());
                      });
-            CreateMap<User, UserForDetailedDto>()
+            //  .ForMember(dest => dest.Age, opt =>
+            //  {
+            //      opt.MapFrom(d => d.DateOfBirth.CalculateAge());
+            //  });
+            CreateMap<MemberUser, UserForDetailedDto>()
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
@@ -33,23 +33,23 @@ namespace LibraryManagementSystem.API.Helpers
                      .ForMember(dest => dest.Fees, opt =>
                      {
                          opt.MapFrom(src => src.LibraryCard.Fees);
-                     })
-                    .ForMember(dest => dest.Age, opt =>
-                    {
-                        opt.MapFrom(d => d.DateOfBirth.CalculateAge());
-                    });
-            CreateMap<UserForUpdateDto, User>();
-            CreateMap<UpdateAdminDto, User>();
-            CreateMap<UserForRegisterDto, User>();
-            CreateMap<AddAdminDto, User>();
-            CreateMap<MemberForCreation, User>();
+                     });
+            // .ForMember(dest => dest.Age, opt =>
+            // {
+            //     opt.MapFrom(d => d.DateOfBirth.CalculateAge());
+            // });
+            CreateMap<UserForUpdateDto, MemberUser>();
+            CreateMap<UpdateAdminDto, LibraryUser>();
+            CreateMap<UserForRegisterDto, MemberUser>();
+            CreateMap<AddAdminDto, LibraryUser>();
+            CreateMap<MemberForCreation, MemberUser>();
             CreateMap<LibraryCardForCreationDto, LibraryCard>();
             CreateMap<Photo, PhotoForDetailedDto>();
             CreateMap<Photo, PhotoForReturnDto>();
             CreateMap<UserPhotoDto, UserProfilePhoto>();
             CreateMap<AssetPhotoDto, AssetPhoto>();
-            CreateMap<Status, StatusToReturnDto>();
-            CreateMap<AssetType, AssetTypeDto>().ReverseMap();
+            // CreateMap<Status, StatusToReturnDto>();
+            // CreateMap<AssetType, AssetTypeDto>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<LibraryAssetForUpdateDto, LibraryAsset>();
             //.ForMember(dest => dest.AuthorId, opt =>
@@ -60,15 +60,15 @@ namespace LibraryManagementSystem.API.Helpers
                     .ForMember(dest => dest.PhotoUrl, opt =>
                     {
                         opt.MapFrom(src => src.Photo.Url);
-                    })
-                    //.ForMember(dest => dest.AssetType, opt =>
-                    //{
-                    //    opt.MapFrom(src => src.AssetType.Name);
-                    //})
-                    .ForMember(dest => dest.Status, opt =>
-                    {
-                        opt.MapFrom(src => src.Status.Name);
                     });
+            //.ForMember(dest => dest.AssetType, opt =>
+            //{
+            //    opt.MapFrom(src => src.AssetType.Name);
+            //})
+            // .ForMember(dest => dest.Status, opt =>
+            // {
+            //     opt.MapFrom(src => src.Status.Name);
+            // });
             //.ForMember(dest => dest.Category, opt =>
             //{
             //    opt.MapFrom(src => src.Category.Name);
@@ -77,20 +77,20 @@ namespace LibraryManagementSystem.API.Helpers
             //{
             //    opt.MapFrom(src => src.Author.FullName);
             //});
-            CreateMap<LibraryAsset, LibraryAssetForListDto>()
-                    .ForMember(dest => dest.AssetType, opt =>
-                    {
-                        opt.MapFrom(src => src.AssetType.Name);
-                    })
-                    .ForMember(dest => dest.AuthorName, opt =>
-                    {
-                        opt.MapFrom(src => src.Author.FullName);
-                    });
-            CreateMap<LibraryAssetForCreationDto, LibraryAsset>()
-                      .ForMember(dest => dest.AuthorId, opt =>
-                      {
-                          opt.MapFrom(src => src.Author.Id);
-                      });
+            CreateMap<LibraryAsset, LibraryAssetForListDto>();
+            // .ForMember(dest => dest.AssetType, opt =>
+            // {
+            //     opt.MapFrom(src => src.AssetType.Name);
+            // })
+            // .ForMember(dest => dest.AuthorName, opt =>
+            // {
+            //     opt.MapFrom(src => src.Author.FullName);
+            // });
+            CreateMap<LibraryAssetForCreationDto, LibraryAsset>();
+            //   .ForMember(dest => dest.AuthorId, opt =>
+            //   {
+            //       opt.MapFrom(src => src.Author.Id);
+            //   });
             // .ForMember(dest => dest.AssetTypeId, opt =>
             // {
             //     opt.MapFrom(src => src.AssetType.Id);
@@ -101,38 +101,38 @@ namespace LibraryManagementSystem.API.Helpers
             //});
             CreateMap<AuthorDto, Author>().ReverseMap();
             CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();
-            CreateMap<Checkout, CheckoutForReturnDto>()
-                     .ForMember(dest => dest.Title, opt =>
-                     {
-                         opt.MapFrom(src => src.LibraryAsset.Title);
-                     })
-                     .ForMember(dest => dest.Status, opt =>
-                     {
-                         opt.MapFrom(src => src.Status.Name);
-                     })
-                     .ForMember(dest => dest.LibraryCardNumber, opt =>
-                     {
-                         opt.MapFrom(src => src.LibraryCardId);
-                     })
-                     .ForMember(dest => dest.Id, opt =>
-                     {
-                         opt.MapFrom(src => src.Id);
-                     });
+            // CreateMap<Checkout, CheckoutForReturnDto>()
+            //          .ForMember(dest => dest.Title, opt =>
+            //          {
+            //              opt.MapFrom(src => src.LibraryAsset.Title);
+            //          })
+            //          .ForMember(dest => dest.Status, opt =>
+            //          {
+            //              opt.MapFrom(src => src.Status.Name);
+            //          })
+            //          .ForMember(dest => dest.LibraryCardNumber, opt =>
+            //          {
+            //              opt.MapFrom(src => src.LibraryCardId);
+            //          })
+            //          .ForMember(dest => dest.Id, opt =>
+            //          {
+            //              opt.MapFrom(src => src.Id);
+            //          });
             CreateMap<ReserveForCreationDto, ReserveAsset>().ReverseMap();
             CreateMap<ReserveAsset, ReserveForReturnDto>()
                      .ForMember(dest => dest.Id, opt =>
                      {
                          opt.MapFrom(src => src.Id);
                      })
-                     .ForMember(dest => dest.Status, opt =>
-                     {
-                         opt.MapFrom(src => src.Status.Name);
-                     })
+                    //  .ForMember(dest => dest.Status, opt =>
+                    //  {
+                    //      opt.MapFrom(src => src.Status.Name);
+                    //  })
                     .ForMember(dest => dest.Title, opt =>
                      {
                          opt.MapFrom(src => src.LibraryAsset.Title);
                      });
-            CreateMap<UserRole, UserRoleDto>()
+            CreateMap<AppUserRole, UserRoleDto>()
                     .ForMember(dest => dest.Id, opt =>
                     {
                         opt.MapFrom(src => src.Role.Id);
@@ -145,7 +145,7 @@ namespace LibraryManagementSystem.API.Helpers
                     {
                         opt.MapFrom(src => src.Role.NormalizedName);
                     });
-            CreateMap<RoleDto, Role>();
+            CreateMap<RoleDto, AppRole>();
         }
     }
 }

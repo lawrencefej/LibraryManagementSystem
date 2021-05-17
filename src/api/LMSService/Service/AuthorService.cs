@@ -50,8 +50,9 @@ namespace LMSService.Service
         {
             var authors = _context.Authors.AsNoTracking().AsQueryable();
             // TODO make this case insensitive
-            authors = authors.Where(s => s.FirstName.Contains(searchString)
-                    || s.LastName.Contains(searchString));
+            authors = authors.Where(s => s.FullName.Contains(searchString));
+            // authors = authors.Where(s => s.FirstName.Contains(searchString)
+            //         || s.LastName.Contains(searchString));
 
             return await authors.ToListAsync();
         }
@@ -60,39 +61,38 @@ namespace LMSService.Service
         {
             var authors = _context.Authors.AsNoTracking().AsQueryable();
 
-            if (!string.IsNullOrEmpty(paginationParams.SearchString))
-            {
-                authors = authors
-                    .Where(x => x.FirstName.Contains(paginationParams.SearchString)
-                    || x.LastName.Contains(paginationParams.SearchString));
-            }
+            // if (!string.IsNullOrEmpty(paginationParams.SearchString))
+            // {
+            //     authors = authors
+            //         .Where(x => x.FullName.Contains(paginationParams.SearchString));
+            // }
 
-            if (paginationParams.SortDirection == "asc")
-            {
-                if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderBy(x => x.FirstName);
-                }
-                else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderBy(x => x.LastName);
-                }
-            }
-            else if (paginationParams.SortDirection == "desc")
-            {
-                if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderByDescending(x => x.FirstName);
-                }
-                else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderByDescending(x => x.LastName);
-                }
-            }
-            else
-            {
-                authors = authors.OrderBy(x => x.LastName);
-            }
+            // if (paginationParams.SortDirection == "asc")
+            // {
+            //     if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
+            //     {
+            //         authors = authors.OrderBy(x => x.FirstName);
+            //     }
+            //     else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
+            //     {
+            //         authors = authors.OrderBy(x => x.LastName);
+            //     }
+            // }
+            // else if (paginationParams.SortDirection == "desc")
+            // {
+            //     if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
+            //     {
+            //         authors = authors.OrderByDescending(x => x.FirstName);
+            //     }
+            //     else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
+            //     {
+            //         authors = authors.OrderByDescending(x => x.LastName);
+            //     }
+            // }
+            // else
+            // {
+            //     authors = authors.OrderBy(x => x.LastName);
+            // }
 
             return await PagedList<Author>.CreateAsync(authors, paginationParams.PageNumber, paginationParams.PageSize);
         }

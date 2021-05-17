@@ -8,22 +8,22 @@ namespace LMSContracts.Interfaces
 {
     public interface IAuthService
     {
-        Task<User> FindUserByEmail(string email);
+        Task<AppUser> FindUserByEmail(string email);
 
-        Task<User> FindUserById(int userId);
+        Task<AppUser> FindUserById(int userId);
 
-        Task<SignInResult> SignInUser(User user, string password);
+        Task<SignInResult> SignInUser(AppUser user, string password);
 
-        Task<UserForDetailedDto> AddRoleToUser(UserForDetailedDto userToReturn, User user);
+        Task<UserForDetailedDto> AddRoleToUser(UserForDetailedDto userToReturn, AppUser user);
 
-        Task<string> GenerateJwtToken(User user, string token);
+        Task<string> GenerateJwtToken(AppUser user, string token);
 
-        Task ForgotPassword(User user, string scheme, HostString host);
+        Task ForgotPassword(AppUser user, string scheme, HostString host);
 
-        Task<User> GetUser(string email);
+        Task<AppUser> GetUser(string email);
 
-        Task<IdentityResult> ResetPassword(User user, string password, string code);
+        Task<IdentityResult> ResetPassword(AppUser user, string password, string code);
 
-        Task<bool> IsResetEligible(User user);
+        Task<bool> IsResetEligible(AppUser user);
     }
 }

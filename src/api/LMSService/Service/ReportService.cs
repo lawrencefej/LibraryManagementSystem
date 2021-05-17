@@ -21,11 +21,13 @@ namespace LMSService.Service
         public async Task<ChartDto> GetAssetsDistributionReport()
         {
             var data = await _context.LibraryAssets.AsNoTracking()
-               .GroupBy(d => new { d.AssetType.Name })
+            //    .GroupBy(d => new { d.AssetType.Name })
+               .GroupBy(d => new { d.AssetType })
                .Select(x => new DataDto
                {
                    Count = x.Count(),
-                   Name = x.Key.Name
+                   //    Name = x.Key.Name
+                   Name = x.Key.AssetType.ToString()
                })
                .ToListAsync();
 
@@ -61,8 +63,8 @@ namespace LMSService.Service
         public async Task<ChartDto> GetCheckoutsByDayReport()
         {
             var data = await _context.Checkouts.AsNoTracking()
-               .Where(d => d.Since > DateTime.Today.AddDays(-7))
-               .GroupBy(d => new { Date = d.Since })
+               .Where(d => d.CheckoutDate > DateTime.Today.AddDays(-7))
+               .GroupBy(d => new { Date = d.CheckoutDate })
                .Select(x => new DataDto
                {
                    Count = x.Count(),
@@ -88,8 +90,8 @@ namespace LMSService.Service
         public async Task<ChartDto> GetCheckoutsByMonthReport()
         {
             var data = await _context.Checkouts.AsNoTracking()
-               .Where(d => d.Since > DateTime.Today.AddMonths(-12))
-               .GroupBy(d => new { d.Since.Month })
+               .Where(d => d.CheckoutDate > DateTime.Today.AddMonths(-12))
+               .GroupBy(d => new { d.CheckoutDate.Month })
                .Select(x => new DataDto
                {
                    Count = x.Count(),

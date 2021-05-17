@@ -13,7 +13,7 @@ namespace LibraryManagementSystem.DIHelpers
     {
         public static void AddIdentityConfiguration(this IServiceCollection services, string token)
         {
-            IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
+            IdentityBuilder builder = services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireDigit = false;
                 opt.Password.RequiredLength = 4;
@@ -21,12 +21,12 @@ namespace LibraryManagementSystem.DIHelpers
                 opt.Password.RequireUppercase = false;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(LMSEntities.Models.Role), builder.Services);
+            builder = new IdentityBuilder(builder.UserType, typeof(AppRole), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
-            builder.AddRoleValidator<RoleValidator<LMSEntities.Models.Role>>();
+            builder.AddRoleValidator<RoleValidator<AppRole>>();
             // TODO: Fix role naming issue
-            builder.AddRoleManager<RoleManager<LMSEntities.Models.Role>>();
-            builder.AddSignInManager<SignInManager<User>>();
+            builder.AddRoleManager<RoleManager<AppRole>>();
+            builder.AddSignInManager<SignInManager<AppUser>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(Options =>

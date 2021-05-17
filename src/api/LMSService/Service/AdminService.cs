@@ -16,12 +16,12 @@ namespace LMSService.Service
 {
     public class AdminService : IAdminService
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AdminService> _logger;
         private readonly DataContext _context;
 
-        public AdminService(DataContext context, UserManager<User> userManager,
+        public AdminService(DataContext context, UserManager<AppUser> userManager,
             IEmailSender emailSender, ILogger<AdminService> logger)
         {
             _userManager = userManager;
@@ -30,18 +30,18 @@ namespace LMSService.Service
             _context = context;
         }
 
-        public async Task<IdentityResult> CreateUser(User user)
+        public async Task<IdentityResult> CreateUser(AppUser user)
         {
             return await _userManager.CreateAsync(user);
         }
 
-        public async Task<IdentityResult> CreateUser(User user, string password)
+        public async Task<IdentityResult> CreateUser(AppUser user, string password)
         {
             return await _userManager.CreateAsync(user, password);
             // return await _userManager.CreateAsync(user);
         }
 
-        public async Task<User> CompleteUserCreation(User newUser, string newRole, string callbackUrl)
+        public async Task<AppUser> CompleteUserCreation(AppUser newUser, string newRole, string callbackUrl)
         {
             await _userManager.AddToRoleAsync(newUser, newRole);
 
@@ -72,14 +72,14 @@ namespace LMSService.Service
             return users;
         }
 
-        public async Task<User> GetAdminUser(int userId)
+        public async Task<AppUser> GetAdminUser(int userId)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetAdminUsers()
+        public async Task<IEnumerable<AppUser>> GetAdminUsers()
         {
             var users = await _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
@@ -91,7 +91,7 @@ namespace LMSService.Service
             return users;
         }
 
-        public async Task UpdateUser(User userforUpdate, string role)
+        public async Task UpdateUser(AppUser userforUpdate, string role)
         {
             var isInRole = await _userManager.IsInRoleAsync(userforUpdate, role);
 
@@ -110,7 +110,7 @@ namespace LMSService.Service
             await _context.SaveChangesAsync();
         }
 
-        private async Task WelcomeMessage(string code, User user, string url)
+        private async Task WelcomeMessage(string code, AppUser user, string url)
         {
             var encodedToken = HttpUtility.UrlEncode(code);
 
@@ -121,7 +121,7 @@ namespace LMSService.Service
             await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
         }
 
-        public async Task DeleteUser(User user)
+        public async Task DeleteUser(AppUser user)
         {
             _context.Remove(user);
 

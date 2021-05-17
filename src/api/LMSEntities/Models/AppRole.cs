@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LMSEntities.Models
 {
-    public class Role : IdentityRole<int>
+    public class AppRole : IdentityRole<int>
     {
-        public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<AppUserRole> UserRoles { get; set; }
     }
 }

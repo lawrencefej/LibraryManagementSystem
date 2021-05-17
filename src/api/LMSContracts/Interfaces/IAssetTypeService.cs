@@ -4,14 +4,14 @@ using LMSEntities.Models;
 
 namespace LMSContracts.Interfaces
 {
-    public interface IAssetTypeService
-    {
-        Task<AssetType> AddAssetType(AssetType assetType);
+    // public interface IAssetTypeService
+    // {
+    //     Task<AssetType> AddAssetType(AssetType assetType);
 
-        Task DeleteAssetType(AssetType assetType);
+    //     Task DeleteAssetType(AssetType assetType);
 
-        Task<IEnumerable<AssetType>> GetAssetTypes();
+    //     Task<IEnumerable<AssetType>> GetAssetTypes();
 
-        Task<AssetType> GetAssetType(int assetTypeId);
-    }
+    //     Task<AssetType> GetAssetType(int assetTypeId);
+    // }
 }

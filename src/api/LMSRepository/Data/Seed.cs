@@ -8,12 +8,12 @@ namespace LMSRepository.Data
 {
     public class Seed
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly DataContext _context;
 
-        public Seed(UserManager<User> userManager,
-            RoleManager<Role> roleManager,
+        public Seed(UserManager<AppUser> userManager,
+            RoleManager<AppRole> roleManager,
             DataContext context)
         {
             _userManager = userManager;
@@ -26,7 +26,7 @@ namespace LMSRepository.Data
             if (!_userManager.Users.Any())
             {
                 var userData = System.IO.File.ReadAllText("UserSeedData.json");
-                var users = JsonConvert.DeserializeObject<List<User>>(userData);
+                var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);
 
                 foreach (var user in users)
                 {
@@ -35,31 +35,31 @@ namespace LMSRepository.Data
                     _userManager.AddToRoleAsync(user, "Member").Wait();
                 }
 
-                var adminUser = new User
-                {
-                    Email = "a@x.com",
-                };
+                // var adminUser = new AppUser
+                // {
+                //     Email = "a@x.com",
+                // };
 
-                adminUser.UserName = adminUser.Email;
+                // adminUser.UserName = adminUser.Email;
 
-                var librarianUser = new User
-                {
-                    Email = "b@x.com"
-                };
+                // var librarianUser = new User
+                // {
+                //     Email = "b@x.com"
+                // };
 
-                librarianUser.UserName = librarianUser.Email;
+                // librarianUser.UserName = librarianUser.Email;
 
-                IdentityResult result = _userManager.CreateAsync(adminUser, "password").Result;
-                IdentityResult result2 = _userManager.CreateAsync(librarianUser, "password").Result;
+                // IdentityResult result = _userManager.CreateAsync(adminUser, "password").Result;
+                // IdentityResult result2 = _userManager.CreateAsync(librarianUser, "password").Result;
 
-                if (result.Succeeded && result2.Succeeded)
-                {
-                    var admin = _userManager.FindByEmailAsync("a@x.com").Result;
-                    _userManager.AddToRoleAsync(admin, "Admin").Wait();
+                // if (result.Succeeded && result2.Succeeded)
+                // {
+                //     var admin = _userManager.FindByEmailAsync("a@x.com").Result;
+                //     _userManager.AddToRoleAsync(admin, "Admin").Wait();
 
-                    var librarian = _userManager.FindByEmailAsync("b@x.com").Result;
-                    _userManager.AddToRoleAsync(librarian, "Librarian").Wait();
-                }
+                //     var librarian = _userManager.FindByEmailAsync("b@x.com").Result;
+                //     _userManager.AddToRoleAsync(librarian, "Librarian").Wait();
+                // }
             }
         }
 

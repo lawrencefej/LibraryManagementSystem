@@ -73,7 +73,7 @@ namespace LibraryManagementSystem.API
         {
             if (env.IsDevelopment() || env.IsEnvironment("Integration"))
             {
-                dataContext.Database.Migrate();
+                // dataContext.Database.Migrate();
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
                 app.UseDeveloperExceptionPage();
             }

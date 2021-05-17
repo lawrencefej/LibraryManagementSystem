@@ -40,7 +40,7 @@ namespace LibraryManagementSystem.API.Controllers
         {
             addAdminDto.CallbackUrl = (Request.Scheme + "://" + Request.Host + "/resetpassword/");
 
-            var user = _mapper.Map<User>(addAdminDto);
+            var user = _mapper.Map<AppUser>(addAdminDto);
 
             user.UserName = user.Email;
 

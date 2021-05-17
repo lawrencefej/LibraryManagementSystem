@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace LMSEntities.Models
@@ -9,5 +10,6 @@ namespace LMSEntities.Models
         public string LastName { get; set; }
         public DateTime Created { get; set; }
         public UserProfilePhoto ProfilePicture { get; set; }
+        public ICollection<AppUserRole> UserRoles { get; set; }
     }
 }

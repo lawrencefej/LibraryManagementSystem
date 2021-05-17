@@ -25,11 +25,12 @@ namespace LMSService.Service
 
         public async Task<LibraryAsset> AddAsset(LibraryAsset asset)
         {
-            asset.StatusId = (int)StatusEnum.Available;
+            // asset.StatusId = (int)StatusEnum.Available;
+            asset.Status = LibraryAssetStatus.Available;
             asset.CopiesAvailable = asset.NumberOfCopies;
 
-            asset.AssetType = null;
-            asset.Author = null;
+            // asset.AssetType = null;
+            // asset.Author = null;
             asset.Category = null;
 
             _context.Add(asset);
@@ -63,7 +64,8 @@ namespace LMSService.Service
         {
             if (libraryAssetForUpdate.CopiesAvailable > 0)
             {
-                libraryAssetForUpdate.StatusId = (int)StatusEnum.Available;
+                // libraryAssetForUpdate.StatusId = (int)StatusEnum.Available;
+                libraryAssetForUpdate.Status = LibraryAssetStatus.Available;
             }
 
             _context.Update(libraryAssetForUpdate);
@@ -80,7 +82,8 @@ namespace LMSService.Service
                 .Include(p => p.Category)
                 .Include(a => a.AssetType)
                 .Include(s => s.Status)
-                .Include(s => s.Author)
+                .Include(s => s.AssetAuthors)
+                // .Include(s => s.Authors)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(paginationParams.SearchString))
@@ -111,7 +114,8 @@ namespace LMSService.Service
                 .Include(p => p.Category)
                 .Include(a => a.AssetType)
                 .Include(s => s.Status)
-                .Include(s => s.Author)
+                .Include(s => s.AssetAuthors)
+                // .Include(s => s.Authors)
                 .FirstOrDefaultAsync(x => x.Id == assetId);
 
             return asset;
@@ -121,8 +125,9 @@ namespace LMSService.Service
         {
             var assets = await _context.LibraryAssets.AsNoTracking()
                 .Include(a => a.AssetType)
-                .Include(s => s.Author)
-                .Where(x => x.AuthorId == authorId)
+                .Include(s => s.AssetAuthors)
+                // .Include(s => s.Authors)
+                // .Where(x => x.AuthorId == authorId)
                 .ToListAsync();
 
             return assets;
@@ -133,16 +138,18 @@ namespace LMSService.Service
             // TODO make sure it is case insensitive
             var assets = _context.LibraryAssets.AsNoTracking()
                         .Include(p => p.Photo)
-                        .Include(s => s.Author)
+                        .Include(s => s.AssetAuthors)
+                        // .Include(s => s.Authors)
                         .Include(s => s.AssetType)
                         .AsQueryable();
 
-            assets = assets.Where(x => x.StatusId == (int)StatusEnum.Available);
+            // assets = assets.Where(x => x.StatusId == (int)StatusEnum.Available);
+            assets = assets.Where(x => x.Status == LibraryAssetStatus.Available);
 
             assets = assets
                 .Where(s => s.Title.Contains(searchString)
-                || s.Author.LastName.Contains(searchString)
-                || s.Author.FirstName.Contains(searchString)
+                // || s.Author.LastName.Contains(searchString)
+                // || s.Author.FirstName.Contains(searchString)
                 || s.ISBN.Contains(searchString));
             await assets.ToListAsync();
 

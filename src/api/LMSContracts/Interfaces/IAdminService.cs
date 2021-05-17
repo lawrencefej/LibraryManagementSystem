@@ -8,21 +8,21 @@ namespace LMSContracts.Interfaces
 {
     public interface IAdminService
     {
-        Task<IEnumerable<User>> GetAdminUsers();
+        Task<IEnumerable<AppUser>> GetAdminUsers();
 
-        Task<IdentityResult> CreateUser(User user);
-        Task<IdentityResult> CreateUser(User user, string password);
+        Task<IdentityResult> CreateUser(AppUser user);
+        Task<IdentityResult> CreateUser(AppUser user, string password);
 
-        Task<User> CompleteUserCreation(User newUser, string newRole, string callbackUrl);
+        Task<AppUser> CompleteUserCreation(AppUser newUser, string newRole, string callbackUrl);
 
         IEnumerable<UserForDetailedDto> AddRoleToUsers(IEnumerable<UserForDetailedDto> users);
 
         UserForDetailedDto AddRoleToUser(UserForDetailedDto user);
 
-        Task UpdateUser(User userforUpdate, string role);
+        Task UpdateUser(AppUser userforUpdate, string role);
 
-        Task DeleteUser(User user);
+        Task DeleteUser(AppUser user);
 
-        Task<User> GetAdminUser(int userId);
+        Task<AppUser> GetAdminUser(int userId);
     }
 }
