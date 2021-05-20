@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+// using System.Collections.Generic;
 
-namespace LMSEntities.Models
-{
-    public class LibraryUser : AppUser
-    {
-        // public ICollection<AppUserRole> UserRoles { get; set; }
-    }
-}
+// namespace LMSEntities.Models
+// {
+//     public class LibraryUser : AppUser
+//     {
+//         // public ICollection<AppUserRole> UserRoles { get; set; }
+//     }
+// }

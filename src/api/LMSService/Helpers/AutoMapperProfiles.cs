@@ -8,7 +8,7 @@ namespace LibraryManagementSystem.API.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<MemberUser, UserForListDto>()
+            CreateMap<AppUser, UserForListDto>()
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
@@ -21,7 +21,7 @@ namespace LibraryManagementSystem.API.Helpers
             //  {
             //      opt.MapFrom(d => d.DateOfBirth.CalculateAge());
             //  });
-            CreateMap<MemberUser, UserForDetailedDto>()
+            CreateMap<AppUser, UserForDetailedDto>()
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
@@ -38,11 +38,11 @@ namespace LibraryManagementSystem.API.Helpers
             // {
             //     opt.MapFrom(d => d.DateOfBirth.CalculateAge());
             // });
-            CreateMap<UserForUpdateDto, MemberUser>();
-            CreateMap<UpdateAdminDto, LibraryUser>();
-            CreateMap<UserForRegisterDto, MemberUser>();
-            CreateMap<AddAdminDto, LibraryUser>();
-            CreateMap<MemberForCreation, MemberUser>();
+            CreateMap<UserForUpdateDto, AppUser>();
+            CreateMap<UpdateAdminDto, AppUser>();
+            CreateMap<UserForRegisterDto, AppUser>();
+            CreateMap<AddAdminDto, AppUser>();
+            CreateMap<MemberForCreation, AppUser>();
             CreateMap<LibraryCardForCreationDto, LibraryCard>();
             CreateMap<Photo, PhotoForDetailedDto>();
             CreateMap<Photo, PhotoForReturnDto>();

@@ -12,7 +12,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     ALTER DATABASE CHARACTER SET utf8mb4;
 
@@ -27,7 +27,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `Address` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -49,7 +49,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `AspNetRoles` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -70,13 +70,14 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `AspNetUsers` (
         `Id` int NOT NULL AUTO_INCREMENT,
         `FirstName` varchar(25) CHARACTER SET utf8mb4 NOT NULL,
         `LastName` varchar(25) CHARACTER SET utf8mb4 NOT NULL,
         `Created` datetime(6) NOT NULL,
+        `IsAccountActivated` tinyint(1) NOT NULL,
         `UserName` varchar(256) CHARACTER SET utf8mb4 NULL,
         `NormalizedUserName` varchar(256) CHARACTER SET utf8mb4 NULL,
         `Email` varchar(256) CHARACTER SET utf8mb4 NULL,
@@ -105,7 +106,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `Authors` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -124,7 +125,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `Category` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -144,7 +145,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `AspNetRoleClaims` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -166,7 +167,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `AspNetUserClaims` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -188,7 +189,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `AspNetUserLogins` (
         `LoginProvider` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
@@ -210,7 +211,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `AspNetUserRoles` (
         `UserId` int NOT NULL,
@@ -231,7 +232,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `AspNetUserTokens` (
         `UserId` int NOT NULL,
@@ -253,12 +254,18 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
-    CREATE TABLE `LibraryUsers` (
+    CREATE TABLE `LibraryCards` (
         `Id` int NOT NULL AUTO_INCREMENT,
-        CONSTRAINT `PK_LibraryUsers` PRIMARY KEY (`Id`),
-        CONSTRAINT `FK_LibraryUsers_AspNetUsers_Id` FOREIGN KEY (`Id`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
+        `CardNumber` int NOT NULL,
+        `Fees` decimal(65,30) NOT NULL,
+        `Created` datetime(6) NOT NULL,
+        `MemberId` int NOT NULL,
+        `AddressId` int NULL,
+        CONSTRAINT `PK_LibraryCards` PRIMARY KEY (`Id`),
+        CONSTRAINT `FK_LibraryCards_Address_AddressId` FOREIGN KEY (`AddressId`) REFERENCES `Address` (`Id`) ON DELETE RESTRICT,
+        CONSTRAINT `FK_LibraryCards_AspNetUsers_MemberId` FOREIGN KEY (`MemberId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
     ) CHARACTER SET utf8mb4;
 
     END IF;
@@ -272,27 +279,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
-
-    CREATE TABLE `MemberUsers` (
-        `Id` int NOT NULL AUTO_INCREMENT,
-        `IsAccountActivated` tinyint(1) NOT NULL,
-        CONSTRAINT `PK_MemberUsers` PRIMARY KEY (`Id`),
-        CONSTRAINT `FK_MemberUsers_AspNetUsers_Id` FOREIGN KEY (`Id`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
-    ) CHARACTER SET utf8mb4;
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `LibraryAssets` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -322,104 +309,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
-
-    CREATE TABLE `LibraryCards` (
-        `Id` int NOT NULL AUTO_INCREMENT,
-        `CardNumber` int NOT NULL,
-        `Fees` decimal(65,30) NOT NULL,
-        `Created` datetime(6) NOT NULL,
-        `MemberId` int NOT NULL,
-        `AddressId` int NULL,
-        CONSTRAINT `PK_LibraryCards` PRIMARY KEY (`Id`),
-        CONSTRAINT `FK_LibraryCards_Address_AddressId` FOREIGN KEY (`AddressId`) REFERENCES `Address` (`Id`) ON DELETE RESTRICT,
-        CONSTRAINT `FK_LibraryCards_MemberUsers_MemberId` FOREIGN KEY (`MemberId`) REFERENCES `MemberUsers` (`Id`) ON DELETE CASCADE
-    ) CHARACTER SET utf8mb4;
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
-
-    CREATE TABLE `LibraryAssetAuthors` (
-        `Id` int NOT NULL AUTO_INCREMENT,
-        `LibrayAssetId` int NOT NULL,
-        `AuthorId` int NOT NULL,
-        CONSTRAINT `PK_LibraryAssetAuthors` PRIMARY KEY (`Id`),
-        CONSTRAINT `FK_LibraryAssetAuthors_Authors_AuthorId` FOREIGN KEY (`AuthorId`) REFERENCES `Authors` (`Id`) ON DELETE CASCADE,
-        CONSTRAINT `FK_LibraryAssetAuthors_LibraryAssets_LibrayAssetId` FOREIGN KEY (`LibrayAssetId`) REFERENCES `LibraryAssets` (`Id`) ON DELETE CASCADE
-    ) CHARACTER SET utf8mb4;
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
-
-    CREATE TABLE `Photos` (
-        `Id` int NOT NULL AUTO_INCREMENT,
-        `Url` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
-        `DateAdded` datetime(6) NOT NULL,
-        `PublicId` longtext CHARACTER SET utf8mb4 NULL,
-        `Discriminator` longtext CHARACTER SET utf8mb4 NOT NULL,
-        `LibraryAssetId` int NULL,
-        `UserId` int NULL,
-        CONSTRAINT `PK_Photos` PRIMARY KEY (`Id`),
-        CONSTRAINT `FK_Photos_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE,
-        CONSTRAINT `FK_Photos_LibraryAssets_LibraryAssetId` FOREIGN KEY (`LibraryAssetId`) REFERENCES `LibraryAssets` (`Id`) ON DELETE CASCADE
-    ) CHARACTER SET utf8mb4;
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
-
-    CREATE TABLE `CheckoutHistory` (
-        `Id` int NOT NULL AUTO_INCREMENT,
-        `LibraryAssetId` int NULL,
-        `LibraryCardId` int NULL,
-        `CheckedOut` datetime(6) NOT NULL,
-        `CheckedIn` datetime(6) NULL,
-        CONSTRAINT `PK_CheckoutHistory` PRIMARY KEY (`Id`),
-        CONSTRAINT `FK_CheckoutHistory_LibraryAssets_LibraryAssetId` FOREIGN KEY (`LibraryAssetId`) REFERENCES `LibraryAssets` (`Id`) ON DELETE RESTRICT,
-        CONSTRAINT `FK_CheckoutHistory_LibraryCards_LibraryCardId` FOREIGN KEY (`LibraryCardId`) REFERENCES `LibraryCards` (`Id`) ON DELETE RESTRICT
-    ) CHARACTER SET utf8mb4;
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `Checkouts` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -445,7 +335,31 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
+
+    CREATE TABLE `CheckoutHistory` (
+        `Id` int NOT NULL AUTO_INCREMENT,
+        `LibraryAssetId` int NULL,
+        `LibraryCardId` int NULL,
+        `CheckedOut` datetime(6) NOT NULL,
+        `CheckedIn` datetime(6) NULL,
+        CONSTRAINT `PK_CheckoutHistory` PRIMARY KEY (`Id`),
+        CONSTRAINT `FK_CheckoutHistory_LibraryAssets_LibraryAssetId` FOREIGN KEY (`LibraryAssetId`) REFERENCES `LibraryAssets` (`Id`) ON DELETE RESTRICT,
+        CONSTRAINT `FK_CheckoutHistory_LibraryCards_LibraryCardId` FOREIGN KEY (`LibraryCardId`) REFERENCES `LibraryCards` (`Id`) ON DELETE RESTRICT
+    ) CHARACTER SET utf8mb4;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `Holds` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -468,7 +382,55 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
+
+    CREATE TABLE `LibraryAssetAuthors` (
+        `Id` int NOT NULL AUTO_INCREMENT,
+        `LibrayAssetId` int NOT NULL,
+        `AuthorId` int NOT NULL,
+        CONSTRAINT `PK_LibraryAssetAuthors` PRIMARY KEY (`Id`),
+        CONSTRAINT `FK_LibraryAssetAuthors_Authors_AuthorId` FOREIGN KEY (`AuthorId`) REFERENCES `Authors` (`Id`) ON DELETE CASCADE,
+        CONSTRAINT `FK_LibraryAssetAuthors_LibraryAssets_LibrayAssetId` FOREIGN KEY (`LibrayAssetId`) REFERENCES `LibraryAssets` (`Id`) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
+
+    CREATE TABLE `Photos` (
+        `Id` int NOT NULL AUTO_INCREMENT,
+        `Url` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+        `DateAdded` datetime(6) NOT NULL,
+        `PublicId` longtext CHARACTER SET utf8mb4 NULL,
+        `Discriminator` longtext CHARACTER SET utf8mb4 NOT NULL,
+        `LibraryAssetId` int NULL,
+        `UserId` int NULL,
+        CONSTRAINT `PK_Photos` PRIMARY KEY (`Id`),
+        CONSTRAINT `FK_Photos_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE,
+        CONSTRAINT `FK_Photos_LibraryAssets_LibraryAssetId` FOREIGN KEY (`LibraryAssetId`) REFERENCES `LibraryAssets` (`Id`) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `ReserveAssets` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -495,7 +457,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE TABLE `CheckoutItems` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -518,10 +480,10 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     INSERT INTO `AspNetRoles` (`Id`, `ConcurrencyStamp`, `Name`, `NormalizedName`)
-    VALUES (1, '5a8de327-0320-4de1-a6a5-e1d39aa1a88a', 'Member', 'MEMBER');
+    VALUES (1, 'df038373-a791-4fc0-9328-ee6d4daf5bb1', 'Member', 'MEMBER');
 
     END IF;
 END //
@@ -534,10 +496,10 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     INSERT INTO `AspNetRoles` (`Id`, `ConcurrencyStamp`, `Name`, `NormalizedName`)
-    VALUES (2, '8a8d3d20-6f01-4da4-8dcd-91dba32c3ad0', 'Admin', 'ADMIN');
+    VALUES (2, 'b7dd1ed5-ebb2-40fa-ac96-669d70211435', 'Admin', 'ADMIN');
 
     END IF;
 END //
@@ -550,10 +512,10 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     INSERT INTO `AspNetRoles` (`Id`, `ConcurrencyStamp`, `Name`, `NormalizedName`)
-    VALUES (3, '74136544-1517-4c22-ab8a-bb40041c1ee1', 'Librarian', 'LIBRARIAN');
+    VALUES (3, '6a9ba63b-a9b7-4cb5-9200-1e8441d142ce', 'Librarian', 'LIBRARIAN');
 
     END IF;
 END //
@@ -566,7 +528,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_AspNetRoleClaims_RoleId` ON `AspNetRoleClaims` (`RoleId`);
 
@@ -581,7 +543,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE UNIQUE INDEX `RoleNameIndex` ON `AspNetRoles` (`NormalizedName`);
 
@@ -596,7 +558,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_AspNetUserClaims_UserId` ON `AspNetUserClaims` (`UserId`);
 
@@ -611,7 +573,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_AspNetUserLogins_UserId` ON `AspNetUserLogins` (`UserId`);
 
@@ -626,7 +588,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_AspNetUserRoles_RoleId` ON `AspNetUserRoles` (`RoleId`);
 
@@ -641,7 +603,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `EmailIndex` ON `AspNetUsers` (`NormalizedEmail`);
 
@@ -656,7 +618,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE UNIQUE INDEX `UserNameIndex` ON `AspNetUsers` (`NormalizedUserName`);
 
@@ -671,7 +633,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_CheckoutHistory_LibraryAssetId` ON `CheckoutHistory` (`LibraryAssetId`);
 
@@ -686,7 +648,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_CheckoutHistory_LibraryCardId` ON `CheckoutHistory` (`LibraryCardId`);
 
@@ -701,7 +663,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_CheckoutItems_CheckoutId` ON `CheckoutItems` (`CheckoutId`);
 
@@ -716,7 +678,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_CheckoutItems_LibraryAssetId` ON `CheckoutItems` (`LibraryAssetId`);
 
@@ -731,7 +693,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_Checkouts_LibraryCardId` ON `Checkouts` (`LibraryCardId`);
 
@@ -746,7 +708,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_Holds_LibraryAssetId` ON `Holds` (`LibraryAssetId`);
 
@@ -761,7 +723,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_Holds_LibraryCardId` ON `Holds` (`LibraryCardId`);
 
@@ -776,7 +738,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_LibraryAssetAuthors_AuthorId` ON `LibraryAssetAuthors` (`AuthorId`);
 
@@ -791,7 +753,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_LibraryAssetAuthors_LibrayAssetId` ON `LibraryAssetAuthors` (`LibrayAssetId`);
 
@@ -806,7 +768,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_LibraryAssets_CategoryId` ON `LibraryAssets` (`CategoryId`);
 
@@ -821,7 +783,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_LibraryCards_AddressId` ON `LibraryCards` (`AddressId`);
 
@@ -836,7 +798,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE UNIQUE INDEX `IX_LibraryCards_MemberId` ON `LibraryCards` (`MemberId`);
 
@@ -851,7 +813,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE UNIQUE INDEX `IX_Photos_LibraryAssetId` ON `Photos` (`LibraryAssetId`);
 
@@ -866,7 +828,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE UNIQUE INDEX `IX_Photos_UserId` ON `Photos` (`UserId`);
 
@@ -881,7 +843,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_ReserveAssets_LibraryAssetId` ON `ReserveAssets` (`LibraryAssetId`);
 
@@ -896,7 +858,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     CREATE INDEX `IX_ReserveAssets_LibraryCardId` ON `ReserveAssets` (`LibraryCardId`);
 
@@ -911,10 +873,10 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210517211521_initial') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210520194825_initial') THEN
 
     INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-    VALUES ('20210517211521_initial', '5.0.5');
+    VALUES ('20210520194825_initial', '5.0.5');
 
     END IF;
 END //

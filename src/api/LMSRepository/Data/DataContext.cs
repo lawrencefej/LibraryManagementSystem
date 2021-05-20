@@ -14,8 +14,8 @@ namespace LMSRepository.Data
         {
         }
 
-        public DbSet<LibraryUser> LibraryUsers { get; set; }
-        public DbSet<MemberUser> MemberUsers { get; set; }
+        // public DbSet<LibraryUser> LibraryUsers { get; set; }
+        // public DbSet<MemberUser> MemberUsers { get; set; }
         public DbSet<Checkout> Checkouts { get; set; }
         public DbSet<Hold> Holds { get; set; }
         public DbSet<CheckoutHistory> CheckoutHistory { get; set; }

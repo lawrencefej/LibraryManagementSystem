@@ -77,21 +77,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "5a8de327-0320-4de1-a6a5-e1d39aa1a88a",
+                            ConcurrencyStamp = "df038373-a791-4fc0-9328-ee6d4daf5bb1",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "8a8d3d20-6f01-4da4-8dcd-91dba32c3ad0",
+                            ConcurrencyStamp = "b7dd1ed5-ebb2-40fa-ac96-669d70211435",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "74136544-1517-4c22-ab8a-bb40041c1ee1",
+                            ConcurrencyStamp = "6a9ba63b-a9b7-4cb5-9200-1e8441d142ce",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -124,6 +124,9 @@ namespace LMSRepository.Migrations
                         .IsRequired()
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)");
+
+                    b.Property<bool>("IsAccountActivated")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -593,23 +596,6 @@ namespace LMSRepository.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("LMSEntities.Models.LibraryUser", b =>
-                {
-                    b.HasBaseType("LMSEntities.Models.AppUser");
-
-                    b.ToTable("LibraryUsers");
-                });
-
-            modelBuilder.Entity("LMSEntities.Models.MemberUser", b =>
-                {
-                    b.HasBaseType("LMSEntities.Models.AppUser");
-
-                    b.Property<bool>("IsAccountActivated")
-                        .HasColumnType("tinyint(1)");
-
-                    b.ToTable("MemberUsers");
-                });
-
             modelBuilder.Entity("LMSEntities.Models.AssetPhoto", b =>
                 {
                     b.HasBaseType("LMSEntities.Models.Photo");
@@ -751,7 +737,7 @@ namespace LMSRepository.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("LMSEntities.Models.MemberUser", "Member")
+                    b.HasOne("LMSEntities.Models.AppUser", "Member")
                         .WithOne("LibraryCard")
                         .HasForeignKey("LMSEntities.Models.LibraryCard", "MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -817,24 +803,6 @@ namespace LMSRepository.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LMSEntities.Models.LibraryUser", b =>
-                {
-                    b.HasOne("LMSEntities.Models.AppUser", null)
-                        .WithOne()
-                        .HasForeignKey("LMSEntities.Models.LibraryUser", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LMSEntities.Models.MemberUser", b =>
-                {
-                    b.HasOne("LMSEntities.Models.AppUser", null)
-                        .WithOne()
-                        .HasForeignKey("LMSEntities.Models.MemberUser", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("LMSEntities.Models.AssetPhoto", b =>
                 {
                     b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
@@ -864,6 +832,8 @@ namespace LMSRepository.Migrations
 
             modelBuilder.Entity("LMSEntities.Models.AppUser", b =>
                 {
+                    b.Navigation("LibraryCard");
+
                     b.Navigation("ProfilePicture");
 
                     b.Navigation("UserRoles");
@@ -896,11 +866,6 @@ namespace LMSRepository.Migrations
                     b.Navigation("Checkouts");
 
                     b.Navigation("ReservedAssets");
-                });
-
-            modelBuilder.Entity("LMSEntities.Models.MemberUser", b =>
-                {
-                    b.Navigation("LibraryCard");
                 });
 #pragma warning restore 612, 618
         }

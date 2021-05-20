@@ -30,8 +30,8 @@ namespace LMSRepository.Extensions
             });
 
 
-            modelBuilder.Entity<LibraryUser>().ToTable("LibraryUsers");
-            modelBuilder.Entity<MemberUser>().ToTable("MemberUsers");
+            // modelBuilder.Entity<LibraryUser>().ToTable("LibraryUsers");
+            // modelBuilder.Entity<MemberUser>().ToTable("MemberUsers");
 
             modelBuilder.Entity<AppRole>().HasData(
                     new AppRole { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
