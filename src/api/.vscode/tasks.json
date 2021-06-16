@@ -32,11 +32,56 @@
             "args": [
                 "watch",
                 "run",
+                "--project",
                 "${workspaceFolder}/LibraryManagementSystem/LibraryManagementSystem.csproj",
+                "--launch-profile",
+                "${input:env}",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Add EF Migration",
+            "type": "shell",
+            "command": "export PATH=\"$PATH:$HOME/.dotnet/tools\" && dotnet ef migrations add ${input:param1} -p ${workspaceFolder}/LMSRepository/LMSRepository.csproj -s ${workspaceFolder}/LibraryManagementSystem/LibraryManagementSystem.csproj",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Update Database",
+            "type": "shell",
+            "command": "export PATH=\"$PATH:$HOME/.dotnet/tools\" && dotnet ef database update -p ${workspaceFolder}/LMSRepository/LMSRepository.csproj -s ${workspaceFolder}/LibraryManagementSystem/LibraryManagementSystem.csproj",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Generate SQL Script",
+            "type": "shell",
+            "command": "export PATH=\"$PATH:$HOME/.dotnet/tools\" && dotnet ef migrations script -p ${workspaceFolder}/LMSRepository/LMSRepository.csproj -s ${workspaceFolder}/LibraryManagementSystem/LibraryManagementSystem.csproj -o ../sql/${input:sqlName}.sql --idempotent",
+            "problemMatcher": "$msCompile"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "param1",
+            "description": "param1",
+            "type": "promptString",
+            "default": "initial"
+        },
+        {
+            "id": "sqlName",
+            "description": "Sql Script File Name",
+            "type": "promptString",
+            "default": "migration"
+        },
+        {
+            "id": "env",
+            "description": "What environment to run as",
+            "options": [
+                "Dev",
+                "Prod"
+            ],
+            "default": "Dev",
+            "type": "pickString"
         }
     ]
 }

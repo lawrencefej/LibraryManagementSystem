@@ -34,6 +34,28 @@
             "node": {
                 "enableDebugging": true
             }
+        },
+        {
+            "type": "npm",
+            "script": "install",
+            "problemMatcher": [],
+            "label": "npm: install",
+            "detail": "install dependencies from package"
+        },
+        {
+            "type": "npm",
+            "script": "build-prod",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: build-prod",
+            "detail": "ng build --prod"
+        },
+        {
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": [],
+            "label": "npm: start",
+            "detail": "ng serve"
         }
     ]
 }
