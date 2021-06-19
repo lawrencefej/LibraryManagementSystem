@@ -886,3 +886,391 @@ DROP PROCEDURE MigrationsScript;
 
 COMMIT;
 
+START TRANSACTION;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    DROP PROCEDURE IF EXISTS `POMELO_BEFORE_DROP_PRIMARY_KEY`;
+    DELIMITER //
+    CREATE PROCEDURE `POMELO_BEFORE_DROP_PRIMARY_KEY`(IN `SCHEMA_NAME_ARGUMENT` VARCHAR(255), IN `TABLE_NAME_ARGUMENT` VARCHAR(255))
+    BEGIN
+    	DECLARE HAS_AUTO_INCREMENT_ID TINYINT(1);
+    	DECLARE PRIMARY_KEY_COLUMN_NAME VARCHAR(255);
+    	DECLARE PRIMARY_KEY_TYPE VARCHAR(255);
+    	DECLARE SQL_EXP VARCHAR(1000);
+    	SELECT COUNT(*)
+    		INTO HAS_AUTO_INCREMENT_ID
+    		FROM `information_schema`.`COLUMNS`
+    		WHERE `TABLE_SCHEMA` = (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA()))
+    			AND `TABLE_NAME` = TABLE_NAME_ARGUMENT
+    			AND `Extra` = 'auto_increment'
+    			AND `COLUMN_KEY` = 'PRI'
+    			LIMIT 1;
+    	IF HAS_AUTO_INCREMENT_ID THEN
+    		SELECT `COLUMN_TYPE`
+    			INTO PRIMARY_KEY_TYPE
+    			FROM `information_schema`.`COLUMNS`
+    			WHERE `TABLE_SCHEMA` = (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA()))
+    				AND `TABLE_NAME` = TABLE_NAME_ARGUMENT
+    				AND `COLUMN_KEY` = 'PRI'
+    			LIMIT 1;
+    		SELECT `COLUMN_NAME`
+    			INTO PRIMARY_KEY_COLUMN_NAME
+    			FROM `information_schema`.`COLUMNS`
+    			WHERE `TABLE_SCHEMA` = (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA()))
+    				AND `TABLE_NAME` = TABLE_NAME_ARGUMENT
+    				AND `COLUMN_KEY` = 'PRI'
+    			LIMIT 1;
+    		SET SQL_EXP = CONCAT('ALTER TABLE `', (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA())), '`.`', TABLE_NAME_ARGUMENT, '` MODIFY COLUMN `', PRIMARY_KEY_COLUMN_NAME, '` ', PRIMARY_KEY_TYPE, ' NOT NULL;');
+    		SET @SQL_EXP = SQL_EXP;
+    		PREPARE SQL_EXP_EXECUTE FROM @SQL_EXP;
+    		EXECUTE SQL_EXP_EXECUTE;
+    		DEALLOCATE PREPARE SQL_EXP_EXECUTE;
+    	END IF;
+    END //
+    DELIMITER ;
+
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    DROP PROCEDURE IF EXISTS `POMELO_AFTER_ADD_PRIMARY_KEY`;
+    DELIMITER //
+    CREATE PROCEDURE `POMELO_AFTER_ADD_PRIMARY_KEY`(IN `SCHEMA_NAME_ARGUMENT` VARCHAR(255), IN `TABLE_NAME_ARGUMENT` VARCHAR(255), IN `COLUMN_NAME_ARGUMENT` VARCHAR(255))
+    BEGIN
+    	DECLARE HAS_AUTO_INCREMENT_ID INT(11);
+    	DECLARE PRIMARY_KEY_COLUMN_NAME VARCHAR(255);
+    	DECLARE PRIMARY_KEY_TYPE VARCHAR(255);
+    	DECLARE SQL_EXP VARCHAR(1000);
+    	SELECT COUNT(*)
+    		INTO HAS_AUTO_INCREMENT_ID
+    		FROM `information_schema`.`COLUMNS`
+    		WHERE `TABLE_SCHEMA` = (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA()))
+    			AND `TABLE_NAME` = TABLE_NAME_ARGUMENT
+    			AND `COLUMN_NAME` = COLUMN_NAME_ARGUMENT
+    			AND `COLUMN_TYPE` LIKE '%int%'
+    			AND `COLUMN_KEY` = 'PRI';
+    	IF HAS_AUTO_INCREMENT_ID THEN
+    		SELECT `COLUMN_TYPE`
+    			INTO PRIMARY_KEY_TYPE
+    			FROM `information_schema`.`COLUMNS`
+    			WHERE `TABLE_SCHEMA` = (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA()))
+    				AND `TABLE_NAME` = TABLE_NAME_ARGUMENT
+    				AND `COLUMN_NAME` = COLUMN_NAME_ARGUMENT
+    				AND `COLUMN_TYPE` LIKE '%int%'
+    				AND `COLUMN_KEY` = 'PRI';
+    		SELECT `COLUMN_NAME`
+    			INTO PRIMARY_KEY_COLUMN_NAME
+    			FROM `information_schema`.`COLUMNS`
+    			WHERE `TABLE_SCHEMA` = (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA()))
+    				AND `TABLE_NAME` = TABLE_NAME_ARGUMENT
+    				AND `COLUMN_NAME` = COLUMN_NAME_ARGUMENT
+    				AND `COLUMN_TYPE` LIKE '%int%'
+    				AND `COLUMN_KEY` = 'PRI';
+    		SET SQL_EXP = CONCAT('ALTER TABLE `', (SELECT IFNULL(SCHEMA_NAME_ARGUMENT, SCHEMA())), '`.`', TABLE_NAME_ARGUMENT, '` MODIFY COLUMN `', PRIMARY_KEY_COLUMN_NAME, '` ', PRIMARY_KEY_TYPE, ' NOT NULL AUTO_INCREMENT;');
+    		SET @SQL_EXP = SQL_EXP;
+    		PREPARE SQL_EXP_EXECUTE FROM @SQL_EXP;
+    		EXECUTE SQL_EXP_EXECUTE;
+    		DEALLOCATE PREPARE SQL_EXP_EXECUTE;
+    	END IF;
+    END //
+    DELIMITER ;
+
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssets` DROP FOREIGN KEY `FK_LibraryAssets_Category_CategoryId`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssets` DROP INDEX `IX_LibraryAssets_CategoryId`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    CALL POMELO_BEFORE_DROP_PRIMARY_KEY(NULL, 'LibraryAssetAuthors');
+    ALTER TABLE `LibraryAssetAuthors` DROP PRIMARY KEY;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssetAuthors` DROP INDEX `IX_LibraryAssetAuthors_LibrayAssetId`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssets` DROP COLUMN `CategoryId`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssetAuthors` DROP COLUMN `Id`;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssets` MODIFY COLUMN `Description` varchar(250) CHARACTER SET utf8mb4 NULL;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssetAuthors` ADD `Order` tinyint unsigned NOT NULL DEFAULT 0;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    ALTER TABLE `LibraryAssetAuthors` ADD CONSTRAINT `PK_LibraryAssetAuthors` PRIMARY KEY (`LibrayAssetId`, `AuthorId`);
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    CREATE TABLE `CategoryLibraryAsset` (
+        `AssetsId` int NOT NULL,
+        `CategoriesId` int NOT NULL,
+        CONSTRAINT `PK_CategoryLibraryAsset` PRIMARY KEY (`AssetsId`, `CategoriesId`),
+        CONSTRAINT `FK_CategoryLibraryAsset_Category_CategoriesId` FOREIGN KEY (`CategoriesId`) REFERENCES `Category` (`Id`) ON DELETE CASCADE,
+        CONSTRAINT `FK_CategoryLibraryAsset_LibraryAssets_AssetsId` FOREIGN KEY (`AssetsId`) REFERENCES `LibraryAssets` (`Id`) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4;
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    UPDATE `AspNetRoles` SET `ConcurrencyStamp` = 'a39fa3a9-486f-44f5-ac47-65ea2783b00a'
+    WHERE `Id` = 1;
+    SELECT ROW_COUNT();
+
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    UPDATE `AspNetRoles` SET `ConcurrencyStamp` = 'f0dd774b-d29a-46d1-888a-10ac068b68b1'
+    WHERE `Id` = 2;
+    SELECT ROW_COUNT();
+
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    UPDATE `AspNetRoles` SET `ConcurrencyStamp` = '97931e82-0a4b-4590-8495-fe0ff155e7f4'
+    WHERE `Id` = 3;
+    SELECT ROW_COUNT();
+
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    CREATE INDEX `IX_CategoryLibraryAsset_CategoriesId` ON `CategoryLibraryAsset` (`CategoriesId`);
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    DROP PROCEDURE `POMELO_BEFORE_DROP_PRIMARY_KEY`;
+
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    DROP PROCEDURE `POMELO_AFTER_ADD_PRIMARY_KEY`;
+
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+
+DROP PROCEDURE IF EXISTS MigrationsScript;
+DELIMITER //
+CREATE PROCEDURE MigrationsScript()
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20210619002029_manytomany') THEN
+
+    INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+    VALUES ('20210619002029_manytomany', '5.0.5');
+
+    END IF;
+END //
+DELIMITER ;
+CALL MigrationsScript();
+DROP PROCEDURE MigrationsScript;
+
+COMMIT;
+

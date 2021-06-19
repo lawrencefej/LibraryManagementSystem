@@ -21,8 +21,8 @@ insert into AspNetUsers (
     )
 values (
         1,
-        'Larry',
-        'Johnson',
+        'Steph',
+        'Curry',
         '2018-10-18 07:19:33',
         'b@x.com',
         'B@X.COM',

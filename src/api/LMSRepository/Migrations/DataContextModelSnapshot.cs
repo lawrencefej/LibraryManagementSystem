@@ -17,6 +17,21 @@ namespace LMSRepository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.5");
 
+            modelBuilder.Entity("CategoryLibraryAsset", b =>
+                {
+                    b.Property<int>("AssetsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AssetsId", "CategoriesId");
+
+                    b.HasIndex("CategoriesId");
+
+                    b.ToTable("CategoryLibraryAsset");
+                });
+
             modelBuilder.Entity("LMSEntities.Models.Address", b =>
                 {
                     b.Property<int>("Id")
@@ -77,21 +92,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "df038373-a791-4fc0-9328-ee6d4daf5bb1",
+                            ConcurrencyStamp = "19632aff-74c9-4177-88e9-5a76f33bc8e6",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "b7dd1ed5-ebb2-40fa-ac96-669d70211435",
+                            ConcurrencyStamp = "762f92cc-f93f-4cbf-b62f-d1d4821da198",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "6a9ba63b-a9b7-4cb5-9200-1e8441d142ce",
+                            ConcurrencyStamp = "0b16632e-ce69-486a-a960-cf8dabe96f9c",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -354,15 +369,12 @@ namespace LMSRepository.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(10)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CopiesAvailable")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("DeweyIndex")
                         .HasMaxLength(15)
@@ -390,28 +402,23 @@ namespace LMSRepository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("LibraryAssets");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.LibraryAssetAuthor", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("LibrayAssetId")
                         .HasColumnType("int");
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LibrayAssetId")
-                        .HasColumnType("int");
+                    b.Property<byte>("Order")
+                        .HasColumnType("tinyint unsigned");
 
-                    b.HasKey("Id");
+                    b.HasKey("LibrayAssetId", "AuthorId");
 
                     b.HasIndex("AuthorId");
-
-                    b.HasIndex("LibrayAssetId");
 
                     b.ToTable("LibraryAssetAuthors");
                 });
@@ -622,6 +629,21 @@ namespace LMSRepository.Migrations
                     b.HasDiscriminator().HasValue("UserProfilePhoto");
                 });
 
+            modelBuilder.Entity("CategoryLibraryAsset", b =>
+                {
+                    b.HasOne("LMSEntities.Models.LibraryAsset", null)
+                        .WithMany()
+                        .HasForeignKey("AssetsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMSEntities.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LMSEntities.Models.AppUserRole", b =>
                 {
                     b.HasOne("LMSEntities.Models.AppRole", "Role")
@@ -699,17 +721,6 @@ namespace LMSRepository.Migrations
                     b.Navigation("LibraryAsset");
 
                     b.Navigation("LibraryCard");
-                });
-
-            modelBuilder.Entity("LMSEntities.Models.LibraryAsset", b =>
-                {
-                    b.HasOne("LMSEntities.Models.Category", "Category")
-                        .WithMany("Assets")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.LibraryAssetAuthor", b =>
@@ -842,11 +853,6 @@ namespace LMSRepository.Migrations
             modelBuilder.Entity("LMSEntities.Models.Author", b =>
                 {
                     b.Navigation("AuthorAssets");
-                });
-
-            modelBuilder.Entity("LMSEntities.Models.Category", b =>
-                {
-                    b.Navigation("Assets");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.Checkout", b =>

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
 
@@ -60,7 +61,7 @@ namespace LibraryManagementSystem.API.Helpers
                     .ForMember(dest => dest.PhotoUrl, opt =>
                     {
                         opt.MapFrom(src => src.Photo.Url);
-                    });
+                    })
             //.ForMember(dest => dest.AssetType, opt =>
             //{
             //    opt.MapFrom(src => src.AssetType.Name);
@@ -69,14 +70,14 @@ namespace LibraryManagementSystem.API.Helpers
             // {
             //     opt.MapFrom(src => src.Status.Name);
             // });
-            //.ForMember(dest => dest.Category, opt =>
-            //{
-            //    opt.MapFrom(src => src.Category.Name);
-            //})
-            //.ForMember(dest => dest.AuthorName, opt =>
-            //{
-            //    opt.MapFrom(src => src.Author.FullName);
-            //});
+            // .ForMember(dest => dest.Category, opt =>
+            // {
+            //     opt.MapFrom(src => src.Category.Name);
+            // })
+            .ForMember(dest => dest.AuthorName, opt =>
+            {
+                opt.MapFrom(src => src.AssetAuthors.Select(t => t.Author.FullName));
+            });
             CreateMap<LibraryAsset, LibraryAssetForListDto>();
             // .ForMember(dest => dest.AssetType, opt =>
             // {
@@ -146,6 +147,7 @@ namespace LibraryManagementSystem.API.Helpers
                         opt.MapFrom(src => src.Role.NormalizedName);
                     });
             CreateMap<RoleDto, AppRole>();
+            CreateMap<LibraryAssetAuthorDto, LibraryAssetAuthor>().ReverseMap();
         }
     }
 }

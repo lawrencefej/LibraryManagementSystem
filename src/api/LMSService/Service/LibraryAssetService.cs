@@ -31,7 +31,7 @@ namespace LMSService.Service
 
             // asset.AssetType = null;
             // asset.Author = null;
-            asset.Category = null;
+            // asset.Categories = null;
 
             _context.Add(asset);
             await _context.SaveChangesAsync();
@@ -79,9 +79,9 @@ namespace LMSService.Service
         {
             var assets = _context.LibraryAssets.AsNoTracking()
                 .Include(p => p.Photo)
-                .Include(p => p.Category)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
+                .Include(p => p.Categories)
+                // .Include(a => a.AssetType)
+                // .Include(s => s.Status)
                 .Include(s => s.AssetAuthors)
                 // .Include(s => s.Authors)
                 .AsQueryable();
@@ -111,7 +111,7 @@ namespace LMSService.Service
         {
             var asset = await _context.LibraryAssets
                 .Include(p => p.Photo)
-                .Include(p => p.Category)
+                .Include(p => p.Categories)
                 .Include(a => a.AssetType)
                 .Include(s => s.Status)
                 .Include(s => s.AssetAuthors)

@@ -24,7 +24,7 @@ namespace LibraryManagementSystem.Controllers
             return Ok(category);
         }
 
-        [HttpGet("{categoryId}")]
+        [HttpGet("{categoryId}", Name = nameof(GetCategory))]
         public async Task<IActionResult> GetCategory(int categoryId)
         {
             var category = await _categoryService.GetCategory(categoryId);
@@ -42,7 +42,7 @@ namespace LibraryManagementSystem.Controllers
         {
             category = await _categoryService.AddCategory(category);
 
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            return CreatedAtAction(nameof(GetCategory), new { categoryId = category.Id }, category);
         }
 
         [HttpDelete("{id}")]

@@ -43,11 +43,11 @@ namespace LMSService.Service
         public async Task<ChartDto> GetCategoryDistributionReport()
         {
             var data = await _context.LibraryAssets.AsNoTracking()
-               .GroupBy(d => new { d.Category.Name })
+            //    .GroupBy(d => new { d.Categories.Name })
                .Select(x => new DataDto
                {
-                   Count = x.Count(),
-                   Name = x.Key.Name
+                   //    Count = x.Count(),
+                   //    Name = x.Key.Name
                })
                .ToListAsync();
 

@@ -6,7 +6,7 @@ namespace LMSEntities.Models
     public class Checkout
     {
         public int Id { get; set; }
-        public List<CheckoutItem> Items { get; set; } = new List<CheckoutItem>();
+        public ICollection<CheckoutItem> Items { get; set; } = new List<CheckoutItem>();
         public LibraryCard LibraryCard { get; set; }
         public int LibraryCardId { get; set; }
         public DateTime CheckoutDate { get; set; }
