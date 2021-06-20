@@ -34,11 +34,11 @@ namespace LibraryManagementSystem.API.Controllers
         public async Task<IActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
             // TODO decide if this should accept models instead of Id's
-            var assetForCreation = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
+            LibraryAsset assetForCreation = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
-            var asset = await _libraryAssestService.AddAsset(assetForCreation);
+            LibraryAsset asset = await _libraryAssestService.AddAsset(assetForCreation);
 
-            var assetToReturn = _mapper.Map<LibraryAssetForListDto>(asset);
+            LibraryAssetForListDto assetToReturn = _mapper.Map<LibraryAssetForListDto>(asset);
 
             return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, assetToReturn);
         }
@@ -54,7 +54,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPut]
         public async Task<IActionResult> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
-            var asset = await _libraryAssestService.GetAsset(libraryAssetForUpdate.Id);
+            LibraryAsset asset = await _libraryAssestService.GetAsset(libraryAssetForUpdate.Id);
 
             if (asset == null)
             {
@@ -72,9 +72,9 @@ namespace LibraryManagementSystem.API.Controllers
         public async Task<IActionResult> GetLibraryAsset(int assetId)
         {
             // TODO decide if you want this
-            var userId = LoggedInUserID();
+            int userId = LoggedInUserID();
             _logger.LogInformation("User {0} requested Asset {1}", userId, assetId);
-            var libraryAsset = await _libraryAssestService.GetAsset(assetId);
+            LibraryAsset libraryAsset = await _libraryAssestService.GetAsset(assetId);
 
             if (libraryAsset == null)
             {
@@ -82,7 +82,7 @@ namespace LibraryManagementSystem.API.Controllers
                 return NoContent();
             }
 
-            var assetToReturn = _mapper.Map<LibraryAssetForDetailedDto>(libraryAsset);
+            LibraryAssetForDetailedDto assetToReturn = _mapper.Map<LibraryAssetForDetailedDto>(libraryAsset);
 
             return Ok(assetToReturn);
         }
@@ -90,9 +90,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("search/")]
         public async Task<IActionResult> SearchAvailableLibraryAsset([FromQuery] string searchString)
         {
-            var assets = await _libraryAssestService.SearchAvalableLibraryAsset(searchString);
+            IEnumerable<LibraryAsset> assets = await _libraryAssestService.SearchAvalableLibraryAsset(searchString);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+            IEnumerable<LibraryAssetForDetailedDto> assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 
             return Ok(assetsToReturn);
         }
@@ -100,9 +100,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("pagination/")]
         public async Task<IActionResult> GetLibraryAssets([FromQuery] PaginationParams paginationParams)
         {
-            var assets = await _libraryAssestService.GetAllAsync(paginationParams);
+            PagedList<LibraryAsset> assets = await _libraryAssestService.GetAllAsync(paginationParams);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
+            IEnumerable<LibraryAssetForDetailedDto> assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
 
             Response.AddPagination(assets.CurrentPage, assets.PageSize,
                  assets.TotalCount, assets.TotalPages);
@@ -113,14 +113,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("author/{authorId}")]
         public async Task<IActionResult> GetAssetForAuthor(int authorId)
         {
-            var libraryAsset = await _libraryAssestService.GetAssetsByAuthor(authorId);
+            IEnumerable<LibraryAsset> libraryAsset = await _libraryAssestService.GetAssetsByAuthor(authorId);
 
             if (libraryAsset == null)
             {
                 return NoContent();
             }
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(libraryAsset);
+            IEnumerable<LibraryAssetForDetailedDto> assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(libraryAsset);
 
             return Ok(assetsToReturn);
         }
@@ -137,7 +137,7 @@ namespace LibraryManagementSystem.API.Controllers
 
         private int LoggedInUserID()
         {
-            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             return id;
         }

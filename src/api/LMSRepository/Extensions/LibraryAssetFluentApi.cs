@@ -48,6 +48,19 @@ namespace LMSRepository.Extensions
                 .WithMany(l => l.AuthorAssets)
                 .HasForeignKey(b => b.AuthorId);
 
+            modelBuilder.Entity<LibraryAssetCategory>()
+                .HasKey(t => new { t.LibrayAssetId, t.CategoryId });
+
+            modelBuilder.Entity<LibraryAssetCategory>()
+                .HasOne(b => b.LibraryAsset)
+                .WithMany(c => c.AssetCategories)
+                .HasForeignKey(d => d.LibrayAssetId);
+
+            modelBuilder.Entity<LibraryAssetCategory>()
+                .HasOne(b => b.Category)
+                .WithMany(c => c.CategoryAssets)
+                .HasForeignKey(d => d.CategoryId);
+
             modelBuilder.Entity<Category>()
                 .Property(e => e.Name)
                 .HasMaxLength(15)

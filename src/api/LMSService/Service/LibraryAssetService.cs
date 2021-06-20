@@ -79,7 +79,7 @@ namespace LMSService.Service
         {
             var assets = _context.LibraryAssets.AsNoTracking()
                 .Include(p => p.Photo)
-                .Include(p => p.Categories)
+                .Include(p => p.AssetCategories)
                 // .Include(a => a.AssetType)
                 // .Include(s => s.Status)
                 .Include(s => s.AssetAuthors)
@@ -111,10 +111,10 @@ namespace LMSService.Service
         {
             var asset = await _context.LibraryAssets
                 .Include(p => p.Photo)
-                .Include(p => p.Categories)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.AssetAuthors)
+                .Include(p => p.AssetCategories).ThenInclude(ba => ba.Category)
+                // .Include(a => a.AssetType)
+                // .Include(s => s.Status)
+                .Include(s => s.AssetAuthors).ThenInclude(ba => ba.Author)
                 // .Include(s => s.Authors)
                 .FirstOrDefaultAsync(x => x.Id == assetId);
 
@@ -124,10 +124,10 @@ namespace LMSService.Service
         public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId)
         {
             var assets = await _context.LibraryAssets.AsNoTracking()
-                .Include(a => a.AssetType)
+                // .Include(a => a.AssetType)
                 .Include(s => s.AssetAuthors)
                 // .Include(s => s.Authors)
-                // .Where(x => x.AuthorId == authorId)
+                // .Where(x => x.AssetAuthors == authorId)
                 .ToListAsync();
 
             return assets;

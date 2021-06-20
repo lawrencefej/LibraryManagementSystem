@@ -8,7 +8,7 @@ namespace LMSEntities.Models
         public int Id { get; set; }
         public DateTime Added { get; set; }
         public string DeweyIndex { get; set; }
-        public ICollection<Category> Categories { get; set; }
+        public ICollection<LibraryAssetCategory> AssetCategories { get; set; }
         // public Status Status { get; set; }
         // public int StatusId { get; set; }
         public LibraryAssetStatus Status { get; set; }

@@ -62,6 +62,14 @@ namespace LibraryManagementSystem.API.Helpers
                     {
                         opt.MapFrom(src => src.Photo.Url);
                     })
+                    .ForMember(dest => dest.Authors, opt =>
+                    {
+                        opt.MapFrom(src => src.AssetAuthors.Select(t => t.Author));
+                    })
+                    .ForMember(dest => dest.Categories, opt =>
+                    {
+                        opt.MapFrom(src => src.AssetCategories.Select(t => t.Category));
+                    });
             //.ForMember(dest => dest.AssetType, opt =>
             //{
             //    opt.MapFrom(src => src.AssetType.Name);
@@ -74,10 +82,10 @@ namespace LibraryManagementSystem.API.Helpers
             // {
             //     opt.MapFrom(src => src.Category.Name);
             // })
-            .ForMember(dest => dest.AuthorName, opt =>
-            {
-                opt.MapFrom(src => src.AssetAuthors.Select(t => t.Author.FullName));
-            });
+            // .ForMember(dest => dest.AuthorName, opt =>
+            // {
+            //     opt.MapFrom(src => src.AssetAuthors.Select(t => t.Author.FullName));
+            // });
             CreateMap<LibraryAsset, LibraryAssetForListDto>();
             // .ForMember(dest => dest.AssetType, opt =>
             // {
@@ -148,6 +156,7 @@ namespace LibraryManagementSystem.API.Helpers
                     });
             CreateMap<RoleDto, AppRole>();
             CreateMap<LibraryAssetAuthorDto, LibraryAssetAuthor>().ReverseMap();
+            CreateMap<LibraryAssetCategoryDto, LibraryAssetCategory>().ReverseMap();
         }
     }
 }

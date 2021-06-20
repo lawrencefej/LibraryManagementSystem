@@ -129,12 +129,11 @@ namespace LMSRepository.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Added = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeweyIndex = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Year = table.Column<int>(type: "int", maxLength: 4, nullable: false),
                     Status = table.Column<string>(type: "varchar(10)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Added = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     NumberOfCopies = table.Column<int>(type: "int", nullable: false),
                     CopiesAvailable = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true)
@@ -143,8 +142,9 @@ namespace LMSRepository.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ISBN = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DeweyIndex = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Title = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Year = table.Column<int>(type: "int", maxLength: 4, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -304,31 +304,6 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CategoryLibraryAsset",
-                columns: table => new
-                {
-                    AssetsId = table.Column<int>(type: "int", nullable: false),
-                    CategoriesId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryLibraryAsset", x => new { x.AssetsId, x.CategoriesId });
-                    table.ForeignKey(
-                        name: "FK_CategoryLibraryAsset_Category_CategoriesId",
-                        column: x => x.CategoriesId,
-                        principalTable: "Category",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CategoryLibraryAsset_LibraryAssets_AssetsId",
-                        column: x => x.AssetsId,
-                        principalTable: "LibraryAssets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "LibraryAssetAuthors",
                 columns: table => new
                 {
@@ -347,6 +322,31 @@ namespace LMSRepository.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LibraryAssetAuthors_LibraryAssets_LibrayAssetId",
+                        column: x => x.LibrayAssetId,
+                        principalTable: "LibraryAssets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "LibraryAssetCategory",
+                columns: table => new
+                {
+                    LibrayAssetId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LibraryAssetCategory", x => new { x.LibrayAssetId, x.CategoryId });
+                    table.ForeignKey(
+                        name: "FK_LibraryAssetCategory_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LibraryAssetCategory_LibraryAssets_LibrayAssetId",
                         column: x => x.LibrayAssetId,
                         principalTable: "LibraryAssets",
                         principalColumn: "Id",
@@ -536,17 +536,17 @@ namespace LMSRepository.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "19632aff-74c9-4177-88e9-5a76f33bc8e6", "Member", "MEMBER" });
+                values: new object[] { 1, "3af237b9-8247-40b9-8bc1-44fea8bd367b", "Member", "MEMBER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 2, "762f92cc-f93f-4cbf-b62f-d1d4821da198", "Admin", "ADMIN" });
+                values: new object[] { 2, "60b120f1-5ed7-4986-8412-ec1d0ac5986f", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 3, "0b16632e-ce69-486a-a960-cf8dabe96f9c", "Librarian", "LIBRARIAN" });
+                values: new object[] { 3, "65383363-1e34-4dac-a194-c25d2e20ee2f", "Librarian", "LIBRARIAN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -584,11 +584,6 @@ namespace LMSRepository.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CategoryLibraryAsset_CategoriesId",
-                table: "CategoryLibraryAsset",
-                column: "CategoriesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CheckoutHistory_LibraryAssetId",
@@ -629,6 +624,11 @@ namespace LMSRepository.Migrations
                 name: "IX_LibraryAssetAuthors_AuthorId",
                 table: "LibraryAssetAuthors",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LibraryAssetCategory_CategoryId",
+                table: "LibraryAssetCategory",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibraryCards_AddressId",
@@ -682,9 +682,6 @@ namespace LMSRepository.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CategoryLibraryAsset");
-
-            migrationBuilder.DropTable(
                 name: "CheckoutHistory");
 
             migrationBuilder.DropTable(
@@ -697,6 +694,9 @@ namespace LMSRepository.Migrations
                 name: "LibraryAssetAuthors");
 
             migrationBuilder.DropTable(
+                name: "LibraryAssetCategory");
+
+            migrationBuilder.DropTable(
                 name: "Photos");
 
             migrationBuilder.DropTable(
@@ -706,13 +706,13 @@ namespace LMSRepository.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Category");
-
-            migrationBuilder.DropTable(
                 name: "Checkouts");
 
             migrationBuilder.DropTable(
                 name: "Authors");
+
+            migrationBuilder.DropTable(
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "LibraryAssets");
