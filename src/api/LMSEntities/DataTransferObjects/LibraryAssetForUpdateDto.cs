@@ -1,21 +1,27 @@
-﻿namespace LMSEntities.DataTransferObjects
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace LMSEntities.DataTransferObjects
 {
     public class LibraryAssetForUpdateDto
     {
+        [Required]
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public int Year { get; set; }
         public int StatusId { get; set; }
+        [Required]
         public int NumberOfCopies { get; set; }
 
-        //public AuthorDto Author { get; set; }
+        [Required]
         public int CopiesAvailable { get; set; }
 
+        [Required]
         public string Description { get; set; }
-        public int AssetTypeId { get; set; }
-        public int AuthorId { get; set; }
+        [Required]
+        public LibraryAssetTypeDto AssetTypeId { get; set; }
         public string ISBN { get; set; }
         public string DeweyIndex { get; set; }
-        public int CategoryId { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace LMSContracts.Interfaces
     {
         Task<LibraryAsset> AddAsset(LibraryAsset asset);
 
-        Task DeleteAsset(int assetId);
+        Task DeleteAsset(LibraryAsset asset);
 
         Task EditAsset(LibraryAsset libraryAssetForUpdate);
 

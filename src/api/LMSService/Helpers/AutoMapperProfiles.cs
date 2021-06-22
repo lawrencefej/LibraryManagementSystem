@@ -86,7 +86,11 @@ namespace LibraryManagementSystem.API.Helpers
             // {
             //     opt.MapFrom(src => src.AssetAuthors.Select(t => t.Author.FullName));
             // });
-            CreateMap<LibraryAsset, LibraryAssetForListDto>();
+            CreateMap<LibraryAsset, LibraryAssetForListDto>()
+                .ForMember(dest => dest.AuthorName, opt =>
+                {
+                    opt.MapFrom(src => src.AssetAuthors.FirstOrDefault().Author.FullName);
+                });
             // .ForMember(dest => dest.AssetType, opt =>
             // {
             //     opt.MapFrom(src => src.AssetType.Name);
