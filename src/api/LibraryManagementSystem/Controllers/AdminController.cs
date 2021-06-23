@@ -5,6 +5,7 @@ using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.API.Controllers
@@ -26,9 +27,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var users = await _adminService.GetAdminUsers();
+            IEnumerable<AppUser> users = await _adminService.GetAdminUsers();
 
-            var usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
+            IEnumerable<UserForDetailedDto> usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
 
             usersToReturn = _adminService.AddRoleToUsers(usersToReturn);
 
@@ -40,24 +41,24 @@ namespace LibraryManagementSystem.API.Controllers
         {
             addAdminDto.CallbackUrl = (Request.Scheme + "://" + Request.Host + "/resetpassword/");
 
-            var user = _mapper.Map<AppUser>(addAdminDto);
+            AppUser user = _mapper.Map<AppUser>(addAdminDto);
 
             user.UserName = user.Email;
 
-            var result = await _adminService.CreateUser(user, "password");
+            IdentityResult result = await _adminService.CreateUser(user, "password");
 
             if (result.Succeeded)
             {
                 user = await _adminService.CompleteUserCreation(user, addAdminDto.Role, addAdminDto.CallbackUrl);
 
-                var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+                UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
                 userToReturn = _adminService.AddRoleToUser(userToReturn);
 
                 return CreatedAtRoute("Get", new { id = userToReturn.Id }, userToReturn);
             }
 
-            foreach (var error in result.Errors)
+            foreach (IdentityError error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
@@ -68,9 +69,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<IActionResult> Get(int id)
         {
-            var user = await _adminService.GetAdminUser(id);
+            AppUser user = await _adminService.GetAdminUser(id);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
             return Ok(userToReturn);
         }
@@ -78,7 +79,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(UpdateAdminDto updateAdminDto)
         {
-            var user = await _adminService.GetAdminUser(updateAdminDto.Id);
+            AppUser user = await _adminService.GetAdminUser(updateAdminDto.Id);
 
             if (user == null)
             {
@@ -93,7 +94,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var user = await _adminService.GetAdminUser(id);
+            AppUser user = await _adminService.GetAdminUser(id);
 
             if (user == null)
             {

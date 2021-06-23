@@ -3,7 +3,7 @@
     <mat-card class="mat-elevation-z4">
       <mat-card-header>
         <mat-card-title align="start">{{asset.title | titlecase}}</mat-card-title>
-        <mat-card-subtitle align="start">{{asset.author.fullName | titlecase}}</mat-card-subtitle>
+        <!-- <mat-card-subtitle align="start">{{asset.author.fullName | titlecase}}</mat-card-subtitle> -->
       </mat-card-header>
       <div class="photo-container" align="center">
         <img mat-card-image src="{{asset?.photoUrl || '../../../assets/img/book.jpg'}}" alt="{{asset.title}}">

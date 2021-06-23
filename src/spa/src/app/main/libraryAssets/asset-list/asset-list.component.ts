@@ -10,7 +10,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { merge } from 'rxjs';
+import { merge, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-asset-list',
@@ -18,14 +19,18 @@ import { merge } from 'rxjs';
   styleUrls: ['./asset-list.component.css'],
 })
 export class AssetListComponent implements AfterViewInit, OnInit {
+  private readonly unsubscribe = new Subject<void>();
+
   assets: LibraryAsset[] = [];
   pagination: Pagination;
   dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
   searchString = '';
   displayedColumns = ['title', 'authorName', 'year', 'assetType', 'actions'];
   paginationOptions = new Pagination();
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
   constructor(
     private assetService: AssetService,
     private route: ActivatedRoute,
@@ -34,7 +39,7 @@ export class AssetListComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data.subscribe((data) => {
+    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe((data) => {
       this.pagination = data.assets.pagination;
       this.assets = data.assets.result;
       this.dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
@@ -81,24 +86,28 @@ export class AssetListComponent implements AfterViewInit, OnInit {
     this.notify
       .confirm('Are you sure you sure you want to delete this item')
       .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((res) => {
         if (res) {
-          this.assetService.deleteAsset(asset.id).subscribe(
-            () => {
-              this.assets.splice(
-                this.assets.findIndex((x) => x.id === asset.id),
-                1
-              );
-              this.notify.warn('Item was deleted successfully');
-              this.pagination.totalItems--;
-              this.dataSource = new MatTableDataSource<LibraryAsset>(
-                this.assets
-              );
-            },
-            (error) => {
-              this.notify.error(error);
-            }
-          );
+          this.assetService
+            .deleteAsset(asset.id)
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(
+              () => {
+                this.assets.splice(
+                  this.assets.findIndex((x) => x.id === asset.id),
+                  1
+                );
+                this.notify.warn('Item was deleted successfully');
+                this.pagination.totalItems--;
+                this.dataSource = new MatTableDataSource<LibraryAsset>(
+                  this.assets
+                );
+              },
+              (error) => {
+                this.notify.error(error);
+              }
+            );
         }
       });
   }
@@ -112,6 +121,7 @@ export class AssetListComponent implements AfterViewInit, OnInit {
         this.sort.direction.toString(),
         this.searchString
       )
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         (res: PaginatedResult<LibraryAsset[]>) => {
           this.assets = res.result;

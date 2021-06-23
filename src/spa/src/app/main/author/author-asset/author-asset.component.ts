@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-
 import { ActivatedRoute } from '@angular/router';
 import { AssetComponent } from '../../libraryAssets/asset/asset.component';
 import { AssetService } from 'src/app/_services/asset.service';
@@ -12,17 +11,21 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { Pagination } from 'src/app/_models/pagination';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-author-asset',
   templateUrl: './author-asset.component.html',
   styleUrls: ['./author-asset.component.css'],
 })
-export class AuthorAssetComponent implements OnInit {
+export class AuthorAssetComponent implements OnInit, OnDestroy {
+  private readonly unsubscribe = new Subject<void>();
+
   author: Author;
   assets: LibraryAsset[] = [];
   dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
-  displayedColumns = ['title', 'authorName', 'year', 'assetType', 'actions'];
+  displayedColumns = ['title', 'year', 'assetType', 'actions'];
   paginationOptions = new Pagination();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,25 +38,33 @@ export class AuthorAssetComponent implements OnInit {
     private assetService: AssetService
   ) {}
 
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
   ngOnInit() {
-    this.route.data.subscribe((data) => {
+    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe((data) => {
       this.author = data.author;
     });
     this.getAssets();
   }
 
   getAssets() {
-    this.authorService.getAssetForAuthor(this.author.id).subscribe(
-      (assets: LibraryAsset[]) => {
-        this.assets = assets;
-        this.dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      (error) => {
-        this.notify.error(error);
-      }
-    );
+    this.authorService
+      .getAssetForAuthor(this.author.id)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        (assets: LibraryAsset[]) => {
+          this.assets = assets;
+          this.dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        },
+        (error) => {
+          this.notify.error(error);
+        }
+      );
   }
 
   applyFilter(filterValue: string) {
@@ -90,25 +101,29 @@ export class AuthorAssetComponent implements OnInit {
     this.notify
       .confirm('Are you sure you sure you want to delete this item')
       .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((res) => {
         if (res) {
-          this.assetService.deleteAsset(asset.id).subscribe(
-            () => {
-              this.assets.splice(
-                this.assets.findIndex((x) => x.id === asset.id),
-                1
-              );
-              this.notify.warn('Item was deleted successfully');
-              this.dataSource = new MatTableDataSource<LibraryAsset>(
-                this.assets
-              );
-              this.dataSource.paginator = this.paginator;
-              this.dataSource.sort = this.sort;
-            },
-            (error) => {
-              this.notify.error(error);
-            }
-          );
+          this.assetService
+            .deleteAsset(asset.id)
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(
+              () => {
+                this.assets.splice(
+                  this.assets.findIndex((x) => x.id === asset.id),
+                  1
+                );
+                this.notify.warn('Item was deleted successfully');
+                this.dataSource = new MatTableDataSource<LibraryAsset>(
+                  this.assets
+                );
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+              },
+              (error) => {
+                this.notify.error(error);
+              }
+            );
         }
       });
   }

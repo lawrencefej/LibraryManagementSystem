@@ -5,6 +5,7 @@ using LibraryManagementSystem.API.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
+using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -58,14 +59,14 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("{id}", Name = "GetCheckout")]
         public async Task<ActionResult> GetCheckout(int id)
         {
-            var checkout = await _checkoutService.GetCheckout(id);
+            Checkout checkout = await _checkoutService.GetCheckout(id);
 
             if (checkout == null)
             {
                 return NotFound();
             }
 
-            var checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
+            CheckoutForReturnDto checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
 
             return Ok(checkoutToReturn);
         }
@@ -73,9 +74,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("asset/{libraryAssetId}")]
         public async Task<ActionResult> GetCheckoutsForAsset(int libraryAssetId)
         {
-            var checkouts = await _checkoutService.GetCheckoutsForAsset(libraryAssetId);
+            IEnumerable<Checkout> checkouts = await _checkoutService.GetCheckoutsForAsset(libraryAssetId);
 
-            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+            IEnumerable<CheckoutForReturnDto> checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 
             return Ok(checkoutsToReturn);
         }
@@ -83,9 +84,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("user/{userId}")]
         public async Task<ActionResult> GetCheckoutsForMember(int userId)
         {
-            var checkouts = await _checkoutService.GetCheckoutsForMember(userId);
+            IEnumerable<Checkout> checkouts = await _checkoutService.GetCheckoutsForMember(userId);
 
-            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+            IEnumerable<CheckoutForReturnDto> checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 
             return Ok(checkoutsToReturn);
         }
@@ -93,9 +94,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("search/")]
         public async Task<IActionResult> SearchCheckouts([FromQuery] string searchString)
         {
-            var checkouts = await _checkoutService.SearchCheckouts(searchString);
+            IEnumerable<Checkout> checkouts = await _checkoutService.SearchCheckouts(searchString);
 
-            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+            IEnumerable<CheckoutForReturnDto> checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 
             return Ok(checkoutsToReturn);
         }
@@ -103,9 +104,9 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("pagination/")]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var checkouts = await _checkoutService.GetAllCurrentCheckouts(paginationParams);
+            PagedList<Checkout> checkouts = await _checkoutService.GetAllCurrentCheckouts(paginationParams);
 
-            var checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
+            IEnumerable<CheckoutForReturnDto> checkoutsToReturn = _mapper.Map<IEnumerable<CheckoutForReturnDto>>(checkouts);
 
             Response.AddPagination(checkouts.CurrentPage, checkouts.PageSize,
                  checkouts.TotalCount, checkouts.TotalPages);

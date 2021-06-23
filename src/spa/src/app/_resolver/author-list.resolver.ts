@@ -6,20 +6,25 @@ import { AuthorService } from '../_services/author.service';
 import { Injectable } from '@angular/core';
 import { NotificationService } from '../_services/notification.service';
 import { catchError } from 'rxjs/operators';
+import { lmsResolverContants } from './resolver.constants';
 
 @Injectable()
 export class AuthorListResolver implements Resolve<Author[]> {
-  pageNumber = 1;
-  pageSize = 5;
   constructor(
     private authorService: AuthorService,
     private notify: NotificationService,
     private router: Router
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Author[]> {
+  resolve(): Observable<Author[]> {
     return this.authorService
-      .getPaginatedAuthors(this.pageNumber, this.pageSize, '', '', '')
+      .getPaginatedAuthors(
+        lmsResolverContants.pageNumber,
+        lmsResolverContants.pageSize,
+        '',
+        '',
+        ''
+      )
       .pipe(
         catchError(() => {
           this.notify.error('Problem retrieving data');

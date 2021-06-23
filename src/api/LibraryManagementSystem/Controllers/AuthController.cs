@@ -3,6 +3,7 @@ using AutoMapper;
 using LibraryManagementSystem.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
+using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -64,7 +65,7 @@ namespace LibraryManagementSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(ResetPassword resetPassword)
         {
-            var user = await _authService.FindUserByEmail(resetPassword.Email);
+            AppUser user = await _authService.FindUserByEmail(resetPassword.Email);
 
             if (!await _authService.IsResetEligible(user))
             {
@@ -82,21 +83,16 @@ namespace LibraryManagementSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {
-            var user = await _authService.FindUserById(resetPassword.UserId);
+            AppUser user = await _authService.FindUserById(resetPassword.UserId);
 
             if (!await _authService.IsResetEligible(user))
             {
                 return BadRequest("User does not exist");
             }
 
-            var result = await _authService.ResetPassword(user, resetPassword.Password, resetPassword.Code);
+            Microsoft.AspNetCore.Identity.IdentityResult result = await _authService.ResetPassword(user, resetPassword.Password, resetPassword.Code);
 
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
-
-            return BadRequest(result.Errors);
+            return result.Succeeded ? Ok() : BadRequest(result.Errors);
         }
     }
 }
