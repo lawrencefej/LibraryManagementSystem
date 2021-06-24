@@ -31,9 +31,9 @@ namespace LMSService.Service
 
         public async Task<UserForDetailedDto> AddRoleToUser(UserForDetailedDto userToReturn, AppUser user)
         {
-            var roles = await _userManager.GetRolesAsync(user);
+            IList<string> roles = await _userManager.GetRolesAsync(user);
 
-            foreach (var role in roles)
+            foreach (string role in roles)
             {
                 userToReturn.Role = role;
             }
@@ -43,41 +43,41 @@ namespace LMSService.Service
 
         public async Task<AppUser> FindUserByEmail(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            AppUser user = await _userManager.FindByEmailAsync(email);
 
             return user;
         }
 
         public async Task ForgotPassword(AppUser user, string scheme, HostString host)
         {
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            string code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var encodedToken = HttpUtility.UrlEncode(code);
+            string encodedToken = HttpUtility.UrlEncode(code);
 
-            var callbackUrl = new Uri(scheme + "://" + host + "/resetpassword/" + user.Id + "/" + encodedToken);
+            Uri callbackUrl = new Uri(scheme + "://" + host + "/resetpassword/" + user.Id + "/" + encodedToken);
 
-            var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking <a href='{callbackUrl}'>here</a>:";
+            string body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking <a href='{callbackUrl}'>here</a>:";
 
             await _emailSender.SendEmail(user.Email, "Reset Password", body);
         }
 
         public async Task<IdentityResult> ResetPassword(AppUser user, string password, string code)
         {
-            var result = await _userManager.ResetPasswordAsync(user, code, password);
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, code, password);
 
             return result;
         }
 
         public async Task<SignInResult> SignInUser(AppUser user, string password)
         {
-            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+            SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
             return result;
         }
 
         public async Task<AppUser> GetUser(string email)
         {
-            var user = await _userManager.Users.Include(p => p.ProfilePicture)
+            AppUser user = await _userManager.Users.Include(p => p.ProfilePicture)
                         .FirstOrDefaultAsync(u => u.NormalizedEmail == email.ToUpper());
 
             return user;
@@ -85,47 +85,47 @@ namespace LMSService.Service
 
         public async Task<string> GenerateJwtToken(AppUser user, string jwtToken)
         {
-            var claims = new List<Claim>
+            List<Claim> claims = new()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email)
             };
 
-            var roles = await _userManager.GetRolesAsync(user);
+            IList<string> roles = await _userManager.GetRolesAsync(user);
 
-            foreach (var role in roles)
+            foreach (string role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtToken));
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(jwtToken));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            SecurityTokenDescriptor tokenDescriptor = new()
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(30),
                 SigningCredentials = creds
             };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+            JwtSecurityTokenHandler tokenHandler = new();
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
         }
 
         public async Task<AppUser> FindUserById(int userId)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            AppUser user = await _userManager.FindByIdAsync(userId.ToString());
 
             return user;
         }
 
         public async Task<bool> IsResetEligible(AppUser user)
         {
-            return user != null && !await _userManager.IsInRoleAsync(user, nameof(RolesEnum.Member));
+            return user != null && !await _userManager.IsInRoleAsync(user, nameof(UserRoles.Member));
         }
     }
 }

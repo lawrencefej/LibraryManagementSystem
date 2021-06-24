@@ -30,9 +30,8 @@ namespace LMSService.Service
 
         public async Task CheckInAsset(int checkoutId)
         {
-            Checkout checkout = await ValidateCheckin(checkoutId);
+            Checkout checkout = await ValidateCheckIn(checkoutId);
 
-            // checkout.StatusId = (int)StatusEnum.Returned;
             checkout.Status = CheckoutStatus.Returned;
 
             checkout.IsReturned = true;
@@ -71,7 +70,8 @@ namespace LMSService.Service
             await _context.SaveChangesAsync();
 
             CheckoutForReturnDto checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
-            checkoutToReturn.Status = nameof(StatusEnum.Checkedout);
+            // checkoutToReturn.Status = CheckoutStatus.Checkedout;
+            // checkoutToReturn.Status = nameof(StatusEnum.Checkedout);
             return checkoutToReturn;
         }
 
@@ -123,7 +123,7 @@ namespace LMSService.Service
 
             List<Checkout> checkouts = await _context.Checkouts.AsNoTracking()
                 .Include(a => a.Items)
-                .Include(a => a.Status)
+                // .Include(a => a.Status)
                 .Where(l => l.LibraryCard.Id == card.Id)
                 .Where(l => l.Status == CheckoutStatus.Checkedout)
                 .ToListAsync();
@@ -245,7 +245,7 @@ namespace LMSService.Service
             return checkouts;
         }
 
-        private async Task<Checkout> ValidateCheckin(int checkoutId)
+        private async Task<Checkout> ValidateCheckIn(int checkoutId)
         {
             Checkout checkout = await _context.Checkouts
                 .FirstOrDefaultAsync(x => x.Id == checkoutId);
