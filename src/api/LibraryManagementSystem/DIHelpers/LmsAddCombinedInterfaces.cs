@@ -13,10 +13,9 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<ILibraryAssetService, LibraryAssetService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<ICategoryService, CategoryService>();
-            // services.AddScoped<IAssetTypeService, AssetTypeService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IAdminService, AdminService>();
-            // services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IMemberService, MemberService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPhotoService, PhotoService>();

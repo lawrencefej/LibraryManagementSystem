@@ -150,7 +150,7 @@ namespace LMSService.Service
         {
             LibraryCard card = await _context.LibraryCards
                 .Include(x => x.Checkouts)
-                .FirstOrDefaultAsync(x => x.MemberId == userId);
+                .FirstOrDefaultAsync(x => x.CardNumber == userId.ToString());
 
             if (card == null)
             {

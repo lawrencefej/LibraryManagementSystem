@@ -45,7 +45,7 @@ namespace LMSService.Service
 
         private async Task<LibraryCard> CreateNewCard(int memberId)
         {
-            var newCard = new LibraryCard
+            LibraryCard newCard = new()
             {
                 MemberId = memberId
             };
@@ -83,7 +83,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<AppUser>> GetAllMembers(PaginationParams paginationParams)
         {
-            var members = _userManager.Users.AsNoTracking()
+            IQueryable<AppUser> members = _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
@@ -139,7 +139,7 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<AppUser>> AdvancedMemberSearch(UserForDetailedDto member)
         {
-            var members = _userManager.Users.AsNoTracking()
+            IQueryable<AppUser> members = _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)

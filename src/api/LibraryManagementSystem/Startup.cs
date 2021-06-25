@@ -35,10 +35,10 @@ namespace LibraryManagementSystem.API
         {
             services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
 
-            var appSettingsSection = Configuration.GetSection(nameof(AppSettings));
+            IConfigurationSection appSettingsSection = Configuration.GetSection(nameof(AppSettings));
 
             services.Configure<AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<AppSettings>();
+            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
 
             //IdentityModelEventSource.ShowPII = true;
             services.AddDataAccessServices(appSettings);

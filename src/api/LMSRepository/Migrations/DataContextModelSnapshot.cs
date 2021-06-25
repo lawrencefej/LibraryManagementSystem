@@ -28,9 +28,8 @@ namespace LMSRepository.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(2)");
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Street")
                         .IsRequired()
@@ -43,6 +42,8 @@ namespace LMSRepository.Migrations
                         .HasColumnType("varchar(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StateId");
 
                     b.ToTable("Address");
                 });
@@ -77,21 +78,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "3af237b9-8247-40b9-8bc1-44fea8bd367b",
+                            ConcurrencyStamp = "4abdb7dd-0a06-4359-b4f5-8190dbe114fc",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "60b120f1-5ed7-4986-8412-ec1d0ac5986f",
+                            ConcurrencyStamp = "d2fa2931-ac05-40cd-86a4-26c633f066a2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "65383363-1e34-4dac-a194-c25d2e20ee2f",
+                            ConcurrencyStamp = "c9542a94-5cae-4142-bb8b-67b261bf57c8",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -432,22 +433,57 @@ namespace LMSRepository.Migrations
                     b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CardNumber")
+                    b.Property<string>("CardNumber")
+                        .IsRequired()
                         .HasMaxLength(25)
-                        .HasColumnType("int");
+                        .HasColumnType("varchar(25)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
 
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("CardNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("MemberId")
                         .IsUnique();
@@ -517,6 +553,335 @@ namespace LMSRepository.Migrations
                     b.HasIndex("LibraryCardId");
 
                     b.ToTable("ReserveAssets");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.State", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Abbreviations")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("varchar(5)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("State");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Abbreviations = "AL",
+                            Name = "Alabama"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Abbreviations = "AK",
+                            Name = "Alaska"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Abbreviations = "AR",
+                            Name = "Arkansas"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Abbreviations = "AZ",
+                            Name = "Arizona"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Abbreviations = "CA",
+                            Name = "California"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Abbreviations = "CO",
+                            Name = "Colorado"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Abbreviations = "CT",
+                            Name = "Connecticut"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Abbreviations = "DC",
+                            Name = "District of Columbia"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Abbreviations = "DE",
+                            Name = "Delaware"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Abbreviations = "FL",
+                            Name = "Florida"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Abbreviations = "GA",
+                            Name = "Georgia"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Abbreviations = "HI",
+                            Name = "Hawaii"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Abbreviations = "ID",
+                            Name = "Idaho"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Abbreviations = "IL",
+                            Name = "Illinois"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Abbreviations = "IN",
+                            Name = "Indiana"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Abbreviations = "IA",
+                            Name = "Iowa"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Abbreviations = "KS",
+                            Name = "Kansas"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Abbreviations = "KY",
+                            Name = "Kentucky"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Abbreviations = "LA",
+                            Name = "Louisiana"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Abbreviations = "ME",
+                            Name = "Maine"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Abbreviations = "MD",
+                            Name = "Maryland"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Abbreviations = "MA",
+                            Name = "Massachusetts"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Abbreviations = "MI",
+                            Name = "Michigan"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Abbreviations = "MN",
+                            Name = "Minnesota"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Abbreviations = "MS",
+                            Name = "Mississippi"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Abbreviations = "MO",
+                            Name = "Missouri"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Abbreviations = "MT",
+                            Name = "Montana"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Abbreviations = "NE",
+                            Name = "Nebraska"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Abbreviations = "NH",
+                            Name = "New Hampshire"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Abbreviations = "NJ",
+                            Name = "New Jersey"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Abbreviations = "NM",
+                            Name = "New Mexico"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Abbreviations = "NY",
+                            Name = "New York"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Abbreviations = "NC",
+                            Name = "North Carolina"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Abbreviations = "NV",
+                            Name = "Nevada"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Abbreviations = "ND",
+                            Name = "North Dakota"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Abbreviations = "OH",
+                            Name = "Ohio"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Abbreviations = "OK",
+                            Name = "Oklahoma"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Abbreviations = "OR",
+                            Name = "Oregon"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Abbreviations = "PA",
+                            Name = "Pennsylvania"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Abbreviations = "RI",
+                            Name = "Rhode Island"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Abbreviations = "SC",
+                            Name = "South Carolina"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Abbreviations = "SD",
+                            Name = "South Dakota"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Abbreviations = "TN",
+                            Name = "Tennessee"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Abbreviations = "TX",
+                            Name = "Texas"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Abbreviations = "UT",
+                            Name = "Utah"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Abbreviations = "VT",
+                            Name = "Vermont"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Abbreviations = "VA",
+                            Name = "Virginia"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Abbreviations = "WA",
+                            Name = "Washington"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Abbreviations = "WV",
+                            Name = "West Virginia"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Abbreviations = "WI",
+                            Name = "Wisconsin"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Abbreviations = "WY",
+                            Name = "Wyoming"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -627,6 +992,17 @@ namespace LMSRepository.Migrations
                         .IsUnique();
 
                     b.HasDiscriminator().HasValue("UserProfilePhoto");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.Address", b =>
+                {
+                    b.HasOne("LMSEntities.Models.State", "State")
+                        .WithMany()
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("State");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.AppUserRole", b =>

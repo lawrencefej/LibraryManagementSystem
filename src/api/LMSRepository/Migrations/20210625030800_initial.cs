@@ -12,26 +12,6 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Address",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Street = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    City = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    State = table.Column<string>(type: "nvarchar(2)", nullable: false),
-                    Zipcode = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Address", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -149,6 +129,23 @@ namespace LMSRepository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LibraryAssets", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "State",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Abbreviations = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_State", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -274,36 +271,6 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "LibraryCards",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CardNumber = table.Column<int>(type: "int", maxLength: 25, nullable: false),
-                    Fees = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    MemberId = table.Column<int>(type: "int", nullable: false),
-                    AddressId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LibraryCards", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LibraryCards_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_LibraryCards_AspNetUsers_MemberId",
-                        column: x => x.MemberId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "LibraryAssetAuthors",
                 columns: table => new
                 {
@@ -383,6 +350,75 @@ namespace LMSRepository.Migrations
                         name: "FK_Photos_LibraryAssets_LibraryAssetId",
                         column: x => x.LibraryAssetId,
                         principalTable: "LibraryAssets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Street = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    City = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    StateId = table.Column<int>(type: "int", nullable: false),
+                    Zipcode = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Address_State_StateId",
+                        column: x => x.StateId,
+                        principalTable: "State",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "LibraryCards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FirstName = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LastName = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumber = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CardNumber = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Fees = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    MemberId = table.Column<int>(type: "int", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: true),
+                    Gender = table.Column<string>(type: "varchar(10)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<string>(type: "varchar(10)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LibraryCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LibraryCards_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LibraryCards_AspNetUsers_MemberId",
+                        column: x => x.MemberId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -536,17 +572,75 @@ namespace LMSRepository.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "3af237b9-8247-40b9-8bc1-44fea8bd367b", "Member", "MEMBER" });
+                values: new object[,]
+                {
+                    { 1, "4abdb7dd-0a06-4359-b4f5-8190dbe114fc", "Member", "MEMBER" },
+                    { 2, "d2fa2931-ac05-40cd-86a4-26c633f066a2", "Admin", "ADMIN" },
+                    { 3, "c9542a94-5cae-4142-bb8b-67b261bf57c8", "Librarian", "LIBRARIAN" }
+                });
 
             migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 2, "60b120f1-5ed7-4986-8412-ec1d0ac5986f", "Admin", "ADMIN" });
+                table: "State",
+                columns: new[] { "Id", "Abbreviations", "Name" },
+                values: new object[,]
+                {
+                    { 28, "NE", "Nebraska" },
+                    { 29, "NH", "New Hampshire" },
+                    { 30, "NJ", "New Jersey" },
+                    { 31, "NM", "New Mexico" },
+                    { 32, "NY", "New York" },
+                    { 33, "NC", "North Carolina" },
+                    { 34, "NV", "Nevada" },
+                    { 35, "ND", "North Dakota" },
+                    { 36, "OH", "Ohio" },
+                    { 37, "OK", "Oklahoma" },
+                    { 38, "OR", "Oregon" },
+                    { 39, "PA", "Pennsylvania" },
+                    { 40, "RI", "Rhode Island" },
+                    { 41, "SC", "South Carolina" },
+                    { 42, "SD", "South Dakota" },
+                    { 43, "TN", "Tennessee" },
+                    { 44, "TX", "Texas" },
+                    { 45, "UT", "Utah" },
+                    { 46, "VT", "Vermont" },
+                    { 47, "VA", "Virginia" },
+                    { 48, "WA", "Washington" },
+                    { 49, "WV", "West Virginia" },
+                    { 27, "MT", "Montana" },
+                    { 26, "MO", "Missouri" },
+                    { 24, "MN", "Minnesota" },
+                    { 50, "WI", "Wisconsin" },
+                    { 1, "AL", "Alabama" },
+                    { 2, "AK", "Alaska" },
+                    { 3, "AR", "Arkansas" },
+                    { 4, "AZ", "Arizona" },
+                    { 5, "CA", "California" },
+                    { 6, "CO", "Colorado" },
+                    { 7, "CT", "Connecticut" },
+                    { 8, "DC", "District of Columbia" },
+                    { 9, "DE", "Delaware" },
+                    { 10, "FL", "Florida" },
+                    { 11, "GA", "Georgia" },
+                    { 12, "HI", "Hawaii" },
+                    { 13, "ID", "Idaho" },
+                    { 14, "IL", "Illinois" },
+                    { 15, "IN", "Indiana" },
+                    { 16, "IA", "Iowa" },
+                    { 17, "KS", "Kansas" },
+                    { 18, "KY", "Kentucky" },
+                    { 19, "LA", "Louisiana" },
+                    { 20, "ME", "Maine" },
+                    { 21, "MD", "Maryland" },
+                    { 22, "MA", "Massachusetts" },
+                    { 23, "MI", "Michigan" },
+                    { 25, "MS", "Mississippi" },
+                    { 51, "WY", "Wyoming" }
+                });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 3, "65383363-1e34-4dac-a194-c25d2e20ee2f", "Librarian", "LIBRARIAN" });
+            migrationBuilder.CreateIndex(
+                name: "IX_Address_StateId",
+                table: "Address",
+                column: "StateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -634,6 +728,18 @@ namespace LMSRepository.Migrations
                 name: "IX_LibraryCards_AddressId",
                 table: "LibraryCards",
                 column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LibraryCards_CardNumber",
+                table: "LibraryCards",
+                column: "CardNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LibraryCards_Email",
+                table: "LibraryCards",
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibraryCards_MemberId",
@@ -725,6 +831,9 @@ namespace LMSRepository.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "State");
         }
     }
 }

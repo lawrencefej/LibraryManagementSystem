@@ -1,149 +1,155 @@
-﻿// using System.Collections.Generic;
-// using System.Threading.Tasks;
-// using AutoMapper;
-// using LibraryManagementSystem.API.Helpers;
-// using LMSContracts.Interfaces;
-// using LMSEntities.DataTransferObjects;
-// using LMSEntities.Helpers;
-// using LMSEntities.Models;
-// using Microsoft.AspNet.OData;
-// using Microsoft.AspNetCore.Authorization;
-// using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
+using LibraryManagementSystem.API.Helpers;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
+using LMSEntities.Models;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
-// namespace LibraryManagementSystem.Controllers
-// {
-//     [Authorize(Policy = API.Helpers.Role.RequireLibrarianRole)]
-//     [Route("api/[controller]")]
-//     [Authorize]
-//     [ApiController]
-//     public class MemberController : ControllerBase
-//     {
-//         private readonly IMemberService _memberService;
-//         private readonly IMapper _mapper;
+namespace LibraryManagementSystem.Controllers
+{
+    [Authorize(Policy = API.Helpers.Role.RequireLibrarianRole)]
+    [Route("api/[controller]")]
+    [Authorize]
+    [ApiController]
+    public class MemberController : ControllerBase
+    {
+        private readonly IMemberService _memberService;
+        private readonly IMapper _mapper;
 
-//         public MemberController(IMemberService memberService, IMapper mapper)
-//         {
-//             _memberService = memberService;
-//             _mapper = mapper;
-//         }
+        public MemberController(IMemberService memberService, IMapper mapper)
+        {
+            _memberService = memberService;
+            _mapper = mapper;
+        }
 
-//         [HttpGet]
-//         [EnableQuery]
-//         public async Task<ActionResult> GetMembers()
-//         {
-//             var users = await _memberService.SearchMembers();
+        [HttpGet]
+        [EnableQuery]
+        public async Task<ActionResult> GetMembers()
+        {
+            IEnumerable<AppUser> users = await _memberService.SearchMembers();
 
-//             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
-//             return Ok(usersToReturn);
-//         }
+            return Ok(usersToReturn);
+        }
 
-//         [HttpGet("pagination/")]
-//         public async Task<IActionResult> GetpaginatedMembers([FromQuery] PaginationParams paginationParams)
-//         {
-//             var members = await _memberService.GetAllMembers(paginationParams);
+        [HttpGet("pagination/")]
+        public async Task<IActionResult> GetpaginatedMembers([FromQuery] PaginationParams paginationParams)
+        {
+            PagedList<AppUser> members = await _memberService.GetAllMembers(paginationParams);
 
-//             var membersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(members);
+            IEnumerable<UserForDetailedDto> membersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(members);
 
-//             Response.AddPagination(members.CurrentPage, members.PageSize,
-//                  members.TotalCount, members.TotalPages);
+            Response.AddPagination(members.CurrentPage, members.PageSize,
+                 members.TotalCount, members.TotalPages);
 
-//             return Ok(membersToReturn);
-//         }
+            return Ok(membersToReturn);
+        }
 
-//         [HttpGet("advancedSearch/")]
-//         public async Task<IActionResult> AdvancedmemberSearch([FromQuery] UserForDetailedDto member)
-//         {
-//             var members = await _memberService.AdvancedMemberSearch(member);
+        [HttpGet("advancedSearch/")]
+        public async Task<IActionResult> AdvancedmemberSearch([FromQuery] UserForDetailedDto member)
+        {
+            IEnumerable<AppUser> members = await _memberService.AdvancedMemberSearch(member);
 
-//             var membersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(members);
+            IEnumerable<UserForDetailedDto> membersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(members);
 
-//             return Ok(membersToReturn);
-//         }
+            return Ok(membersToReturn);
+        }
 
-//         [HttpGet("{id}", Name = nameof(GetMember))]
-//         public async Task<IActionResult> GetMember(int id)
-//         {
-//             var user = await _memberService.GetMember(id);
+        [HttpGet("{id}", Name = nameof(GetMember))]
+        public async Task<IActionResult> GetMember(int id)
+        {
+            AppUser user = await _memberService.GetMember(id);
 
-//             if (user == null)
-//             {
-//                 return NotFound();
-//             }
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-//             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
-//             return Ok(userToReturn);
-//         }
+            return Ok(userToReturn);
+        }
 
-//         [HttpGet("card/{cardId}")]
-//         public async Task<IActionResult> GetMemberByCardNumber(int cardId)
-//         {
-//             var user = await _memberService.GetMemberByCardNumber(cardId);
+        [HttpGet("card/{cardId}")]
+        public async Task<IActionResult> GetMemberByCardNumber(int cardId)
+        {
+            AppUser user = await _memberService.GetMemberByCardNumber(cardId);
 
-//             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-//             return Ok(userToReturn);
-//         }
+            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
-//         [HttpPut]
-//         public async Task<IActionResult> UpdateMember(UserForUpdateDto userForUpdateDto)
-//         {
-//             var user = await _memberService.GetMember(userForUpdateDto.Id);
+            return Ok(userToReturn);
+        }
 
-//             if (user == null)
-//             {
-//                 return NotFound();
-//             }
+        [HttpPut]
+        public async Task<IActionResult> UpdateMember(UserForUpdateDto userForUpdateDto)
+        {
+            AppUser user = await _memberService.GetMember(userForUpdateDto.Id);
 
-//             _mapper.Map(userForUpdateDto, user);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-//             await _memberService.UpdateMember(user);
+            _mapper.Map(userForUpdateDto, user);
 
-//             return NoContent();
-//         }
+            await _memberService.UpdateMember(user);
 
-//         [HttpPost]
-//         public async Task<IActionResult> AddMember(MemberForCreation memberForCreation)
-//         {
-//             var member = _mapper.Map<User>(memberForCreation);
+            return NoContent();
+        }
 
-//             member.UserName = member.Email;
+        [HttpPost]
+        public async Task<IActionResult> AddMember(MemberForCreation memberForCreation)
+        {
+            AppUser member = _mapper.Map<AppUser>(memberForCreation);
 
-//             var result = await _memberService.CreateMember(member);
+            member.UserName = member.Email;
 
-//             if (result.Succeeded)
-//             {
-//                 member = await _memberService.CompleteAddMember(member);
+            IdentityResult result = await _memberService.CreateMember(member);
 
-//                 var MemberToReturn = _mapper.Map<UserForDetailedDto>(member);
+            if (result.Succeeded)
+            {
+                member = await _memberService.CompleteAddMember(member);
 
-//                 MemberToReturn.LibraryCardNumber = member.LibraryCard.Id;
+                UserForDetailedDto MemberToReturn = _mapper.Map<UserForDetailedDto>(member);
 
-//                 return CreatedAtAction(nameof(GetMember), new { id = MemberToReturn.Id }, MemberToReturn);
-//             }
+                MemberToReturn.LibraryCardNumber = member.LibraryCard.Id;
 
-//             foreach (var error in result.Errors)
-//             {
-//                 ModelState.AddModelError(string.Empty, error.Description);
-//             }
+                return CreatedAtAction(nameof(GetMember), new { id = MemberToReturn.Id }, MemberToReturn);
+            }
 
-//             return BadRequest(ModelState);
-//         }
+            foreach (IdentityError error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
 
-//         [HttpDelete("{id}")]
-//         public async Task<IActionResult> DeleteUser(int id)
-//         {
-//             var user = await _memberService.GetMember(id);
+            return BadRequest(ModelState);
+        }
 
-//             if (user == null)
-//             {
-//                 return NotFound();
-//             }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            AppUser user = await _memberService.GetMember(id);
 
-//             await _memberService.DeleteMember(user);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-//             return NoContent();
-//         }
-//     }
-// }
+            await _memberService.DeleteMember(user);
+
+            return NoContent();
+        }
+    }
+}

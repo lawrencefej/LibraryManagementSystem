@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace LMSEntities.Models
 {
     public class Address
@@ -8,7 +5,8 @@ namespace LMSEntities.Models
         public int Id { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
-        public States State { get; set; }
+        public State State { get; set; }
+        public int StateId { get; set; }
         public string Zipcode { get; set; }
     }
 }
