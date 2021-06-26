@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210626201349_initial")]
+    [Migration("20210626232805_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,21 +80,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "a04bba3d-3c9d-4015-9011-30abfeb62430",
+                            ConcurrencyStamp = "9114602c-2203-4dfd-a702-357976ff7b5b",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "25428550-e58a-4753-84eb-291144d08c7b",
+                            ConcurrencyStamp = "e30be16f-bd69-4ad1-a46c-f1d7d9ef06ee",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "d47f0222-a114-44ed-b713-c550fdf42506",
+                            ConcurrencyStamp = "5a1856f0-ac58-418e-ad37-ce9b175c34c5",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });

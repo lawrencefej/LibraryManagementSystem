@@ -581,9 +581,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "a04bba3d-3c9d-4015-9011-30abfeb62430", "Member", "MEMBER" },
-                    { 2, "25428550-e58a-4753-84eb-291144d08c7b", "Admin", "ADMIN" },
-                    { 3, "d47f0222-a114-44ed-b713-c550fdf42506", "Librarian", "LIBRARIAN" }
+                    { 1, "9114602c-2203-4dfd-a702-357976ff7b5b", "Member", "MEMBER" },
+                    { 2, "e30be16f-bd69-4ad1-a46c-f1d7d9ef06ee", "Admin", "ADMIN" },
+                    { 3, "5a1856f0-ac58-418e-ad37-ce9b175c34c5", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(

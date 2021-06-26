@@ -27,6 +27,16 @@ services:
       AppSettings__DbUser: librarydb
       AppSettings__DbPassword: Password123
       AppSettings__DatabaseName: librarydb
+      EmailSettings__apikey: zdvvd
+      EmailSettings__Host: zdvvd
+      EmailSettings__Password: zdvvd
+      EmailSettings__Port: 1234
+      EmailSettings__Username: zdvvd
+      EmailSettings__Email: zdvvd
+      EmailSettings__Name: zdvvd
+      CloudinarySettings__Name: dgngdndngn
+      CloudinarySettings__ApiKey: dgngdndngn
+      CloudinarySettings__ApiSecret: dgngdndngn
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -63,7 +73,8 @@ services:
     volumes:
       # - mariadb-data:/var/lib/mysql
       - ./src/sql/migration.sql:/docker-entrypoint-initdb.d/1.sql
-      - ./src/sql/admins.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./src/sql/states.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./src/sql/admins.sql:/docker-entrypoint-initdb.d/3.sql
     environment:
       MYSQL_ROOT_PASSWORD: mariadb
       MYSQL_DATABASE: librarydb
