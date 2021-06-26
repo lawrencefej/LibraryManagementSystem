@@ -6,11 +6,10 @@ import { CheckoutService } from '../_services/checkout.service';
 import { Injectable } from '@angular/core';
 import { NotificationService } from '../_services/notification.service';
 import { catchError } from 'rxjs/operators';
+import { lmsResolverContants } from './resolver.constants';
 
 @Injectable()
 export class CheckoutListResolver implements Resolve<Checkout[]> {
-  pageNumber = 1;
-  pageSize = 5;
   constructor(
     private checkoutService: CheckoutService,
     private notify: NotificationService,
@@ -19,9 +18,12 @@ export class CheckoutListResolver implements Resolve<Checkout[]> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<Checkout[]> {
     return this.checkoutService
-      .getPaginatedCheckouts(this.pageNumber, this.pageSize, '', '', '')
+      .getPaginatedCheckouts(
+        lmsResolverContants.pageNumber,
+        lmsResolverContants.pageSize
+      )
       .pipe(
-        catchError((error) => {
+        catchError(() => {
           this.notify.error('Problem retrieving data');
           this.router.navigate(['/memberSearch']);
           return of(null);

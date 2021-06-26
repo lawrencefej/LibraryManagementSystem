@@ -18,7 +18,7 @@ export class AssetDetailResolver implements Resolve<LibraryAsset> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<LibraryAsset> {
     return this.assetService.getAsset(route.params.id).pipe(
-      catchError((error) => {
+      catchError(() => {
         this.notify.error('Problem retrieving data');
         this.router.navigate(['/catalog']);
         return of(null);

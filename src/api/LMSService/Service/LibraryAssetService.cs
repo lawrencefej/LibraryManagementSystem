@@ -5,7 +5,6 @@ using LMSContracts.Interfaces;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
-using LMSService.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

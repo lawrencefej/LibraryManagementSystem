@@ -54,7 +54,7 @@ namespace LMSService.Service
 
         public UserForDetailedDto AddRoleToUser(UserForDetailedDto user)
         {
-            var role = user.UserRoles.ElementAtOrDefault(0);
+            UserRoleDto role = user.UserRoles.ElementAtOrDefault(0);
 
             user.Role = role.Name;
 
@@ -63,9 +63,9 @@ namespace LMSService.Service
 
         public IEnumerable<UserForDetailedDto> AddRoleToUsers(IEnumerable<UserForDetailedDto> users)
         {
-            foreach (var user in users)
+            foreach (UserForDetailedDto user in users)
             {
-                var role = user.UserRoles.ElementAtOrDefault(0);
+                UserRoleDto role = user.UserRoles.ElementAtOrDefault(0);
                 user.Role = role.Name;
             }
 

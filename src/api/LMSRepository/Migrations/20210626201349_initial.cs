@@ -322,40 +322,6 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Photos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Url = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DateAdded = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    PublicId = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Discriminator = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    LibraryAssetId = table.Column<int>(type: "int", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Photos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Photos_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Photos_LibraryAssets_LibraryAssetId",
-                        column: x => x.LibraryAssetId,
-                        principalTable: "LibraryAssets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Address",
                 columns: table => new
                 {
@@ -400,7 +366,7 @@ namespace LMSRepository.Migrations
                     Fees = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     MemberId = table.Column<int>(type: "int", nullable: false),
-                    AddressId = table.Column<int>(type: "int", nullable: true),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
                     Gender = table.Column<string>(type: "varchar(10)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<string>(type: "varchar(10)", nullable: false)
@@ -414,7 +380,7 @@ namespace LMSRepository.Migrations
                         column: x => x.AddressId,
                         principalTable: "Address",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LibraryCards_AspNetUsers_MemberId",
                         column: x => x.MemberId,
@@ -509,6 +475,47 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Url = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DateAdded = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    PublicId = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Discriminator = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LibraryAssetId = table.Column<int>(type: "int", nullable: true),
+                    LibraryCardId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Photos_LibraryAssets_LibraryAssetId",
+                        column: x => x.LibraryAssetId,
+                        principalTable: "LibraryAssets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Photos_LibraryCards_LibraryCardId",
+                        column: x => x.LibraryCardId,
+                        principalTable: "LibraryCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "ReserveAssets",
                 columns: table => new
                 {
@@ -574,9 +581,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "4abdb7dd-0a06-4359-b4f5-8190dbe114fc", "Member", "MEMBER" },
-                    { 2, "d2fa2931-ac05-40cd-86a4-26c633f066a2", "Admin", "ADMIN" },
-                    { 3, "c9542a94-5cae-4142-bb8b-67b261bf57c8", "Librarian", "LIBRARIAN" }
+                    { 1, "a04bba3d-3c9d-4015-9011-30abfeb62430", "Member", "MEMBER" },
+                    { 2, "25428550-e58a-4753-84eb-291144d08c7b", "Admin", "ADMIN" },
+                    { 3, "d47f0222-a114-44ed-b713-c550fdf42506", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(
@@ -751,6 +758,12 @@ namespace LMSRepository.Migrations
                 name: "IX_Photos_LibraryAssetId",
                 table: "Photos",
                 column: "LibraryAssetId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_LibraryCardId",
+                table: "Photos",
+                column: "LibraryCardId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

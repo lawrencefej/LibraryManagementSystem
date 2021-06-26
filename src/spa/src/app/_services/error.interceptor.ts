@@ -7,7 +7,6 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 

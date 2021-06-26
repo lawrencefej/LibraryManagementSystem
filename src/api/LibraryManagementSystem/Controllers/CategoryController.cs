@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LMSContracts.Interfaces;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            var category = await _categoryService.GetCategories();
+            IEnumerable<Category> category = await _categoryService.GetCategories();
 
             return Ok(category);
         }
@@ -27,14 +28,9 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("{categoryId}", Name = nameof(GetCategory))]
         public async Task<IActionResult> GetCategory(int categoryId)
         {
-            var category = await _categoryService.GetCategory(categoryId);
+            Category category = await _categoryService.GetCategory(categoryId);
 
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(category);
+            return category == null ? NotFound() : Ok(category);
         }
 
         [HttpPost]
@@ -48,16 +44,15 @@ namespace LibraryManagementSystem.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-            var category = await _categoryService.GetCategory(id);
 
-            if (category == null)
+            if (await _categoryService.GetCategory(id) == null)
             {
                 return NotFound();
             }
 
-            await _categoryService.DeleteCategory(category);
+            await _categoryService.DeleteCategory(await _categoryService.GetCategory(id));
 
-            return category;
+            return await _categoryService.GetCategory(id);
         }
     }
 }

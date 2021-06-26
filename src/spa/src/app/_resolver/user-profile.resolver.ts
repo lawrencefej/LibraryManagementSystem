@@ -19,7 +19,7 @@ export class UserProfileResolver implements Resolve<User> {
 
   resolve(): Observable<User> {
     return this.userService.getUser(this.authService.loggedInUser.id).pipe(
-      catchError((error) => {
+      catchError(() => {
         this.notify.error('Problem retrieving data');
         this.router.navigate(['/members']);
         return of(null);

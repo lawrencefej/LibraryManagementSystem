@@ -20,10 +20,7 @@ export class AuthorListResolver implements Resolve<Author[]> {
     return this.authorService
       .getPaginatedAuthors(
         lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize,
-        '',
-        '',
-        ''
+        lmsResolverContants.pageSize
       )
       .pipe(
         catchError(() => {

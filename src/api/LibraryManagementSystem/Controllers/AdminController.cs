@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using LibraryManagementSystem.API.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.API.Controllers
 {
-    [Authorize(Policy = Helpers.Role.RequireAdminRole)]
+    [Authorize(Policy = Role.RequireAdminRole)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase

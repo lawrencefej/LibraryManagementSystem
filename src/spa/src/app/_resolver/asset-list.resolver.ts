@@ -1,6 +1,5 @@
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import { Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-
 import { AssetService } from '../_services/asset.service';
 import { Injectable } from '@angular/core';
 import { LibraryAsset } from '../_models/libraryAsset';
@@ -20,10 +19,7 @@ export class AssetListResolver implements Resolve<LibraryAsset[]> {
     return this.assetService
       .getPaginatedAssets(
         lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize,
-        '',
-        '',
-        ''
+        lmsResolverContants.pageSize
       )
       .pipe(
         catchError(() => {

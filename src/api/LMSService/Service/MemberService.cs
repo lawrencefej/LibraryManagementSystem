@@ -92,6 +92,7 @@ namespace LMSService.Service
 
             if (!string.IsNullOrEmpty(paginationParams.SearchString))
             {
+                // TODO See if this can work with generics and then move to its own method
                 members = members
                     .Where(x => x.FirstName.Contains(paginationParams.SearchString)
                     || x.Email.Contains(paginationParams.SearchString)
@@ -101,6 +102,7 @@ namespace LMSService.Service
 
             if (paginationParams.SortDirection == "asc")
             {
+                // TODO Same here
                 if (string.Equals(paginationParams.OrderBy, "email", StringComparison.CurrentCultureIgnoreCase))
                 {
                     members = members.OrderBy(x => x.Email);
@@ -207,7 +209,6 @@ namespace LMSService.Service
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(UserRoles.Member)))
                 .FirstOrDefaultAsync(x => x.Email == email);
             return user != null;
-            // return true;
         }
     }
 }

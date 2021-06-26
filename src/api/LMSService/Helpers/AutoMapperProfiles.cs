@@ -161,6 +161,11 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<RoleDto, AppRole>();
             CreateMap<LibraryAssetAuthorDto, LibraryAssetAuthor>().ReverseMap();
             CreateMap<LibraryAssetCategoryDto, LibraryAssetCategory>().ReverseMap();
+            CreateMap<LibraryCardForCreationDto, LibraryCard>();
+            CreateMap<LibraryCardForDetailedDto, LibraryCard>().ReverseMap();
+            CreateMap<LibrarycardForListDto, LibraryCard>().ReverseMap();
+            CreateMap<LibraryCardForUpdate, LibraryCard>();
+            CreateMap<AddressDto, Address>().ReverseMap();
         }
     }
 }

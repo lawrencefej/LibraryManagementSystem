@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210625030800_initial")]
+    [Migration("20210626201349_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,21 +80,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "4abdb7dd-0a06-4359-b4f5-8190dbe114fc",
+                            ConcurrencyStamp = "a04bba3d-3c9d-4015-9011-30abfeb62430",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "d2fa2931-ac05-40cd-86a4-26c633f066a2",
+                            ConcurrencyStamp = "25428550-e58a-4753-84eb-291144d08c7b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "c9542a94-5cae-4142-bb8b-67b261bf57c8",
+                            ConcurrencyStamp = "d47f0222-a114-44ed-b713-c550fdf42506",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -432,7 +432,7 @@ namespace LMSRepository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AddressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("CardNumber")
@@ -983,6 +983,19 @@ namespace LMSRepository.Migrations
                     b.HasDiscriminator().HasValue("AssetPhoto");
                 });
 
+            modelBuilder.Entity("LMSEntities.Models.LibraryCardPhoto", b =>
+                {
+                    b.HasBaseType("LMSEntities.Models.Photo");
+
+                    b.Property<int>("LibraryCardId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("LibraryCardId")
+                        .IsUnique();
+
+                    b.HasDiscriminator().HasValue("LibraryCardPhoto");
+                });
+
             modelBuilder.Entity("LMSEntities.Models.UserProfilePhoto", b =>
                 {
                     b.HasBaseType("LMSEntities.Models.Photo");
@@ -1128,7 +1141,9 @@ namespace LMSRepository.Migrations
                 {
                     b.HasOne("LMSEntities.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LMSEntities.Models.AppUser", "Member")
                         .WithOne("LibraryCard")
@@ -1207,6 +1222,17 @@ namespace LMSRepository.Migrations
                     b.Navigation("LibraryAsset");
                 });
 
+            modelBuilder.Entity("LMSEntities.Models.LibraryCardPhoto", b =>
+                {
+                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
+                        .WithOne("LibraryCardPhoto")
+                        .HasForeignKey("LMSEntities.Models.LibraryCardPhoto", "LibraryCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LibraryCard");
+                });
+
             modelBuilder.Entity("LMSEntities.Models.UserProfilePhoto", b =>
                 {
                     b.HasOne("LMSEntities.Models.AppUser", "User")
@@ -1259,6 +1285,8 @@ namespace LMSRepository.Migrations
             modelBuilder.Entity("LMSEntities.Models.LibraryCard", b =>
                 {
                     b.Navigation("Checkouts");
+
+                    b.Navigation("LibraryCardPhoto");
 
                     b.Navigation("ReservedAssets");
                 });

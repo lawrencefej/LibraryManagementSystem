@@ -17,7 +17,7 @@ export class CheckoutDetailResolver implements Resolve<Checkout> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<Checkout> {
     return this.checkoutService.getCheckout(route.params.id).pipe(
-      catchError((error) => {
+      catchError(() => {
         this.notify.error('Problem retrieving data');
         this.router.navigate(['/members']);
         return of(null);

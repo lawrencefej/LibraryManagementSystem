@@ -6,6 +6,7 @@ import { MemberService } from './../_services/member.service';
 import { NotificationService } from '../_services/notification.service';
 import { User } from '../_models/user';
 import { catchError } from 'rxjs/operators';
+import { lmsResolverContants } from './resolver.constants';
 
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> {
@@ -20,9 +21,13 @@ export class MemberListResolver implements Resolve<User[]> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
     return this.memberService
-      .getPaginatedMembers(this.pageNumber, this.pageSize, '', '', '')
+      .getPaginatedMembers(
+        lmsResolverContants.pageNumber,
+        lmsResolverContants.pageSize
+      )
       .pipe(
         catchError(() => {
+          // TODO Make this central
           this.notify.error('Problem retrieving data');
           this.router.navigate(['/memberSearch']);
           return of(null);
