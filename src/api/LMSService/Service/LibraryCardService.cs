@@ -26,7 +26,7 @@ namespace LMSService.Service
         }
         public async Task<LibraryCard> AddLibraryCard(LibraryCard card)
         {
-            card.CardNumber = card.GenerateCardNumber();
+            card = await GenerateCardNumber(card);
             AppUser member = await CreateNewMember(card);
             card.Member = member;
 
@@ -34,6 +34,19 @@ namespace LMSService.Service
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"added LibraryCard {card.CardNumber} with ID: {card.Id}");
+
+            return card;
+        }
+
+        private async Task<LibraryCard> GenerateCardNumber(LibraryCard card)
+        {
+            card.CardNumber = card.GenerateCardNumber();
+
+            if (await DoesLibraryCardExist(card.CardNumber))
+            {
+                card.CardNumber = card.GenerateCardNumber();
+                await GenerateCardNumber(card);
+            }
 
             return card;
         }
@@ -72,7 +85,7 @@ namespace LMSService.Service
 
             // return card != null;
 
-            return await _context.LibraryCards.AsNoTracking().FirstOrDefaultAsync(x => x.CardNumber == cardNumber) == null;
+            return await _context.LibraryCards.AsNoTracking().FirstOrDefaultAsync(x => x.CardNumber == cardNumber) != null;
         }
 
         public async Task<PagedList<LibraryCard>> GetAllLibraryCard(PaginationParams paginationParams)

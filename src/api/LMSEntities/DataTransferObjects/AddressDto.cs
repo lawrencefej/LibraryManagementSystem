@@ -11,7 +11,7 @@ namespace LMSEntities.DataTransferObjects
         public string City { get; set; }
         [Required]
         public int StateId { get; set; }
-        // public StateDto State { get; set; }
+        public StateDto State { get; set; }
         [Required]
         [StringLength(5, MinimumLength = 5)]
         public string Zipcode { get; set; }

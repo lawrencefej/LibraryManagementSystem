@@ -108,7 +108,7 @@ namespace LibraryManagementSystem.Controllers
 
             if (card == null)
             {
-                NoContent();
+                return NoContent();
             }
 
             await _libraryCardService.DeleteLibraryCard(card);

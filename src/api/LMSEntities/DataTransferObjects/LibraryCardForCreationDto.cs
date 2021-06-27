@@ -17,14 +17,10 @@ namespace LMSEntities.DataTransferObjects
         [Required]
         [Phone]
         public string PhoneNumber { get; set; }
-        // public string CardNumber { get; set; }
         public decimal Fees { get; set; } = 0;
         public DateTime Created { get; set; } = DateTime.Today;
-        // public AppUser Member { get; set; }
-        // public int MemberId { get; set; }
         [Required]
         public AddressDto Address { get; set; }
-        // public int AddressId { get; set; }
         [Required]
         public MemberGenderDto Gender { get; set; }
         [Required]
