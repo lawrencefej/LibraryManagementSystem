@@ -8,6 +8,8 @@ namespace LMSContracts.Interfaces
 {
     public interface ICheckoutService
     {
+        Task<LmsResponseHandler<CheckoutForReturnDto>> CheckoutItems(LibraryCard card, CheckoutForCreationDto checkoutDto);
+        Task<LibraryCard> GetMemberLibraryCard(string CardNumber);
         Task CheckInAsset(int checkoutId);
 
         Task<CheckoutForReturnDto> CheckoutAsset(CheckoutForCreationDto checkoutForCreation);

@@ -167,6 +167,9 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<LibraryCardForUpdate, LibraryCard>();
             CreateMap<AddressDto, Address>().ReverseMap();
             CreateMap<StateDto, State>().ReverseMap();
+            CreateMap<CheckoutForCreationDto, Checkout>();
+            CreateMap<CheckoutItemForCreationDto, CheckoutItem>();
+
         }
     }
 }

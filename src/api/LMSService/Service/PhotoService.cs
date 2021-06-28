@@ -32,7 +32,7 @@ namespace LMSService.Service
 
         public async Task<ResponseHandler> AddPhotoForAsset(AssetPhotoDto assetPhotoDto)
         {
-            var asset = await _context.LibraryAssets.Include(x => x.Photo).FirstOrDefaultAsync(x => x.Id == assetPhotoDto.LibraryAssetId);
+            LibraryAsset asset = await _context.LibraryAssets.Include(x => x.Photo).FirstOrDefaultAsync(x => x.Id == assetPhotoDto.LibraryAssetId);
 
             PhotoSettings settings = CloudinarySettings();
 
@@ -41,7 +41,7 @@ namespace LMSService.Service
                 await DeletePhoto(settings, asset.Photo);
             }
 
-            var photoModel = new PhotoModel(assetPhotoDto.File)
+            PhotoModel photoModel = new PhotoModel(assetPhotoDto.File)
             {
                 Folder = "LMS/Assets",
                 Width = 500,
@@ -49,25 +49,25 @@ namespace LMSService.Service
                 Crop = "fill"
             };
 
-            var result = _photoLibrary.UploadPhoto(settings, photoModel);
+            PhotoLibrary.Helper.PhotoResponse result = _photoLibrary.UploadPhoto(settings, photoModel);
 
             assetPhotoDto.Url = result.Url;
             assetPhotoDto.PublicId = result.PublicId;
 
-            var photo = _mapper.Map<AssetPhoto>(assetPhotoDto);
+            AssetPhoto photo = _mapper.Map<AssetPhoto>(assetPhotoDto);
 
             asset.Photo = photo;
 
             await _context.SaveChangesAsync();
 
-            var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+            PhotoForReturnDto photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
 
             return new ResponseHandler(photoToreturn, photo.Id);
         }
 
         public async Task<ResponseHandler> AddPhotoForUser(UserPhotoDto userPhotoDto)
         {
-            var user = await _context.Users.Include(x => x.ProfilePicture).FirstOrDefaultAsync(x => x.Id == userPhotoDto.UserId);
+            AppUser user = await _context.Users.Include(x => x.ProfilePicture).FirstOrDefaultAsync(x => x.Id == userPhotoDto.UserId);
 
             PhotoSettings settings = CloudinarySettings();
 
@@ -76,7 +76,7 @@ namespace LMSService.Service
                 await DeletePhoto(settings, user.ProfilePicture);
             }
 
-            var photoModel = new PhotoModel(userPhotoDto.File)
+            PhotoModel photoModel = new PhotoModel(userPhotoDto.File)
             {
                 Folder = "LMS/Members",
                 Width = 500,
@@ -85,18 +85,18 @@ namespace LMSService.Service
                 Crop = "fill"
             };
 
-            var result = _photoLibrary.UploadPhoto(settings, photoModel);
+            PhotoLibrary.Helper.PhotoResponse result = _photoLibrary.UploadPhoto(settings, photoModel);
 
             userPhotoDto.Url = result.Url;
             userPhotoDto.PublicId = result.PublicId;
 
-            var photo = _mapper.Map<UserProfilePhoto>(userPhotoDto);
+            UserProfilePhoto photo = _mapper.Map<UserProfilePhoto>(userPhotoDto);
 
             user.ProfilePicture = photo;
 
             await _context.SaveChangesAsync();
 
-            var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+            PhotoForReturnDto photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
             return new ResponseHandler(photoToreturn, photo.Id);
         }
 

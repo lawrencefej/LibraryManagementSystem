@@ -32,14 +32,14 @@ namespace LMSService.Service
 
         public async Task<IEnumerable<Category>> GetCategories()
         {
-            var categories = await _context.Category.ToListAsync();
+            List<Category> categories = await _context.Categories.ToListAsync();
 
             return categories;
         }
 
         public async Task<Category> GetCategory(int categoryId)
         {
-            var category = await _context.Category.FirstOrDefaultAsync(x => x.Id == categoryId);
+            Category category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);
 
             return category;
         }

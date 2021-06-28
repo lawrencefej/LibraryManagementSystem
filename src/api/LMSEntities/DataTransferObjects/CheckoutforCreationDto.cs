@@ -1,31 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using LMSEntities.Models;
 
 namespace LMSEntities.DataTransferObjects
 {
     public class CheckoutForCreationDto
     {
-        public int LibraryAssetId { get; set; }
+        [Required]
+        public ICollection<CheckoutItem> Items { get; set; }
+        // TODO IS this needed
+        [Required]
         public int LibraryCardId { get; set; }
-        public int UserId { get; set; }
+        [Required]
+        public string LibraryCardNumber { get; set; }
         public DateTime CheckoutDate { get; set; } = DateTime.Today;
         public DateTime DueDate { get; set; } = DateTime.Today.AddDays(21);
-        // public Status Status { get; set; }
-        public CheckoutStatus Status { get; set; } = CheckoutStatus.Checkedout;
-        // public int StatusId { get; set; }
-        public decimal Fees { get; set; }
-        public string AssetStatus { get; set; }
-        public int CurrentCheckoutCount { get; set; }
-
-        //public IEnumerable<LibraryAssetForCreationDto> Assets { get; set; }
-        public LibraryAssetForDetailedDto Asset { get; set; }
-
-        public CheckoutForCreationDto()
-        {
-            // StatusId = (int)StatusEnum.Checkedout;
-            // Status = CheckoutStatus.Checkedout;
-            // CheckoutDate = DateTime.Today;
-            // DueDate = DateTime.Today.AddDays(21);
-        }
+        public CheckoutStatusDto Status { get; set; } = CheckoutStatusDto.Checkedout;
+        public byte RenewalCount { get; set; } = 1;
+        public bool IsReturned { get; set; }
     }
 }

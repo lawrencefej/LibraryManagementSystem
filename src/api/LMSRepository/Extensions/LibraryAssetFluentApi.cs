@@ -61,11 +61,11 @@ namespace LMSRepository.Extensions
                 .WithMany(c => c.CategoryAssets)
                 .HasForeignKey(d => d.CategoryId);
 
-            modelBuilder.Entity<Category>()
-                .Property(e => e.Name)
-                .HasMaxLength(15)
-                .IsRequired();
-
+            modelBuilder.Entity<Category>(e =>
+            {
+                e.Property(a => a.Name).HasMaxLength(50).IsRequired();
+                e.Property(a => a.Description).HasMaxLength(250);
+            });
             // modelBuilder.Entity<Category>().HasData(
             //     new Category { Id = 1, Name = "Science", Description = "Paper back books" },
             //     new Category { Id = 2, Name = "Computer", Description = "Video and media" }

@@ -50,16 +50,16 @@ namespace LMSService.Service
 
         public async Task<CheckoutForReturnDto> CheckoutAsset(CheckoutForCreationDto checkoutForCreation)
         {
-            LibraryCard libraryCard = await GetMemberLibraryCard(checkoutForCreation.UserId);
+            LibraryCard libraryCard = await GetMemberLibraryCard(checkoutForCreation.LibraryCardNumber);
             DoesMemberHaveFees(libraryCard.Fees);
 
-            IsAssetCurrentlyCheckedOutByMember(libraryCard.Checkouts.ToList(), checkoutForCreation.LibraryAssetId, 0);
+            // IsAssetCurrentlyCheckedOutByMember(checkoutForCreation, libraryCard);
 
-            LibraryAsset libraryAsset = await GetLibraryAsset(checkoutForCreation.LibraryAssetId);
+            LibraryAsset libraryAsset = await GetLibraryAsset(checkoutForCreation.LibraryCardId);
 
             // checkoutForCreation.AssetStatus = libraryAsset.Status.Name;
             checkoutForCreation.LibraryCardId = libraryCard.Id;
-            checkoutForCreation.Fees = libraryCard.Fees;
+            // checkoutForCreation.Fees = libraryCard.Fees;
 
             ReduceAssetCopiesAvailable(libraryAsset);
 
@@ -77,18 +77,18 @@ namespace LMSService.Service
 
         public async Task CheckoutAsset(IEnumerable<CheckoutForCreationDto> checkoutsForCreation)
         {
-            LibraryCard libraryCard = await GetMemberLibraryCard(checkoutsForCreation.First().UserId);
+            LibraryCard libraryCard = await GetMemberLibraryCard(checkoutsForCreation.First().LibraryCardNumber);
             DoesMemberHaveFees(libraryCard.Fees);
 
             foreach (CheckoutForCreationDto item in checkoutsForCreation)
             {
-                IsAssetCurrentlyCheckedOutByMember(libraryCard.Checkouts.ToList(), item.LibraryAssetId, checkoutsForCreation.Count());
+                // IsAssetCurrentlyCheckedOutByMember(libraryCard.Checkouts.ToList(), item);
             }
 
             foreach (CheckoutForCreationDto item in checkoutsForCreation)
             {
                 item.LibraryCardId = libraryCard.Id;
-                IsAssetAvailable(item.Asset);
+                // IsAssetAvailable(item.Asset);
             }
 
             IEnumerable<Checkout> checkouts = _mapper.Map<IEnumerable<Checkout>>(checkoutsForCreation);
@@ -97,11 +97,51 @@ namespace LMSService.Service
             await _context.SaveChangesAsync();
         }
 
+        public async Task<LmsResponseHandler<CheckoutForReturnDto>> CheckoutItems(LibraryCard card, CheckoutForCreationDto checkoutDto)
+        {
+            if (DoesMemberHaveFees(card.Fees))
+            {
+                return LmsResponseHandler<CheckoutForReturnDto>.Failed("This member still has fees to pay");
+            }
+
+            if ((card.Checkouts.Count + checkoutDto.Items.Count) > 5)
+            {
+                return LmsResponseHandler<CheckoutForReturnDto>.Failed($"{checkoutDto.Items.Count} checkouts puts this Member above the maximum amount of checkouts allowed");
+            }
+
+            if (checkoutDto.Items.Any(x => card.Checkouts.Any(y => y.LibraryCardId == x.LibraryAssetId)))
+            {
+                throw new LMSValidationException("This asset is currently checked out by this member");
+            }
+
+            // IsAssetCurrentlyCheckedOutByMember(libraryCard.Checkouts.ToList(), checkoutForCreation.LibraryAssetId, 0);
+
+            // LibraryAsset libraryAsset = await GetLibraryAsset(checkoutForCreation.LibraryAssetId);
+            IList<LibraryAsset> libraryAssets = await _context.LibraryAssets.Where(id => checkoutDto.Items.Any(a => a.LibraryAssetId == id.Id)).ToListAsync();
+
+            // checkoutForCreation.AssetStatus = libraryAsset.Status.Name;
+            // checkoutForCreation.LibraryCardId = libraryCard.Id;
+            // checkoutForCreation.Fees = libraryCard.Fees;
+
+            libraryAssets = ReduceAssetCopiesAvailable(libraryAssets);
+
+            Checkout checkout = _mapper.Map<Checkout>(checkoutDto);
+            checkout.Status = CheckoutStatus.Checkedout;
+
+            _context.Add(checkout);
+            await _context.SaveChangesAsync();
+
+            CheckoutForReturnDto checkoutToReturn = _mapper.Map<CheckoutForReturnDto>(checkout);
+            // checkoutToReturn.Status = CheckoutStatus.Checkedout;
+            // checkoutToReturn.Status = nameof(StatusEnum.Checkedout);
+            return LmsResponseHandler<CheckoutForReturnDto>.Successful(checkoutToReturn);
+
+        }
+
         public async Task<Checkout> GetCheckout(int checkoutId)
         {
             Checkout checkout = await _context.Checkouts
                 .Include(a => a.Items)
-                .Include(a => a.Status)
                 .FirstOrDefaultAsync(a => a.Id == checkoutId);
 
             return checkout;
@@ -117,7 +157,7 @@ namespace LMSService.Service
             return checkouts;
         }
 
-        public async Task<IEnumerable<Checkout>> GetCheckoutsForMember(int userId)
+        public async Task<IEnumerable<Checkout>> GetCheckoutsForMember(string userId)
         {
             LibraryCard card = await GetMemberLibraryCard(userId);
 
@@ -146,11 +186,11 @@ namespace LMSService.Service
             return asset;
         }
 
-        public async Task<LibraryCard> GetMemberLibraryCard(int userId)
+        public async Task<LibraryCard> GetMemberLibraryCard(string CardNumber)
         {
             LibraryCard card = await _context.LibraryCards
                 .Include(x => x.Checkouts)
-                .FirstOrDefaultAsync(x => x.CardNumber == userId.ToString());
+                .FirstOrDefaultAsync(x => x.CardNumber == CardNumber);
 
             if (card == null)
             {
@@ -176,14 +216,86 @@ namespace LMSService.Service
             ReduceAssetCopiesAvailable(libraryAsset);
         }
 
-        private void DoesMemberHaveFees(decimal fees)
+        // private void DoesMemberHaveFees(decimal fees)
+        // {
+        //     // TODO Return boolean and fail with an error
+        //     if (fees > 0)
+        //     {
+        //         _logger.LogError("This member still has fees to pay");
+        //         throw new LMSValidationException("This member still has fees to pay");
+        //     }
+        // }
+        private bool DoesMemberHaveFees(decimal fees)
         {
+            // TODO Return boolean and fail with an error
             if (fees > 0)
             {
                 _logger.LogError("This member still has fees to pay");
                 throw new LMSValidationException("This member still has fees to pay");
             }
+
+            return fees > 0;
         }
+
+        // private static void IsAssetCurrentlyCheckedOutByMember(CheckoutForCreationDto checkout, LibraryCard card)
+        // {
+        //     List<Checkout> currentCheckedoutItems = card.Checkouts.Where(x => x.Status == CheckoutStatus.Checkedout).ToList();
+
+        //     if (checkout.Items.Count >= 5)
+        //     {
+        //         // TODO move count to appsetting
+        //         throw new LMSValidationException("This Member has reached the max amount of checkouts");
+        //     }
+
+        //     if ((currentCheckedoutItems.Count + checkout.Items.Count) > 5)
+        //     {
+        //         throw new LMSValidationException($"{checkout.Items.Count} checkouts puts this Member above the maximum amount of checkouts allowed");
+        //     }
+
+        //     if (checkout.Items.Any(x => currentCheckedoutItems.Any(y => y.LibraryCardId == x.LibraryAssetId)))
+        //     {
+        //         throw new LMSValidationException("This asset is currently checked out by this member");
+        //     }
+
+        //     // if (checkouts.Exists(x => x.LibraryAssetId == assetId))
+        //     // {
+        //     //     throw new LMSValidationException("This asset is currently checked out by this member");
+        //     // }
+        //     // if (checkout.Exists(x => x.Items.Any(t => t.LibraryAssetId == assetId)))
+        //     // {
+        //     //     throw new LMSValidationException("This asset is currently checked out by this member");
+        //     // }
+        // }
+
+        // private static TestResponseHandler<CheckoutForReturnDto> IsAssetCurrentlyCheckedOutByMember(CheckoutForCreationDto checkout, LibraryCard card)
+        // {
+        //     List<Checkout> currentCheckedoutItems = card.Checkouts.Where(x => x.Status == CheckoutStatus.Checkedout).ToList();
+
+        //     if (checkout.Items.Count >= 5)
+        //     {
+        //         // TODO move count to appsetting
+        //         throw new LMSValidationException("This Member has reached the max amount of checkouts");
+        //     }
+
+        //     if ((currentCheckedoutItems.Count + checkout.Items.Count) > 5)
+        //     {
+        //         throw new LMSValidationException($"{checkout.Items.Count} checkouts puts this Member above the maximum amount of checkouts allowed");
+        //     }
+
+        //     if (checkout.Items.Any(x => currentCheckedoutItems.Any(y => y.LibraryCardId == x.LibraryAssetId)))
+        //     {
+        //         throw new LMSValidationException("This asset is currently checked out by this member");
+        //     }
+
+        //     // if (checkouts.Exists(x => x.LibraryAssetId == assetId))
+        //     // {
+        //     //     throw new LMSValidationException("This asset is currently checked out by this member");
+        //     // }
+        //     // if (checkout.Exists(x => x.Items.Any(t => t.LibraryAssetId == assetId)))
+        //     // {
+        //     //     throw new LMSValidationException("This asset is currently checked out by this member");
+        //     // }
+        // }
 
         private void IsAssetCurrentlyCheckedOutByMember(List<Checkout> checkouts, int assetId, int newCheckoutCount)
         {
@@ -218,6 +330,21 @@ namespace LMSService.Service
             {
                 asset.Status = LibraryAssetStatus.Unavailable;
             }
+        }
+
+        public static IList<LibraryAsset> ReduceAssetCopiesAvailable(IList<LibraryAsset> assets)
+        {
+            foreach (LibraryAsset item in assets)
+            {
+                item.CopiesAvailable--;
+
+                if (item.CopiesAvailable == 0)
+                {
+                    item.Status = LibraryAssetStatus.Unavailable;
+                }
+            }
+
+            return assets;
         }
 
         public void IncreaseAssetCopiesAvailable(LibraryAsset asset)
@@ -322,6 +449,11 @@ namespace LMSService.Service
             }
 
             return await PagedList<Checkout>.CreateAsync(checkouts, paginationParams.PageNumber, paginationParams.PageSize);
+        }
+
+        public Task<IEnumerable<Checkout>> GetCheckoutsForMember(int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

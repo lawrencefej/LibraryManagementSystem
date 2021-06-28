@@ -14,8 +14,6 @@ namespace LMSRepository.Data
         {
         }
 
-        // public DbSet<LibraryUser> LibraryUsers { get; set; }
-        // public DbSet<MemberUser> MemberUsers { get; set; }
         public DbSet<Checkout> Checkouts { get; set; }
         public DbSet<Hold> Holds { get; set; }
         public DbSet<CheckoutHistory> CheckoutHistory { get; set; }
@@ -24,7 +22,7 @@ namespace LMSRepository.Data
         public DbSet<LibraryCard> LibraryCards { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Author> Authors { get; set; }
-        public DbSet<Category> Category { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<ReserveAsset> ReserveAssets { get; set; }
         public DbSet<AssetPhoto> AssetPhotos { get; set; }
         public DbSet<UserProfilePhoto> UserProfilePhotos { get; set; }

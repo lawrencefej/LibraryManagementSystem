@@ -36,25 +36,33 @@ namespace LibraryManagementSystem.API.Controllers
             return NoContent();
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
-        //{
-        //    var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
-
-        //    return CreatedAtRoute("GetCheckout", new { id = result.Id }, result);
-        //}
-
         [HttpPost]
-        public async Task<IActionResult> CheckoutAsset(IEnumerable<CheckoutForCreationDto> checkoutForCreationDto)
+        public async Task<IActionResult> CheckoutAsset(CheckoutForCreationDto checkoutForCreationDto)
         {
-            //var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+            LibraryCard card = await _checkoutService.GetMemberLibraryCard(checkoutForCreationDto.LibraryCardNumber);
 
-            //return CreatedAtRoute("GetCheckout", new { id = result.Id }, result);
+            if (card == null)
+            {
+                return BadRequest("LibraryCard Does Not Exist");
+            }
 
-            await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+            LmsResponseHandler<CheckoutForReturnDto> result = await _checkoutService.CheckoutItems(card, checkoutForCreationDto);
 
-            return Ok();
+            return result.IsSuccessful ? CreatedAtRoute("GetCheckout", new { id = result.Item.Id }, result) : BadRequest(result.Error);
         }
+
+        // [HttpPost]
+        // public async Task<IActionResult> CheckoutAsset(IEnumerable<CheckoutForCreationDto> checkoutForCreationDto)
+        // {
+
+        //     //var result = await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+
+        //     //return CreatedAtRoute("GetCheckout", new { id = result.Id }, result);
+
+        //     await _checkoutService.CheckoutAsset(checkoutForCreationDto);
+
+        //     return Ok();
+        // }
 
         [HttpGet("{id}", Name = "GetCheckout")]
         public async Task<ActionResult> GetCheckout(int id)
