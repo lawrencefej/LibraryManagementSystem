@@ -87,19 +87,19 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
+                    Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -307,9 +307,9 @@ namespace LMSRepository.Migrations
                 {
                     table.PrimaryKey("PK_LibraryAssetCategory", x => new { x.LibrayAssetId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_LibraryAssetCategory_Category_CategoryId",
+                        name: "FK_LibraryAssetCategory_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Category",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -426,6 +426,8 @@ namespace LMSRepository.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     LibraryCardId = table.Column<int>(type: "int", nullable: false),
+                    LibraryCardNumber = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CheckoutDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     RenewalCount = table.Column<byte>(type: "tinyint unsigned", maxLength: 3, nullable: false),
@@ -581,9 +583,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "9114602c-2203-4dfd-a702-357976ff7b5b", "Member", "MEMBER" },
-                    { 2, "e30be16f-bd69-4ad1-a46c-f1d7d9ef06ee", "Admin", "ADMIN" },
-                    { 3, "5a1856f0-ac58-418e-ad37-ce9b175c34c5", "Librarian", "LIBRARIAN" }
+                    { 1, "22360261-376d-47ca-8aca-f5a2c5f621d2", "Member", "MEMBER" },
+                    { 2, "2b5855e3-27f2-4dba-ac14-902711438ef9", "Admin", "ADMIN" },
+                    { 3, "843983e7-ba83-4d62-8535-048903d174bf", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(
@@ -831,7 +833,7 @@ namespace LMSRepository.Migrations
                 name: "Authors");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "LibraryAssets");

@@ -78,21 +78,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "9114602c-2203-4dfd-a702-357976ff7b5b",
+                            ConcurrencyStamp = "22360261-376d-47ca-8aca-f5a2c5f621d2",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "e30be16f-bd69-4ad1-a46c-f1d7d9ef06ee",
+                            ConcurrencyStamp = "2b5855e3-27f2-4dba-ac14-902711438ef9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "5a1856f0-ac58-418e-ad37-ce9b175c34c5",
+                            ConcurrencyStamp = "843983e7-ba83-4d62-8535-048903d174bf",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -217,7 +217,8 @@ namespace LMSRepository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -226,7 +227,7 @@ namespace LMSRepository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.Checkout", b =>
@@ -250,6 +251,9 @@ namespace LMSRepository.Migrations
 
                     b.Property<int>("LibraryCardId")
                         .HasColumnType("int");
+
+                    b.Property<string>("LibraryCardNumber")
+                        .HasColumnType("longtext");
 
                     b.Property<byte>("RenewalCount")
                         .HasMaxLength(3)

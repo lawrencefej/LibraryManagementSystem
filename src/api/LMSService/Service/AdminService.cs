@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using AutoMapper;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using LMSRepository.Helpers;
@@ -20,14 +22,41 @@ namespace LMSService.Service
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AdminService> _logger;
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
         public AdminService(DataContext context, UserManager<AppUser> userManager,
-            IEmailSender emailSender, ILogger<AdminService> logger)
+            IEmailSender emailSender, ILogger<AdminService> logger, IMapper mapper)
         {
+            _mapper = mapper;
             _userManager = userManager;
             _emailSender = emailSender;
             _logger = logger;
             _context = context;
+        }
+
+        public async Task<LmsResponseHandler<UserForDetailedDto>> CreateUser(AddAdminDto addAdminDto)
+        {
+
+            AppUser newUser = _mapper.Map<AppUser>(addAdminDto);
+            newUser.UserName = newUser.Email.ToLower();
+            IdentityResult result = await _userManager.CreateAsync(newUser, addAdminDto.Password);
+
+            if (!result.Succeeded)
+            {
+                return ReturnErrors(result.Errors);
+            }
+
+
+            result = await _userManager.AddToRoleAsync(newUser, addAdminDto.Role);
+
+            if (!result.Succeeded)
+            {
+                return ReturnErrors(result.Errors);
+            }
+
+            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(newUser);
+
+            return LmsResponseHandler<UserForDetailedDto>.Successful(AddRoleToUser(userToReturn));
         }
 
         public async Task<IdentityResult> CreateUser(AppUser user)
@@ -38,14 +67,13 @@ namespace LMSService.Service
         public async Task<IdentityResult> CreateUser(AppUser user, string password)
         {
             return await _userManager.CreateAsync(user, password);
-            // return await _userManager.CreateAsync(user);
         }
 
         public async Task<AppUser> CompleteUserCreation(AppUser newUser, string newRole, string callbackUrl)
         {
             await _userManager.AddToRoleAsync(newUser, newRole);
 
-            var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(newUser);
+            string resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(newUser);
 
             await WelcomeMessage(resetPasswordToken, newUser, callbackUrl);
 
@@ -74,18 +102,18 @@ namespace LMSService.Service
 
         public async Task<AppUser> GetAdminUser(int userId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            AppUser user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             return user;
         }
 
         public async Task<IEnumerable<AppUser>> GetAdminUsers()
         {
-            var users = await _userManager.Users.AsNoTracking()
+            List<AppUser> users = await _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.UserRoles)
                     .ThenInclude(ur => ur.Role)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name != (nameof(EnumRoles.Member))))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name != nameof(EnumRoles.Member)))
                 .OrderBy(u => u.FirstName).ToListAsync();
 
             return users;
@@ -93,11 +121,11 @@ namespace LMSService.Service
 
         public async Task UpdateUser(AppUser userforUpdate, string role)
         {
-            var isInRole = await _userManager.IsInRoleAsync(userforUpdate, role);
+            bool isInRole = await _userManager.IsInRoleAsync(userforUpdate, role);
 
             if (!isInRole)
             {
-                var roles = new List<string>()
+                List<string> roles = new List<string>()
                 {
                     nameof(EnumRoles.Admin),
                     nameof(EnumRoles.Librarian)
@@ -110,17 +138,6 @@ namespace LMSService.Service
             await _context.SaveChangesAsync();
         }
 
-        private async Task WelcomeMessage(string code, AppUser user, string url)
-        {
-            var encodedToken = HttpUtility.UrlEncode(code);
-
-            var callbackUrl = new Uri(url + user.Id + "/" + encodedToken);
-
-            var body = $"Welcome {user.FirstName.ToLower()}, <p>An account has been created for you</p> Please create your new password by clicking <a href='{callbackUrl}'>here</a>:";
-
-            await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
-        }
-
         public async Task DeleteUser(AppUser user)
         {
             _context.Remove(user);
@@ -128,6 +145,29 @@ namespace LMSService.Service
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"userID: {user.Id} was deleted");
+        }
+
+        private async Task WelcomeMessage(string code, AppUser user, string url)
+        {
+            string encodedToken = HttpUtility.UrlEncode(code);
+
+            Uri callbackUrl = new Uri(url + user.Id + "/" + encodedToken);
+
+            string body = $"Welcome {user.FirstName.ToLower()}, <p>An account has been created for you</p> Please create your new password by clicking <a href='{callbackUrl}'>here</a>:";
+
+            await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
+        }
+
+        private static LmsResponseHandler<UserForDetailedDto> ReturnErrors(IEnumerable<IdentityError> identityErrors)
+        {
+            List<string> errors = new();
+
+            foreach (IdentityError error in identityErrors)
+            {
+                errors.Add(error.Description);
+            }
+
+            return LmsResponseHandler<UserForDetailedDto>.Failed(errors);
         }
     }
 }

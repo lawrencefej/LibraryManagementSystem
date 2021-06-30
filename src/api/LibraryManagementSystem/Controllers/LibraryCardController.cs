@@ -42,16 +42,9 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCard(LibraryCardForCreationDto addCardDto)
         {
+            LibraryCardForDetailedDto cardToReturn = await _libraryCardService.AddLibraryCard(addCardDto);
 
-            LibraryCard cardForCreation = _mapper.Map<LibraryCard>(addCardDto);
-
-            LibraryCard card = await _libraryCardService.AddLibraryCard(cardForCreation);
-
-            _logger.LogInformation("User {0} added Asset {1} successfully", LoggedInUserID(), card);
-
-            LibraryCardForDetailedDto cardToReturn = _mapper.Map<LibraryCardForDetailedDto>(card);
-
-            return CreatedAtRoute(nameof(GetById), new { cardId = card.Id }, cardToReturn);
+            return CreatedAtRoute(nameof(GetById), new { cardId = cardToReturn.Id }, cardToReturn);
         }
 
         [HttpGet("{cardId}", Name = nameof(GetById))]

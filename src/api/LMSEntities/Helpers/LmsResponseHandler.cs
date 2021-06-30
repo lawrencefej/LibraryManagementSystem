@@ -5,7 +5,7 @@ namespace LMSEntities.Helpers
     public class LmsResponseHandler<T>
     {
         public string Error { get; set; }
-        public bool IsSuccessful { get; set; }
+        public bool Succeeded { get; set; }
         public T Item { get; set; }
         public IList<string> Errors { get; set; } = new List<string>();
 
@@ -16,7 +16,7 @@ namespace LMSEntities.Helpers
         public LmsResponseHandler(string errorMessage)
         {
             Error = errorMessage;
-            IsSuccessful = false;
+            Succeeded = false;
         }
 
         /// <summary>
@@ -27,13 +27,13 @@ namespace LMSEntities.Helpers
         public LmsResponseHandler(T item)
         {
             Item = item;
-            IsSuccessful = true;
+            Succeeded = true;
         }
 
         public LmsResponseHandler(IList<string> errors)
         {
             Errors = errors;
-            IsSuccessful = false;
+            Succeeded = false;
         }
 
         public static LmsResponseHandler<T> Failed(string error)

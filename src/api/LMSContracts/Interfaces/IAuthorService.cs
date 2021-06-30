@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 
@@ -7,7 +8,8 @@ namespace LMSContracts.Interfaces
 {
     public interface IAuthorService
     {
-        Task<Author> AddAuthor(Author author);
+        Task<AuthorDto> AddAuthor(AuthorDto authorDto);
+        // Task<Author> AddAuthor(Author author);
 
         Task DeleteAuthor(Author author);
 

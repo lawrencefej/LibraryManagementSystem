@@ -54,6 +54,12 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "Drop Database",
+            "type": "shell",
+            "command": "export PATH=\"$PATH:$HOME/.dotnet/tools\" && dotnet ef database drop -p ${workspaceFolder}/LMSRepository/LMSRepository.csproj -s ${workspaceFolder}/LibraryManagementSystem/LibraryManagementSystem.csproj",
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "Generate SQL Script",
             "type": "shell",
             "command": "export PATH=\"$PATH:$HOME/.dotnet/tools\" && dotnet ef migrations script -p ${workspaceFolder}/LMSRepository/LMSRepository.csproj -s ${workspaceFolder}/LibraryManagementSystem/LibraryManagementSystem.csproj -o ../sql/${input:sqlName}.sql --idempotent",

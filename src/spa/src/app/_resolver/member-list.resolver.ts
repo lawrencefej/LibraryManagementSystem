@@ -23,7 +23,10 @@ export class MemberListResolver implements Resolve<User[]> {
     return this.memberService
       .getPaginatedMembers(
         lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize
+        lmsResolverContants.pageSize,
+        '',
+        '',
+        ''
       )
       .pipe(
         catchError(() => {

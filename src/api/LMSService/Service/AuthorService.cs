@@ -1,30 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
     public class AuthorService : IAuthorService
     {
         private readonly DataContext _context;
+        private readonly ILogger<AuthorService> _logger;
+        private readonly IMapper _mapper;
 
-        public AuthorService(DataContext context)
+        public AuthorService(DataContext context, IMapper mapper, ILogger<AuthorService> logger)
         {
+            _mapper = mapper;
+            _logger = logger;
             _context = context;
         }
 
-        public async Task<Author> AddAuthor(Author author)
+        public async Task<AuthorDto> AddAuthor(AuthorDto authorDto)
         {
+            Author author = _mapper.Map<Author>(authorDto);
+
             _context.Add(author);
             await _context.SaveChangesAsync();
 
-            return author;
+            return _mapper.Map<AuthorDto>(author);
         }
 
         public async Task DeleteAuthor(Author author)

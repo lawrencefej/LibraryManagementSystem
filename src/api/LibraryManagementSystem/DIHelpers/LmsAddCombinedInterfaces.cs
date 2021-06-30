@@ -1,4 +1,6 @@
-﻿using LMSContracts.Interfaces;
+﻿using LibraryManagementSystem.Helpers;
+using LMSContracts.Interfaces;
+using LMSRepository.Data;
 using LMSService.Helpers;
 using LMSService.Service;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,8 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ILibraryCardService, LibraryCardService>();
             // services.AddScoped<LogUserActivity>();
+            services.AddScoped<DevOnlyActionFilter>();
+            services.AddScoped<Seed>();
         }
     }
 }

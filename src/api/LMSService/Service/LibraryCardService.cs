@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Enumerations;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
@@ -17,15 +19,21 @@ namespace LMSService.Service
         private readonly DataContext _context;
         private readonly ILogger<LibraryCard> _logger;
         private readonly UserManager<AppUser> _userManager;
-        public LibraryCardService(DataContext context, ILogger<LibraryCard> logger, UserManager<AppUser> userManager)
+        private readonly IMapper _mapper;
+        public LibraryCardService(DataContext context, ILogger<LibraryCard> logger, UserManager<AppUser> userManager, IMapper mapper)
         {
+            _mapper = mapper;
             _userManager = userManager;
             _logger = logger;
             _context = context;
 
         }
-        public async Task<LibraryCard> AddLibraryCard(LibraryCard card)
+
+        public async Task<LibraryCardForDetailedDto> AddLibraryCard(LibraryCardForCreationDto addCardDto)
         {
+
+            LibraryCard card = _mapper.Map<LibraryCard>(addCardDto);
+
             card = await GenerateCardNumber(card);
             AppUser member = await CreateNewMember(card);
             card.Member = member;
@@ -35,8 +43,24 @@ namespace LMSService.Service
 
             _logger.LogInformation($"added LibraryCard {card.CardNumber} with ID: {card.Id}");
 
-            return card;
+            LibraryCardForDetailedDto cardToReturn = _mapper.Map<LibraryCardForDetailedDto>(card);
+
+            return cardToReturn;
         }
+
+        // public async Task<LibraryCard> AddLibraryCard(LibraryCard card)
+        // {
+        //     card = await GenerateCardNumber(card);
+        //     AppUser member = await CreateNewMember(card);
+        //     card.Member = member;
+
+        //     _context.Add(card);
+        //     await _context.SaveChangesAsync();
+
+        //     _logger.LogInformation($"added LibraryCard {card.CardNumber} with ID: {card.Id}");
+
+        //     return card;
+        // }
 
         private async Task<LibraryCard> GenerateCardNumber(LibraryCard card)
         {

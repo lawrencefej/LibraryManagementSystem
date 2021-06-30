@@ -1,5 +1,6 @@
 ﻿using EmailService.Configuration;
 using LibraryManagementSystem.DIHelpers;
+using LibraryManagementSystem.Extensions;
 using LibraryManagementSystem.Helpers;
 using LMSEntities.Helpers;
 using LMSRepository.Data;
@@ -69,11 +70,12 @@ namespace LibraryManagementSystem.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, DataContext dataContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, DataContext dataContext, Seed seeder)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("Integration"))
+            if (env.IsDevelopment())
             {
                 // dataContext.Database.Migrate();
+                seeder.SeedData(dataContext).Wait();
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
                 app.UseDeveloperExceptionPage();
             }
@@ -86,14 +88,7 @@ namespace LibraryManagementSystem.API
             }
 
             loggerFactory.AddSerilog();
-            // seeder.SeedUsers();
-            // seeder.SeedAuthors();
-            // seeder.SeedAssets();
             app.UseRouting();
-            // TODO Confirm if Cors in needed since we are now using spa proxy
-            //app.UseCors(x => x.AllowAnyOrigin()
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader());
             app.UseCors("CorsPolicy");
             //.AllowCredentials());
             //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
@@ -102,7 +97,6 @@ namespace LibraryManagementSystem.API
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            // app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseDefaultFiles();

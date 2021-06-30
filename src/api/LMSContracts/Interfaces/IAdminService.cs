@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,6 +9,7 @@ namespace LMSContracts.Interfaces
 {
     public interface IAdminService
     {
+        Task<LmsResponseHandler<UserForDetailedDto>> CreateUser(AddAdminDto addAdminDto);
         Task<IEnumerable<AppUser>> GetAdminUsers();
 
         Task<IdentityResult> CreateUser(AppUser user);

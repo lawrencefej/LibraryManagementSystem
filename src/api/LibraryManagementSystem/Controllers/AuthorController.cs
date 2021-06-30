@@ -60,13 +60,9 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAuthor(AuthorDto authorDto)
         {
-            var author = _mapper.Map<Author>(authorDto);
+            AuthorDto authorToReturn = await _authorService.AddAuthor(authorDto);
 
-            author = await _authorService.AddAuthor(author);
-
-            var authorToReturn = _mapper.Map<AuthorDto>(author);
-
-            return CreatedAtRoute("GetAuthor", new { authorId = author.Id }, authorToReturn);
+            return CreatedAtRoute("GetAuthor", new { authorId = authorToReturn.Id }, authorToReturn);
         }
 
         [HttpDelete("{authorId}")]

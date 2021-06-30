@@ -48,7 +48,7 @@ namespace LibraryManagementSystem.API.Controllers
 
             LmsResponseHandler<CheckoutForReturnDto> result = await _checkoutService.CheckoutItems(card, checkoutForCreationDto);
 
-            return result.IsSuccessful ? CreatedAtRoute("GetCheckout", new { id = result.Item.Id }, result) : BadRequest(result.Error);
+            return result.Succeeded ? CreatedAtRoute("GetCheckout", new { id = result.Item.Id }, result) : BadRequest(result.Error);
         }
 
         // [HttpPost]

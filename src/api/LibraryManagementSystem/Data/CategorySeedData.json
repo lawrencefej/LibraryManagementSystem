@@ -1,0 +1,42 @@
+[
+    {
+        "Name": "Computer science and Information Technology",
+        "Description": "Curabitur gravida nisi at nibh."
+    },
+    {
+        "Name": "Philosophy and psychology",
+        "Description": "Phasellus sit amet erat."
+    },
+    {
+        "Name": "Religion",
+        "Description": "Suspendisse ornare consequat lectus."
+    },
+    {
+        "Name": "Social Sciences",
+        "Description": "Ut at dolor quis odio consequat varius."
+    },
+    {
+        "Name": "Language",
+        "Description": "Aliquam erat volutpat."
+    },
+    {
+        "Name": "Science",
+        "Description": "Mauris lacinia sapien quis libero."
+    },
+    {
+        "Name": "Arts and Recreation",
+        "Description": "Curabitur in libero ut massa volutpat convallis."
+    },
+    {
+        "Name": "Literature",
+        "Description": "Aenean fermentum."
+    },
+    {
+        "Name": "History",
+        "Description": "Suspendisse potenti."
+    },
+    {
+        "Name": "Other",
+        "Description": "Nulla nisl."
+    }
+]

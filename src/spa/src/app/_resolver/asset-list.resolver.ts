@@ -19,7 +19,10 @@ export class AssetListResolver implements Resolve<LibraryAsset[]> {
     return this.assetService
       .getPaginatedAssets(
         lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize
+        lmsResolverContants.pageSize,
+        '',
+        '',
+        ''
       )
       .pipe(
         catchError(() => {

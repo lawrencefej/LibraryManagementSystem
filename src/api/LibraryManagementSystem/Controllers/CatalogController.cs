@@ -33,15 +33,15 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
-            LibraryAsset assetForCreation = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
+            // LibraryAsset assetForCreation = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
-            LibraryAsset asset = await _libraryAssestService.AddAsset(assetForCreation);
+            LibraryAssetForDetailedDto asset = await _libraryAssestService.AddAsset(libraryAssetForCreation);
 
-            _logger.LogInformation("User {0} added Asset {1} successfully", LoggedInUserID(), asset);
+            // _logger.LogInformation("User {0} added Asset {1} successfully", LoggedInUserID(), asset);
 
-            LibraryAssetForListDto assetToReturn = _mapper.Map<LibraryAssetForListDto>(asset);
+            // LibraryAssetForListDto assetToReturn = _mapper.Map<LibraryAssetForListDto>(asset);
 
-            return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, assetToReturn);
+            return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, asset);
         }
 
         [HttpDelete("{assetId}")]

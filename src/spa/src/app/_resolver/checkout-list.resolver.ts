@@ -20,7 +20,10 @@ export class CheckoutListResolver implements Resolve<Checkout[]> {
     return this.checkoutService
       .getPaginatedCheckouts(
         lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize
+        lmsResolverContants.pageSize,
+        '',
+        '',
+        ''
       )
       .pipe(
         catchError(() => {

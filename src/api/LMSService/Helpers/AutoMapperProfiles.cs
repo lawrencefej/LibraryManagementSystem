@@ -49,14 +49,8 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<Photo, PhotoForReturnDto>();
             CreateMap<UserPhotoDto, UserProfilePhoto>();
             CreateMap<AssetPhotoDto, AssetPhoto>();
-            // CreateMap<Status, StatusToReturnDto>();
-            // CreateMap<AssetType, AssetTypeDto>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<LibraryAssetForUpdateDto, LibraryAsset>();
-            //.ForMember(dest => dest.AuthorId, opt =>
-            //{
-            //    opt.MapFrom(src => src.Author.Id);
-            //});
             CreateMap<LibraryAsset, LibraryAssetForDetailedDto>()
                     .ForMember(dest => dest.PhotoUrl, opt =>
                     {

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
@@ -14,9 +17,11 @@ namespace LMSService.Service
     {
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger)
+        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper)
         {
+            _mapper = mapper;
             _logger = logger;
             _context = context;
         }
@@ -32,6 +37,20 @@ namespace LMSService.Service
             _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
 
             return asset;
+        }
+
+        public async Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation)
+        {
+            LibraryAsset asset = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
+
+            asset.CopiesAvailable = asset.NumberOfCopies;
+
+            _context.Add(asset);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
+
+            return _mapper.Map<LibraryAssetForDetailedDto>(asset);
         }
 
         public async Task DeleteAsset(LibraryAsset asset)
@@ -69,7 +88,7 @@ namespace LMSService.Service
                     .ThenInclude(a => a.Author)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(paginationParams.SearchString))
+            if (!string.IsNullOrWhiteSpace(paginationParams.SearchString))
             {
                 assets = assets.Where(x => x.Title.Contains(paginationParams.SearchString));
             }

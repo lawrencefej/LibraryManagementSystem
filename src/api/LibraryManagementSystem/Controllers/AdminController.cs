@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
+using LibraryManagementSystem.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +39,17 @@ namespace LibraryManagementSystem.API.Controllers
             return Ok(usersToReturn);
         }
 
+
+        [ServiceFilter(typeof(DevOnlyActionFilter))]
+        [HttpPost]
+        [Route("password")]
+        public async Task<IActionResult> CreateAdminWithPassword(AddAdminDto addAdminDto)
+        {
+            LmsResponseHandler<UserForDetailedDto> result = await _adminService.CreateUser(addAdminDto);
+
+            return result.Succeeded ? CreatedAtRoute(nameof(GetAdmin), new { id = result.Item.Id }, result.Item) : BadRequest(result.Errors);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateUser(AddAdminDto addAdminDto)
         {
@@ -67,8 +80,8 @@ namespace LibraryManagementSystem.API.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpGet("{id}", Name = "Get")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{id}", Name = nameof(GetAdmin))]
+        public async Task<IActionResult> GetAdmin(int id)
         {
             AppUser user = await _adminService.GetAdminUser(id);
 
@@ -99,7 +112,7 @@ namespace LibraryManagementSystem.API.Controllers
 
             if (user == null)
             {
-                NoContent();
+                return NoContent();
             }
 
             await _adminService.DeleteUser(user);
