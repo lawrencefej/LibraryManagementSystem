@@ -9,16 +9,13 @@ namespace LMSContracts.Interfaces
     public interface IAuthorService
     {
         Task<AuthorDto> AddAuthor(AuthorDto authorDto);
-        // Task<Author> AddAuthor(Author author);
 
-        Task DeleteAuthor(Author author);
+        Task<LmsResponseHandler<AuthorDto>> DeleteAuthor(int authorId);
 
-        Task EditAuthor(Author author);
+        Task<LmsResponseHandler<AuthorDto>> EditAuthor(AuthorDto authorDto);
 
-        Task<Author> GetAuthor(int authorId);
+        Task<LmsResponseHandler<AuthorDto>> GetAuthorForController(int authorId);
 
-        Task<IEnumerable<Author>> SearchAuthors(string searchString);
-
-        Task<PagedList<Author>> GetPaginatedAuthors(PaginationParams paginationParams);
+        Task<PagedList<AuthorDto>> GetPaginatedAuthors(PaginationParams paginationParams);
     }
 }

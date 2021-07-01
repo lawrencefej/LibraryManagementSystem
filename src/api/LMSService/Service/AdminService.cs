@@ -41,22 +41,20 @@ namespace LMSService.Service
             newUser.UserName = newUser.Email.ToLower();
             IdentityResult result = await _userManager.CreateAsync(newUser, addAdminDto.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return ReturnErrors(result.Errors);
+                result = await _userManager.AddToRoleAsync(newUser, addAdminDto.Role);
+
+                if (!result.Succeeded)
+                {
+                    return ReturnErrors(result.Errors);
+                }
+
+                UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(newUser);
+
+                return LmsResponseHandler<UserForDetailedDto>.Successful(AddRoleToUser(userToReturn));
             }
-
-
-            result = await _userManager.AddToRoleAsync(newUser, addAdminDto.Role);
-
-            if (!result.Succeeded)
-            {
-                return ReturnErrors(result.Errors);
-            }
-
-            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(newUser);
-
-            return LmsResponseHandler<UserForDetailedDto>.Successful(AddRoleToUser(userToReturn));
+            return ReturnErrors(result.Errors);
         }
 
         public async Task<IdentityResult> CreateUser(AppUser user)

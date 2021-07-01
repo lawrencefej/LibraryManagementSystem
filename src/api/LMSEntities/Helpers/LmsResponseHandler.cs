@@ -36,6 +36,11 @@ namespace LMSEntities.Helpers
             Succeeded = false;
         }
 
+        public LmsResponseHandler()
+        {
+            Succeeded = true;
+        }
+
         public static LmsResponseHandler<T> Failed(string error)
         {
             return new LmsResponseHandler<T>(error);
@@ -44,6 +49,11 @@ namespace LMSEntities.Helpers
         public static LmsResponseHandler<T> Failed(IList<string> error)
         {
             return new LmsResponseHandler<T>(error);
+        }
+
+        public static LmsResponseHandler<T> Successful()
+        {
+            return new LmsResponseHandler<T>();
         }
 
         public static LmsResponseHandler<T> Successful(T item)
