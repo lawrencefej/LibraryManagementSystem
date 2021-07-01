@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,6 +7,8 @@ using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
+using LMSService.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -18,10 +19,12 @@ namespace LMSService.Service
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper)
+        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _context = context;
         }
@@ -51,6 +54,28 @@ namespace LMSService.Service
             _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
 
             return _mapper.Map<LibraryAssetForDetailedDto>(asset);
+        }
+
+        public async Task DeleteAsset(int assetId)
+        {
+            LibraryAsset asset = await GetAsset(assetId);
+
+            if (asset != null)
+            {
+                _context.Remove(asset);
+                await _context.SaveChangesAsync();
+                // TODO log who performed the action
+
+                _logger.LogInformation($"{asset.Id} was deleted by user {GetLoggedInUserId()}");
+
+            }
+
+            return;
+        }
+
+        private async Task<LibraryAsset> GetAsset(int assetId)
+        {
+            return await _context.LibraryAssets.FirstOrDefaultAsync(a => a.Id == assetId);
         }
 
         public async Task DeleteAsset(LibraryAsset asset)
@@ -109,7 +134,7 @@ namespace LMSService.Service
             return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
         }
 
-        public async Task<LibraryAsset> GetAsset(int assetId)
+        public async Task<LibraryAsset> GetAssetWithDetails(int assetId)
         {
             LibraryAsset asset = await _context.LibraryAssets
                 .Include(p => p.Photo)
@@ -152,6 +177,11 @@ namespace LMSService.Service
             await assets.ToListAsync();
 
             return assets;
+        }
+
+        private int GetLoggedInUserId()
+        {
+            return _httpContextAccessor.HttpContext.User.GetUserId();
         }
     }
 }

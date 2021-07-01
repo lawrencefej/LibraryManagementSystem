@@ -16,7 +16,7 @@ namespace LMSContracts.Interfaces
 
         Task EditAsset(LibraryAsset libraryAssetForUpdate);
 
-        Task<LibraryAsset> GetAsset(int assetId);
+        Task<LibraryAsset> GetAssetWithDetails(int assetId);
 
         Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId);
 

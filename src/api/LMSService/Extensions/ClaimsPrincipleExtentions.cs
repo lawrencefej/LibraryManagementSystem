@@ -13,5 +13,10 @@ namespace LMSService.Extensions
         {
             return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
+
+        public static bool IsCurrentUser(this ClaimsPrincipal user, int id)
+        {
+            return GetUserId(user) == id;
+        }
     }
 }

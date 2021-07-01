@@ -103,9 +103,7 @@ namespace LMSService.Service
 
         private async Task<Author> GetAuthor(int authorId)
         {
-            Author author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);
-
-            return author;
+            return await _context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);
         }
     }
 }

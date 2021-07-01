@@ -123,7 +123,7 @@ namespace LMSService.Service
 
             if (!isInRole)
             {
-                List<string> roles = new List<string>()
+                List<string> roles = new()
                 {
                     nameof(EnumRoles.Admin),
                     nameof(EnumRoles.Librarian)

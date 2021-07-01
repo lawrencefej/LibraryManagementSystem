@@ -47,7 +47,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpDelete("{assetId}")]
         public async Task<IActionResult> DeleteLibraryAsset(int assetId)
         {
-            LibraryAsset asset = await _libraryAssestService.GetAsset(assetId);
+            LibraryAsset asset = await _libraryAssestService.GetAssetWithDetails(assetId);
 
             if (asset == null)
             {
@@ -62,7 +62,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPut]
         public async Task<IActionResult> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
-            LibraryAsset asset = await _libraryAssestService.GetAsset(libraryAssetForUpdate.Id);
+            LibraryAsset asset = await _libraryAssestService.GetAssetWithDetails(libraryAssetForUpdate.Id);
 
             if (asset == null)
             {
@@ -81,7 +81,7 @@ namespace LibraryManagementSystem.API.Controllers
         public async Task<IActionResult> GetLibraryAsset(int assetId)
         {
             _logger.LogInformation("User {0} requested Asset {1}", LoggedInUserID(), assetId);
-            LibraryAsset libraryAsset = await _libraryAssestService.GetAsset(assetId);
+            LibraryAsset libraryAsset = await _libraryAssestService.GetAssetWithDetails(assetId);
 
             if (libraryAsset == null)
             {
