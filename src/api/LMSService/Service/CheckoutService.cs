@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
-using LMSEntities.Enumerations;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
@@ -297,7 +296,7 @@ namespace LMSService.Service
         //     // }
         // }
 
-        private void IsAssetCurrentlyCheckedOutByMember(List<Checkout> checkouts, int assetId, int newCheckoutCount)
+        private static void IsAssetCurrentlyCheckedOutByMember(List<Checkout> checkouts, int assetId, int newCheckoutCount)
         {
             checkouts = checkouts.Where(x => x.Status == CheckoutStatus.Checkedout).ToList();
 
@@ -322,21 +321,22 @@ namespace LMSService.Service
             }
         }
 
-        public void ReduceAssetCopiesAvailable(LibraryAsset asset)
+        // TODO make this an extension method
+        public static void ReduceAssetCopiesAvailable(LibraryAsset asset)
         {
-            asset.CopiesAvailable--;
+            asset.ReduceCopiesAvailable();
 
-            if (asset.CopiesAvailable == 0)
-            {
-                asset.Status = LibraryAssetStatus.Unavailable;
-            }
+            // if (asset.CopiesAvailable == 0)
+            // {
+            //     asset.Status = LibraryAssetStatus.Unavailable;
+            // }
         }
 
-        public static IList<LibraryAsset> ReduceAssetCopiesAvailable(IList<LibraryAsset> assets)
+        private static IList<LibraryAsset> ReduceAssetCopiesAvailable(IList<LibraryAsset> assets)
         {
             foreach (LibraryAsset item in assets)
             {
-                item.CopiesAvailable--;
+                item.ReduceCopiesAvailable();
 
                 if (item.CopiesAvailable == 0)
                 {
@@ -347,14 +347,15 @@ namespace LMSService.Service
             return assets;
         }
 
-        public void IncreaseAssetCopiesAvailable(LibraryAsset asset)
+        // TODO Make this an extension method
+        private static void IncreaseAssetCopiesAvailable(LibraryAsset asset)
         {
-            asset.CopiesAvailable++;
+            asset.IncreaseCopiesAvailable();
 
-            if (asset.Status == LibraryAssetStatus.Unavailable)
-            {
-                asset.Status = LibraryAssetStatus.Available;
-            }
+            // if (asset.Status == LibraryAssetStatus.Unavailable)
+            // {
+            //     asset.Status = LibraryAssetStatus.Available;
+            // }
         }
 
         public async Task<IEnumerable<Checkout>> SearchCheckouts(string searchString)
@@ -412,33 +413,33 @@ namespace LMSService.Service
                 .Where(x => x.Status == CheckoutStatus.Checkedout)
                 .AsQueryable();
 
-            if (string.Equals(paginationParams.SearchString, "returned", StringComparison.CurrentCultureIgnoreCase))
+            if (string.Equals(paginationParams.SearchString, "returned", StringComparison.OrdinalIgnoreCase))
             {
                 checkouts = checkouts.Where(x => x.Status == CheckoutStatus.Returned);
             }
-            else if (string.Equals(paginationParams.SearchString, "checkedout", StringComparison.CurrentCultureIgnoreCase))
+            else if (string.Equals(paginationParams.SearchString, "checkedout", StringComparison.OrdinalIgnoreCase))
             {
                 checkouts = checkouts.Where(x => x.Status == CheckoutStatus.Checkedout);
             }
 
             if (paginationParams.SortDirection == "asc")
             {
-                if (string.Equals(paginationParams.OrderBy, "since", StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(paginationParams.OrderBy, "since", StringComparison.OrdinalIgnoreCase))
                 {
                     checkouts = checkouts.OrderBy(x => x.CheckoutDate);
                 }
-                else if (string.Equals(paginationParams.OrderBy, "until", StringComparison.CurrentCultureIgnoreCase))
+                else if (string.Equals(paginationParams.OrderBy, "until", StringComparison.OrdinalIgnoreCase))
                 {
                     checkouts = checkouts.OrderBy(x => x.DueDate);
                 }
             }
             else if (paginationParams.SortDirection == "desc")
             {
-                if (string.Equals(paginationParams.OrderBy, "since", StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(paginationParams.OrderBy, "since", StringComparison.OrdinalIgnoreCase))
                 {
                     checkouts = checkouts.OrderByDescending(x => x.CheckoutDate);
                 }
-                else if (string.Equals(paginationParams.OrderBy, "until", StringComparison.CurrentCultureIgnoreCase))
+                else if (string.Equals(paginationParams.OrderBy, "until", StringComparison.OrdinalIgnoreCase))
                 {
                     checkouts = checkouts.OrderByDescending(x => x.DueDate);
                 }

@@ -4,6 +4,7 @@ using LibraryManagementSystem.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
+using LMSService.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -51,7 +52,8 @@ namespace LibraryManagementSystem.API.Controllers
 
                     return Ok(new
                     {
-                        token = await _authService.GenerateJwtToken(appUser, _appSettings.Token),
+                        // token = await _authService.GenerateJwtToken(appUser, _appSettings.Token),
+                        token = LmsTokens.GenerateJwtToken(appUser, _appSettings.Token),
                         user = userToReturn
                     });
                 }

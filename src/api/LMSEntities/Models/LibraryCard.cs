@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace LMSEntities.Models
 {
@@ -11,8 +11,9 @@ namespace LMSEntities.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string CardNumber { get; set; }
-        public decimal Fees { get; set; }
+        public string CardNumber { get; private set; }
+        public decimal Fees { get; private set; }
+        public DateTime DateOfBirth { get; set; }
         public DateTime Created { get; set; }
         public AppUser Member { get; set; }
         public int MemberId { get; set; }
@@ -23,5 +24,28 @@ namespace LMSEntities.Models
         public LibraryCardPhoto LibraryCardPhoto { get; set; }
         public ICollection<Checkout> Checkouts { get; set; }
         public ICollection<ReserveAsset> ReservedAssets { get; set; }
+
+        public bool DoesCardHaveFees()
+        {
+            return Fees > 0;
+        }
+
+        public void GenerateCardNumber()
+        {
+            string date = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+
+            CardNumber = $"{LastName.Substring(0, 1).ToUpper()}-{date.Substring(0, 4)}-{date.Substring(4, 4)}-{date.Substring(8, 6)}";
+
+        }
+
+        public void AddFeesToCard(decimal fees)
+        {
+            Fees += fees;
+        }
+
+        public void ZeroFees()
+        {
+            Fees = 0;
+        }
     }
 }

@@ -39,8 +39,6 @@ namespace LMSRepository.Data
             builder.AddLibraryAssetFluentApi();
             builder.AddLibraryCardFluentApi();
             builder.AddPhotoFluentApi();
-
-            builder.Entity<Category>().Property(e => e.Name).HasMaxLength(15).IsRequired();
         }
     }
 }

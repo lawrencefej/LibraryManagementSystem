@@ -7,46 +7,30 @@ using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
-using LMSService.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
-    public class LibraryAssetService : ILibraryAssetService
+    public class LibraryAssetService : BaseService, ILibraryAssetService
     {
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _context = context;
-        }
-
-        public async Task<LibraryAsset> AddAsset(LibraryAsset asset)
-        {
-            asset.Status = LibraryAssetStatus.Available;
-            asset.CopiesAvailable = asset.NumberOfCopies;
-
-            _context.Add(asset);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
-
-            return asset;
         }
 
         public async Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
             LibraryAsset asset = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
-            asset.CopiesAvailable = asset.NumberOfCopies;
+            asset.SetCopiesAvailable();
 
             _context.Add(asset);
             await _context.SaveChangesAsync();
@@ -56,9 +40,24 @@ namespace LMSService.Service
             return _mapper.Map<LibraryAssetForDetailedDto>(asset);
         }
 
-        public async Task DeleteAsset(int assetId)
+        public async Task AddAsset(List<LibraryAssetForCreationDto> libraryAssetForCreations)
         {
-            LibraryAsset asset = await GetAsset(assetId);
+            List<LibraryAsset> assets = _mapper.Map<List<LibraryAsset>>(libraryAssetForCreations);
+
+            foreach (LibraryAsset asset in assets)
+            {
+
+                asset.SetCopiesAvailable();
+            }
+
+
+            _context.AddRange(assets);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(LibraryAssetForDetailedDto assetForDel)
+        {
+            LibraryAsset asset = await GetAsset(assetForDel.Id);
 
             if (asset != null)
             {
@@ -67,43 +66,39 @@ namespace LMSService.Service
                 // TODO log who performed the action
 
                 _logger.LogInformation($"{asset.Id} was deleted by user {GetLoggedInUserId()}");
-
+                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful();
             }
 
-            return;
+            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"{assetForDel.AssetType}: {assetForDel.Title} does not exist");
         }
 
-        private async Task<LibraryAsset> GetAsset(int assetId)
+        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
-            return await _context.LibraryAssets.FirstOrDefaultAsync(a => a.Id == assetId);
-        }
+            LibraryAsset asset = await GetAsset(libraryAssetForUpdate.Id);
 
-        public async Task DeleteAsset(LibraryAsset asset)
-        {
-
-            _context.Remove(asset);
-            await _context.SaveChangesAsync();
-            // TODO log who performed the action
-
-            _logger.LogInformation($"assetId: {asset.Id} was deleted");
-            return;
-        }
-
-        public async Task EditAsset(LibraryAsset libraryAssetForUpdate)
-        {
-            if (libraryAssetForUpdate.CopiesAvailable > 0)
+            if (asset != null)
             {
-                libraryAssetForUpdate.Status = LibraryAssetStatus.Available;
+                // ICollection<LibraryAssetAuthor> newAuthors = _mapper.Map(libraryAssetForUpdate.AssetAuthors, asset.AssetAuthors);
+
+                // ICollection<LibraryAssetAuthor> oldAuthors = asset.AssetAuthors;
+
+                _mapper.Map(libraryAssetForUpdate, asset);
+
+                asset.SetToAvailable();
+
+                _context.Update(asset);
+
+
+                await _context.SaveChangesAsync();
+                _logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
+
+                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(_mapper.Map<LibraryAssetForDetailedDto>(asset));
             }
 
-            _context.Update(libraryAssetForUpdate);
-
-            await _context.SaveChangesAsync();
-            _logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
-            return;
+            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"Item with title: '{libraryAssetForUpdate.Title}' does not exist");
         }
 
-        public async Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<PagedList<LibraryAssetForListDto>> GetPaginatedAssets(PaginationParams paginationParams)
         {
             IQueryable<LibraryAsset> assets = _context.LibraryAssets.AsNoTracking()
                 .Include(p => p.Photo)
@@ -113,6 +108,38 @@ namespace LMSService.Service
                     .ThenInclude(a => a.Author)
                 .AsQueryable();
 
+            return await FilterAssets(paginationParams, assets);
+        }
+
+        public async Task<PagedList<LibraryAssetForListDto>> GetAssetsByAuthor(PaginationParams paginationParams, int authorId)
+        {
+            IQueryable<LibraryAsset> assets = _context.LibraryAssets.AsNoTracking()
+                .Include(c => c.AssetCategories)
+                    .ThenInclude(t => t.Category)
+                    .Where(x => x.AssetAuthors.Any(t => t.AuthorId == authorId))
+                    .AsQueryable();
+
+            return await FilterAssets(paginationParams, assets);
+        }
+
+        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> GetAssetWithDetails(int assetId)
+        {
+            return MapLibraryAsset(await GetAsset(assetId));
+        }
+
+        private async Task<LibraryAsset> GetAsset(int assetId)
+        {
+            return await _context.LibraryAssets
+                .Include(p => p.Photo)
+                .Include(p => p.AssetCategories)
+                    .ThenInclude(ba => ba.Category)
+                .Include(s => s.AssetAuthors)
+                    .ThenInclude(ba => ba.Author)
+                .FirstOrDefaultAsync(a => a.Id == assetId);
+        }
+
+        private async Task<PagedList<LibraryAssetForListDto>> FilterAssets(PaginationParams paginationParams, IQueryable<LibraryAsset> assets)
+        {
             if (!string.IsNullOrWhiteSpace(paginationParams.SearchString))
             {
                 assets = assets.Where(x => x.Title.Contains(paginationParams.SearchString));
@@ -131,57 +158,35 @@ namespace LMSService.Service
                 assets = assets.OrderBy(x => x.Title);
             }
 
-            return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
+            PagedList<LibraryAsset> assetsToReturn = await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
+
+            return _mapper.Map<PagedList<LibraryAssetForListDto>>(assetsToReturn);
         }
 
-        public async Task<LibraryAsset> GetAssetWithDetails(int assetId)
+        private LmsResponseHandler<LibraryAssetForDetailedDto> MapLibraryAsset(LibraryAsset asset)
         {
-            LibraryAsset asset = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(p => p.AssetCategories)
-                    .ThenInclude(ba => ba.Category)
-                .Include(s => s.AssetAuthors)
-                    .ThenInclude(ba => ba.Author)
-                .FirstOrDefaultAsync(x => x.Id == assetId);
+            if (asset != null)
+            {
+                LibraryAssetForDetailedDto assetForReturn = _mapper.Map<LibraryAssetForDetailedDto>(asset);
 
-            return asset;
+                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(assetForReturn);
+            }
+
+            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed("");
+        }
+        private bool DoesIsbnExist(string isbn)
+        {
+            return !_context.LibraryAssets.Any(p => p.ISBN == isbn);
         }
 
-        public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId)
+        private bool DoesCategoryExist(int id)
         {
-            List<LibraryAsset> assets = await _context.LibraryAssets.AsNoTracking()
-                .Include(c => c.AssetCategories)
-                    .ThenInclude(t => t.Category)
-                .Where(x => x.AssetAuthors.Any(t => t.AuthorId == authorId))
-                .ToListAsync();
-
-            return assets;
+            return _context.Categories.Any(a => a.Id == id);
         }
 
-        public async Task<IEnumerable<LibraryAsset>> SearchAvalableLibraryAsset(string searchString)
+        private bool DoesAuthorExist(int id)
         {
-            // TODO make sure it is case insensitive
-            IQueryable<LibraryAsset> assets = _context.LibraryAssets.AsNoTracking()
-                        .Include(p => p.Photo)
-                        .Include(s => s.AssetAuthors)
-                            .ThenInclude(a => a.Author)
-                        .AsQueryable();
-
-            assets = assets.Where(x => x.Status == LibraryAssetStatus.Available);
-
-            assets = assets
-                .Where(s => s.Title.Contains(searchString)
-                || s.Description.Contains(searchString)
-                || s.AssetAuthors.Any(a => a.Author.FullName.Contains(searchString))
-                || s.ISBN.Contains(searchString));
-            await assets.ToListAsync();
-
-            return assets;
-        }
-
-        private int GetLoggedInUserId()
-        {
-            return _httpContextAccessor.HttpContext.User.GetUserId();
+            return _context.Authors.Any(a => a.Id == id);
         }
     }
 }

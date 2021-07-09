@@ -3,6 +3,7 @@ using LMSContracts.Interfaces;
 using LMSRepository.Data;
 using LMSService.Helpers;
 using LMSService.Service;
+using LMSService.Validators.services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManagementSystem.DIHelpers
@@ -24,6 +25,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ILibraryCardService, LibraryCardService>();
+            services.AddScoped<IValidatorService, ValidatorService>();
             // services.AddScoped<LogUserActivity>();
             services.AddScoped<DevOnlyActionFilter>();
             services.AddScoped<Seed>();

@@ -10,6 +10,7 @@ namespace LMSRepository.Extensions
             modelBuilder.Entity<Author>(e =>
             {
                 e.Property(a => a.FullName).HasMaxLength(50).IsRequired();
+                // e.Property(a => a.Des).HasMaxLength(250);
             });
 
             modelBuilder.Entity<LibraryAssetAuthor>()

@@ -24,7 +24,6 @@ namespace LibraryManagementSystem.DIHelpers
             builder = new IdentityBuilder(builder.UserType, typeof(AppRole), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
             builder.AddRoleValidator<RoleValidator<AppRole>>();
-            // TODO: Fix role naming issue
             builder.AddRoleManager<RoleManager<AppRole>>();
             builder.AddSignInManager<SignInManager<AppUser>>();
 

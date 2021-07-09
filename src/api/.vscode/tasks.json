@@ -48,6 +48,12 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "Remove EF Migration",
+            "type": "shell",
+            "command": "rm -r LMSRepository/Migrations",
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "Update Database",
             "type": "shell",
             "command": "export PATH=\"$PATH:$HOME/.dotnet/tools\" && dotnet ef database update -p ${workspaceFolder}/LMSRepository/LMSRepository.csproj -s ${workspaceFolder}/LibraryManagementSystem/LibraryManagementSystem.csproj",

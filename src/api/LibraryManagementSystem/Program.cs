@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -27,6 +25,6 @@ namespace LibraryManagementSystem.API
         //    logging.ClearProviders();
         //})
         //.UseStartup<Startup>();
-        // Todo Fix login
+        // Todo Fix logging
     }
 }

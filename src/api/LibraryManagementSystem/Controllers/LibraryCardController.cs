@@ -1,12 +1,9 @@
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -32,11 +29,12 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPaginatedCards([FromQuery] PaginationParams paginationParams)
         {
-            PagedList<LibraryCard> cards = await _libraryCardService.GetAllLibraryCard(paginationParams);
+            PagedList<LibrarycardForListDto> cards = await _libraryCardService.GetAllLibraryCard(paginationParams);
 
-            IEnumerable<LibrarycardForListDto> usersToReturn = _mapper.Map<IEnumerable<LibrarycardForListDto>>(cards);
+            Response.AddPagination(cards.CurrentPage, cards.PageSize,
+                 cards.TotalCount, cards.TotalPages);
 
-            return Ok(usersToReturn);
+            return Ok(cards);
         }
 
         [HttpPost]
@@ -50,70 +48,38 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("{cardId}", Name = nameof(GetById))]
         public async Task<IActionResult> GetById(int cardId)
         {
-            LibraryCard card = await _libraryCardService.GetLibraryCardById(cardId);
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.GetLibraryCardById(cardId);
 
-            if (card == null)
-            {
-                _logger.LogWarning("card {0} was not found", cardId);
-                return NoContent();
-            }
-
-            LibraryCardForDetailedDto cardToReturn = _mapper.Map<LibraryCardForDetailedDto>(card);
-
-            return Ok(cardToReturn);
+            return result.Succeeded ? Ok(result.Item) : NotFound();
         }
 
         [HttpGet("cardnumber/{cardNumber}")]
         public async Task<IActionResult> GetLibraryCardByNumber(string cardNumber)
         {
-            LibraryCard card = await _libraryCardService.GetLibraryCardByNumber(cardNumber);
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.GetLibraryCardByNumber(cardNumber);
 
-            if (card == null)
-            {
-                _logger.LogWarning("card {0} was not found", cardNumber);
-                return NoContent();
-            }
-
-            LibraryCardForDetailedDto cardToReturn = _mapper.Map<LibraryCardForDetailedDto>(card);
-
-            return Ok(cardToReturn);
+            return result.Succeeded ? Ok(result.Item) : NotFound();
         }
 
         [HttpPut]
         public async Task<IActionResult> Put(LibraryCardForUpdate updateCardDto)
         {
-            LibraryCard card = await _libraryCardService.GetLibraryCardById(updateCardDto.Id);
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.UpdateLibraryCard(updateCardDto);
 
-            if (card == null)
-            {
-                return BadRequest("User for not found");
-            }
-
-            await _libraryCardService.UpdateLibraryCard(card);
-
-            return NoContent();
+            return ResultCheck(result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(LibraryCardForDetailedDto cardForDel)
         {
-            LibraryCard card = await _libraryCardService.GetLibraryCardById(id);
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.DeleteLibraryCard(cardForDel);
 
-            if (card == null)
-            {
-                return NoContent();
-            }
-
-            await _libraryCardService.DeleteLibraryCard(card);
-
-            return NoContent();
+            return ResultCheck(result);
         }
 
-        private int LoggedInUserID()
+        private IActionResult ResultCheck(LmsResponseHandler<LibraryCardForDetailedDto> result)
         {
-            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            return id;
+            return result.Succeeded ? NoContent() : NotFound(result.Error);
         }
     }
 }

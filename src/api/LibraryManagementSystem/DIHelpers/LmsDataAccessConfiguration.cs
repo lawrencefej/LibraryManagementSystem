@@ -11,7 +11,7 @@ namespace LibraryManagementSystem.DIHelpers
     {
         public static void AddDataAccessServices(this IServiceCollection services, AppSettings appSettings)
         {
-            var connectionString = $"Server={appSettings.Host};Port={appSettings.Port};Database={appSettings.DatabaseName};Uid={appSettings.DbUser};Pwd={appSettings.DbPassword};";
+            string connectionString = $"Server={appSettings.Host};Port={appSettings.Port};Database={appSettings.DatabaseName};Uid={appSettings.DbUser};Pwd={appSettings.DbPassword};";
 
             IdentityModelEventSource.ShowPII = true;
             services.AddDbContext<DataContext>(x => x

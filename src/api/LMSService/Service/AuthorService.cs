@@ -59,8 +59,9 @@ namespace LMSService.Service
                 _context.Update(author);
                 await _context.SaveChangesAsync();
 
-                return LmsResponseHandler<AuthorDto>.Successful();
+                return LmsResponseHandler<AuthorDto>.Successful(_mapper.Map<AuthorDto>(author));
             }
+
             return LmsResponseHandler<AuthorDto>.Failed("");
         }
 
@@ -74,6 +75,7 @@ namespace LMSService.Service
 
                 return LmsResponseHandler<AuthorDto>.Successful(authorForReturn);
             }
+
             return LmsResponseHandler<AuthorDto>.Failed("");
         }
 
@@ -88,6 +90,11 @@ namespace LMSService.Service
             return _mapper.Map<PagedList<AuthorDto>>(authorsToReturn);
         }
 
+        private async Task<Author> GetAuthor(int authorId)
+        {
+            return await _context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);
+        }
+
         private static IQueryable<Author> FilterAuthors(PaginationParams paginationParams, IQueryable<Author> authors)
         {
             if (!string.IsNullOrEmpty(paginationParams.SearchString))
@@ -99,11 +106,6 @@ namespace LMSService.Service
             authors = paginationParams.SortDirection == "desc" ? authors.OrderByDescending(x => x.FullName) : authors.OrderBy(x => x.FullName);
 
             return authors;
-        }
-
-        private async Task<Author> GetAuthor(int authorId)
-        {
-            return await _context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);
         }
     }
 }

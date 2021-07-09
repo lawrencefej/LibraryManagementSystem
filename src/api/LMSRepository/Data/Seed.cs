@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
@@ -90,6 +91,75 @@ namespace LMSRepository.Data
             foreach (Category category in categories)
             {
                 await _categoryService.AddCategory(category);
+            }
+        }
+
+        public async Task SeedBooksAsset()
+        {
+            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Book))
+            {
+                string assetData = System.IO.File.ReadAllText("Data/BooksSeedData.json");
+                List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
+
+                CleanAssetData(assets);
+                await _libraryAssetService.AddAsset(assets);
+            }
+        }
+
+        public async Task SeedMediaAsset()
+        {
+            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Media))
+            {
+                string assetData = System.IO.File.ReadAllText("Data/MediaSeedData.json");
+                List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
+
+                CleanAssetData(assets);
+                await _libraryAssetService.AddAsset(assets);
+            }
+        }
+
+        public async Task SeedOtherAsset()
+        {
+            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Other))
+            {
+                string assetData = System.IO.File.ReadAllText("Data/OtherSeedData.json");
+                List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
+
+                CleanAssetData(assets);
+                await _libraryAssetService.AddAsset(assets);
+            }
+        }
+
+        private static void CleanAssetData(List<LibraryAssetForCreationDto> assets)
+        {
+            foreach (LibraryAssetForCreationDto asset in assets)
+            {
+                if (asset.AssetAuthors.Distinct().Count() > 1)
+                {
+                    List<LibraryAssetAuthorDto> AssetAuthors = new()
+                    {
+                        new LibraryAssetAuthorDto { AuthorId = new Random().Next(1, 5) },
+                        new LibraryAssetAuthorDto { AuthorId = new Random().Next(6, 10) }
+                    };
+                    asset.AssetCategories.Clear();
+                    asset.AssetAuthors = AssetAuthors;
+                }
+
+                if (asset.AssetCategories.Distinct().Count() > 1)
+                {
+                    List<LibraryAssetCategoryDto> AssetCategories = new()
+                    {
+                        new LibraryAssetCategoryDto { CategoryId = new Random().Next(1, 5) },
+                        new LibraryAssetCategoryDto { CategoryId = new Random().Next(6, 10) }
+                    };
+                    asset.AssetCategories.Clear();
+                    asset.AssetCategories = AssetCategories;
+                }
+
+                if (asset.Description.Length > 250)
+                {
+                    asset.Description = asset.Description.Substring(0, 250);
+                }
             }
         }
 

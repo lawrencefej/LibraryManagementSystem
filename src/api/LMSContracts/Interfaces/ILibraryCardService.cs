@@ -9,13 +9,15 @@ namespace LMSContracts.Interfaces
     public interface ILibraryCardService
     {
         Task<LibraryCardForDetailedDto> AddLibraryCard(LibraryCardForCreationDto addCardDto);
-        Task<LibraryCard> GetLibraryCardByNumber(string cardNumber);
-        Task<LibraryCard> GetLibraryCardById(int id);
-        Task<bool> DoesLibraryCardExist(string cardNumber);
-        Task<PagedList<LibraryCard>> GetAllLibraryCard(PaginationParams paginationParams);
-        Task<IEnumerable<LibraryCard>> SearchLibraryCard(LibraryCard card);
-        Task DeleteLibraryCard(LibraryCard card);
-        Task<LibraryCard> UpdateLibraryCard(LibraryCard card);
-        // Task<LibraryCard> AddLibraryCard(LibraryCard card);
+
+        Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardByNumber(string cardNumber);
+
+        Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardById(int id);
+
+        Task<PagedList<LibrarycardForListDto>> GetAllLibraryCard(PaginationParams paginationParams);
+
+        Task<LmsResponseHandler<LibraryCardForDetailedDto>> DeleteLibraryCard(LibraryCardForDetailedDto cardForDel);
+
+        Task<LmsResponseHandler<LibraryCardForDetailedDto>> UpdateLibraryCard(LibraryCardForUpdate cardForUpdate);
     }
 }

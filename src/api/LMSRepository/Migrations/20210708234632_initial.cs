@@ -77,7 +77,7 @@ namespace LMSRepository.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FullName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    FullName = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -92,7 +92,7 @@ namespace LMSRepository.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: false)
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -364,6 +364,7 @@ namespace LMSRepository.Migrations
                     CardNumber = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Fees = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     MemberId = table.Column<int>(type: "int", nullable: false),
                     AddressId = table.Column<int>(type: "int", nullable: false),
@@ -583,9 +584,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "22360261-376d-47ca-8aca-f5a2c5f621d2", "Member", "MEMBER" },
-                    { 2, "2b5855e3-27f2-4dba-ac14-902711438ef9", "Admin", "ADMIN" },
-                    { 3, "843983e7-ba83-4d62-8535-048903d174bf", "Librarian", "LIBRARIAN" }
+                    { 1, "17fce0ab-7f50-47cb-afcb-939f9d505480", "Member", "MEMBER" },
+                    { 2, "d24baea8-fa2a-4017-90a6-c90f9e40978b", "Admin", "ADMIN" },
+                    { 3, "519d898a-68d2-4abf-8f0f-13cf451837ff", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(
@@ -732,6 +733,12 @@ namespace LMSRepository.Migrations
                 name: "IX_LibraryAssetCategory_CategoryId",
                 table: "LibraryAssetCategory",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LibraryAssets_ISBN",
+                table: "LibraryAssets",
+                column: "ISBN",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LibraryCards_AddressId",

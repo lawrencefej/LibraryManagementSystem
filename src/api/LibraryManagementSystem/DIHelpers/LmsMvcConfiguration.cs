@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API;
 using LMSRepository.Interfaces.Helpers;
+using LMSService.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -18,22 +19,26 @@ namespace LibraryManagementSystem.DIHelpers
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    //.AllowCredentials()
                     );
             });
             services.AddControllers(options =>
             {
-                var policy = new AuthorizationPolicyBuilder()
+                AuthorizationPolicy policy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
                 options.Filters.Add(typeof(ValidateModelAttribute));
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            // .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling =
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore)
-            .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<Startup>());
+            // .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<Startup>());
+            .AddFluentValidation(fv =>
+            {
+                // fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                fv.RegisterValidatorsFromAssemblyContaining<LibraryAssetValidator>();
+            });
         }
     }
 }

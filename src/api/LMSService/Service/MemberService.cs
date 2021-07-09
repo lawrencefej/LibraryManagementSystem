@@ -95,7 +95,7 @@ namespace LMSService.Service
                 // TODO See if this can work with generics and then move to its own method
                 members = members
                     .Where(x => x.FirstName.Contains(paginationParams.SearchString)
-                    || x.Email.Contains(paginationParams.SearchString)
+                    || x.LastName.Contains(paginationParams.SearchString)
                     || x.Email.Contains(paginationParams.SearchString)
                     );
             }

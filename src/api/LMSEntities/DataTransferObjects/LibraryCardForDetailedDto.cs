@@ -17,6 +17,7 @@ namespace LMSEntities.DataTransferObjects
         public string Gender { get; set; }
         public string Status { get; set; }
         public string LibraryCardPhoto { get; set; }
+        public int Age { get; set; }
 
     }
 }

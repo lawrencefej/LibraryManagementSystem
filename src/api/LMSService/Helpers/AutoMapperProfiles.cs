@@ -131,10 +131,6 @@ namespace LibraryManagementSystem.API.Helpers
                      {
                          opt.MapFrom(src => src.Id);
                      })
-                    //  .ForMember(dest => dest.Status, opt =>
-                    //  {
-                    //      opt.MapFrom(src => src.Status.Name);
-                    //  })
                     .ForMember(dest => dest.Title, opt =>
                      {
                          opt.MapFrom(src => src.LibraryAsset.Title);
@@ -156,8 +152,12 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<LibraryAssetAuthorDto, LibraryAssetAuthor>().ReverseMap();
             CreateMap<LibraryAssetCategoryDto, LibraryAssetCategory>().ReverseMap();
             CreateMap<LibraryCardForCreationDto, LibraryCard>();
-            CreateMap<LibraryCardForDetailedDto, LibraryCard>().ReverseMap();
-            CreateMap<LibrarycardForListDto, LibraryCard>().ReverseMap();
+            CreateMap<LibraryCard, LibraryCardForDetailedDto>()
+                .ForMember(dest => dest.Age, opt =>
+                {
+                    opt.MapFrom(src => src.DateOfBirth.CalculateAge());
+                });
+            CreateMap<LibraryCard, LibrarycardForListDto>().ReverseMap();
             CreateMap<LibraryCardForUpdate, LibraryCard>();
             CreateMap<AddressDto, Address>().ReverseMap();
             CreateMap<StateDto, State>().ReverseMap();

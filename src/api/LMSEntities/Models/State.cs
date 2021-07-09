@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 /// <summary>
@@ -11,122 +13,65 @@ namespace LMSEntities.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Abbreviations { get; set; }
+
+        public static ReadOnlyCollection<State> GetStates()
+        {
+            List<State> states = new()
+            {
+                new State { Id = 1, Abbreviations = "AL", Name = "Alabama" },
+                new State { Id = 2, Abbreviations = "AK", Name = "Alaska" },
+                new State { Id = 3, Abbreviations = "AR", Name = "Arkansas" },
+                new State { Id = 4, Abbreviations = "AZ", Name = "Arizona" },
+                new State { Id = 5, Abbreviations = "CA", Name = "California" },
+                new State { Id = 6, Abbreviations = "CO", Name = "Colorado" },
+                new State { Id = 7, Abbreviations = "CT", Name = "Connecticut" },
+                new State { Id = 8, Abbreviations = "DC", Name = "District of Columbia" },
+                new State { Id = 9, Abbreviations = "DE", Name = "Delaware" },
+                new State { Id = 10, Abbreviations = "FL", Name = "Florida" },
+                new State { Id = 11, Abbreviations = "GA", Name = "Georgia" },
+                new State { Id = 12, Abbreviations = "HI", Name = "Hawaii" },
+                new State { Id = 13, Abbreviations = "ID", Name = "Idaho" },
+                new State { Id = 14, Abbreviations = "IL", Name = "Illinois" },
+                new State { Id = 15, Abbreviations = "IN", Name = "Indiana" },
+                new State { Id = 16, Abbreviations = "IA", Name = "Iowa" },
+                new State { Id = 17, Abbreviations = "KS", Name = "Kansas" },
+                new State { Id = 18, Abbreviations = "KY", Name = "Kentucky" },
+                new State { Id = 19, Abbreviations = "LA", Name = "Louisiana" },
+                new State { Id = 20, Abbreviations = "ME", Name = "Maine" },
+                new State { Id = 21, Abbreviations = "MD", Name = "Maryland" },
+                new State { Id = 22, Abbreviations = "MA", Name = "Massachusetts" },
+                new State { Id = 23, Abbreviations = "MI", Name = "Michigan" },
+                new State { Id = 24, Abbreviations = "MN", Name = "Minnesota" },
+                new State { Id = 25, Abbreviations = "MS", Name = "Mississippi" },
+                new State { Id = 26, Abbreviations = "MO", Name = "Missouri" },
+                new State { Id = 27, Abbreviations = "MT", Name = "Montana" },
+                new State { Id = 28, Abbreviations = "NE", Name = "Nebraska" },
+                new State { Id = 29, Abbreviations = "NH", Name = "New Hampshire" },
+                new State { Id = 30, Abbreviations = "NJ", Name = "New Jersey" },
+                new State { Id = 31, Abbreviations = "NM", Name = "New Mexico" },
+                new State { Id = 32, Abbreviations = "NY", Name = "New York" },
+                new State { Id = 33, Abbreviations = "NC", Name = "North Carolina" },
+                new State { Id = 34, Abbreviations = "NV", Name = "Nevada" },
+                new State { Id = 35, Abbreviations = "ND", Name = "North Dakota" },
+                new State { Id = 36, Abbreviations = "OH", Name = "Ohio" },
+                new State { Id = 37, Abbreviations = "OK", Name = "Oklahoma" },
+                new State { Id = 38, Abbreviations = "OR", Name = "Oregon" },
+                new State { Id = 39, Abbreviations = "PA", Name = "Pennsylvania" },
+                new State { Id = 40, Abbreviations = "RI", Name = "Rhode Island" },
+                new State { Id = 41, Abbreviations = "SC", Name = "South Carolina" },
+                new State { Id = 42, Abbreviations = "SD", Name = "South Dakota" },
+                new State { Id = 43, Abbreviations = "TN", Name = "Tennessee" },
+                new State { Id = 44, Abbreviations = "TX", Name = "Texas" },
+                new State { Id = 45, Abbreviations = "UT", Name = "Utah" },
+                new State { Id = 46, Abbreviations = "VT", Name = "Vermont" },
+                new State { Id = 47, Abbreviations = "VA", Name = "Virginia" },
+                new State { Id = 48, Abbreviations = "WA", Name = "Washington" },
+                new State { Id = 49, Abbreviations = "WV", Name = "West Virginia" },
+                new State { Id = 50, Abbreviations = "WI", Name = "Wisconsin" },
+                new State { Id = 51, Abbreviations = "WY", Name = "Wyoming" }
+            };
+
+            return states.AsReadOnly();
+        }
     }
-    // public enum States
-    // {
-    //     // States
-    //     [Description("Alabama")]
-    //     AL = 1,
-    //     [Description("Alaska")]
-    //     AK = 2,
-    //     [Description("Arkansas")]
-    //     AR = 3,
-    //     [Description("Arizona")]
-    //     AZ = 4,
-    //     [Description("California")]
-    //     CA = 5,
-    //     [Description("Colorado")]
-    //     CO = 6,
-    //     [Description("Connecticut")]
-    //     CT = 7,
-    //     [Description("District of Columbia")]
-    //     DC = 8,
-    //     [Description("Delaware")]
-    //     DE = 9,
-    //     [Description("Florida")]
-    //     FL = 10,
-    //     [Description("Georgia")]
-    //     GA = 11,
-    //     [Description("Hawaii")]
-    //     HI = 12,
-    //     [Description("Iowa")]
-    //     IA = 13,
-    //     [Description("Idaho")]
-    //     ID = 14,
-    //     [Description("Illinois")]
-    //     IL = 15,
-    //     [Description("Indiana")]
-    //     IN = 16,
-    //     [Description("Kansas")]
-    //     KS = 17,
-    //     [Description("Kentucky")]
-    //     KY = 18,
-    //     [Description("Louisiana")]
-    //     LA = 19,
-    //     [Description("Massachusetts")]
-    //     MA = 20,
-    //     [Description("Maryland")]
-    //     MD = 21,
-    //     [Description("Maine")]
-    //     ME = 22,
-    //     [Description("Michigan")]
-    //     MI = 23,
-    //     [Description("Minnesota")]
-    //     MN = 24,
-    //     [Description("Missouri")]
-    //     MO = 25,
-    //     [Description("Mississippi")]
-    //     MS = 26,
-    //     [Description("Montana")]
-    //     MT = 27,
-    //     [Description("North Carolina")]
-    //     NC = 28,
-    //     [Description("North Dakota")]
-    //     ND = 29,
-    //     [Description("Nebraska")]
-    //     NE = 30,
-    //     [Description("New Hampshire")]
-    //     NH = 31,
-    //     [Description("New Jersey")]
-    //     NJ = 32,
-    //     [Description("New Mexico")]
-    //     NM = 33,
-    //     [Description("Nevada")]
-    //     NV = 34,
-    //     [Description("New York")]
-    //     NY = 35,
-    //     [Description("Oklahoma")]
-    //     OK = 36,
-    //     [Description("Ohio")]
-    //     OH = 37,
-    //     [Description("Oregon")]
-    //     OR = 38,
-    //     [Description("Pennsylvania")]
-    //     PA = 39,
-    //     [Description("Rhode Island")]
-    //     RI = 40,
-    //     [Description("South Carolina")]
-    //     SC = 41,
-    //     [Description("South Dakota")]
-    //     SD = 42,
-    //     [Description("Tennessee")]
-    //     TN = 43,
-    //     [Description("Texas")]
-    //     TX = 44,
-    //     [Description("Utah")]
-    //     UT = 45,
-    //     [Description("Virginia")]
-    //     VA = 46,
-    //     [Description("Vermont")]
-    //     VT = 47,
-    //     [Description("Washington")]
-    //     WA = 48,
-    //     [Description("Wisconsin")]
-    //     WI = 49,
-    //     [Description("West Virginia")]
-    //     WV = 50,
-    //     [Description("Wyoming")]
-    //     WY = 51,
-    //     //Territories
-    //     [Description("Puerto Rico")]
-    //     PR = 52,
-    //     [Description("American Samoa")]
-    //     AS = 53,
-    //     [Description("Guam")]
-    //     GU = 54,
-    //     [Description("Northern Mariana Islands")]
-    //     MP = 55,
-    //     [Description("U.S. Virgin Islands")]
-    //     VI = 56,
-    // }
 }

@@ -31,6 +31,8 @@ namespace LMSRepository.Extensions
                     .IsRequired();
                 e.Property(a => a.ISBN)
                     .HasMaxLength(25);
+                e.HasIndex(a => a.ISBN)
+                    .IsUnique();
                 e.Property(a => a.DeweyIndex)
                     .HasMaxLength(15);
             });
@@ -63,7 +65,7 @@ namespace LMSRepository.Extensions
 
             modelBuilder.Entity<Category>(e =>
             {
-                e.Property(a => a.Name).HasMaxLength(50).IsRequired();
+                e.Property(a => a.Name).HasMaxLength(100).IsRequired();
                 e.Property(a => a.Description).HasMaxLength(250);
             });
             // modelBuilder.Entity<Category>().HasData(

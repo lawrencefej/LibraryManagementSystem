@@ -2,14 +2,12 @@
 using LibraryManagementSystem.DIHelpers;
 using LibraryManagementSystem.Extensions;
 using LibraryManagementSystem.Helpers;
-using LMSEntities.Helpers;
 using LMSRepository.Data;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

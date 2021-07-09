@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace LMSEntities.DataTransferObjects
 {
@@ -10,7 +11,6 @@ namespace LMSEntities.DataTransferObjects
         public string Title { get; set; }
         [Required]
         public int Year { get; set; }
-        public int StatusId { get; set; }
         [Required]
         public int NumberOfCopies { get; set; }
 
@@ -20,8 +20,14 @@ namespace LMSEntities.DataTransferObjects
         [Required]
         public string Description { get; set; }
         [Required]
-        public LibraryAssetTypeDto AssetTypeId { get; set; }
+        public LibraryAssetTypeDto AssetType { get; set; }
         public string ISBN { get; set; }
         public string DeweyIndex { get; set; }
+
+        // [Required]
+        public ICollection<LibraryAssetAuthorDto> AssetAuthors { get; set; }
+
+        // [Required]
+        public ICollection<LibraryAssetCategoryDto> AssetCategories { get; set; }
     }
 }

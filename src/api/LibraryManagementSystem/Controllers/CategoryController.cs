@@ -8,7 +8,7 @@ namespace LibraryManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController<T> : ControllerBase
     {
         private readonly ICategoryService _categoryService;
 

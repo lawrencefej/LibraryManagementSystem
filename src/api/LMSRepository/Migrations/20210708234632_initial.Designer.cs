@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210629174418_initial")]
+    [Migration("20210708234632_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,21 +80,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "22360261-376d-47ca-8aca-f5a2c5f621d2",
+                            ConcurrencyStamp = "17fce0ab-7f50-47cb-afcb-939f9d505480",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "2b5855e3-27f2-4dba-ac14-902711438ef9",
+                            ConcurrencyStamp = "d24baea8-fa2a-4017-90a6-c90f9e40978b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "843983e7-ba83-4d62-8535-048903d174bf",
+                            ConcurrencyStamp = "519d898a-68d2-4abf-8f0f-13cf451837ff",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -204,8 +204,8 @@ namespace LMSRepository.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.HasKey("Id");
 
@@ -224,8 +224,8 @@ namespace LMSRepository.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("varchar(15)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -394,6 +394,9 @@ namespace LMSRepository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ISBN")
+                        .IsUnique();
+
                     b.ToTable("LibraryAssets");
                 });
 
@@ -445,6 +448,9 @@ namespace LMSRepository.Migrations
                         .HasColumnType("varchar(25)");
 
                     b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
