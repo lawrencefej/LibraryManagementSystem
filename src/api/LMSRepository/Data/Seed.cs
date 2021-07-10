@@ -86,9 +86,9 @@ namespace LMSRepository.Data
             }
 
             string authorData = System.IO.File.ReadAllText("Data/CategorySeedData.json");
-            List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(authorData);
+            List<CategoryDto> categories = JsonConvert.DeserializeObject<List<CategoryDto>>(authorData);
 
-            foreach (Category category in categories)
+            foreach (CategoryDto category in categories)
             {
                 await _categoryService.AddCategory(category);
             }
@@ -98,7 +98,7 @@ namespace LMSRepository.Data
         {
             if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Book))
             {
-                string assetData = System.IO.File.ReadAllText("Data/BooksSeedData.json");
+                string assetData = System.IO.File.ReadAllText("Data/BookSeedData.json");
                 List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
 
                 CleanAssetData(assets);
@@ -159,6 +159,11 @@ namespace LMSRepository.Data
                 if (asset.Description.Length > 250)
                 {
                     asset.Description = asset.Description.Substring(0, 250);
+                }
+
+                if (asset.Title.Length > 50)
+                {
+                    asset.Title = asset.Title.Substring(0, 50);
                 }
             }
         }

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using LibraryManagementSystem.API.Helpers;
+using LMSEntities.Models;
 using LMSRepository.Data;
 
 namespace LMSService.Validators.services
@@ -39,6 +41,13 @@ namespace LMSService.Validators.services
             int age = dob.CalculateAge();
 
             return age is >= 14 and <= 120;
+        }
+
+        public bool IsValidState(int stateId)
+        {
+            ReadOnlyCollection<State> states = State.GetStates();
+
+            return states.Any(s => s.Id == stateId);
         }
     }
 }

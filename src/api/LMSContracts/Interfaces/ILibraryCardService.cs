@@ -8,7 +8,7 @@ namespace LMSContracts.Interfaces
 {
     public interface ILibraryCardService
     {
-        Task<LibraryCardForDetailedDto> AddLibraryCard(LibraryCardForCreationDto addCardDto);
+        Task<LmsResponseHandler<LibraryCardForDetailedDto>> AddLibraryCard(LibraryCardForCreationDto addCardDto);
 
         Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardByNumber(string cardNumber);
 
@@ -16,7 +16,7 @@ namespace LMSContracts.Interfaces
 
         Task<PagedList<LibrarycardForListDto>> GetAllLibraryCard(PaginationParams paginationParams);
 
-        Task<LmsResponseHandler<LibraryCardForDetailedDto>> DeleteLibraryCard(LibraryCardForDetailedDto cardForDel);
+        Task<LmsResponseHandler<LibraryCardForDetailedDto>> DeleteLibraryCard(int cardId);
 
         Task<LmsResponseHandler<LibraryCardForDetailedDto>> UpdateLibraryCard(LibraryCardForUpdate cardForUpdate);
     }

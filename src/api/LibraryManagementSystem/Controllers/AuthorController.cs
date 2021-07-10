@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using LibraryManagementSystem.API.Helpers;
+using LibraryManagementSystem.Extensions;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
@@ -11,7 +12,7 @@ namespace LibraryManagementSystem.Controllers
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLibrarianRole")]
     [ApiController]
-    public class AuthorController : ControllerBase
+    public class AuthorController : BaseApiController<AuthorDto, AuthorDto>
     {
         private readonly IAuthorService _authorService;
 
@@ -25,7 +26,7 @@ namespace LibraryManagementSystem.Controllers
         {
             LmsResponseHandler<AuthorDto> result = await _authorService.GetAuthorForController(authorId);
 
-            return result.Succeeded ? Ok(result.Item) : NotFound();
+            return ResultCheck(result);
         }
 
         [HttpPut]
@@ -33,7 +34,7 @@ namespace LibraryManagementSystem.Controllers
         {
             LmsResponseHandler<AuthorDto> result = await _authorService.EditAuthor(authorDto);
 
-            return result.Succeeded ? NoContent() : NotFound();
+            return ResultCheck(result);
         }
 
         [HttpPost]
@@ -49,7 +50,7 @@ namespace LibraryManagementSystem.Controllers
         {
             LmsResponseHandler<AuthorDto> result = await _authorService.DeleteAuthor(authorId);
 
-            return result.Succeeded ? NoContent() : NotFound();
+            return ResultCheck(result);
         }
 
         [HttpGet]
@@ -57,10 +58,7 @@ namespace LibraryManagementSystem.Controllers
         {
             PagedList<AuthorDto> authors = await _authorService.GetPaginatedAuthors(paginationParams);
 
-            Response.AddPagination(authors.CurrentPage, authors.PageSize,
-                 authors.TotalCount, authors.TotalPages);
-
-            return Ok(authors);
+            return ReturnPagination(authors);
         }
     }
 }

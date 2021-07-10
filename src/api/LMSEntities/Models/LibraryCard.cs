@@ -12,15 +12,15 @@ namespace LMSEntities.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string CardNumber { get; private set; }
-        public decimal Fees { get; private set; }
+        public decimal Fees { get; private set; } = 0;
         public DateTime DateOfBirth { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
         public AppUser Member { get; set; }
         public int MemberId { get; set; }
         public Address Address { get; set; }
         public int AddressId { get; set; }
         public MemberGender Gender { get; set; }
-        public LibraryCardStatus Status { get; set; }
+        public LibraryCardStatus Status { get; set; } = LibraryCardStatus.Good;
         public LibraryCardPhoto LibraryCardPhoto { get; set; }
         public ICollection<Checkout> Checkouts { get; set; }
         public ICollection<ReserveAsset> ReservedAssets { get; set; }

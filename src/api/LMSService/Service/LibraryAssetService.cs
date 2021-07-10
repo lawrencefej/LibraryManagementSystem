@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
-    public class LibraryAssetService : BaseService, ILibraryAssetService
+    public class LibraryAssetService : BaseService<LibraryAssetForDetailedDto>, ILibraryAssetService
     {
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly DataContext _context;
@@ -55,9 +55,9 @@ namespace LMSService.Service
             await _context.SaveChangesAsync();
         }
 
-        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(LibraryAssetForDetailedDto assetForDel)
+        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(int assetId)
         {
-            LibraryAsset asset = await GetAsset(assetForDel.Id);
+            LibraryAsset asset = await GetAsset(assetId);
 
             if (asset != null)
             {
@@ -69,7 +69,7 @@ namespace LMSService.Service
                 return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful();
             }
 
-            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"{assetForDel.AssetType}: {assetForDel.Title} does not exist");
+            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"Selected item does not exist");
         }
 
         public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
@@ -78,10 +78,6 @@ namespace LMSService.Service
 
             if (asset != null)
             {
-                // ICollection<LibraryAssetAuthor> newAuthors = _mapper.Map(libraryAssetForUpdate.AssetAuthors, asset.AssetAuthors);
-
-                // ICollection<LibraryAssetAuthor> oldAuthors = asset.AssetAuthors;
-
                 _mapper.Map(libraryAssetForUpdate, asset);
 
                 asset.SetToAvailable();
@@ -145,22 +141,13 @@ namespace LMSService.Service
                 assets = assets.Where(x => x.Title.Contains(paginationParams.SearchString));
             }
 
-            if (paginationParams.SortDirection == "asc")
-            {
-                assets = assets.OrderBy(x => x.Title);
-            }
-            else if (paginationParams.SortDirection == "desc")
-            {
-                assets = assets.OrderByDescending(x => x.Title);
-            }
-            else
-            {
-                assets = assets.OrderBy(x => x.Title);
-            }
+            assets = paginationParams.SortDirection == "desc" ? assets.OrderByDescending(x => x.Title) : assets.OrderBy(x => x.Title);
 
-            PagedList<LibraryAsset> assetsToReturn = await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
+            PagedList<LibraryAsset> assetsList = await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
 
-            return _mapper.Map<PagedList<LibraryAssetForListDto>>(assetsToReturn);
+            PagedList<LibraryAssetForListDto> assetToReturn = _mapper.Map<PagedList<LibraryAssetForListDto>>(assetsList);
+
+            return PagedListMapper<LibraryAssetForListDto, LibraryAsset>.MapPagedList(assetToReturn, assetsList);
         }
 
         private LmsResponseHandler<LibraryAssetForDetailedDto> MapLibraryAsset(LibraryAsset asset)
@@ -174,19 +161,20 @@ namespace LMSService.Service
 
             return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed("");
         }
-        private bool DoesIsbnExist(string isbn)
-        {
-            return !_context.LibraryAssets.Any(p => p.ISBN == isbn);
-        }
 
-        private bool DoesCategoryExist(int id)
-        {
-            return _context.Categories.Any(a => a.Id == id);
-        }
+        // private bool DoesIsbnExist(string isbn)
+        // {
+        //     return !_context.LibraryAssets.Any(p => p.ISBN == isbn);
+        // }
 
-        private bool DoesAuthorExist(int id)
-        {
-            return _context.Authors.Any(a => a.Id == id);
-        }
+        // private bool DoesCategoryExist(int id)
+        // {
+        //     return _context.Categories.Any(a => a.Id == id);
+        // }
+
+        // private bool DoesAuthorExist(int id)
+        // {
+        //     return _context.Authors.Any(a => a.Id == id);
+        // }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace LibraryManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController<T> : ControllerBase
+    public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
 
@@ -34,9 +35,9 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> AddCategory(CategoryDto categoryForCreation)
         {
-            category = await _categoryService.AddCategory(category);
+            CategoryDto category = await _categoryService.AddCategory(categoryForCreation);
 
             return CreatedAtAction(nameof(GetCategory), new { categoryId = category.Id }, category);
         }
@@ -45,12 +46,7 @@ namespace LibraryManagementSystem.Controllers
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
 
-            if (await _categoryService.GetCategory(id) == null)
-            {
-                return NotFound();
-            }
-
-            await _categoryService.DeleteCategory(await _categoryService.GetCategory(id));
+            await _categoryService.DeleteCategory(id);
 
             return await _categoryService.GetCategory(id);
         }

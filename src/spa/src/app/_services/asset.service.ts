@@ -48,9 +48,8 @@ export class AssetService {
     sortDirection?: string,
     searchString?: string
   ): Observable<PaginatedResult<LibraryAsset[]>> {
-    const paginatedResult: PaginatedResult<
-      LibraryAsset[]
-    > = new PaginatedResult<LibraryAsset[]>();
+    const paginatedResult: PaginatedResult<LibraryAsset[]> =
+      new PaginatedResult<LibraryAsset[]>();
 
     let params = new HttpParams();
 
@@ -64,7 +63,7 @@ export class AssetService {
     }
 
     return this.http
-      .get<LibraryAsset[]>(this.baseUrl + 'pagination', {
+      .get<LibraryAsset[]>(this.baseUrl, {
         observe: 'response',
         params,
       })

@@ -34,10 +34,7 @@ namespace LibraryManagementSystem.API
         {
             services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
 
-            IConfigurationSection appSettingsSection = Configuration.GetSection(nameof(AppSettings));
-
-            services.Configure<AppSettings>(appSettingsSection);
-            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
+            AppSettings appSettings = GetAppSettings(services);
 
             //IdentityModelEventSource.ShowPII = true;
             services.AddDataAccessServices(appSettings);
@@ -67,13 +64,23 @@ namespace LibraryManagementSystem.API
 
         }
 
+        private AppSettings GetAppSettings(IServiceCollection services)
+        {
+            IConfigurationSection appSettingsSection = Configuration.GetSection(nameof(AppSettings));
+
+            services.Configure<AppSettings>(appSettingsSection);
+            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
+            return appSettings;
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, DataContext dataContext, Seed seeder)
         {
             if (env.IsDevelopment())
             {
-                // dataContext.Database.Migrate();
-                seeder.SeedData(dataContext).Wait();
+                // var appSettings = new AppSettings();
+                AppSettings appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+                seeder.SeedData(dataContext, appSettings.SeedDb).Wait();
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
                 app.UseDeveloperExceptionPage();
             }

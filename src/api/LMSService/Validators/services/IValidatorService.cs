@@ -13,5 +13,7 @@ namespace LMSService.Validators.services
         bool IsValidYear(int year);
 
         bool IsValidAge(DateTime dob);
+
+        bool IsValidState(int stateId);
     }
 }

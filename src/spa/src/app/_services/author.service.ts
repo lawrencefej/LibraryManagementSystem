@@ -68,7 +68,7 @@ export class AuthorService {
     }
 
     return this.http
-      .get<Checkout[]>(this.baseUrl + 'pagination', {
+      .get<Checkout[]>(this.baseUrl, {
         observe: 'response',
         params,
       })

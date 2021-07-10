@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
 using LibraryManagementSystem.Controllers;
 using LMSContracts.Interfaces;
@@ -7,25 +6,19 @@ using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(Policy = Role.RequireLibrarianRole)]
     [ApiController]
-    public class CatalogController : BaseApiController<LibraryAssetForDetailedDto>
+    public class CatalogController : BaseApiController<LibraryAssetForDetailedDto, LibraryAssetForListDto>
     {
         private readonly ILibraryAssetService _libraryAssestService;
-        private readonly ILogger<CatalogController> _logger;
-        private readonly IMapper _mapper;
 
-        public CatalogController(ILibraryAssetService libraryAssestService, ILogger<CatalogController> logger,
-            IMapper mapper)
+        public CatalogController(ILibraryAssetService libraryAssestService)
         {
             _libraryAssestService = libraryAssestService;
-            _logger = logger;
-            _mapper = mapper;
         }
 
         [HttpPost]
@@ -37,9 +30,9 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpDelete("{assetId}")]
-        public async Task<IActionResult> DeleteLibraryAsset(LibraryAssetForDetailedDto assetFordel)
+        public async Task<IActionResult> DeleteLibraryAsset(int assetId)
         {
-            LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.DeleteAsset(assetFordel);
+            LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.DeleteAsset(assetId);
 
             return ResultCheck(result);
         }
@@ -74,14 +67,6 @@ namespace LibraryManagementSystem.API.Controllers
             PagedList<LibraryAssetForListDto> assets = await _libraryAssestService.GetAssetsByAuthor(paginationParams, authorId);
 
             return ReturnPagination(assets);
-        }
-
-        private IActionResult ReturnPagination(PagedList<LibraryAssetForListDto> assets)
-        {
-            Response.AddPagination(assets.CurrentPage, assets.PageSize,
-                             assets.TotalCount, assets.TotalPages);
-
-            return Ok(assets);
         }
     }
 }

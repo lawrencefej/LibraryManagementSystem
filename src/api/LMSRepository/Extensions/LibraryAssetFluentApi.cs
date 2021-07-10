@@ -68,10 +68,6 @@ namespace LMSRepository.Extensions
                 e.Property(a => a.Name).HasMaxLength(100).IsRequired();
                 e.Property(a => a.Description).HasMaxLength(250);
             });
-            // modelBuilder.Entity<Category>().HasData(
-            //     new Category { Id = 1, Name = "Science", Description = "Paper back books" },
-            //     new Category { Id = 2, Name = "Computer", Description = "Video and media" }
-            //     );
         }
     }
 }

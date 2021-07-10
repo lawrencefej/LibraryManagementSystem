@@ -32,6 +32,33 @@ namespace LMSService.Service
             return await _userManager.CreateAsync(user);
         }
 
+        // public async Task<LmsResponseHandler<AppUser>> CreateMember(LibraryCard card)
+        // {
+        //     AppUser member = new()
+        //     {
+        //         FirstName = card.FirstName,
+        //         LastName = card.LastName,
+        //         Created = card.Created,
+        //         Email = card.Email,
+        //         UserName = card.Email,
+        //         PhoneNumber = card.PhoneNumber
+        //     };
+
+        //     IdentityResult result = await _userManager.CreateAsync(member);
+
+
+        //     if (result.Succeeded)
+        //     {
+        //         result = await _userManager.AddToRoleAsync(member, nameof(UserRoles.Member));
+
+        //         if (!result.Succeeded)
+        //         {
+        //             return ReturnErrors(result.Errors);
+        //         }
+
+        //     }
+        // }
+
         public async Task<AppUser> CompleteAddMember(AppUser member)
         {
             await _userManager.AddToRoleAsync(member, nameof(UserRoles.Member));

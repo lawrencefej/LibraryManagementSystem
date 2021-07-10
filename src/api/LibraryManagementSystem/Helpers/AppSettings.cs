@@ -10,16 +10,23 @@ namespace LibraryManagementSystem.Helpers
 
         [Required]
         public string ConnectionString { get; set; }
+
         [Required]
         public string Host { get; set; }
+
         [Required]
         public string Port { get; set; }
+
         [Required]
         public string DbUser { get; set; }
+
         [Required]
         public string DbPassword { get; set; }
+
         [Required]
         public string DatabaseName { get; set; }
+
+        public bool SeedDb { get; set; }
 
         public void Validate()
         {

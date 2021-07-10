@@ -1,29 +1,23 @@
 using System.Threading.Tasks;
-using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.Controllers
 {
     [Authorize(Policy = Role.RequireLibrarianRole)]
     [Route("api/[controller]")]
     [ApiController]
-    public class LibraryCardController : ControllerBase
+    public class LibraryCardController : BaseApiController<LibraryCardForDetailedDto, LibrarycardForListDto>
     {
-        private readonly IMapper _mapper;
         private readonly ILibraryCardService _libraryCardService;
-        private readonly ILogger<LibraryCardController> _logger;
-        public LibraryCardController(IMapper mapper, ILibraryCardService libraryCardService, ILogger<LibraryCardController> logger)
-        {
-            _logger = logger;
-            _libraryCardService = libraryCardService;
-            _mapper = mapper;
 
+        public LibraryCardController(ILibraryCardService libraryCardService)
+        {
+            _libraryCardService = libraryCardService;
         }
 
         [HttpGet]
@@ -31,18 +25,15 @@ namespace LibraryManagementSystem.Controllers
         {
             PagedList<LibrarycardForListDto> cards = await _libraryCardService.GetAllLibraryCard(paginationParams);
 
-            Response.AddPagination(cards.CurrentPage, cards.PageSize,
-                 cards.TotalCount, cards.TotalPages);
-
-            return Ok(cards);
+            return ReturnPagination(cards);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCard(LibraryCardForCreationDto addCardDto)
         {
-            LibraryCardForDetailedDto cardToReturn = await _libraryCardService.AddLibraryCard(addCardDto);
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.AddLibraryCard(addCardDto);
 
-            return CreatedAtRoute(nameof(GetById), new { cardId = cardToReturn.Id }, cardToReturn);
+            return CreatedAtRoute(nameof(GetById), new { cardId = result.Item.Id }, result.Item);
         }
 
         [HttpGet("{cardId}", Name = nameof(GetById))]
@@ -50,7 +41,7 @@ namespace LibraryManagementSystem.Controllers
         {
             LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.GetLibraryCardById(cardId);
 
-            return result.Succeeded ? Ok(result.Item) : NotFound();
+            return ResultCheck(result);
         }
 
         [HttpGet("cardnumber/{cardNumber}")]
@@ -58,7 +49,7 @@ namespace LibraryManagementSystem.Controllers
         {
             LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.GetLibraryCardByNumber(cardNumber);
 
-            return result.Succeeded ? Ok(result.Item) : NotFound();
+            return ResultCheck(result);
         }
 
         [HttpPut]
@@ -69,17 +60,12 @@ namespace LibraryManagementSystem.Controllers
             return ResultCheck(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(LibraryCardForDetailedDto cardForDel)
+        [HttpDelete("{cardId}")]
+        public async Task<IActionResult> Delete(int cardId)
         {
-            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.DeleteLibraryCard(cardForDel);
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.DeleteLibraryCard(cardId);
 
             return ResultCheck(result);
-        }
-
-        private IActionResult ResultCheck(LmsResponseHandler<LibraryCardForDetailedDto> result)
-        {
-            return result.Succeeded ? NoContent() : NotFound(result.Error);
         }
     }
 }

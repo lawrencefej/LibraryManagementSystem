@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace LMSEntities.DataTransferObjects
+﻿namespace LMSEntities.DataTransferObjects
 {
     public class CategoryDto
     {
         public int Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
+
+        public string Description { get; set; }
     }
 }

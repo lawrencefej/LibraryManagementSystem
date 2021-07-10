@@ -1,16 +1,30 @@
-using LMSContracts.Interfaces;
+using System.Collections.Generic;
+using LMSEntities.Helpers;
 using LMSService.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace LMSService.Service
 {
-    public class BaseService
+    public class BaseService<TDetail>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         public BaseService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
 
+        }
+
+        protected static LmsResponseHandler<TDetail> ReturnErrors(IEnumerable<IdentityError> identityErrors)
+        {
+            List<string> errors = new();
+
+            foreach (IdentityError error in identityErrors)
+            {
+                errors.Add(error.Description);
+            }
+
+            return LmsResponseHandler<TDetail>.Failed(errors);
         }
 
         protected int GetLoggedInUserId()

@@ -9,7 +9,7 @@ namespace LMSContracts.Interfaces
     {
         Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation);
 
-        Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(LibraryAssetForDetailedDto assetForDel);
+        Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(int assetId);
 
         Task<LmsResponseHandler<LibraryAssetForDetailedDto>> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate);
 

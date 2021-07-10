@@ -90,6 +90,7 @@
             "description": "What environment to run as",
             "options": [
                 "Dev",
+                "DevSeed",
                 "Prod"
             ],
             "default": "Dev",

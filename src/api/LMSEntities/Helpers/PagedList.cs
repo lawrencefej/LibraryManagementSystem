@@ -19,7 +19,7 @@ namespace LMSEntities.Helpers
             PageSize = pageSize;
             CurrentPage = pageNumber;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            this.AddRange(items);
+            AddRange(items);
         }
 
         public PagedList() { }
