@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace LMSEntities.Models
 {
@@ -25,7 +24,7 @@ namespace LMSEntities.Models
         public ICollection<Checkout> Checkouts { get; set; }
         public ICollection<ReserveAsset> ReservedAssets { get; set; }
 
-        public bool DoesCardHaveFees()
+        public bool HasFees()
         {
             return Fees > 0;
         }

@@ -107,7 +107,18 @@ namespace LibraryManagementSystem.API.Helpers
             //    opt.MapFrom(src => src.Category.Id);
             //});
             CreateMap<AuthorDto, Author>().ReverseMap();
-            CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();
+            // CreateMap<CheckoutForCreationDto, Checkout>().ReverseMap();
+            CreateMap<Checkout, CheckoutForDetailedDto>();
+            // CreateMap<CheckoutItem, CheckoutItemForReturn>();
+            CreateMap<Checkout, CheckoutForListDto>()
+                .ForMember(dest => dest.CardNumber, opt =>
+                {
+                    opt.MapFrom(src => src.LibraryCard.CardNumber);
+                });
+            // .ForMember(dest => dest.ItemCount, opt =>
+            // {
+            //     opt.MapFrom(src => src.Items.Count);
+            // });
             // CreateMap<Checkout, CheckoutForReturnDto>()
             //          .ForMember(dest => dest.Title, opt =>
             //          {
@@ -161,8 +172,8 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<LibraryCardForUpdate, LibraryCard>();
             CreateMap<AddressDto, Address>().ReverseMap();
             CreateMap<StateDto, State>().ReverseMap();
-            CreateMap<CheckoutForCreationDto, Checkout>();
-            CreateMap<CheckoutItemForCreationDto, CheckoutItem>();
+            // CreateMap<CheckoutForCreationDto, Checkout>();
+            // CreateMap<CheckoutItemForCreationDto, CheckoutItem>();
 
         }
     }

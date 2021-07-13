@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210708234632_initial")]
+    [Migration("20210713014118_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,21 +80,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "17fce0ab-7f50-47cb-afcb-939f9d505480",
+                            ConcurrencyStamp = "844be891-c169-4d8d-9bb2-746e04a0d34b",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "d24baea8-fa2a-4017-90a6-c90f9e40978b",
+                            ConcurrencyStamp = "55e02bbf-09cb-40a0-b5f1-e230db018a8a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "519d898a-68d2-4abf-8f0f-13cf451837ff",
+                            ConcurrencyStamp = "d98c12f4-a318-4f9a-9e1b-60ac3cd3769c",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -204,8 +204,8 @@ namespace LMSRepository.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("varchar(250)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -241,21 +241,17 @@ namespace LMSRepository.Migrations
                     b.Property<DateTime>("CheckoutDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DateReturned")
-                        .IsRequired()
+                    b.Property<DateTime>("DateReturned")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsReturned")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("LibraryAssetId")
+                        .HasColumnType("int");
 
                     b.Property<int>("LibraryCardId")
                         .HasColumnType("int");
-
-                    b.Property<string>("LibraryCardNumber")
-                        .HasColumnType("longtext");
 
                     b.Property<byte>("RenewalCount")
                         .HasMaxLength(3)
@@ -266,6 +262,8 @@ namespace LMSRepository.Migrations
                         .HasColumnType("varchar(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LibraryAssetId");
 
                     b.HasIndex("LibraryCardId");
 
@@ -308,12 +306,17 @@ namespace LMSRepository.Migrations
                     b.Property<int>("CheckoutId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("LibraryAssetId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("varchar(10)");
+                    b.Property<byte>("RenewalCount")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1051,11 +1054,19 @@ namespace LMSRepository.Migrations
 
             modelBuilder.Entity("LMSEntities.Models.Checkout", b =>
                 {
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
+                        .WithMany()
+                        .HasForeignKey("LibraryAssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
                         .WithMany("Checkouts")
                         .HasForeignKey("LibraryCardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("LibraryAsset");
 
                     b.Navigation("LibraryCard");
                 });
@@ -1078,7 +1089,7 @@ namespace LMSRepository.Migrations
             modelBuilder.Entity("LMSEntities.Models.CheckoutItem", b =>
                 {
                     b.HasOne("LMSEntities.Models.Checkout", "Checkout")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("CheckoutId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1276,11 +1287,6 @@ namespace LMSRepository.Migrations
             modelBuilder.Entity("LMSEntities.Models.Category", b =>
                 {
                     b.Navigation("CategoryAssets");
-                });
-
-            modelBuilder.Entity("LMSEntities.Models.Checkout", b =>
-                {
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.LibraryAsset", b =>

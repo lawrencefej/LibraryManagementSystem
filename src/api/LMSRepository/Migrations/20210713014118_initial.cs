@@ -77,7 +77,7 @@ namespace LMSRepository.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FullName = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
+                    FullName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -426,20 +426,24 @@ namespace LMSRepository.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    LibraryAssetId = table.Column<int>(type: "int", nullable: false),
                     LibraryCardId = table.Column<int>(type: "int", nullable: false),
-                    LibraryCardNumber = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CheckoutDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    RenewalCount = table.Column<byte>(type: "tinyint unsigned", maxLength: 3, nullable: false),
-                    IsReturned = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     DateReturned = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Status = table.Column<string>(type: "varchar(10)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RenewalCount = table.Column<byte>(type: "tinyint unsigned", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Checkouts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Checkouts_LibraryAssets_LibraryAssetId",
+                        column: x => x.LibraryAssetId,
+                        principalTable: "LibraryAssets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Checkouts_LibraryCards_LibraryCardId",
                         column: x => x.LibraryCardId,
@@ -557,9 +561,10 @@ namespace LMSRepository.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     LibraryAssetId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "varchar(10)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CheckoutId = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CheckoutId = table.Column<int>(type: "int", nullable: false),
+                    RenewalCount = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -584,9 +589,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "17fce0ab-7f50-47cb-afcb-939f9d505480", "Member", "MEMBER" },
-                    { 2, "d24baea8-fa2a-4017-90a6-c90f9e40978b", "Admin", "ADMIN" },
-                    { 3, "519d898a-68d2-4abf-8f0f-13cf451837ff", "Librarian", "LIBRARIAN" }
+                    { 1, "844be891-c169-4d8d-9bb2-746e04a0d34b", "Member", "MEMBER" },
+                    { 2, "55e02bbf-09cb-40a0-b5f1-e230db018a8a", "Admin", "ADMIN" },
+                    { 3, "d98c12f4-a318-4f9a-9e1b-60ac3cd3769c", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(
@@ -707,6 +712,11 @@ namespace LMSRepository.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CheckoutItems_LibraryAssetId",
                 table: "CheckoutItems",
+                column: "LibraryAssetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Checkouts_LibraryAssetId",
+                table: "Checkouts",
                 column: "LibraryAssetId");
 
             migrationBuilder.CreateIndex(

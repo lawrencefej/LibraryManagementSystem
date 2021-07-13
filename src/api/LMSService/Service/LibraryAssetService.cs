@@ -13,22 +13,20 @@ using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
-    public class LibraryAssetService : BaseService<LibraryAssetForDetailedDto>, ILibraryAssetService
+    public class LibraryAssetService : BaseService<LibraryAsset, LibraryAssetForDetailedDto, LibraryAssetForListDto, LibraryAssetService>, ILibraryAssetService
     {
         private readonly ILogger<LibraryAssetService> _logger;
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
 
-        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, mapper)
         {
-            _mapper = mapper;
             _logger = logger;
             _context = context;
         }
 
         public async Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
-            LibraryAsset asset = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
+            LibraryAsset asset = Mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
             asset.SetCopiesAvailable();
 
@@ -37,12 +35,12 @@ namespace LMSService.Service
 
             _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
 
-            return _mapper.Map<LibraryAssetForDetailedDto>(asset);
+            return Mapper.Map<LibraryAssetForDetailedDto>(asset);
         }
 
         public async Task AddAsset(List<LibraryAssetForCreationDto> libraryAssetForCreations)
         {
-            List<LibraryAsset> assets = _mapper.Map<List<LibraryAsset>>(libraryAssetForCreations);
+            List<LibraryAsset> assets = Mapper.Map<List<LibraryAsset>>(libraryAssetForCreations);
 
             foreach (LibraryAsset asset in assets)
             {
@@ -78,7 +76,7 @@ namespace LMSService.Service
 
             if (asset != null)
             {
-                _mapper.Map(libraryAssetForUpdate, asset);
+                Mapper.Map(libraryAssetForUpdate, asset);
 
                 asset.SetToAvailable();
 
@@ -88,7 +86,7 @@ namespace LMSService.Service
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
 
-                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(_mapper.Map<LibraryAssetForDetailedDto>(asset));
+                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(Mapper.Map<LibraryAssetForDetailedDto>(asset));
             }
 
             return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"Item with title: '{libraryAssetForUpdate.Title}' does not exist");
@@ -120,7 +118,7 @@ namespace LMSService.Service
 
         public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> GetAssetWithDetails(int assetId)
         {
-            return MapLibraryAsset(await GetAsset(assetId));
+            return MapDetailReturn(await GetAsset(assetId));
         }
 
         private async Task<LibraryAsset> GetAsset(int assetId)
@@ -143,24 +141,20 @@ namespace LMSService.Service
 
             assets = paginationParams.SortDirection == "desc" ? assets.OrderByDescending(x => x.Title) : assets.OrderBy(x => x.Title);
 
-            PagedList<LibraryAsset> assetsList = await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
-
-            PagedList<LibraryAssetForListDto> assetToReturn = _mapper.Map<PagedList<LibraryAssetForListDto>>(assetsList);
-
-            return PagedListMapper<LibraryAssetForListDto, LibraryAsset>.MapPagedList(assetToReturn, assetsList);
+            return await MapPagination(assets, paginationParams);
         }
 
-        private LmsResponseHandler<LibraryAssetForDetailedDto> MapLibraryAsset(LibraryAsset asset)
-        {
-            if (asset != null)
-            {
-                LibraryAssetForDetailedDto assetForReturn = _mapper.Map<LibraryAssetForDetailedDto>(asset);
+        // private LmsResponseHandler<LibraryAssetForDetailedDto> MapLibraryAsset(LibraryAsset asset)
+        // {
+        //     if (asset != null)
+        //     {
+        //         LibraryAssetForDetailedDto assetForReturn = Mapper.Map<LibraryAssetForDetailedDto>(asset);
 
-                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(assetForReturn);
-            }
+        //         return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(assetForReturn);
+        //     }
 
-            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed("");
-        }
+        //     return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed("");
+        // }
 
         // private bool DoesIsbnExist(string isbn)
         // {

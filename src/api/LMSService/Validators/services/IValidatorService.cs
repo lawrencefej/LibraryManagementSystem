@@ -15,5 +15,7 @@ namespace LMSService.Validators.services
         bool IsValidAge(DateTime dob);
 
         bool IsValidState(int stateId);
+
+        bool DoesAssetExist(int id);
     }
 }

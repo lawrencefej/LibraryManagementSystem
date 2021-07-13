@@ -16,13 +16,13 @@ using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
-    public class LibraryCardService : BaseService<LibraryCardForDetailedDto>, ILibraryCardService
+    public class LibraryCardService : BaseService<LibraryCard, LibraryCardForDetailedDto, LibrarycardForListDto, LibraryCardService>, ILibraryCardService
     {
         private readonly DataContext _context;
         private readonly ILogger<LibraryCard> _logger;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
-        public LibraryCardService(DataContext context, ILogger<LibraryCard> logger, UserManager<AppUser> userManager, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public LibraryCardService(DataContext context, ILogger<LibraryCard> logger, UserManager<AppUser> userManager, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, mapper)
         {
             _mapper = mapper;
             _userManager = userManager;

@@ -30,6 +30,10 @@ namespace LMSService.Validators.services
         {
             return _context.Authors.Any(a => a.Id == id);
         }
+        public bool DoesAssetExist(int id)
+        {
+            return _context.LibraryAssets.Any(a => a.Id == id);
+        }
 
         public bool IsValidYear(int year)
         {

@@ -120,8 +120,8 @@ namespace LMSService.Service
                {
                    Count = x.Count(),
                    Date = x.Key.Date,
-                   Day = x.Key.Date.Value.DayOfWeek,
-                   Name = x.Key.Date.Value.ToString("ddd")
+                   //    Day = x.Key.Date.Value.DayOfWeek,
+                   //    Name = x.Key.Date.Value.ToString("ddd")
                })
                .ToListAsync();
 
@@ -145,8 +145,8 @@ namespace LMSService.Service
                .Select(x => new DataDto
                {
                    Count = x.Count(),
-                   Month = x.Key.DateReturned.Value.Month,
-                   Name = GetMonthName(x.Key.DateReturned.Value.Month)
+                   //    Month = x.Key.DateReturned.Value.Month,
+                   //    Name = GetMonthName(x.Key.DateReturned.Value.Month)
                })
                .ToListAsync();
 

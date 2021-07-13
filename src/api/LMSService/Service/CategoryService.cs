@@ -24,14 +24,6 @@ namespace LMSService.Service
             _context = context;
         }
 
-        public async Task<Category> AddCategory(Category category)
-        {
-            _context.Add(category);
-            await _context.SaveChangesAsync();
-
-            return category;
-        }
-
         public async Task<CategoryDto> AddCategory(CategoryDto categoryForCreation)
         {
             Category category = _mapper.Map<Category>(categoryForCreation);
