@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LMSService.Service
 {
-    public class BaseService<TBase, TDetail, TList, TClass>
+    public class BaseService<TBase, TDetail, TList, TService>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;

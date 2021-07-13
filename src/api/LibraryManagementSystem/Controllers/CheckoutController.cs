@@ -48,15 +48,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("asset/{libraryAssetId}")]
         public async Task<IActionResult> GetCheckoutsForAsset(int libraryAssetId, [FromQuery] PaginationParams paginationParams)
         {
-            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCurrentCheckoutsForAsset(libraryAssetId, paginationParams);
-
-            return ReturnPagination(checkouts);
-        }
-
-        [HttpGet("asset/history/{libraryAssetId}")]
-        public async Task<IActionResult> GetCheckoutHistoryForAsset(int libraryAssetId, [FromQuery] PaginationParams paginationParams)
-        {
-            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCheckoutHistoryForAsset(libraryAssetId, paginationParams);
+            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCheckoutsForAsset(libraryAssetId, paginationParams);
 
             return ReturnPagination(checkouts);
         }
@@ -64,31 +56,15 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpGet("card/{libraryCardId}")]
         public async Task<IActionResult> GetCurrentCheckoutsForCard(int libraryCardId, [FromQuery] PaginationParams paginationParams)
         {
-            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCurrentCheckoutsForCard(libraryCardId, paginationParams);
-
-            return ReturnPagination(checkouts);
-        }
-
-        [HttpGet("card/history/{libraryCardId}")]
-        public async Task<IActionResult> GetCheckoutHistoryForCard(int libraryCardId, [FromQuery] PaginationParams paginationParams)
-        {
-            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCheckoutHistoryForCard(libraryCardId, paginationParams);
+            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCheckoutsForCard(libraryCardId, paginationParams);
 
             return ReturnPagination(checkouts);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCurrentCheckouts([FromQuery] PaginationParams paginationParams)
+        public async Task<IActionResult> GetCheckouts([FromQuery] PaginationParams paginationParams)
         {
-            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetAllCurrentCheckouts(paginationParams);
-
-            return ReturnPagination(checkouts);
-        }
-
-        [HttpGet("history/")]
-        public async Task<IActionResult> GetCheckoutHistory([FromQuery] PaginationParams paginationParams)
-        {
-            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCheckoutHistory(paginationParams);
+            PagedList<CheckoutForListDto> checkouts = await _checkoutService.GetCheckouts(paginationParams);
 
             return ReturnPagination(checkouts);
         }

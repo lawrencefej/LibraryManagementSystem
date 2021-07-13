@@ -13,13 +13,10 @@ namespace LMSContracts.Interfaces
 
         Task<LmsResponseHandler<CheckoutForDetailedDto>> GetCheckoutWithDetails(int checkoutId);
 
-        Task<PagedList<CheckoutForListDto>> GetCurrentCheckoutsForAsset(int libraryAssetId, PaginationParams paginationParams);
-        Task<PagedList<CheckoutForListDto>> GetCheckoutHistoryForAsset(int libraryAssetId, PaginationParams paginationParams);
+        Task<PagedList<CheckoutForListDto>> GetCheckoutsForAsset(int libraryAssetId, PaginationParams paginationParams);
 
-        Task<PagedList<CheckoutForListDto>> GetCurrentCheckoutsForCard(int LibraryCardId, PaginationParams paginationParams);
-        Task<PagedList<CheckoutForListDto>> GetCheckoutHistoryForCard(int LibraryCardId, PaginationParams paginationParams);
+        Task<PagedList<CheckoutForListDto>> GetCheckoutsForCard(int LibraryCardId, PaginationParams paginationParams);
 
-        Task<PagedList<CheckoutForListDto>> GetAllCurrentCheckouts(PaginationParams paginationParams);
-        Task<PagedList<CheckoutForListDto>> GetCheckoutHistory(PaginationParams paginationParams);
+        Task<PagedList<CheckoutForListDto>> GetCheckouts(PaginationParams paginationParams);
     }
 }

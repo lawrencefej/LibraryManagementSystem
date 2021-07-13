@@ -93,7 +93,38 @@ namespace LMSService.Service
             return MapDetailReturn(await GetCheckout(checkoutId));
         }
 
-        public async Task<Checkout> GetCheckout(int checkoutId)
+        public async Task<PagedList<CheckoutForListDto>> GetCheckoutsForAsset(int libraryAssetId, PaginationParams paginationParams)
+        {
+            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
+                                                               .Include(a => a.LibraryAsset)
+                                                               .Include(a => a.LibraryCard)
+                                                               .Where(x => x.LibraryAssetId == libraryAssetId);
+
+            return await FilterCheckouts(paginationParams, checkouts);
+        }
+
+        public async Task<PagedList<CheckoutForListDto>> GetCheckoutsForCard(int LibraryCardId, PaginationParams paginationParams)
+        {
+
+            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
+                                                               .Include(a => a.LibraryAsset)
+                                                               .Include(a => a.LibraryCard)
+                                                               .Where(l => l.LibraryCard.Id == LibraryCardId);
+
+            return await FilterCheckouts(paginationParams, checkouts);
+        }
+
+        public async Task<PagedList<CheckoutForListDto>> GetCheckouts(PaginationParams paginationParams)
+        {
+            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
+                .Include(a => a.LibraryAsset)
+                .Include(a => a.LibraryCard)
+                .AsQueryable();
+
+            return await FilterCheckouts(paginationParams, checkouts);
+        }
+
+        private async Task<Checkout> GetCheckout(int checkoutId)
         {
             Checkout checkout = await _context.Checkouts
                 .Include(a => a.LibraryAsset)
@@ -103,82 +134,9 @@ namespace LMSService.Service
             return checkout;
         }
 
-        public async Task<PagedList<CheckoutForListDto>> GetCurrentCheckoutsForAsset(int libraryAssetId, PaginationParams paginationParams)
-        {
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
-                                                               .Include(a => a.LibraryCard)
-                                                               .Where(l => l.Status == CheckoutStatus.Checkedout)
-                                                               .Where(x => x.LibraryAssetId == libraryAssetId);
-
-            return await FilterCheckouts(paginationParams, checkouts);
-        }
-
-        public async Task<PagedList<CheckoutForListDto>> GetCheckoutHistoryForAsset(int libraryAssetId, PaginationParams paginationParams)
-        {
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
-                                                               .Where(l => l.Status == CheckoutStatus.Returned)
-                                                               .Include(a => a.LibraryCard)
-                                                               .Where(x => x.LibraryAssetId == libraryAssetId);
-
-            return await FilterCheckouts(paginationParams, checkouts);
-        }
-
-        public async Task<PagedList<CheckoutForListDto>> GetCurrentCheckoutsForCard(int LibraryCardId, PaginationParams paginationParams)
-        {
-
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
-                                                               .Include(a => a.LibraryAsset)
-                                                               .Include(a => a.LibraryCard)
-                                                               .Where(l => l.LibraryCard.Id == LibraryCardId)
-                                                               .Where(l => l.Status == CheckoutStatus.Checkedout);
-
-            return await FilterCheckouts(paginationParams, checkouts);
-        }
-
-        public async Task<PagedList<CheckoutForListDto>> GetCheckoutHistoryForCard(int LibraryCardId, PaginationParams paginationParams)
-        {
-
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
-                                                               //    .Include(a => a.Items)
-                                                               .Include(a => a.LibraryCard)
-                                                               .Where(l => l.LibraryCard.Id == LibraryCardId)
-                                                               .Where(l => l.Status == CheckoutStatus.Returned);
-
-            return await FilterCheckouts(paginationParams, checkouts);
-        }
-
-        public async Task<PagedList<CheckoutForListDto>> GetAllCurrentCheckouts(PaginationParams paginationParams)
-        {
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
-                .Include(a => a.LibraryAsset)
-                .Include(a => a.LibraryCard)
-                .Where(x => x.Status == CheckoutStatus.Checkedout)
-                .AsQueryable();
-
-            return await FilterCheckouts(paginationParams, checkouts);
-        }
-
-        public async Task<PagedList<CheckoutForListDto>> GetCheckoutHistory(PaginationParams paginationParams)
-        {
-            // TODO Make this into one filter
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
-                .Include(a => a.LibraryAsset)
-                .Include(a => a.LibraryCard)
-                .Where(x => x.Status == CheckoutStatus.Returned)
-                .AsQueryable();
-
-            return await FilterCheckouts(paginationParams, checkouts);
-        }
-
-        public Task<PagedList<CheckoutForListDto>> GetAllCheckoutsForMember(int userId)
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task<LmsResponseHandler<Checkout>> ValidateCheckIn(int checkoutId)
         {
-            Checkout checkout = await _context.Checkouts.Include(a => a.LibraryAsset)
-                                                        .FirstOrDefaultAsync(x => x.Id == checkoutId);
+            Checkout checkout = await GetCheckout(checkoutId);
 
             if (checkout != null)
             {
@@ -223,10 +181,10 @@ namespace LMSService.Service
                 : checkouts.Where(x => x.Status == CheckoutStatus.Checkedout);
 
             checkouts = paginationParams.SortDirection == "desc"
-                ? string.Equals(paginationParams.OrderBy, "until", StringComparison.OrdinalIgnoreCase)
+                ? string.Equals(paginationParams.OrderBy, "duedate", StringComparison.OrdinalIgnoreCase)
                     ? checkouts.OrderByDescending(x => x.DueDate)
                     : checkouts.OrderByDescending(x => x.CheckoutDate)
-                : string.Equals(paginationParams.OrderBy, "until", StringComparison.OrdinalIgnoreCase)
+                : string.Equals(paginationParams.OrderBy, "duedate", StringComparison.OrdinalIgnoreCase)
                     ? checkouts.OrderBy(x => x.DueDate)
                     : checkouts.OrderBy(x => x.CheckoutDate);
 
