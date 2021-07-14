@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 
 namespace LMSContracts.Interfaces
 {
     public interface ICheckoutService
     {
-        Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckoutAssets(Basket basketForCheckout);
+        Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckoutAssets(BasketForCheckoutDto basketForCheckout);
 
         Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckInAsset(CheckoutForCheckInDto checkoutForCheckIn);
 

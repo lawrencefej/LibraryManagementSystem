@@ -15,13 +15,8 @@ namespace LMSService.Service
 {
     public class CheckoutService : BaseService<Checkout, CheckoutForDetailedDto, CheckoutForListDto, CheckoutService>, ICheckoutService
     {
-        private readonly DataContext _context;
-        private readonly ILogger<CheckoutService> _logger;
-
-        public CheckoutService(DataContext context, IMapper mapper, ILogger<CheckoutService> logger) : base(mapper)
+        public CheckoutService(DataContext context, IMapper mapper, ILogger<CheckoutService> logger) : base(context, mapper, logger)
         {
-            _context = context;
-            _logger = logger;
         }
 
         public async Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckInAsset(CheckoutForCheckInDto checkoutForCheckIn)
@@ -38,14 +33,14 @@ namespace LMSService.Service
                 {
                     checkoutResult.Item.CheckInAsset();
                 }
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return LmsResponseHandler<CheckoutForDetailedDto>.Successful();
             }
 
             return LmsResponseHandler<CheckoutForDetailedDto>.Failed(checkoutResult.Errors);
         }
 
-        public async Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckoutAssets(Basket basketForCheckout)
+        public async Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckoutAssets(BasketForCheckoutDto basketForCheckout)
         {
             LmsResponseHandler<LibraryCard> cardResult = await ValidateCard(basketForCheckout.LibraryCardId);
 
@@ -73,8 +68,8 @@ namespace LMSService.Service
                         {
                             asset.ReduceCopiesAvailable();
                         }
-                        _context.AddRange(checkouts);
-                        await _context.SaveChangesAsync();
+                        Context.AddRange(checkouts);
+                        await Context.SaveChangesAsync();
 
                         return LmsResponseHandler<CheckoutForDetailedDto>.Successful();
                     }
@@ -95,7 +90,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<CheckoutForListDto>> GetCheckoutsForAsset(int libraryAssetId, PaginationParams paginationParams)
         {
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
+            IQueryable<Checkout> checkouts = Context.Checkouts.AsNoTracking()
                                                                .Include(a => a.LibraryAsset)
                                                                .Include(a => a.LibraryCard)
                                                                .Where(x => x.LibraryAssetId == libraryAssetId);
@@ -106,7 +101,7 @@ namespace LMSService.Service
         public async Task<PagedList<CheckoutForListDto>> GetCheckoutsForCard(int LibraryCardId, PaginationParams paginationParams)
         {
 
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
+            IQueryable<Checkout> checkouts = Context.Checkouts.AsNoTracking()
                                                                .Include(a => a.LibraryAsset)
                                                                .Include(a => a.LibraryCard)
                                                                .Where(l => l.LibraryCard.Id == LibraryCardId);
@@ -116,7 +111,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<CheckoutForListDto>> GetCheckouts(PaginationParams paginationParams)
         {
-            IQueryable<Checkout> checkouts = _context.Checkouts.AsNoTracking()
+            IQueryable<Checkout> checkouts = Context.Checkouts.AsNoTracking()
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.LibraryCard)
                 .AsQueryable();
@@ -126,7 +121,7 @@ namespace LMSService.Service
 
         private async Task<Checkout> GetCheckout(int checkoutId)
         {
-            Checkout checkout = await _context.Checkouts
+            Checkout checkout = await Context.Checkouts
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.LibraryCard)
                 .FirstOrDefaultAsync(a => a.Id == checkoutId);
@@ -145,17 +140,17 @@ namespace LMSService.Service
                     return LmsResponseHandler<Checkout>.Successful(checkout);
                 }
 
-                _logger.LogError($"{checkoutId} has already been returned");
+                Logger.LogError($"{checkoutId} has already been returned");
                 return LmsResponseHandler<Checkout>.Failed(new List<string>() { "Item has already been returned" });
             }
 
-            _logger.LogError($"{checkoutId} was null");
+            Logger.LogError($"{checkoutId} was null");
             return LmsResponseHandler<Checkout>.Failed(new List<string>() { "Checkout does not exist" });
         }
 
         private async Task<LmsResponseHandler<List<LibraryAsset>>> ValidateAssets(List<int> ids)
         {
-            List<LibraryAsset> assetsForCheckout = await _context.LibraryAssets
+            List<LibraryAsset> assetsForCheckout = await Context.LibraryAssets
                                                         .Where(asset => ids.Contains(asset.Id))
                                                         .ToListAsync();
 
@@ -193,7 +188,7 @@ namespace LMSService.Service
 
         private async Task<LmsResponseHandler<LibraryCard>> ValidateCard(int libraryCardId)
         {
-            LibraryCard card = await _context.LibraryCards.AsNoTracking()
+            LibraryCard card = await Context.LibraryCards.AsNoTracking()
                                     .Include(a => a.Checkouts
                                     .Where(d => d.Status == CheckoutStatus.Checkedout))
                                     .ThenInclude(item => item.LibraryAsset)

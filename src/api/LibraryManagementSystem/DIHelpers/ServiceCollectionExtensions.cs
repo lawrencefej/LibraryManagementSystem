@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using EmailService;
+﻿using EmailService;
 using EmailService.Services;
 using LibraryManagementSystem.API.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using PhotoLibrary;
 using PhotoLibrary.Service;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace LibraryManagementSystem.DIHelpers
 {

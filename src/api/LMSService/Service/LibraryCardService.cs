@@ -18,23 +18,16 @@ namespace LMSService.Service
 {
     public class LibraryCardService : BaseService<LibraryCard, LibraryCardForDetailedDto, LibrarycardForListDto, LibraryCardService>, ILibraryCardService
     {
-        private readonly DataContext _context;
-        private readonly ILogger<LibraryCard> _logger;
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
-        public LibraryCardService(DataContext context, ILogger<LibraryCard> logger, UserManager<AppUser> userManager, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, mapper)
+        public LibraryCardService(DataContext context, ILogger<LibraryCardService> logger, UserManager<AppUser> userManager, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(context, mapper, logger, httpContextAccessor)
         {
-            _mapper = mapper;
             _userManager = userManager;
-            _logger = logger;
-            _context = context;
-
         }
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> AddLibraryCard(LibraryCardForCreationDto addCardDto)
         {
 
-            LibraryCard card = _mapper.Map<LibraryCard>(addCardDto);
+            LibraryCard card = Mapper.Map<LibraryCard>(addCardDto);
 
             LmsResponseHandler<AppUser> member = await CreateNewMember(card);
 
@@ -43,12 +36,12 @@ namespace LMSService.Service
                 card = await GenerateCardNumber(card);
                 card.Member = member.Item;
 
-                _context.Add(card);
-                await _context.SaveChangesAsync();
+                Context.Add(card);
+                await Context.SaveChangesAsync();
 
-                _logger.LogInformation($"added LibraryCard {card.CardNumber} with ID: {card.Id}");
+                Logger.LogInformation($"added LibraryCard {card.CardNumber} with ID: {card.Id}");
 
-                LibraryCardForDetailedDto cardsToReturn = _mapper.Map<LibraryCardForDetailedDto>(card);
+                LibraryCardForDetailedDto cardsToReturn = Mapper.Map<LibraryCardForDetailedDto>(card);
 
                 return LmsResponseHandler<LibraryCardForDetailedDto>.Successful(cardsToReturn);
             }
@@ -62,11 +55,11 @@ namespace LMSService.Service
 
             if (card != null)
             {
-                _context.Remove(card);
-                await _context.SaveChangesAsync();
+                Context.Remove(card);
+                await Context.SaveChangesAsync();
                 // TODO log who performed the action
 
-                _logger.LogInformation($"LibraryCard with ID {card} was deleted");
+                Logger.LogInformation($"LibraryCard with ID {card} was deleted");
                 return LmsResponseHandler<LibraryCardForDetailedDto>.Successful();
             }
 
@@ -75,7 +68,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<LibrarycardForListDto>> GetAllLibraryCard(PaginationParams paginationParams)
         {
-            IQueryable<LibraryCard> cards = _context.LibraryCards.AsNoTracking()
+            IQueryable<LibraryCard> cards = Context.LibraryCards.AsNoTracking()
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
                     .ThenInclude(s => s.State)
@@ -86,7 +79,7 @@ namespace LMSService.Service
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardByNumber(string cardNumber)
         {
-            LibraryCard card = await _context.LibraryCards.AsNoTracking()
+            LibraryCard card = await Context.LibraryCards.AsNoTracking()
                 .Include(m => m.Member)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
@@ -99,7 +92,7 @@ namespace LMSService.Service
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardById(int id)
         {
-            LibraryCard card = await _context.LibraryCards.AsNoTracking()
+            LibraryCard card = await Context.LibraryCards.AsNoTracking()
                 .Include(m => m.Member)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
@@ -110,7 +103,7 @@ namespace LMSService.Service
 
         private async Task<LibraryCard> GetLibraryCard(int id)
         {
-            return await _context.LibraryCards.AsNoTracking()
+            return await Context.LibraryCards.AsNoTracking()
                     .Include(m => m.Member)
                     .Include(m => m.LibraryCardPhoto)
                     .Include(m => m.Address)
@@ -120,7 +113,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<LibrarycardForListDto>> AdvancedLibraryCardSearch(LibraryCardForDetailedDto card, PaginationParams paginationParams)
         {
-            IQueryable<LibraryCard> cards = _context.LibraryCards.AsNoTracking()
+            IQueryable<LibraryCard> cards = Context.LibraryCards.AsNoTracking()
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
                     .ThenInclude(s => s.State)
@@ -145,12 +138,12 @@ namespace LMSService.Service
 
             if (card != null)
             {
-                _mapper.Map(cardForUpdate, card);
-                _context.Update(card);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"LibraryCard: {card.Id} was edited");
+                Mapper.Map(cardForUpdate, card);
+                Context.Update(card);
+                await Context.SaveChangesAsync();
+                Logger.LogInformation($"LibraryCard: {card.Id} was edited");
 
-                return LmsResponseHandler<LibraryCardForDetailedDto>.Successful(_mapper.Map<LibraryCardForDetailedDto>(card));
+                return LmsResponseHandler<LibraryCardForDetailedDto>.Successful(Mapper.Map<LibraryCardForDetailedDto>(card));
             }
 
             return LmsResponseHandler<LibraryCardForDetailedDto>.Failed($"LibraryCard: {card.CardNumber} does not exist");
@@ -227,19 +220,19 @@ namespace LMSService.Service
 
             PagedList<LibraryCard> cardsToReturn = await PagedList<LibraryCard>.CreateAsync(cards, paginationParams.PageNumber, paginationParams.PageSize);
 
-            return _mapper.Map<PagedList<LibrarycardForListDto>>(cardsToReturn);
+            return Mapper.Map<PagedList<LibrarycardForListDto>>(cardsToReturn);
         }
 
         private async Task<bool> DoesLibraryCardExist(string cardNumber)
         {
-            return await _context.LibraryCards.AsNoTracking().AnyAsync(x => x.CardNumber == cardNumber);
+            return await Context.LibraryCards.AsNoTracking().AnyAsync(x => x.CardNumber == cardNumber);
         }
 
         private LmsResponseHandler<LibraryCardForDetailedDto> MapLibraryCard(LibraryCard card)
         {
             if (card != null)
             {
-                LibraryCardForDetailedDto cardForReturn = _mapper.Map<LibraryCardForDetailedDto>(card);
+                LibraryCardForDetailedDto cardForReturn = Mapper.Map<LibraryCardForDetailedDto>(card);
 
                 return LmsResponseHandler<LibraryCardForDetailedDto>.Successful(cardForReturn);
             }

@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using System.Text.Json.Serialization;
+using FluentValidation.AspNetCore;
 using LibraryManagementSystem.API;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Validators;
@@ -29,6 +30,8 @@ namespace LibraryManagementSystem.DIHelpers
                 options.Filters.Add(new AuthorizeFilter(policy));
                 options.Filters.Add(typeof(ValidateModelAttribute));
             })
+            .AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
             // .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling =

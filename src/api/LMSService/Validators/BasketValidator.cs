@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using LMSEntities.DataTransferObjects;
-using LMSEntities.Models;
 
 namespace LMSService.Validators
 {
-    public class BasketValidator : AbstractValidator<Basket>
+    public class BasketValidator : AbstractValidator<BasketForCheckoutDto>
     {
         public BasketValidator()
         {

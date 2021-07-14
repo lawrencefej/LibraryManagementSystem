@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using LibraryManagementSystem.API.Helpers;
-using LibraryManagementSystem.Extensions;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;

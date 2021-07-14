@@ -6,13 +6,15 @@ namespace LMSEntities.DataTransferObjects
     {
         public int Id { get; set; }
 
-        public string CardNumber { get; set; }
+        public string Title { get; set; }
 
-        public int ItemCount { get; set; }
+        public string CardNumber { get; set; }
 
         public DateTime CheckoutDate { get; set; }
 
         public DateTime DueDate { get; set; }
+
+        public DateTime? DateReturned { get; set; }
 
         public string Status { get; set; }
 

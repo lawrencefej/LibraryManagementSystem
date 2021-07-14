@@ -3,7 +3,6 @@ using LibraryManagementSystem.Controllers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +29,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CheckoutAsset(Basket basketForCheckout)
+        public async Task<IActionResult> CheckoutAsset(BasketForCheckoutDto basketForCheckout)
         {
             LmsResponseHandler<CheckoutForDetailedDto> result = await _checkoutService.CheckoutAssets(basketForCheckout);
 

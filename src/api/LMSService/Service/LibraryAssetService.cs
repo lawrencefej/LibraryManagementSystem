@@ -15,13 +15,8 @@ namespace LMSService.Service
 {
     public class LibraryAssetService : BaseService<LibraryAsset, LibraryAssetForDetailedDto, LibraryAssetForListDto, LibraryAssetService>, ILibraryAssetService
     {
-        private readonly ILogger<LibraryAssetService> _logger;
-        private readonly DataContext _context;
-
-        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, mapper)
+        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(context, mapper, logger, httpContextAccessor)
         {
-            _logger = logger;
-            _context = context;
         }
 
         public async Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation)
@@ -30,10 +25,10 @@ namespace LMSService.Service
 
             asset.SetCopiesAvailable();
 
-            _context.Add(asset);
-            await _context.SaveChangesAsync();
+            Context.Add(asset);
+            await Context.SaveChangesAsync();
 
-            _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
+            Logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
 
             return Mapper.Map<LibraryAssetForDetailedDto>(asset);
         }
@@ -49,8 +44,8 @@ namespace LMSService.Service
             }
 
 
-            _context.AddRange(assets);
-            await _context.SaveChangesAsync();
+            Context.AddRange(assets);
+            await Context.SaveChangesAsync();
         }
 
         public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(int assetId)
@@ -59,11 +54,11 @@ namespace LMSService.Service
 
             if (asset != null)
             {
-                _context.Remove(asset);
-                await _context.SaveChangesAsync();
+                Context.Remove(asset);
+                await Context.SaveChangesAsync();
                 // TODO log who performed the action
 
-                _logger.LogInformation($"{asset.Id} was deleted by user {GetLoggedInUserId()}");
+                Logger.LogInformation($"{asset.Id} was deleted by user {GetLoggedInUserId()}");
                 return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful();
             }
 
@@ -80,11 +75,11 @@ namespace LMSService.Service
 
                 asset.SetToAvailable();
 
-                _context.Update(asset);
+                Context.Update(asset);
 
 
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
+                await Context.SaveChangesAsync();
+                Logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
 
                 return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(Mapper.Map<LibraryAssetForDetailedDto>(asset));
             }
@@ -94,7 +89,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<LibraryAssetForListDto>> GetPaginatedAssets(PaginationParams paginationParams)
         {
-            IQueryable<LibraryAsset> assets = _context.LibraryAssets.AsNoTracking()
+            IQueryable<LibraryAsset> assets = Context.LibraryAssets.AsNoTracking()
                 .Include(p => p.Photo)
                 .Include(p => p.AssetCategories)
                     .ThenInclude(c => c.Category)
@@ -107,7 +102,7 @@ namespace LMSService.Service
 
         public async Task<PagedList<LibraryAssetForListDto>> GetAssetsByAuthor(PaginationParams paginationParams, int authorId)
         {
-            IQueryable<LibraryAsset> assets = _context.LibraryAssets.AsNoTracking()
+            IQueryable<LibraryAsset> assets = Context.LibraryAssets.AsNoTracking()
                 .Include(c => c.AssetCategories)
                     .ThenInclude(t => t.Category)
                     .Where(x => x.AssetAuthors.Any(t => t.AuthorId == authorId))
@@ -123,7 +118,7 @@ namespace LMSService.Service
 
         private async Task<LibraryAsset> GetAsset(int assetId)
         {
-            return await _context.LibraryAssets
+            return await Context.LibraryAssets
                 .Include(p => p.Photo)
                 .Include(p => p.AssetCategories)
                     .ThenInclude(ba => ba.Category)
@@ -143,18 +138,6 @@ namespace LMSService.Service
 
             return await MapPagination(assets, paginationParams);
         }
-
-        // private LmsResponseHandler<LibraryAssetForDetailedDto> MapLibraryAsset(LibraryAsset asset)
-        // {
-        //     if (asset != null)
-        //     {
-        //         LibraryAssetForDetailedDto assetForReturn = Mapper.Map<LibraryAssetForDetailedDto>(asset);
-
-        //         return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(assetForReturn);
-        //     }
-
-        //     return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed("");
-        // }
 
         // private bool DoesIsbnExist(string isbn)
         // {
