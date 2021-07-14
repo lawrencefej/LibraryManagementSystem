@@ -56,6 +56,13 @@
             "problemMatcher": [],
             "label": "npm: start",
             "detail": "ng serve"
+        },
+        {
+            "type": "npm",
+            "script": "gen-dto",
+            "problemMatcher": [],
+            "label": "gen dto",
+            "detail": "gen dto"
         }
     ]
 }
