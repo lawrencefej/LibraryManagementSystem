@@ -12,5 +12,5 @@ export class PaginatedResult<T> {
 }
 
 export class Pagination implements Pagination {
-  pageSizeOptions: number[] = [5, 10, 15, 20];
+  pageSizeOptions: number[] = [10, 5, 15, 20];
 }

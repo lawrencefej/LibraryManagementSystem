@@ -4,6 +4,9 @@ export interface Checkout {
   id?: number;
   title?: string;
   since?: Date;
+  checkoutDate?: Date;
+  dueDate?: Date;
+  returnDate?: Date;
   until?: Date;
   userId?: number;
   libraryAssetId?: number;
@@ -12,6 +15,7 @@ export interface Checkout {
   status?: string;
   statusId?: number | undefined;
   libraryCardNumber?: number;
+  cardNumber?: string;
   assets?: LibraryAsset[];
   asset?: LibraryAsset;
 }

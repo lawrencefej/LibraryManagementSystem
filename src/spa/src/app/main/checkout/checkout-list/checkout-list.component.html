@@ -17,22 +17,23 @@
 
     <ng-container matColumnDef="libraryCardId">
       <th mat-header-cell *matHeaderCellDef> Card Number </th>
-      <td mat-cell *matCellDef="let element"> {{element.libraryCardId}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.cardNumber}} </td>
     </ng-container>
 
     <ng-container matColumnDef="since">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Checkout Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.since | date: 'mediumDate'}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.checkoutDate | date: 'mediumDate'}} </td>
     </ng-container>
 
     <ng-container matColumnDef="until">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.until | date: 'mediumDate'}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.dueDate | date: 'mediumDate'}} </td>
     </ng-container>
 
     <ng-container matColumnDef="dateReturned">
       <th mat-header-cell *matHeaderCellDef> Return Date </th>
       <td mat-cell *matCellDef="let element"> {{element.dateReturned | date: 'mediumDate'}} </td>
+      <!-- <td ng mat-cell *matCellDef="let element"> {{element.dateReturned | date: 'mediumDate'}} </td> -->
     </ng-container>
 
     <ng-container matColumnDef="status">

@@ -17,7 +17,7 @@ import { User } from 'src/app/_models/user';
 @Component({
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
-  styleUrls: ['./member-detail.component.css']
+  styleUrls: ['./member-detail.component.css'],
 })
 export class MemberDetailComponent implements OnInit {
   @ViewChild('fileInput') myInputVariable: ElementRef;
@@ -38,11 +38,11 @@ export class MemberDetailComponent implements OnInit {
     private checkoutService: CheckoutService
   ) {
     this.basketItems$ = this.basketService.getItemsInBasket();
-    this.basketItems$.subscribe(_ => (this.basketItems = _));
+    this.basketItems$.subscribe((_) => (this.basketItems = _));
   }
 
   ngOnInit() {
-    this.route.data.subscribe(res => {
+    this.route.data.subscribe((res) => {
       this.member = res.member;
     });
     this.getCheckoutsForMember();
@@ -50,7 +50,9 @@ export class MemberDetailComponent implements OnInit {
 
   canDeactivate() {
     if (this.basketItems.length > 0) {
-      this.notify.warn('The Member Basket has to be empty before you can leave this page');
+      this.notify.warn(
+        'The Member Basket has to be empty before you can leave this page'
+      );
       return false;
     } else {
       return true;
@@ -58,12 +60,12 @@ export class MemberDetailComponent implements OnInit {
   }
 
   getCheckoutsForMember() {
-    this.checkoutService.getCheckoutsForMember(this.member.id).subscribe(
+    this.checkoutService.getCheckoutsForCard(this.member.id).subscribe(
       (checkouts: Checkout[]) => {
         this.checkouts = checkouts;
         this.dataSource.data = checkouts;
       },
-      error => {
+      (error) => {
         this.notify.error(error);
       }
     );
@@ -88,7 +90,7 @@ export class MemberDetailComponent implements OnInit {
           this.member.photoUrl = res.url;
           this.notify.success('Photo changed successfully');
         },
-        error => {
+        (error) => {
           this.notify.error(error);
         }
       );
@@ -100,14 +102,14 @@ export class MemberDetailComponent implements OnInit {
     this.notify
       .confirm('Are you sure you want to return ' + checkout.title)
       .afterClosed()
-      .subscribe(res => {
+      .subscribe((res) => {
         if (res) {
           this.checkoutService.returnAsset(checkout.id).subscribe(
             () => {
               this.notify.success(checkout.title + 'was returned successfully');
               this.getCheckoutsForMember();
             },
-            error => {
+            (error) => {
               this.notify.error(error);
             }
           );
@@ -119,14 +121,14 @@ export class MemberDetailComponent implements OnInit {
     this.notify
       .confirm('Are you sure you want to pay $' + member.fees)
       .afterClosed()
-      .subscribe(res => {
+      .subscribe((res) => {
         if (res) {
           this.feeService.payFees(member.libraryCardNumber).subscribe(
             () => {
               this.notify.success('Payment was successful');
               this.member.fees = 0;
             },
-            error => {
+            (error) => {
               this.notify.error(error);
             }
           );

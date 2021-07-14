@@ -6,7 +6,8 @@
         <mat-card-subtitle align="start">{{member.email}}</mat-card-subtitle>
       </mat-card-header>
       <div class="photo-container" align="center">
-        <img mat-card-image src="{{member?.photoUrl || '../../../assets/img/user.png'}}" alt="{{member.firstName}}">
+        <!-- <img mat-card-image src="{{member?.photoUrl || '../../../assets/img/user.png'}}" alt="{{member.firstName}}"> -->
+        <img mat-card-image src="{{member?.photoUrl || 'https://picsum.photos/500'}}" alt="{{member.firstName}}">
       </div>
       <mat-card-actions align="center">
         <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)">

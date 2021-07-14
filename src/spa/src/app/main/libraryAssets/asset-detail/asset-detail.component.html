@@ -6,7 +6,8 @@
         <!-- <mat-card-subtitle align="start">{{asset.author.fullName | titlecase}}</mat-card-subtitle> -->
       </mat-card-header>
       <div class="photo-container" align="center">
-        <img mat-card-image src="{{asset?.photoUrl || '../../../assets/img/book.jpg'}}" alt="{{asset.title}}">
+        <!-- <img mat-card-image src="{{asset?.photoUrl || '../../../assets/img/book.jpg'}}" alt="{{asset.title}}"> -->
+        <img mat-card-image src="{{asset?.photoUrl || 'https://picsum.photos/500'}}" alt="{{asset.title}}">
       </div>
       <mat-card-actions align="center">
         <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)">
