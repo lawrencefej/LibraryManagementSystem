@@ -114,6 +114,14 @@ namespace LibraryManagementSystem.API.Helpers
                 .ForMember(dest => dest.CardNumber, opt =>
                 {
                     opt.MapFrom(src => src.LibraryCard.CardNumber);
+                })
+                .ForMember(dest => dest.Title, opt =>
+                {
+                    opt.MapFrom(src => src.LibraryAsset.Title);
+                })
+                .ForMember(dest => dest.DateReturned, opt =>
+                {
+                    opt.Condition(src => (src.Status == CheckoutStatus.Returned));
                 });
             // .ForMember(dest => dest.ItemCount, opt =>
             // {

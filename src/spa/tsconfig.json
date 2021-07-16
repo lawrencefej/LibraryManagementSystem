@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    // "strict": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -14,6 +15,11 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    "paths": {
+      "~dtos/*": [
+        "src/dto/"
+      ]
+    },
     "lib": [
       "es2018",
       "dom"

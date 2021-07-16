@@ -57,12 +57,18 @@
             "label": "npm: start",
             "detail": "ng serve"
         },
+        // {
+        //     "type": "npm",
+        //     "script": "gen-dto",
+        //     "problemMatcher": [],
+        //     "label": "gen dto",
+        //     "detail": "gen dto"
+        // },
         {
-            "type": "npm",
-            "script": "gen-dto",
-            "problemMatcher": [],
+            "type": "shell",
             "label": "gen dto",
-            "detail": "gen dto"
+            "command": "npm run gen-dto && rm -r src/dto/services && rm src/dto/api-configuration.ts src/dto/api.module.ts src/dto/base-service.ts src/dto/request-builder.ts src/dto/strict-http-response.ts src/dto/services.ts",
+            "problemMatcher": []
         }
     ]
 }

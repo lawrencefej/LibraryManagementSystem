@@ -49,6 +49,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './user/user-profile-edit/user-profile-edit.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   exports: [BasketComponent, BasketDetailComponent],
@@ -73,7 +74,7 @@ import { UserProfileEditComponent } from './user/user-profile-edit/user-profile-
     MemberListComponent,
     MemberSearchComponent,
     UserProfileComponent,
-    UserProfileEditComponent,
+    UserProfileEditComponent
   ],
   imports: [
     MatAutocompleteModule,
@@ -104,10 +105,11 @@ import { UserProfileEditComponent } from './user/user-profile-edit/user-profile-
     MatTooltipModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    SharedModule,
+    RouterModule,
+    SharedModule
     // ReactiveFormsModule,
     // CommonModule,
-  ],
+  ]
   // entryComponents: [
   //   AdminComponent,
   //   AssetComponent,

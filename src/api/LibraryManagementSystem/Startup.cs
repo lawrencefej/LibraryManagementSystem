@@ -137,10 +137,14 @@ namespace LibraryManagementSystem.API
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "../../spa/";
                 if (env.IsDevelopment())
                 {
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                }
+                else
+                {
+                    spa.Options.SourcePath = "../../spa/";
+
                 }
             });
         }

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface CategoryDto {
+export interface AuthorDto {
   description?: null | string;
+  fullName: string;
   id?: number;
-  name?: null | string;
 }

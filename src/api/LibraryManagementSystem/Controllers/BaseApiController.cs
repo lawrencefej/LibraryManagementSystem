@@ -10,7 +10,7 @@ namespace LibraryManagementSystem.Controllers
     {
         protected virtual IActionResult ResultCheck(LmsResponseHandler<TDetail> result)
         {
-            return result.Succeeded ? result.Item != null ? Ok(result.Item) : NoContent() : NotFound(result.Errors);
+            return result.Succeeded ? result.Item != null ? Ok(result.Item) : NoContent() : BadRequest(result.Errors);
         }
 
         protected virtual IActionResult ReturnPagination(PagedList<TList> items)
@@ -20,6 +20,5 @@ namespace LibraryManagementSystem.Controllers
 
             return Ok(items);
         }
-
     }
 }

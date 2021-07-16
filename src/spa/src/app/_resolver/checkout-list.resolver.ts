@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import { Resolve, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 import { Checkout } from '../_models/checkout';
@@ -16,14 +16,14 @@ export class CheckoutListResolver implements Resolve<Checkout[]> {
     private router: Router
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Checkout[]> {
+  resolve(): Observable<Checkout[]> {
     return this.checkoutService
       .getPaginatedCheckouts(
         lmsResolverContants.pageNumber,
         lmsResolverContants.pageSize,
         '',
         '',
-        ''
+        'checkedOut'
       )
       .pipe(
         catchError(() => {

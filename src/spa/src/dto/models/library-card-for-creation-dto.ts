@@ -4,10 +4,10 @@ import { AddressDto } from './address-dto';
 import { MemberGenderDto } from './member-gender-dto';
 export interface LibraryCardForCreationDto {
   address: AddressDto;
-  dateOfBirth?: string;
+  dateOfBirth: string;
   email?: null | string;
-  firstName?: null | string;
+  firstName: string;
   gender: MemberGenderDto;
-  lastName?: null | string;
-  phoneNumber?: null | string;
+  lastName: string;
+  phoneNumber: string;
 }

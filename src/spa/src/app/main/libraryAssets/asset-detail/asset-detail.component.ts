@@ -5,11 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { AssetComponent } from '../asset/asset.component';
 import { Checkout } from 'src/app/_models/checkout';
 import { CheckoutService } from 'src/app/_services/checkout.service';
-import { LibraryAsset } from 'src/app/_models/libraryAsset';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { Photo } from 'src/app/_models/photo';
 import { PhotoService } from 'src/app/_services/photo.service';
+import { LibraryAssetForDetailedDto } from 'src/dto/models/library-asset-for-detailed-dto';
+import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
 
 @Component({
   selector: 'app-asset-detail',
@@ -19,9 +20,9 @@ import { PhotoService } from 'src/app/_services/photo.service';
 export class AssetDetailComponent implements OnInit {
   @ViewChild('fileInput') myInputVariable: ElementRef;
   displayedColumns = ['libraryCardId', 'until', 'status'];
-  asset: LibraryAsset;
-  checkouts: Checkout[];
-  dataSource = new MatTableDataSource<Checkout>();
+  asset: LibraryAssetForDetailedDto;
+  checkouts: CheckoutForListDto[];
+  dataSource = new MatTableDataSource<CheckoutForListDto>();
   constructor(
     private notify: NotificationService,
     private route: ActivatedRoute,
@@ -39,7 +40,7 @@ export class AssetDetailComponent implements OnInit {
 
   getCheckoutsForAsset() {
     this.checkoutService.getCheckoutsForAsset(this.asset.id).subscribe(
-      (checkouts: Checkout[]) => {
+      checkouts => {
         this.checkouts = checkouts;
         this.dataSource.data = checkouts;
       },

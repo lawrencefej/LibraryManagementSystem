@@ -171,9 +171,18 @@ namespace LMSService.Service
 
         private async Task<PagedList<CheckoutForListDto>> FilterCheckouts(PaginationParams paginationParams, IQueryable<Checkout> checkouts)
         {
-            checkouts = string.Equals(paginationParams.SearchString, "returned", StringComparison.OrdinalIgnoreCase)
-                ? checkouts.Where(x => x.Status == CheckoutStatus.Returned)
-                : checkouts.Where(x => x.Status == CheckoutStatus.Checkedout);
+            // checkouts = string.Equals(paginationParams.SearchString, "returned", StringComparison.OrdinalIgnoreCase)
+            //     ? checkouts.Where(x => x.Status == CheckoutStatus.Returned)
+            //     : checkouts.Where(x => x.Status == CheckoutStatus.Checkedout);
+
+            if (string.Equals(paginationParams.SearchString, "returned", StringComparison.OrdinalIgnoreCase))
+            {
+                checkouts = checkouts.Where(x => x.Status == CheckoutStatus.Returned);
+            }
+            else if (string.Equals(paginationParams.SearchString, "checkedout", StringComparison.OrdinalIgnoreCase))
+            {
+                checkouts = checkouts.Where(x => x.Status == CheckoutStatus.Checkedout);
+            }
 
             checkouts = paginationParams.SortDirection == "desc"
                 ? string.Equals(paginationParams.OrderBy, "duedate", StringComparison.OrdinalIgnoreCase)

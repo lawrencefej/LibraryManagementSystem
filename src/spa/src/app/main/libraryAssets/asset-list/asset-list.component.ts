@@ -12,18 +12,19 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LibraryAssetForListDto } from 'src/dto/models/library-asset-for-list-dto';
 
 @Component({
   selector: 'app-asset-list',
   templateUrl: './asset-list.component.html',
-  styleUrls: ['./asset-list.component.css'],
+  styleUrls: ['./asset-list.component.css']
 })
 export class AssetListComponent implements AfterViewInit, OnInit {
   private readonly unsubscribe = new Subject<void>();
 
-  assets: LibraryAsset[] = [];
+  assets: LibraryAssetForListDto[] = [];
   pagination: Pagination;
-  dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
+  dataSource = new MatTableDataSource<LibraryAssetForListDto>(this.assets);
   searchString = '';
   displayedColumns = ['title', 'authorName', 'year', 'assetType', 'actions'];
   paginationOptions = new Pagination();
@@ -39,10 +40,10 @@ export class AssetListComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe((data) => {
+    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       this.pagination = data.assets.pagination;
       this.assets = data.assets.result;
-      this.dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
+      this.dataSource = new MatTableDataSource<LibraryAssetForListDto>(this.assets);
     });
   }
 
@@ -87,7 +88,7 @@ export class AssetListComponent implements AfterViewInit, OnInit {
       .confirm('Are you sure you sure you want to delete this item')
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe((res) => {
+      .subscribe(res => {
         if (res) {
           this.assetService
             .deleteAsset(asset.id)
@@ -95,16 +96,14 @@ export class AssetListComponent implements AfterViewInit, OnInit {
             .subscribe(
               () => {
                 this.assets.splice(
-                  this.assets.findIndex((x) => x.id === asset.id),
+                  this.assets.findIndex(x => x.id === asset.id),
                   1
                 );
                 this.notify.warn('Item was deleted successfully');
                 this.pagination.totalItems--;
-                this.dataSource = new MatTableDataSource<LibraryAsset>(
-                  this.assets
-                );
+                this.dataSource = new MatTableDataSource<LibraryAssetForListDto>(this.assets);
               },
-              (error) => {
+              error => {
                 this.notify.error(error);
               }
             );
@@ -123,11 +122,11 @@ export class AssetListComponent implements AfterViewInit, OnInit {
       )
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(
-        (res: PaginatedResult<LibraryAsset[]>) => {
+        (res: PaginatedResult<LibraryAssetForListDto[]>) => {
           this.assets = res.result;
-          this.dataSource = new MatTableDataSource<LibraryAsset>(this.assets);
+          this.dataSource = new MatTableDataSource<LibraryAssetForListDto>(this.assets);
         },
-        (error) => {
+        error => {
           this.notify.error(error);
         }
       );

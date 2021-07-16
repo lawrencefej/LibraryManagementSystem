@@ -6,9 +6,11 @@ import { Injectable } from '@angular/core';
 import { PaginatedResult } from '../_models/pagination';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { CheckoutForDetailedDto } from 'src/dto/models/checkout-for-detailed-dto';
+import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CheckoutService {
   private baseUrl = environment.apiUrl + 'checkout/';
@@ -16,30 +18,28 @@ export class CheckoutService {
 
   constructor(private http: HttpClient) {}
 
-  getCheckout(checkoutId: number): Observable<Checkout> {
-    return this.http.get<Checkout>(this.baseUrl + checkoutId);
+  getCheckout(checkoutId: number): Observable<CheckoutForDetailedDto> {
+    return this.http.get<CheckoutForDetailedDto>(this.baseUrl + checkoutId);
   }
 
-  getCheckouts(): Observable<Checkout[]> {
-    return this.http.get<Checkout[]>(this.baseUrl);
+  getCheckouts(): Observable<CheckoutForListDto[]> {
+    return this.http.get<CheckoutForListDto[]>(this.baseUrl);
   }
 
-  getCheckoutsForCard(userId: number): Observable<Checkout[]> {
-    return this.http.get<Checkout[]>(this.baseUrl + 'card/' + userId);
+  getCheckoutsForCard(userId: number): Observable<CheckoutForListDto[]> {
+    return this.http.get<CheckoutForListDto[]>(this.baseUrl + 'card/' + userId);
   }
 
-  searchCheckouts(searchString: string): Observable<Checkout[]> {
-    return this.http.get<Checkout[]>(
-      this.baseUrl + '/search?SearchString=' + searchString
-    );
+  searchCheckouts(searchString: string): Observable<CheckoutForListDto[]> {
+    return this.http.get<CheckoutForListDto[]>(this.baseUrl + '/search?SearchString=' + searchString);
   }
 
   returnAsset(id: number) {
-    return this.http.put(this.baseUrl + id, {});
+    return this.http.put<void>(this.baseUrl + id, {});
   }
 
-  getCheckoutsForAsset(assetId: number): Observable<Checkout[]> {
-    return this.http.get<Checkout[]>(this.baseUrl + 'asset/' + assetId);
+  getCheckoutsForAsset(assetId: number): Observable<CheckoutForListDto[]> {
+    return this.http.get<CheckoutForListDto[]>(this.baseUrl + 'asset/' + assetId);
   }
 
   checkoutAsset(checkout: Checkout) {
@@ -64,10 +64,8 @@ export class CheckoutService {
     orderBy?: string,
     sortDirection?: string,
     searchString?: string
-  ): Observable<PaginatedResult<Checkout[]>> {
-    const paginatedResult: PaginatedResult<Checkout[]> = new PaginatedResult<
-      Checkout[]
-    >();
+  ): Observable<PaginatedResult<CheckoutForListDto[]>> {
+    const paginatedResult: PaginatedResult<CheckoutForListDto[]> = new PaginatedResult<CheckoutForListDto[]>();
 
     let params = new HttpParams();
 
@@ -81,17 +79,15 @@ export class CheckoutService {
     }
 
     return this.http
-      .get<Checkout[]>(this.baseUrl, {
+      .get<CheckoutForListDto[]>(this.baseUrl, {
         observe: 'response',
-        params,
+        params
       })
       .pipe(
-        map((response) => {
+        map(response => {
           paginatedResult.result = response.body;
           if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(
-              response.headers.get('Pagination')
-            );
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
           }
           return paginatedResult;
         })

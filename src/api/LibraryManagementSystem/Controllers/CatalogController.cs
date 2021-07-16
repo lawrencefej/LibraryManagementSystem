@@ -5,6 +5,7 @@ using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.API.Controllers
@@ -22,6 +23,8 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
             LibraryAssetForDetailedDto asset = await _libraryAssestService.AddAsset(libraryAssetForCreation);
@@ -30,6 +33,8 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpDelete("{assetId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteLibraryAsset(int assetId)
         {
             LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.DeleteAsset(assetId);
@@ -38,6 +43,8 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
             LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.EditAsset(libraryAssetForUpdate);
@@ -46,6 +53,8 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet("{assetId}", Name = nameof(GetLibraryAsset))]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetLibraryAsset(int assetId)
         {
             LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.GetAssetWithDetails(assetId);
@@ -54,6 +63,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(LibraryAssetForListDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetLibraryAssets([FromQuery] PaginationParams paginationParams)
         {
             PagedList<LibraryAssetForListDto> assets = await _libraryAssestService.GetPaginatedAssets(paginationParams);
@@ -62,6 +72,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet("author/{authorId}")]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAssetForAuthor(int authorId, [FromQuery] PaginationParams paginationParams)
         {
             PagedList<LibraryAssetForListDto> assets = await _libraryAssestService.GetAssetsByAuthor(paginationParams, authorId);

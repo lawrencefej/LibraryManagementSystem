@@ -27,7 +27,7 @@ import { SidebarComponent } from './navigation/sidebar/sidebar.component';
 
 @NgModule({
   exports: [
-    AppRoutingModule,
+    // AppRoutingModule,
     CommonModule,
     ConfirmDialogComponent,
     DashboardLayoutComponent,
@@ -45,7 +45,7 @@ import { SidebarComponent } from './navigation/sidebar/sidebar.component';
     ProgressSpinnerComponent,
     ReactiveFormsModule,
     ServerErrorComponent,
-    SidebarComponent,
+    SidebarComponent
   ],
   declarations: [
     ConfirmDialogComponent,
@@ -60,10 +60,11 @@ import { SidebarComponent } from './navigation/sidebar/sidebar.component';
     PreventUnsavedComponent,
     ProgressSpinnerComponent,
     ServerErrorComponent,
-    SidebarComponent,
+    SidebarComponent
   ],
   imports: [
-    AppRoutingModule,
+    // AppRoutingModule,
+    RouterModule,
     CommonModule,
     FlexLayoutModule,
     FormsModule,
@@ -74,8 +75,8 @@ import { SidebarComponent } from './navigation/sidebar/sidebar.component';
     MatIconModule,
     MatListModule,
     MatToolbarModule,
-    MatDialogModule,
+    MatDialogModule
   ],
-  entryComponents: [ConfirmDialogComponent, PreventUnsavedComponent],
+  entryComponents: [ConfirmDialogComponent, PreventUnsavedComponent]
 })
 export class SharedModule {}

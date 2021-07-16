@@ -1,4 +1,4 @@
 {
     "input": "swagger.json",
-    "output": "src/app/dto"
+    "output": "src/dto"
 }

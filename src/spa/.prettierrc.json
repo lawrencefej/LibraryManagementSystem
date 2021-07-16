@@ -1,0 +1,11 @@
+{
+  "arrowParens": "avoid",
+  "singleQuote": true,
+  "semi": true,
+  "printWidth": 120,
+  "`disableLanguages": [
+    "html"
+  ],
+  "tabWidth": 2,
+  "trailingComma": "none"
+}

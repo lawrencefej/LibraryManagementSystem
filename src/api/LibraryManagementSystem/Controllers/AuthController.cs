@@ -34,7 +34,7 @@ namespace LibraryManagementSystem.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            var user = await _authService.FindUserByEmail(userForLoginDto.Email);
+            AppUser user = await _authService.FindUserByEmail(userForLoginDto.Email);
 
             if (user != null)
             {
@@ -52,8 +52,8 @@ namespace LibraryManagementSystem.API.Controllers
 
                     return Ok(new
                     {
-                        // token = await _authService.GenerateJwtToken(appUser, _appSettings.Token),
-                        token = LmsTokens.GenerateJwtToken(appUser, _appSettings.Token),
+                        token = await _authService.GenerateJwtToken(appUser, _appSettings.Token),
+                        // token = LmsTokens.GenerateJwtToken(appUser, _appSettings.Token),
                         user = userToReturn
                     });
                 }

@@ -1,6 +1,7 @@
 ﻿using EmailService;
 using EmailService.Services;
 using LibraryManagementSystem.API.Helpers;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using PhotoLibrary;
@@ -23,6 +24,7 @@ namespace LibraryManagementSystem.DIHelpers
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Library Management System", Version = "V1" });
             });
+            services.AddFluentValidationRulesToSwagger();
         }
 
         public static void AddDevelopmentInterfaces(this IServiceCollection services)

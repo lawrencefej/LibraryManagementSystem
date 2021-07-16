@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { AdminListResolver } from './_resolver/admin-list.resolver';
 import { AdminPanelComponent } from './main/admin/admin-panel/admin-panel.component';
@@ -37,65 +37,69 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'member-search', pathMatch: 'full' },
+      {
+        path: 'library-card',
+        loadChildren: () => import('./library-card/library-card.module').then(m => m.LibraryCardModule)
+      },
       { path: 'member-search', component: MemberSearchComponent },
       { path: 'advanced-search', component: MemberAdvancedSearchComponent },
       {
         path: 'catalog',
         component: AssetListComponent,
-        resolve: { assets: AssetListResolver },
+        resolve: { assets: AssetListResolver }
       },
       {
         path: 'catalog/:id',
         component: AssetDetailComponent,
-        resolve: { asset: AssetDetailResolver },
+        resolve: { asset: AssetDetailResolver }
       },
       {
         path: 'admin',
         component: AdminPanelComponent,
         data: { allowedRoles: ['Admin'] },
-        resolve: { admins: AdminListResolver },
+        resolve: { admins: AdminListResolver }
       },
       {
         path: 'members',
         component: MemberListComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { members: MemberListResolver },
+        resolve: { members: MemberListResolver }
       },
       {
         path: 'members/:id',
         component: MemberDetailComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { member: MemberDetailResolver },
+        resolve: { member: MemberDetailResolver }
       },
       {
         path: 'checkouts',
         component: CheckoutListComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { checkouts: CheckoutListResolver },
+        resolve: { checkouts: CheckoutListResolver }
       },
       {
         path: 'authors',
         component: AuthorListComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { authors: AuthorListResolver },
+        resolve: { authors: AuthorListResolver }
       },
       {
         path: 'authors/:id',
         component: AuthorAssetComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { author: AuthorAssetResolver },
+        resolve: { author: AuthorAssetResolver }
       },
       {
         path: 'dashboard',
         component: DashboardPanelComponent,
-        data: { allowedRoles: ['Admin'] },
+        data: { allowedRoles: ['Admin'] }
       },
       {
         path: 'user-profile',
         component: UserProfileComponent,
-        resolve: { user: UserProfileResolver },
-      },
-    ],
+        resolve: { user: UserProfileResolver }
+      }
+    ]
   },
   {
     path: '',
@@ -103,14 +107,20 @@ const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'reset-password/:id/:code', component: ResetPasswordComponent },
-    ],
+      { path: 'reset-password/:id/:code', component: ResetPasswordComponent }
+    ]
   },
-  { path: '**', redirectTo: 'member-search', pathMatch: 'full' },
+  { path: '**', redirectTo: 'member-search', pathMatch: 'full' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
-  exports: [RouterModule],
+  imports: [
+    RouterModule.forRoot(routes, {
+      relativeLinkResolution: 'legacy',
+      scrollPositionRestoration: 'enabled',
+      preloadingStrategy: PreloadAllModules
+    })
+  ],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

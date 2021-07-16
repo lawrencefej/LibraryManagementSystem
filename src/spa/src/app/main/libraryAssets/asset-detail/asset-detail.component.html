@@ -13,7 +13,7 @@
         <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)">
         <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">Photo</button>
         <button mat-raised-button color="accent" type="button" (click)="updateAsset(asset)">Edit
-          {{asset.assetType.name}}</button>
+          {{asset.assetType}}</button>
       </mat-card-actions>
     </mat-card>
   </div>
@@ -27,7 +27,8 @@
               <mat-list-item role="listitem"><b>Copies Available: </b> {{ asset.copiesAvailable}}</mat-list-item>
               <mat-list-item role="listitem"><b>Total Copies: </b> {{ asset.numberOfCopies}}</mat-list-item>
               <mat-list-item role="listitem"><b>Location: </b> {{ asset.deweyIndex}}</mat-list-item>
-              <mat-list-item role="listitem"><b>ISBN: </b> {{ asset.isbn}}</mat-list-item>
+              <mat-list-item *ngIf="asset.assetType == 'Book'" role="listitem"><b>ISBN: </b> {{ asset.isbn}}
+              </mat-list-item>
               <mat-list-item role="listitem"><b>Status: </b> {{ asset.status | titlecase}}</mat-list-item>
             </mat-list>
           </div>
@@ -42,11 +43,11 @@
             <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="dataSource">
               <ng-container matColumnDef="libraryCardId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Card# </th>
-                <td mat-cell *matCellDef="let element"> {{element.libraryCardId}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.cardNumber}} </td>
               </ng-container>
               <ng-container matColumnDef="until">
                 <th mat-header-cell *matHeaderCellDef> Due Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.until | date: 'mediumDate'}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.dueDate | date: 'mediumDate'}} </td>
               </ng-container>
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef> Status </th>

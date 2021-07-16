@@ -1,11 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/_services/auth.service';
 import { NotificationService } from 'src/app/_services/notification.service';
@@ -41,8 +36,7 @@ export class LoginComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.returnUrl =
-      this.route.snapshot.queryParams.returnUrl || '/member-search  ';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/member-search  ';
     this.createLoginForm();
   }
 
@@ -63,15 +57,9 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: new FormControl(
         '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
-        ])
+        Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')])
       ),
-      password: new FormControl(
-        '',
-        Validators.compose([Validators.required, Validators.minLength(4)])
-      )
+      password: new FormControl('', Validators.compose([Validators.required, Validators.minLength(4)]))
     });
   }
 }

@@ -9,29 +9,23 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { merge } from 'rxjs';
+import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
 
 @Component({
   selector: 'app-checkout-list',
   templateUrl: './checkout-list.component.html',
-  styleUrls: ['./checkout-list.component.css'],
+  styleUrls: ['./checkout-list.component.css']
 })
 export class CheckoutListComponent implements AfterViewInit, OnInit {
   pagination: Pagination;
-  checkouts: Checkout[] = [];
-  dataSource = new MatTableDataSource<Checkout>(this.checkouts);
+  checkouts: CheckoutForListDto[] = [];
+  dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
   searchString = '';
-  displayedColumns = [
-    'title',
-    'libraryCardId',
-    'since',
-    'until',
-    'dateReturned',
-    'status',
-  ];
+  displayedColumns = ['title', 'libraryCardId', 'since', 'until', 'dateReturned', 'status'];
   checkoutFilters = [
-    { id: 1, name: 'All', value: 'all' },
     { id: 2, name: 'Checked Out', value: 'checkedOut' },
     { id: 3, name: 'Returned', value: 'returned' },
+    { id: 1, name: 'All', value: 'all' }
   ];
   paginationOptions = new Pagination();
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -44,10 +38,10 @@ export class CheckoutListComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data.subscribe((data) => {
+    this.route.data.subscribe(data => {
       this.pagination = data.checkouts.pagination;
       this.checkouts = data.checkouts.result;
-      this.dataSource = new MatTableDataSource<Checkout>(this.checkouts);
+      this.dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
     });
   }
 
@@ -72,12 +66,12 @@ export class CheckoutListComponent implements AfterViewInit, OnInit {
         this.searchString
       )
       .subscribe(
-        (res: PaginatedResult<Checkout[]>) => {
+        (res: PaginatedResult<CheckoutForListDto[]>) => {
           this.checkouts = res.result;
           this.pagination = res.pagination;
-          this.dataSource = new MatTableDataSource<Checkout>(this.checkouts);
+          this.dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
         },
-        (error) => {
+        error => {
           this.notify.error(error);
         }
       );

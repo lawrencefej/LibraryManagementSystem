@@ -12,7 +12,7 @@ namespace LMSService.Helpers
     {
         public static string GenerateJwtToken(AppUser user, string resetCode)
         {
-            var claims = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("ResetCode", resetCode)

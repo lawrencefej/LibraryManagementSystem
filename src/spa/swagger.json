@@ -1,2734 +1,3565 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-        "title": "Library Management System",
-        "version": "V1"
-    },
-    "paths": {
-        "/api/Admin": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Admin"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateAdminDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateAdminDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateAdminDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateAdminDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Admin/password": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddAdminDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Admin/{id}": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "operationId": "GetAdmin",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Admin"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Auth/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForLoginDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForLoginDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForLoginDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForLoginDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Auth/forgot-password": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Auth/reset-password": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ResetPassword"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Author/{authorId}": {
-            "get": {
-                "tags": [
-                    "Author"
-                ],
-                "operationId": "GetAuthor",
-                "parameters": [
-                    {
-                        "name": "authorId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Author"
-                ],
-                "parameters": [
-                    {
-                        "name": "authorId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Author": {
-            "put": {
-                "tags": [
-                    "Author"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Author"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthorDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Author"
-                ],
-                "parameters": [
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Catalog": {
-            "post": {
-                "tags": [
-                    "Catalog"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Catalog"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Catalog"
-                ],
-                "parameters": [
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Catalog/{assetId}": {
-            "delete": {
-                "tags": [
-                    "Catalog"
-                ],
-                "parameters": [
-                    {
-                        "name": "assetId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Catalog"
-                ],
-                "operationId": "GetLibraryAsset",
-                "parameters": [
-                    {
-                        "name": "assetId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Catalog/author/{authorId}": {
-            "get": {
-                "tags": [
-                    "Catalog"
-                ],
-                "parameters": [
-                    {
-                        "name": "authorId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Category": {
-            "get": {
-                "tags": [
-                    "Category"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Category"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CategoryDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CategoryDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CategoryDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CategoryDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Category"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Category"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Category"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/Category/{categoryId}": {
-            "get": {
-                "tags": [
-                    "Category"
-                ],
-                "operationId": "GetCategory",
-                "parameters": [
-                    {
-                        "name": "categoryId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Category/{id}": {
-            "delete": {
-                "tags": [
-                    "Category"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Category"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Category"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Category"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/Checkout": {
-            "put": {
-                "tags": [
-                    "Checkout"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CheckoutForCheckInDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CheckoutForCheckInDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CheckoutForCheckInDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CheckoutForCheckInDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Checkout"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/BasketForCheckoutDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/BasketForCheckoutDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/BasketForCheckoutDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/BasketForCheckoutDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Checkout"
-                ],
-                "parameters": [
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Checkout/{id}": {
-            "get": {
-                "tags": [
-                    "Checkout"
-                ],
-                "operationId": "GetCheckout",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Checkout/asset/{libraryAssetId}": {
-            "get": {
-                "tags": [
-                    "Checkout"
-                ],
-                "parameters": [
-                    {
-                        "name": "libraryAssetId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Checkout/card/{libraryCardId}": {
-            "get": {
-                "tags": [
-                    "Checkout"
-                ],
-                "parameters": [
-                    {
-                        "name": "libraryCardId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Fee/{librayCardID}": {
-            "post": {
-                "tags": [
-                    "Fee"
-                ],
-                "parameters": [
-                    {
-                        "name": "librayCardID",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/LibraryCard": {
-            "get": {
-                "tags": [
-                    "LibraryCard"
-                ],
-                "parameters": [
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "LibraryCard"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForCreationDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForCreationDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForCreationDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForCreationDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "LibraryCard"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForUpdate"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForUpdate"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForUpdate"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LibraryCardForUpdate"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/LibraryCard/{cardId}": {
-            "get": {
-                "tags": [
-                    "LibraryCard"
-                ],
-                "operationId": "GetById",
-                "parameters": [
-                    {
-                        "name": "cardId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "LibraryCard"
-                ],
-                "parameters": [
-                    {
-                        "name": "cardId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/LibraryCard/cardnumber/{cardNumber}": {
-            "get": {
-                "tags": [
-                    "LibraryCard"
-                ],
-                "parameters": [
-                    {
-                        "name": "cardNumber",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Member": {
-            "get": {
-                "tags": [
-                    "Member"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Member"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForUpdateDto"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForUpdateDto"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForUpdateDto"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserForUpdateDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Member"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/MemberForCreation"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/MemberForCreation"
-                            }
-                        },
-                        "text/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/MemberForCreation"
-                            }
-                        },
-                        "application/*+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/MemberForCreation"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Member/pagination": {
-            "get": {
-                "tags": [
-                    "Member"
-                ],
-                "parameters": [
-                    {
-                        "name": "PageNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "PageSize",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "OrderBy",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SortDirection",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "SearchString",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Member/advancedSearch": {
-            "get": {
-                "tags": [
-                    "Member"
-                ],
-                "parameters": [
-                    {
-                        "name": "Id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "FirstName",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "LastName",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Email",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "PhoneNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Gender",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Age",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Created",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "format": "date-time"
-                        }
-                    },
-                    {
-                        "name": "LastActive",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "format": "date-time"
-                        }
-                    },
-                    {
-                        "name": "Address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "City",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "State",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Zipcode",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "PhotoUrl",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "LibraryCardNumber",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    },
-                    {
-                        "name": "Fees",
-                        "in": "query",
-                        "schema": {
-                            "type": "number",
-                            "format": "double"
-                        }
-                    },
-                    {
-                        "name": "Role",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Token",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "UserRoles",
-                        "in": "query",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/UserRoleDto"
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Member/{id}": {
-            "get": {
-                "tags": [
-                    "Member"
-                ],
-                "operationId": "GetMember",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Member"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Member/card/{cardId}": {
-            "get": {
-                "tags": [
-                    "Member"
-                ],
-                "parameters": [
-                    {
-                        "name": "cardId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Photo/userphoto": {
-            "post": {
-                "tags": [
-                    "Photo"
-                ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "File"
-                                ],
-                                "type": "object",
-                                "properties": {
-                                    "Url": {
-                                        "type": "string"
-                                    },
-                                    "File": {
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "Description": {
-                                        "type": "string"
-                                    },
-                                    "DateAdded": {
-                                        "type": "string",
-                                        "format": "date-time"
-                                    },
-                                    "PublicId": {
-                                        "type": "string"
-                                    },
-                                    "UserId": {
-                                        "type": "integer",
-                                        "format": "int32"
-                                    }
-                                }
-                            },
-                            "encoding": {
-                                "Url": {
-                                    "style": "form"
-                                },
-                                "File": {
-                                    "style": "form"
-                                },
-                                "Description": {
-                                    "style": "form"
-                                },
-                                "DateAdded": {
-                                    "style": "form"
-                                },
-                                "PublicId": {
-                                    "style": "form"
-                                },
-                                "UserId": {
-                                    "style": "form"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Photo/assetphoto": {
-            "post": {
-                "tags": [
-                    "Photo"
-                ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "File"
-                                ],
-                                "type": "object",
-                                "properties": {
-                                    "Url": {
-                                        "type": "string"
-                                    },
-                                    "File": {
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "Description": {
-                                        "type": "string"
-                                    },
-                                    "DateAdded": {
-                                        "type": "string",
-                                        "format": "date-time"
-                                    },
-                                    "PublicId": {
-                                        "type": "string"
-                                    },
-                                    "LibraryAssetId": {
-                                        "type": "integer",
-                                        "format": "int32"
-                                    }
-                                }
-                            },
-                            "encoding": {
-                                "Url": {
-                                    "style": "form"
-                                },
-                                "File": {
-                                    "style": "form"
-                                },
-                                "Description": {
-                                    "style": "form"
-                                },
-                                "DateAdded": {
-                                    "style": "form"
-                                },
-                                "PublicId": {
-                                    "style": "form"
-                                },
-                                "LibraryAssetId": {
-                                    "style": "form"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Photo/librarycardphoto": {
-            "post": {
-                "tags": [
-                    "Photo"
-                ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "File"
-                                ],
-                                "type": "object",
-                                "properties": {
-                                    "Url": {
-                                        "type": "string"
-                                    },
-                                    "File": {
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "Description": {
-                                        "type": "string"
-                                    },
-                                    "DateAdded": {
-                                        "type": "string",
-                                        "format": "date-time"
-                                    },
-                                    "PublicId": {
-                                        "type": "string"
-                                    },
-                                    "LibraryAssetId": {
-                                        "type": "integer",
-                                        "format": "int32"
-                                    }
-                                }
-                            },
-                            "encoding": {
-                                "Url": {
-                                    "style": "form"
-                                },
-                                "File": {
-                                    "style": "form"
-                                },
-                                "Description": {
-                                    "style": "form"
-                                },
-                                "DateAdded": {
-                                    "style": "form"
-                                },
-                                "PublicId": {
-                                    "style": "form"
-                                },
-                                "LibraryAssetId": {
-                                    "style": "form"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Reports/byMonth": {
-            "get": {
-                "tags": [
-                    "Reports"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Reports/AssetDistribution": {
-            "get": {
-                "tags": [
-                    "Reports"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Reports/CategoryDistribution": {
-            "get": {
-                "tags": [
-                    "Reports"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Reports/byDay": {
-            "get": {
-                "tags": [
-                    "Reports"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Reports/returns": {
-            "get": {
-                "tags": [
-                    "Reports"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Reports/totals": {
-            "get": {
-                "tags": [
-                    "Reports"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/Reports/returnsByMonth": {
-            "get": {
-                "tags": [
-                    "Reports"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Library Management System",
+    "version": "V1"
+  },
+  "paths": {
+    "/api/Admin": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
         }
-    },
-    "components": {
-        "schemas": {
-            "AddAdminDto": {
-                "required": [
-                    "email",
-                    "firstName",
-                    "lastName",
-                    "role"
-                ],
-                "type": "object",
-                "properties": {
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "role": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "callbackUrl": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
+      },
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
             },
-            "AddressDto": {
-                "required": [
-                    "city",
-                    "stateId",
-                    "street",
-                    "zipcode"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "street": {
-                        "type": "string"
-                    },
-                    "city": {
-                        "type": "string"
-                    },
-                    "stateId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "state": {
-                        "$ref": "#/components/schemas/StateDto"
-                    },
-                    "zipcode": {
-                        "maxLength": 5,
-                        "minLength": 5,
-                        "type": "string"
-                    }
-                },
-                "additionalProperties": false
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
             },
-            "AssetPhoto": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "url": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "dateAdded": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "publicId": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "libraryAsset": {
-                        "$ref": "#/components/schemas/LibraryAsset"
-                    },
-                    "libraryAssetId": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
             },
-            "Author": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "fullName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "authorAssets": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetAuthor"
-                        },
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "AuthorDto": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "fullName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "description": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "BasketForCheckoutDto": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "libraryCardId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "assets": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetForBasket"
-                        },
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "Category": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "name": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "description": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "categoryAssets": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetCategory"
-                        },
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "CategoryDto": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "name": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "description": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "CheckoutForCheckInDto": {
-                "type": "object",
-                "properties": {
-                    "checkoutId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "isRenew": {
-                        "type": "boolean"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAsset": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "added": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "deweyIndex": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "assetCategories": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetCategory"
-                        },
-                        "nullable": true
-                    },
-                    "status": {
-                        "$ref": "#/components/schemas/LibraryAssetStatus"
-                    },
-                    "numberOfCopies": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "copiesAvailable": {
-                        "type": "integer",
-                        "format": "int32",
-                        "readOnly": true
-                    },
-                    "description": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "photo": {
-                        "$ref": "#/components/schemas/AssetPhoto"
-                    },
-                    "assetType": {
-                        "$ref": "#/components/schemas/LibraryAssetType"
-                    },
-                    "assetAuthors": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetAuthor"
-                        },
-                        "nullable": true
-                    },
-                    "isbn": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "title": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "year": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetAuthor": {
-                "type": "object",
-                "properties": {
-                    "librayAssetId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "libraryAsset": {
-                        "$ref": "#/components/schemas/LibraryAsset"
-                    },
-                    "authorId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "author": {
-                        "$ref": "#/components/schemas/Author"
-                    },
-                    "order": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetAuthorDto": {
-                "required": [
-                    "authorId",
-                    "librayAssetId",
-                    "order"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "librayAssetId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "authorId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "order": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetCategory": {
-                "type": "object",
-                "properties": {
-                    "librayAssetId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "libraryAsset": {
-                        "$ref": "#/components/schemas/LibraryAsset"
-                    },
-                    "categoryId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "category": {
-                        "$ref": "#/components/schemas/Category"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetCategoryDto": {
-                "required": [
-                    "categoryId"
-                ],
-                "type": "object",
-                "properties": {
-                    "librayAssetId": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "categoryId": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetForBasket": {
-                "type": "object",
-                "properties": {
-                    "libraryAssetId": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetForCreationDto": {
-                "type": "object",
-                "properties": {
-                    "deweyIndex": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "assetType": {
-                        "$ref": "#/components/schemas/LibraryAssetTypeDto"
-                    },
-                    "assetAuthors": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetAuthorDto"
-                        },
-                        "nullable": true
-                    },
-                    "assetCategories": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetCategoryDto"
-                        },
-                        "nullable": true
-                    },
-                    "numberOfCopies": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "description": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "isbn": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "title": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "year": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetForUpdateDto": {
-                "required": [
-                    "assetType",
-                    "copiesAvailable",
-                    "description",
-                    "id",
-                    "numberOfCopies",
-                    "title",
-                    "year"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "year": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "numberOfCopies": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "copiesAvailable": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "assetType": {
-                        "$ref": "#/components/schemas/LibraryAssetTypeDto"
-                    },
-                    "isbn": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "deweyIndex": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "assetAuthors": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetAuthorDto"
-                        },
-                        "nullable": true
-                    },
-                    "assetCategories": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LibraryAssetCategoryDto"
-                        },
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryAssetStatus": {
-                "enum": [
-                    "Available",
-                    "Unavailable"
-                ],
-                "type": "string"
-            },
-            "LibraryAssetType": {
-                "enum": [
-                    "Book",
-                    "Media",
-                    "Other"
-                ],
-                "type": "string"
-            },
-            "LibraryAssetTypeDto": {
-                "enum": [
-                    "Book",
-                    "Media",
-                    "Other"
-                ],
-                "type": "string"
-            },
-            "LibraryCardForCreationDto": {
-                "required": [
-                    "address",
-                    "gender"
-                ],
-                "type": "object",
-                "properties": {
-                    "firstName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "lastName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "email": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "phoneNumber": {
-                        "type": "string",
-                        "format": "tel",
-                        "nullable": true
-                    },
-                    "dateOfBirth": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "address": {
-                        "$ref": "#/components/schemas/AddressDto"
-                    },
-                    "gender": {
-                        "$ref": "#/components/schemas/MemberGenderDto"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "LibraryCardForUpdate": {
-                "required": [
-                    "email",
-                    "firstName",
-                    "lastName",
-                    "phoneNumber"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "firstName": {
-                        "maxLength": 25,
-                        "minLength": 2,
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "maxLength": 25,
-                        "minLength": 2,
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string",
-                        "format": "email"
-                    },
-                    "phoneNumber": {
-                        "type": "string",
-                        "format": "tel"
-                    },
-                    "address": {
-                        "$ref": "#/components/schemas/AddressDto"
-                    },
-                    "gender": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "status": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "MemberForCreation": {
-                "required": [
-                    "address",
-                    "city",
-                    "created",
-                    "dateOfBirth",
-                    "email",
-                    "firstName",
-                    "gender",
-                    "lastName",
-                    "phoneNumber",
-                    "state",
-                    "zipcode"
-                ],
-                "type": "object",
-                "properties": {
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "phoneNumber": {
-                        "type": "string"
-                    },
-                    "userName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "gender": {
-                        "type": "string"
-                    },
-                    "address": {
-                        "type": "string"
-                    },
-                    "dateOfBirth": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "city": {
-                        "type": "string"
-                    },
-                    "state": {
-                        "type": "string"
-                    },
-                    "zipcode": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "MemberGenderDto": {
-                "enum": [
-                    "Male",
-                    "Female",
-                    "Other"
-                ],
-                "type": "string"
-            },
-            "ResetPassword": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "code": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "token": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "password": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "url": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "userId": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "StateDto": {
-                "required": [
-                    "abbreviations",
-                    "name"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "abbreviations": {
-                        "type": "string"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "UpdateAdminDto": {
-                "required": [
-                    "email",
-                    "firstName",
-                    "lastName",
-                    "role"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "userName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "role": {
-                        "type": "string"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "UserForLoginDto": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "password": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "UserForUpdateDto": {
-                "required": [
-                    "address",
-                    "dateOfBirth",
-                    "email",
-                    "firstName",
-                    "gender",
-                    "lastname",
-                    "phoneNumber"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastname": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "phoneNumber": {
-                        "type": "string"
-                    },
-                    "gender": {
-                        "type": "string"
-                    },
-                    "dateOfBirth": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "address": {
-                        "type": "string"
-                    },
-                    "city": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "state": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "zipcode": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "UserRoleDto": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "name": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "normalizedName": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                },
-                "additionalProperties": false
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
         }
+      },
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Admin/password": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Admin/{id}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "GetAdmin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForLoginDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForLoginDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForLoginDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Auth/reset-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Author/{authorId}": {
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "operationId": "GetAuthor",
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Author"
+        ],
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Author": {
+      "put": {
+        "tags": [
+          "Author"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Author"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Catalog": {
+      "post": {
+        "tags": [
+          "Catalog"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForCreationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Catalog"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryAssetForUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForListDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForListDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForListDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Catalog/{assetId}": {
+      "delete": {
+        "tags": [
+          "Catalog"
+        ],
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "operationId": "GetLibraryAsset",
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Catalog/author/{authorId}": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Category": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Category/{categoryId}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "operationId": "GetCategory",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Category/{id}": {
+      "delete": {
+        "tags": [
+          "Category"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Checkout": {
+      "put": {
+        "tags": [
+          "Checkout"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutForCheckInDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutForCheckInDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutForCheckInDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutForCheckInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Checkout"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasketForCheckoutDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasketForCheckoutDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasketForCheckoutDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasketForCheckoutDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Checkout"
+        ],
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Checkout/{id}": {
+      "get": {
+        "tags": [
+          "Checkout"
+        ],
+        "operationId": "GetCheckout",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Checkout/asset/{libraryAssetId}": {
+      "get": {
+        "tags": [
+          "Checkout"
+        ],
+        "parameters": [
+          {
+            "name": "libraryAssetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Checkout/card/{libraryCardId}": {
+      "get": {
+        "tags": [
+          "Checkout"
+        ],
+        "parameters": [
+          {
+            "name": "libraryCardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutForListDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Fee/{librayCardID}": {
+      "post": {
+        "tags": [
+          "Fee"
+        ],
+        "parameters": [
+          {
+            "name": "librayCardID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/LibraryCard": {
+      "get": {
+        "tags": [
+          "LibraryCard"
+        ],
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibrarycardForListDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibrarycardForListDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibrarycardForListDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "LibraryCard"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForCreationDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForCreationDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForCreationDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForCreationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryCardForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryCardForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryCardForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "LibraryCard"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LibraryCardForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LibraryCard/{cardId}": {
+      "get": {
+        "tags": [
+          "LibraryCard"
+        ],
+        "operationId": "GetById",
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "LibraryCard"
+        ],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/LibraryCard/cardnumber/{cardNumber}": {
+      "get": {
+        "tags": [
+          "LibraryCard"
+        ],
+        "parameters": [
+          {
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LibraryAssetForDetailedDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Member": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForUpdateDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForUpdateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForUpdateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserForUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberForCreation"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberForCreation"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberForCreation"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberForCreation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Member/pagination": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortDirection",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchString",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Member/advancedSearch": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "FirstName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "LastName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Email",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "PhoneNumber",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Gender",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Age",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Created",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "LastActive",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "Address",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "City",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Zipcode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "PhotoUrl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "LibraryCardNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Fees",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "Role",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "UserRoles",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UserRoleDto"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Member/{id}": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "operationId": "GetMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Member"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Member/card/{cardId}": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "parameters": [
+          {
+            "name": "cardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Photo/userphoto": {
+      "post": {
+        "tags": [
+          "Photo"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "File"
+                ],
+                "type": "object",
+                "properties": {
+                  "Url": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "DateAdded": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "PublicId": {
+                    "type": "string"
+                  },
+                  "UserId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "Url": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "DateAdded": {
+                  "style": "form"
+                },
+                "PublicId": {
+                  "style": "form"
+                },
+                "UserId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Photo/assetphoto": {
+      "post": {
+        "tags": [
+          "Photo"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "File"
+                ],
+                "type": "object",
+                "properties": {
+                  "Url": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "DateAdded": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "PublicId": {
+                    "type": "string"
+                  },
+                  "LibraryAssetId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "Url": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "DateAdded": {
+                  "style": "form"
+                },
+                "PublicId": {
+                  "style": "form"
+                },
+                "LibraryAssetId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Photo/librarycardphoto": {
+      "post": {
+        "tags": [
+          "Photo"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "File"
+                ],
+                "type": "object",
+                "properties": {
+                  "Url": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "DateAdded": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "PublicId": {
+                    "type": "string"
+                  },
+                  "LibraryAssetId": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "Url": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "DateAdded": {
+                  "style": "form"
+                },
+                "PublicId": {
+                  "style": "form"
+                },
+                "LibraryAssetId": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Reports/byMonth": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Reports/AssetDistribution": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Reports/CategoryDistribution": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Reports/byDay": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Reports/returns": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Reports/totals": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Reports/returnsByMonth": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
+  },
+  "components": {
+    "schemas": {
+      "AddAdminDto": {
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "callbackUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddressDto": {
+        "required": [
+          "city",
+          "stateId",
+          "street",
+          "zipcode"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "street": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "stateId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "$ref": "#/components/schemas/StateDto"
+          },
+          "zipcode": {
+            "maxLength": 5,
+            "minLength": 5,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssetPhoto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateAdded": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publicId": {
+            "type": "string",
+            "nullable": true
+          },
+          "libraryAsset": {
+            "$ref": "#/components/schemas/LibraryAsset"
+          },
+          "libraryAssetId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetAuthor"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthorDto": {
+        "required": [
+          "fullName"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fullName": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BasketForCheckoutDto": {
+        "required": [
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "libraryCardId": {
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetForBasket"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetCategory"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryDto": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 250,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutForCheckInDto": {
+        "type": "object",
+        "properties": {
+          "checkoutId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isRenew": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutForDetailedDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "libraryAsset": {
+            "$ref": "#/components/schemas/LibraryAssetForListDto"
+          },
+          "libraryCard": {
+            "$ref": "#/components/schemas/LibraryCardForDetailedDto"
+          },
+          "checkoutDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateReturned": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutForListDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkoutDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dateReturned": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAsset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "added": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deweyIndex": {
+            "type": "string",
+            "nullable": true
+          },
+          "assetCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetCategory"
+            },
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/LibraryAssetStatus"
+          },
+          "numberOfCopies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "copiesAvailable": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "photo": {
+            "$ref": "#/components/schemas/AssetPhoto"
+          },
+          "assetType": {
+            "$ref": "#/components/schemas/LibraryAssetType"
+          },
+          "assetAuthors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetAuthor"
+            },
+            "nullable": true
+          },
+          "isbn": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetAuthor": {
+        "type": "object",
+        "properties": {
+          "librayAssetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "libraryAsset": {
+            "$ref": "#/components/schemas/LibraryAsset"
+          },
+          "authorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetAuthorDto": {
+        "required": [
+          "authorId",
+          "librayAssetId",
+          "order"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "librayAssetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "authorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetCategory": {
+        "type": "object",
+        "properties": {
+          "librayAssetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "libraryAsset": {
+            "$ref": "#/components/schemas/LibraryAsset"
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetCategoryDto": {
+        "required": [
+          "categoryId"
+        ],
+        "type": "object",
+        "properties": {
+          "librayAssetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetForBasket": {
+        "type": "object",
+        "properties": {
+          "libraryAssetId": {
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetForCreationDto": {
+        "required": [
+          "assetAuthors",
+          "assetCategories",
+          "title",
+          "year"
+        ],
+        "type": "object",
+        "properties": {
+          "deweyIndex": {
+            "type": "string",
+            "nullable": true
+          },
+          "assetType": {
+            "$ref": "#/components/schemas/LibraryAssetTypeDto"
+          },
+          "assetAuthors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetAuthorDto"
+            }
+          },
+          "assetCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetCategoryDto"
+            }
+          },
+          "numberOfCopies": {
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "maxLength": 250,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "isbn": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "year": {
+            "minLength": 1,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetForDetailedDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "photoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "added": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "numberOfCopies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "copiesAvailable": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "assetType": {
+            "type": "string",
+            "nullable": true
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthorDto"
+            },
+            "nullable": true
+          },
+          "isbn": {
+            "type": "string",
+            "nullable": true
+          },
+          "deweyIndex": {
+            "type": "string",
+            "nullable": true
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetForListDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "assetType": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "copiesAvailable": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetForUpdateDto": {
+        "required": [
+          "assetAuthors",
+          "assetCategories",
+          "assetType",
+          "copiesAvailable",
+          "description",
+          "id",
+          "numberOfCopies",
+          "title",
+          "year"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "year": {
+            "minLength": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfCopies": {
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          "copiesAvailable": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "maxLength": 250,
+            "minLength": 1,
+            "type": "string"
+          },
+          "assetType": {
+            "$ref": "#/components/schemas/LibraryAssetTypeDto"
+          },
+          "isbn": {
+            "type": "string",
+            "nullable": true
+          },
+          "deweyIndex": {
+            "type": "string",
+            "nullable": true
+          },
+          "assetAuthors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetAuthorDto"
+            }
+          },
+          "assetCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LibraryAssetCategoryDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryAssetStatus": {
+        "enum": [
+          "Available",
+          "Unavailable"
+        ],
+        "type": "string"
+      },
+      "LibraryAssetType": {
+        "enum": [
+          "Book",
+          "Media",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "LibraryAssetTypeDto": {
+        "enum": [
+          "Book",
+          "Media",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "LibraryCardForCreationDto": {
+        "required": [
+          "address",
+          "dateOfBirth",
+          "firstName",
+          "gender",
+          "lastName",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "maxLength": 25,
+            "minLength": 1,
+            "type": "string"
+          },
+          "lastName": {
+            "maxLength": 25,
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressDto"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/MemberGenderDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryCardForDetailedDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "fees": {
+            "type": "number",
+            "format": "double"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressDto"
+          },
+          "addressId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "libraryCardPhoto": {
+            "type": "string",
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "photoUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibrarycardForListDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "libraryCardPhoto": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryCardForUpdate": {
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "maxLength": 25,
+            "minLength": 2,
+            "type": "string"
+          },
+          "lastName": {
+            "maxLength": 25,
+            "minLength": 2,
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "format": "tel"
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressDto"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemberForCreation": {
+        "required": [
+          "address",
+          "city",
+          "created",
+          "dateOfBirth",
+          "email",
+          "firstName",
+          "gender",
+          "lastName",
+          "phoneNumber",
+          "state",
+          "zipcode"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "zipcode": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemberGenderDto": {
+        "enum": [
+          "Male",
+          "Female",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "ResetPassword": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StateDto": {
+        "required": [
+          "abbreviations",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "abbreviations": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAdminDto": {
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserForLoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserForUpdateDto": {
+        "required": [
+          "address",
+          "dateOfBirth",
+          "email",
+          "firstName",
+          "gender",
+          "lastname",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipcode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserRoleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalizedName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
 }

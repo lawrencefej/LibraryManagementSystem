@@ -55,43 +55,43 @@ export function tokenGetter() {
   exports: [],
   declarations: [AppComponent, BaseLayoutComponent, ResponsiveNavComponent],
   imports: [
-    AppRoutingModule,
     AuthModule,
-    BrowserModule,
     BrowserAnimationsModule,
+    BrowserModule,
     CommonModule,
     DashboardModule,
     HttpClientModule,
     LayoutModule,
     MainModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatDividerModule,
-    MatSidenavModule,
-    MatMenuModule,
-    MatCardModule,
-    MatListModule,
     MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatListModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatToolbarModule,
     SharedModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
-        allowedDomains: ['localhost:5000'],
-        disallowedRoutes: [],
-      },
+        allowedDomains: ['localhost:5000', 'localhost:5001'],
+        disallowedRoutes: []
+      }
     }),
+    AppRoutingModule // Should be last, so that the wild card routes will be the last as well
   ],
   providers: [
-    AdminService,
     AdminListResolver,
+    AdminService,
     AssetDetailResolver,
     AssetListResolver,
     AssetService,
     AuthGuard,
+    AuthService,
     AuthorAssetResolver,
     AuthorListResolver,
     AuthorService,
-    AuthService,
     BasketService,
     CheckoutDetailResolver,
     CheckoutListResolver,
@@ -105,10 +105,10 @@ export function tokenGetter() {
     UserProfileResolver,
     UserService,
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   // entryComponents: [
   // ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
