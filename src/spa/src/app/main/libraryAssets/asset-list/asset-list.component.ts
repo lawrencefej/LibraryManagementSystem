@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 
@@ -19,7 +19,7 @@ import { LibraryAssetForListDto } from 'src/dto/models/library-asset-for-list-dt
   templateUrl: './asset-list.component.html',
   styleUrls: ['./asset-list.component.css']
 })
-export class AssetListComponent implements AfterViewInit, OnInit {
+export class AssetListComponent implements AfterViewInit, OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   assets: LibraryAssetForListDto[] = [];
@@ -38,6 +38,11 @@ export class AssetListComponent implements AfterViewInit, OnInit {
     private notify: NotificationService,
     public dialog: MatDialog
   ) {}
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(data => {

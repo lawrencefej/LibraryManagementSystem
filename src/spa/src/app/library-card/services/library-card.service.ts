@@ -33,15 +33,15 @@ export class LibraryCardService {
   // }
 
   updateCard(card: LibraryCardForUpdate) {
-    return this.http.put(this.baseUrl, card);
+    return this.http.put<void>(this.baseUrl, card);
   }
 
   deleteCard(cardId: number) {
-    return this.http.delete(this.baseUrl + cardId);
+    return this.http.delete<void>(this.baseUrl + cardId);
   }
 
   AddCard(card: LibraryCardForCreationDto) {
-    return this.http.post(this.baseUrl, card);
+    return this.http.post<LibrarycardForListDto>(this.baseUrl, card);
   }
 
   getCards(
@@ -65,7 +65,7 @@ export class LibraryCardService {
     }
 
     return this.http
-      .get<LibrarycardForListDto[]>(this.baseUrl + 'pagination', {
+      .get<LibrarycardForListDto[]>(this.baseUrl, {
         observe: 'response',
         params
       })

@@ -16,6 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { LibraryCardListResolver } from './library-card-list/library-card-list.resolver';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   imports: [
@@ -30,7 +34,10 @@ import { MatCardModule } from '@angular/material/card';
     MatFormFieldModule,
     FlexLayoutModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   declarations: [
     LibraryCardAdvancedSearchComponent,
@@ -39,6 +46,6 @@ import { MatCardModule } from '@angular/material/card';
     LibraryCardListComponent,
     LibraryCardSearchComponent
   ],
-  providers: [LibraryCardService]
+  providers: [LibraryCardService, LibraryCardListResolver]
 })
 export class LibraryCardModule {}

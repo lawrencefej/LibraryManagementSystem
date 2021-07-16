@@ -10,24 +10,11 @@ import { lmsResolverContants } from './resolver.constants';
 
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> {
-  pageNumber = 1;
-  pageSize = 5;
-
-  constructor(
-    private memberService: MemberService,
-    private router: Router,
-    private notify: NotificationService
-  ) {}
+  constructor(private memberService: MemberService, private router: Router, private notify: NotificationService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
     return this.memberService
-      .getPaginatedMembers(
-        lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize,
-        '',
-        '',
-        ''
-      )
+      .getPaginatedMembers(lmsResolverContants.pageNumber, lmsResolverContants.pageSize, '', '', '')
       .pipe(
         catchError(() => {
           // TODO Make this central
