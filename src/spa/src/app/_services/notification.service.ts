@@ -1,4 +1,4 @@
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
@@ -19,28 +19,28 @@ export class NotificationService {
     politeness: 'assertive'
   };
 
-  success(message: string) {
+  success(message: string): void {
     this.config.panelClass = ['notification', 'success'];
     this.snackBar.open(message, this.action, this.config);
   }
 
-  error(message: string) {
+  error(message: string): void {
     this.action.fontcolor('black');
     this.config.panelClass = ['notification', 'error'];
     this.snackBar.open(message, this.action, this.config);
   }
 
-  warn(message: string) {
+  warn(message: string): void {
     this.config.panelClass = ['notification', 'warn'];
     this.snackBar.open(message, this.action, this.config);
   }
 
-  message(message: string) {
+  message(message: string): void {
     this.config.panelClass = ['notification', 'message'];
     this.snackBar.open(message, this.action, this.config);
   }
 
-  private getDialogConfig(msg: string) {
+  private getDialogConfig(msg: string): MatDialogConfig<any> {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.width = '340px';
@@ -51,13 +51,13 @@ export class NotificationService {
     return dialogConfig;
   }
 
-  confirm(msg: string) {
+  confirm(msg: string): MatDialogRef<ConfirmDialogComponent, any> {
     const dialogConfig = this.getDialogConfig(msg);
 
     return this.dialog.open(ConfirmDialogComponent, dialogConfig);
   }
 
-  discardDialog(msg: string) {
+  discardDialog(msg: string): void {
     const dialogConfig = this.getDialogConfig(msg);
 
     this.dialog.open(PreventUnsavedComponent, dialogConfig);
