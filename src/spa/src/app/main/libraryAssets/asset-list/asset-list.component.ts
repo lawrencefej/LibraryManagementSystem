@@ -15,7 +15,6 @@ import { takeUntil } from 'rxjs/operators';
 import { LibraryAssetForListDto } from 'src/dto/models/library-asset-for-list-dto';
 
 @Component({
-  selector: 'app-asset-list',
   templateUrl: './asset-list.component.html',
   styleUrls: ['./asset-list.component.css']
 })

@@ -51,15 +51,15 @@ export class NotificationService {
     return dialogConfig;
   }
 
-  confirm(msg: string): MatDialogRef<ConfirmDialogComponent, any> {
+  confirm(msg: string): MatDialogRef<ConfirmDialogComponent, boolean> {
     const dialogConfig = this.getDialogConfig(msg);
 
     return this.dialog.open(ConfirmDialogComponent, dialogConfig);
   }
 
-  discardDialog(msg: string): void {
+  discardDialog(msg: string): MatDialogRef<PreventUnsavedComponent, void> {
     const dialogConfig = this.getDialogConfig(msg);
 
-    this.dialog.open(PreventUnsavedComponent, dialogConfig);
+    return this.dialog.open(PreventUnsavedComponent, dialogConfig);
   }
 }

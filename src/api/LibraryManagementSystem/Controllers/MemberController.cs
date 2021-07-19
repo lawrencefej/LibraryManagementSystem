@@ -52,7 +52,7 @@ namespace LibraryManagementSystem.Controllers
             return Ok(membersToReturn);
         }
 
-        [HttpGet("advancedSearch/")]
+        [HttpGet("advancedsearch/")]
         public async Task<IActionResult> AdvancedmemberSearch([FromQuery] UserForDetailedDto member)
         {
             IEnumerable<AppUser> members = await _memberService.AdvancedMemberSearch(member);

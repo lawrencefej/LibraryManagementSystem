@@ -86,8 +86,6 @@ namespace LMSService.Service
                     .ThenInclude(s => s.State).FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
 
             return MapLibraryCard(card);
-
-
         }
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardById(int id)
@@ -111,7 +109,7 @@ namespace LMSService.Service
                     .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<PagedList<LibrarycardForListDto>> AdvancedLibraryCardSearch(LibraryCardForDetailedDto card, PaginationParams paginationParams)
+        public async Task<PagedList<LibrarycardForListDto>> AdvancedLibraryCardSearch(LibraryCardForAdvancedSearch card, PaginationParams paginationParams)
         {
             IQueryable<LibraryCard> cards = Context.LibraryCards.AsNoTracking()
                 .Include(m => m.LibraryCardPhoto)
@@ -124,12 +122,13 @@ namespace LMSService.Service
                 || x.Email.Contains(card.LastName)
                 || x.Email.Contains(card.Email)
                 || x.PhoneNumber.Contains(card.PhoneNumber)
+                || x.Address.Zipcode.Contains(card.Zipcode)
+                || x.DateOfBirth == card.DateOfBirth
                 );
 
             paginationParams.SearchString = null;
 
             return await FilterCards(paginationParams, cards);
-
         }
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> UpdateLibraryCard(LibraryCardForUpdate cardForUpdate)

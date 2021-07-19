@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LibraryCardAdvancedSearchComponent } from './library-card-advanced-search/library-card-advanced-search.component';
 import { LibraryCardDetailComponent } from './library-card-detail/library-card-detail.component';
+import { LibraryCardDetailResolver } from './library-card-detail/library-card-detail.resolver';
 import { LibraryCardListComponent } from './library-card-list/library-card-list.component';
 import { LibraryCardListResolver } from './library-card-list/library-card-list.resolver';
 import { LibraryCardSearchComponent } from './library-card-search/library-card-search.component';
@@ -18,11 +19,8 @@ const routes: Routes = [
   },
   {
     path: 'cards/:id',
-    component: LibraryCardDetailComponent
-  },
-  {
-    path: 'cards/:id',
-    component: LibraryCardDetailComponent
+    component: LibraryCardDetailComponent,
+    resolve: { data: LibraryCardDetailResolver }
   },
   {
     path: 'advanced-search',

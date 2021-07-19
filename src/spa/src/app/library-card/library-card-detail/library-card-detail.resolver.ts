@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { CheckoutService } from 'src/app/_services/checkout.service';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { StateService } from 'src/app/_services/state.service';
 import { ILibraryCardDetailResponse } from '../Models/ILibraryCardDetailResponse';
 import { LibraryCardService } from '../services/library-card.service';
 
@@ -11,13 +11,13 @@ export class LibraryCardDetailResolver implements Resolve<ILibraryCardDetailResp
   constructor(
     private readonly cardService: LibraryCardService,
     private readonly checkoutService: CheckoutService,
-    private readonly route: Router,
-    private readonly notify: NotificationService
+    private readonly stateService: StateService
   ) {}
   resolve(route: ActivatedRouteSnapshot): Observable<ILibraryCardDetailResponse> {
     return forkJoin({
       card: this.cardService.getCardById(route.params.id),
-      checkouts: this.checkoutService.getCheckoutsForCard(route.params.id)
+      checkouts: this.checkoutService.getCheckoutsForCard(route.params.id),
+      states: this.stateService.getStatesObject()
     });
   }
 }

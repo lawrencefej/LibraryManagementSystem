@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
@@ -9,16 +10,10 @@ import { CheckoutService } from 'src/app/_services/checkout.service';
 import { FeeService } from 'src/app/_services/fee.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
-import {
-  BasketForCheckoutDto,
-  CheckoutForListDto,
-  LibraryCardForDetailedDto,
-  LibrarycardForListDto
-} from 'src/dto/models';
+import { BasketForCheckoutDto, CheckoutForListDto, LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
 import { LibraryCardComponent } from '../library-card/library-card.component';
 
 @Component({
-  selector: 'app-library-card-detail',
   templateUrl: './library-card-detail.component.html',
   styleUrls: ['./library-card-detail.component.css']
 })
@@ -26,27 +21,32 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   @ViewChild('fileInput') myInputVariable: ElementRef;
-  displayedColumns = ['title', 'duedate', 'status', 'action'];
   card: LibraryCardForDetailedDto;
   checkouts: CheckoutForListDto[];
   dataSource = new MatTableDataSource<CheckoutForListDto>();
+  displayedColumns = ['title', 'duedate', 'status', 'action'];
+  isEditCard = false;
   public basketItems$: Observable<CheckoutForListDto[]> = of([]);
   public basketItems: BasketForCheckoutDto[] = [];
+  selected = new FormControl(1);
+  states: StateDto[] = [];
 
   constructor(
-    private readonly route: ActivatedRoute,
-    public readonly dialog: MatDialog,
+    private readonly basketService: BasketService,
+    private readonly checkoutService: CheckoutService,
+    private readonly feeService: FeeService,
     private readonly notify: NotificationService,
     private readonly photoService: PhotoService,
-    private readonly feeService: FeeService,
-    private readonly basketService: BasketService,
-    private readonly checkoutService: CheckoutService
+    private readonly route: ActivatedRoute,
+    public readonly dialog: MatDialog
   ) {}
 
   ngOnInit() {
-    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
-      this.card = data.card;
-      this.checkouts = data.checkouts;
+    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => {
+      this.card = routeData.data.card;
+      this.checkouts = routeData.data.checkouts;
+      this.states = routeData.data.states;
+      this.dataSource.data = this.checkouts;
     });
   }
 
@@ -61,6 +61,16 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     dialogConfig.width = '640px';
     dialogConfig.data = element;
     this.dialog.open(LibraryCardComponent, dialogConfig);
+  }
+
+  editCard(): void {
+    this.isEditCard = true;
+    this.selected.setValue(3);
+  }
+
+  cancelEdit(): void {
+    this.isEditCard = false;
+    this.selected.setValue(0);
   }
 
   updatePhoto(event): void {
@@ -123,15 +133,17 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  payFees(card: LibrarycardForListDto) {
+  payFees() {
+    this.notify.success('fee is paid');
+    console.log('paid');
+
     this.notify
-      // .confirm('Are you sure you want to pay $' + card.fees)
-      .confirm('Are you sure you want to pay $')
+      .confirm('Are you sure you want to pay $' + this.card.fees)
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
         if (res) {
-          this.feeService.payFees(card.id).subscribe(
+          this.feeService.payFees(this.card.id).subscribe(
             () => {
               this.notify.success('Payment was successful');
               this.card.fees = 0;
@@ -143,4 +155,25 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  // payFees(card: LibrarycardForListDto) {
+  //   this.notify
+  //     // .confirm('Are you sure you want to pay $' + card.fees)
+  //     .confirm('Are you sure you want to pay $')
+  //     .afterClosed()
+  //     .pipe(takeUntil(this.unsubscribe))
+  //     .subscribe(res => {
+  //       if (res) {
+  //         this.feeService.payFees(card.id).subscribe(
+  //           () => {
+  //             this.notify.success('Payment was successful');
+  //             this.card.fees = 0;
+  //           },
+  //           error => {
+  //             this.notify.error(error);
+  //           }
+  //         );
+  //       }
+  //     });
+  // }
 }

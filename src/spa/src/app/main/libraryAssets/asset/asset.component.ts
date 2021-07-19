@@ -17,7 +17,6 @@ import { LibraryAssetForUpdateDto } from 'src/dto/models/library-asset-for-updat
 import { LibraryAssetForCreationDto } from 'src/dto/models/library-asset-for-creation-dto';
 
 @Component({
-  selector: 'app-asset',
   templateUrl: './asset.component.html',
   styleUrls: ['./asset.component.css']
 })

@@ -20,32 +20,47 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { LibraryCardListResolver } from './library-card-list/library-card-list.resolver';
 import { MatSortModule } from '@angular/material/sort';
+import { LibraryCardDetailResolver } from './library-card-detail/library-card-detail.resolver';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
+import { LibraryCardEditComponent } from './library-card-edit/library-card-edit.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [
     CommonModule,
-    LibraryCardRoutingModule,
-    SharedModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatFormFieldModule,
     FlexLayoutModule,
+    FormsModule,
+    LibraryCardRoutingModule,
     MatButtonModule,
     MatCardModule,
-    MatTableModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    ReactiveFormsModule,
+    SharedModule,
+    MatAutocompleteModule,
+    MatRadioModule
   ],
   declarations: [
     LibraryCardAdvancedSearchComponent,
     LibraryCardComponent,
     LibraryCardDetailComponent,
+    LibraryCardEditComponent,
     LibraryCardListComponent,
     LibraryCardSearchComponent
   ],
-  providers: [LibraryCardService, LibraryCardListResolver]
+  providers: [LibraryCardService, LibraryCardListResolver, LibraryCardDetailResolver]
 })
 export class LibraryCardModule {}

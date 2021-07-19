@@ -1,14 +1,14 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 
 namespace LMSContracts.Interfaces
 {
     public interface ILibraryCardService
     {
         Task<LmsResponseHandler<LibraryCardForDetailedDto>> AddLibraryCard(LibraryCardForCreationDto addCardDto);
+
+        Task<PagedList<LibrarycardForListDto>> AdvancedLibraryCardSearch(LibraryCardForAdvancedSearch card, PaginationParams paginationParams);
 
         Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardByNumber(string cardNumber);
 

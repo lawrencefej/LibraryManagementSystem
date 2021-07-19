@@ -32,7 +32,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Details </th>
       <td mat-cell *matCellDef="let card">
-        <button mat-icon-button matTooltip="Details" color="primary" [routerLink]="['/cards/', card.id]">
+        <button mat-icon-button matTooltip="Details" color="primary" [routerLink]="['/library-card/cards/', card.id]">
           <mat-icon class="mat-18">reorder</mat-icon>
         </button>
         <button mat-icon-button matTooltip="Update" color="accent" (click)="updateCard(card)">
