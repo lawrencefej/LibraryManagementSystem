@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 import { AssetService } from 'src/app/_services/asset.service';
 import { BasketService } from 'src/app/_services/basket.service';
@@ -8,6 +8,9 @@ import { Checkout } from 'src/app/_models/checkout';
 import { LibraryAsset } from 'src/app/_models/libraryAsset';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/_models/user';
+import { LibraryCardForDetailedDto } from 'src/dto/models';
+import { BasketViewModel } from '../../basket/models/basket-view-model';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'lms-checkout-asset',
@@ -15,20 +18,21 @@ import { User } from 'src/app/_models/user';
   styleUrls: ['./checkout-asset.component.css']
 })
 export class CheckoutAssetComponent implements OnInit {
-  @Input() member: User;
+  private readonly unsubscribe = new Subject<void>();
+
+  @Input() card: LibraryCardForDetailedDto;
   public basketItems$: Observable<Checkout[]> = of([]);
   public basketItems: Checkout[] = [];
   dataSource = new MatTableDataSource<LibraryAsset>();
-  basketNumber = 0;
   displayedColumns = ['title', 'authorName', 'year', 'assetType', 'actions'];
+
+  basket: BasketViewModel;
   searchForm = new FormGroup({
     searchString: new FormControl('', Validators.required)
   });
 
   constructor(private basketService: BasketService, private assetService: AssetService) {
-    this.basketItems$ = this.basketService.getItemsInBasket();
-
-    this.basketItems$.subscribe(_ => (this.basketItems = _));
+    this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.basket = basket));
   }
 
   ngOnInit() {}
@@ -51,7 +55,7 @@ export class CheckoutAssetComponent implements OnInit {
     const checkout: Checkout = {};
     checkout.libraryAssetId = asset.id;
     checkout.asset = asset;
-    checkout.userId = this.member.id;
-    this.basketService.addAssetToCart(checkout);
+    checkout.userId = this.card.id;
+    // this.basketService.addAssetToCart(checkout);
   }
 }

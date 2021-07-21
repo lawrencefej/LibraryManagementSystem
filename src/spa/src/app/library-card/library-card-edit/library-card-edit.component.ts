@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs';
-import { debounceTime, map, startWith, takeUntil } from 'rxjs/operators';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 import { stateValidator } from 'src/app/shared/validators/state.validator';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { StateService } from 'src/app/_services/state.service';
 import { LibraryCardForDetailedDto, LibraryCardForUpdate, StateDto } from 'src/dto/models';
 import { LibraryCardService } from '../services/library-card.service';
 
@@ -22,6 +20,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   @Input() states!: StateDto[];
   @Output() cardChange = new EventEmitter<LibraryCardForDetailedDto>();
   @Output() closeTab = new EventEmitter<void>();
+  @Output() isFormDirty = new EventEmitter<boolean>();
 
   cardForm: FormGroup;
   filteredStates: Observable<StateDto[]> = of([]);
@@ -39,6 +38,9 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       startWith(''),
       map(s => (s ? this.filterStates(s) : this.states.slice()))
     );
+    this.cardForm.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+      this.isFormDirty.emit(this.cardForm.dirty);
+    });
   }
 
   ngOnDestroy(): void {
@@ -47,15 +49,19 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit(): void {
-    this.notify
-      .confirm('Are you sure you want to discard these changes')
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(response => {
-        if (response) {
-          this.closeTab.emit();
-        }
-      });
+    if (this.cardForm.dirty) {
+      this.notify
+        .confirm('Are you sure you want to discard these changes')
+        .afterClosed()
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(response => {
+          if (response) {
+            this.closeTab.emit();
+          }
+        });
+    } else {
+      this.closeTab.emit();
+    }
   }
 
   revert(): void {
@@ -66,6 +72,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (response) {
           this.populateForm(this.card);
+          this.isFormDirty.emit(false);
         }
       });
   }

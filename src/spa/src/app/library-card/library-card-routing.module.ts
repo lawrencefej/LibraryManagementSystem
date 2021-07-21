@@ -6,6 +6,8 @@ import { LibraryCardDetailResolver } from './library-card-detail/library-card-de
 import { LibraryCardListComponent } from './library-card-list/library-card-list.component';
 import { LibraryCardListResolver } from './library-card-list/library-card-list.resolver';
 import { LibraryCardSearchComponent } from './library-card-search/library-card-search.component';
+import { LibraryCardCheckoutCanDeactivateGuardService } from './services/library-card-checkout-can-deactivate-guard.service';
+import { LibraryCardEditCanDeactivateGuardService } from './services/library-card-edit-can-deactivate-guard.service';
 
 const routes: Routes = [
   {
@@ -20,7 +22,8 @@ const routes: Routes = [
   {
     path: 'cards/:id',
     component: LibraryCardDetailComponent,
-    resolve: { data: LibraryCardDetailResolver }
+    resolve: { data: LibraryCardDetailResolver },
+    canDeactivate: [LibraryCardEditCanDeactivateGuardService, LibraryCardCheckoutCanDeactivateGuardService]
   },
   {
     path: 'advanced-search',

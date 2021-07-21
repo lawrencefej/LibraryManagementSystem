@@ -13,7 +13,6 @@ import { LibraryCardComponent } from '../library-card/library-card.component';
 import { LibraryCardService } from '../services/library-card.service';
 
 @Component({
-  selector: 'app-library-card-list',
   templateUrl: './library-card-list.component.html',
   styleUrls: ['./library-card-list.component.css']
 })
@@ -50,9 +49,11 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   ngAfterViewInit(): void {
-    merge(this.paginator.page, this.sort.sortChange).subscribe(() => {
-      this.loadData();
-    });
+    merge(this.paginator.page, this.sort.sortChange)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        this.loadData();
+      });
   }
 
   filterList(): void {
@@ -118,6 +119,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
         this.sort.direction.toString(),
         this.searchString
       )
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         cards => {
           this.cards = cards.result;

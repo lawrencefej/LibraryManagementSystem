@@ -28,6 +28,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { LibraryCardEditComponent } from './library-card-edit/library-card-edit.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatRadioModule } from '@angular/material/radio';
+import { LibraryCardCheckoutComponent } from './library-card-checkout/library-card-checkout.component';
+import { LibraryCardEditCanDeactivateGuardService } from './services/library-card-edit-can-deactivate-guard.service';
+import { LibraryCardCheckoutCanDeactivateGuardService } from './services/library-card-checkout-can-deactivate-guard.service';
 
 @NgModule({
   imports: [
@@ -35,6 +38,7 @@ import { MatRadioModule } from '@angular/material/radio';
     FlexLayoutModule,
     FormsModule,
     LibraryCardRoutingModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
@@ -45,22 +49,28 @@ import { MatRadioModule } from '@angular/material/radio';
     MatInputModule,
     MatListModule,
     MatPaginatorModule,
+    MatRadioModule,
     MatSortModule,
     MatTableModule,
     MatTabsModule,
     ReactiveFormsModule,
-    SharedModule,
-    MatAutocompleteModule,
-    MatRadioModule
+    SharedModule
   ],
   declarations: [
     LibraryCardAdvancedSearchComponent,
+    LibraryCardCheckoutComponent,
     LibraryCardComponent,
     LibraryCardDetailComponent,
     LibraryCardEditComponent,
     LibraryCardListComponent,
     LibraryCardSearchComponent
   ],
-  providers: [LibraryCardService, LibraryCardListResolver, LibraryCardDetailResolver]
+  providers: [
+    LibraryCardDetailResolver,
+    LibraryCardCheckoutCanDeactivateGuardService,
+    LibraryCardEditCanDeactivateGuardService,
+    LibraryCardListResolver,
+    LibraryCardService
+  ]
 })
 export class LibraryCardModule {}

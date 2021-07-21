@@ -45,7 +45,6 @@ import { MemberDetailComponent } from './member/member-detail/member-detail.comp
 import { MemberListComponent } from './member/member-list/member-list.component';
 import { MemberSearchComponent } from './member/member-search/member-search.component';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './user/user-profile-edit/user-profile-edit.component';

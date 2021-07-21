@@ -1,6 +1,5 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AppRoutingModule } from '../app-routing.module';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { DashboardLayoutComponent } from './layout/dashboard-layout/dashboard-layout.component';

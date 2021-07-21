@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { CheckoutForDetailedDto } from 'src/dto/models/checkout-for-detailed-dto';
 import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
+import { BasketForCheckoutDto } from 'src/dto/models';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,10 @@ export class CheckoutService {
 
   getCheckoutsForAsset(assetId: number): Observable<CheckoutForListDto[]> {
     return this.http.get<CheckoutForListDto[]>(this.baseUrl + 'asset/' + assetId);
+  }
+
+  checkoutBasket(basket: BasketForCheckoutDto) {
+    return this.http.post<void>(this.baseUrl + 'checkout/', basket);
   }
 
   checkoutAsset(checkout: Checkout) {

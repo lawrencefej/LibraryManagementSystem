@@ -16,7 +16,6 @@ import { User } from 'src/app/_models/user';
 import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
 
 @Component({
-  selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
   styleUrls: ['./member-detail.component.css']
 })

@@ -3,14 +3,15 @@ import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
 import { BasketService } from 'src/app/_services/basket.service';
 import { CheckoutService } from 'src/app/_services/checkout.service';
 import { FeeService } from 'src/app/_services/fee.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { BasketForCheckoutDto, CheckoutForListDto, LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
+import { CheckoutForListDto, LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
 import { LibraryCardComponent } from '../library-card/library-card.component';
 
 @Component({
@@ -21,13 +22,13 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   @ViewChild('fileInput') myInputVariable: ElementRef;
+  basket: BasketViewModel;
   card: LibraryCardForDetailedDto;
   checkouts: CheckoutForListDto[];
   dataSource = new MatTableDataSource<CheckoutForListDto>();
   displayedColumns = ['title', 'duedate', 'status', 'action'];
+  isCardFormDirty?: boolean;
   isEditCard = false;
-  public basketItems$: Observable<CheckoutForListDto[]> = of([]);
-  public basketItems: BasketForCheckoutDto[] = [];
   selected = new FormControl(1);
   states: StateDto[] = [];
 
@@ -39,7 +40,9 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     private readonly photoService: PhotoService,
     private readonly route: ActivatedRoute,
     public readonly dialog: MatDialog
-  ) {}
+  ) {
+    this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.basket = basket));
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => {
@@ -53,6 +56,18 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+  }
+
+  isFormDirty(isFormDirty: boolean): void {
+    this.isCardFormDirty = isFormDirty;
+  }
+
+  startCheckout() {
+    this.basketService.initializeBasket(this.card);
+  }
+
+  endCheckout() {
+    this.basketService.clearBasket();
   }
 
   public updateMember(element: any): void {

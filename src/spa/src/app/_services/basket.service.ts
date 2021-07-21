@@ -1,49 +1,78 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Checkout } from '../_models/checkout';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { NotificationService } from './notification.service';
+import { BasketViewModel } from '../main/basket/models/basket-view-model';
+import { LibraryAssetForListDto, LibraryCardForDetailedDto } from 'src/dto/models';
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BasketService {
-  private itemsInBasketSubject: BehaviorSubject<Checkout[]> = new BehaviorSubject(this.getBasketFromLocalStorage());
-  private itemsInBasket: Checkout[] = [];
+export class BasketService implements OnDestroy {
+  private readonly unsubscribe = new Subject<void>();
+  private basketSubject = new BehaviorSubject<BasketViewModel>(undefined);
+  private currentBasket: BasketViewModel;
+
+  basket$: Observable<BasketViewModel> = this.basketSubject.asObservable();
 
   constructor(private notify: NotificationService) {
-    this.itemsInBasketSubject.subscribe(_ => (this.itemsInBasket = _));
+    this.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.currentBasket = basket));
+    this.basketSubject.next(JSON.parse(localStorage.getItem('basket')));
   }
 
-  addAssetToCart(checkout: Checkout) {
-    const currentItems = [...this.itemsInBasket];
-    if (!currentItems.find(x => x.asset.id === checkout.asset.id)) {
-      this.itemsInBasketSubject.next([...this.itemsInBasket, checkout]);
-      localStorage.setItem('basket', JSON.stringify(this.itemsInBasket));
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
+  initializeBasket(card: LibraryCardForDetailedDto) {
+    const basket: BasketViewModel = {
+      assets: [],
+      cardNumber: card.cardNumber,
+      photoUrl: card.photoUrl,
+      libraryCardId: card.id,
+      active: true
+    };
+
+    localStorage.setItem('basket', JSON.stringify(basket));
+    this.basketSubject.next(basket);
+  }
+
+  addAssetToCart(newAsset: LibraryAssetForListDto) {
+    const currentBasket = this.currentBasket;
+    if (currentBasket.assets.find(asset => asset.libraryAssetId === newAsset.id)) {
+      this.notify.error(`${newAsset.title} has already been placed in the basket`);
     } else {
-      this.notify.error('This item has already been placed in the basket');
+      this.currentBasket.assets.push({
+        title: newAsset.title,
+        libraryAssetId: newAsset.id,
+        author: newAsset.authorName
+      });
+      this.basketSubject.next(this.currentBasket);
+      localStorage.setItem('basket', JSON.stringify(this.currentBasket));
+      this.notify.success(`${newAsset.title} was added successfully`);
     }
   }
 
-  public getItemsInBasket() {
-    return this.itemsInBasketSubject.asObservable();
+  removeFromBasket(libraryAssetId: number) {
+    const currentItems = this.currentBasket;
+    const newItemList = currentItems.assets.filter(item => item.libraryAssetId !== libraryAssetId);
+    this.currentBasket.assets = [...newItemList];
+    this.basketSubject.next(currentItems);
+    localStorage.setItem('basket', JSON.stringify(this.currentBasket));
   }
 
-  public removeFromBasket(id: number) {
-    const currentItems = [...this.itemsInBasket];
-    const itemsWithoutRemoved = currentItems.filter(_ => _.id !== id);
-    this.itemsInBasketSubject.next(itemsWithoutRemoved);
-    localStorage.setItem('basket', JSON.stringify(this.itemsInBasket));
-  }
-
-  public clearBasket() {
-    localStorage.removeItem('basket');
-    this.itemsInBasketSubject.next([]);
-  }
   getBasketFromLocalStorage() {
     let basket: Checkout[] = [];
     if (localStorage.getItem('basket') !== null) {
       basket = JSON.parse(localStorage.getItem('basket'));
     }
     return basket;
+  }
+
+  clearBasket() {
+    localStorage.removeItem('basket');
+    this.basketSubject.next(undefined);
   }
 }

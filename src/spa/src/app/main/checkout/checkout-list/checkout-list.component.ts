@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 
 import { ActivatedRoute } from '@angular/router';
-import { Checkout } from 'src/app/_models/checkout';
 import { CheckoutService } from 'src/app/_services/checkout.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,7 +11,6 @@ import { merge } from 'rxjs';
 import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
 
 @Component({
-  selector: 'app-checkout-list',
   templateUrl: './checkout-list.component.html',
   styleUrls: ['./checkout-list.component.css']
 })
