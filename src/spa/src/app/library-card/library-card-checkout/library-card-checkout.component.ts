@@ -76,6 +76,6 @@ export class LibraryCardCheckoutComponent implements OnDestroy {
   }
 
   addToCart(asset: LibraryAssetForListDto): void {
-    this.basketService.addAssetToCart(asset);
+    this.basketService.addAssetToCart(asset, this.card);
   }
 }

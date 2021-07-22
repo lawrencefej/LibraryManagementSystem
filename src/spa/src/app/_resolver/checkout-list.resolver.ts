@@ -7,24 +7,15 @@ import { Injectable } from '@angular/core';
 import { NotificationService } from '../_services/notification.service';
 import { catchError } from 'rxjs/operators';
 import { lmsResolverContants } from './resolver.constants';
+import { checkoutFilters } from '../shared/constants/checkout.constant';
 
 @Injectable()
 export class CheckoutListResolver implements Resolve<Checkout[]> {
-  constructor(
-    private checkoutService: CheckoutService,
-    private notify: NotificationService,
-    private router: Router
-  ) {}
+  constructor(private checkoutService: CheckoutService, private notify: NotificationService, private router: Router) {}
 
   resolve(): Observable<Checkout[]> {
     return this.checkoutService
-      .getPaginatedCheckouts(
-        lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize,
-        '',
-        '',
-        'checkedOut'
-      )
+      .getPaginatedCheckouts(lmsResolverContants.pageNumber, lmsResolverContants.pageSize, '', '', checkoutFilters[0])
       .pipe(
         catchError(() => {
           this.notify.error('Problem retrieving data');

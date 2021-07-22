@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { CheckoutForDetailedDto } from 'src/dto/models/checkout-for-detailed-dto';
 import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
-import { BasketForCheckoutDto } from 'src/dto/models';
+import { BasketForCheckoutDto, CheckoutForCheckInDto } from 'src/dto/models';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +39,10 @@ export class CheckoutService {
     return this.http.put<void>(this.baseUrl + id, {});
   }
 
+  checkInAsset(checkout: CheckoutForCheckInDto) {
+    return this.http.put<void>(this.baseUrl, checkout);
+  }
+
   getCheckoutsForAsset(assetId: number): Observable<CheckoutForListDto[]> {
     return this.http.get<CheckoutForListDto[]>(this.baseUrl + 'asset/' + assetId);
   }
@@ -61,6 +65,43 @@ export class CheckoutService {
 
   sendNewCheckout(checkout: Checkout) {
     this.checkout.next(checkout);
+  }
+
+  getPaginatedCheckoutsForCard(
+    userId: number,
+    page?: number,
+    itemsPerPage?: number,
+    orderBy?: string,
+    sortDirection?: string,
+    searchString?: string
+  ): Observable<PaginatedResult<CheckoutForListDto[]>> {
+    const paginatedResult: PaginatedResult<CheckoutForListDto[]> = new PaginatedResult<CheckoutForListDto[]>();
+
+    let params = new HttpParams();
+
+    params = params.append('orderBy', orderBy);
+    params = params.append('sortDirection', sortDirection);
+    params = params.append('searchString', searchString);
+
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page.toString());
+      params = params.append('pageSize', itemsPerPage.toString());
+    }
+
+    return this.http
+      .get<CheckoutForListDto[]>(this.baseUrl + 'card/' + userId, {
+        observe: 'response',
+        params
+      })
+      .pipe(
+        map(response => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+          }
+          return paginatedResult;
+        })
+      );
   }
 
   getPaginatedCheckouts(

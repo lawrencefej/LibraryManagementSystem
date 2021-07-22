@@ -1,5 +1,4 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Checkout } from '../_models/checkout';
 import { Injectable, OnDestroy } from '@angular/core';
 import { NotificationService } from './notification.service';
 import { BasketViewModel } from '../main/basket/models/basket-view-model';
@@ -11,14 +10,17 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class BasketService implements OnDestroy {
   private readonly unsubscribe = new Subject<void>();
-  private basketSubject = new BehaviorSubject<BasketViewModel>(undefined);
+  private basketSubject = new BehaviorSubject<BasketViewModel>(this.getDefaultBasket());
   private currentBasket: BasketViewModel;
 
   basket$: Observable<BasketViewModel> = this.basketSubject.asObservable();
 
   constructor(private notify: NotificationService) {
+    const basketFromLS = JSON.parse(localStorage.getItem('basket'));
+    if (basketFromLS) {
+      this.basketSubject.next(basketFromLS);
+    }
     this.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.currentBasket = basket));
-    this.basketSubject.next(JSON.parse(localStorage.getItem('basket')));
   }
 
   ngOnDestroy(): void {
@@ -39,40 +41,47 @@ export class BasketService implements OnDestroy {
     this.basketSubject.next(basket);
   }
 
-  addAssetToCart(newAsset: LibraryAssetForListDto) {
+  addAssetToCart(newAsset: LibraryAssetForListDto, card: LibraryCardForDetailedDto) {
+    if (card.id !== this.currentBasket.libraryCardId) {
+      this.notify.error('Please initialize the for for the current card first');
+      return;
+    }
+
     const currentBasket = this.currentBasket;
     if (currentBasket.assets.find(asset => asset.libraryAssetId === newAsset.id)) {
       this.notify.error(`${newAsset.title} has already been placed in the basket`);
     } else {
-      this.currentBasket.assets.push({
+      currentBasket.assets.push({
         title: newAsset.title,
         libraryAssetId: newAsset.id,
         author: newAsset.authorName
       });
-      this.basketSubject.next(this.currentBasket);
-      localStorage.setItem('basket', JSON.stringify(this.currentBasket));
+      localStorage.setItem('basket', JSON.stringify(currentBasket));
+      this.basketSubject.next(currentBasket);
       this.notify.success(`${newAsset.title} was added successfully`);
     }
   }
 
   removeFromBasket(libraryAssetId: number) {
-    const currentItems = this.currentBasket;
-    const newItemList = currentItems.assets.filter(item => item.libraryAssetId !== libraryAssetId);
-    this.currentBasket.assets = [...newItemList];
-    this.basketSubject.next(currentItems);
+    const currentBasket = this.currentBasket;
+    const newItemList = currentBasket.assets.filter(item => item.libraryAssetId !== libraryAssetId);
+    currentBasket.assets = [...newItemList];
     localStorage.setItem('basket', JSON.stringify(this.currentBasket));
-  }
-
-  getBasketFromLocalStorage() {
-    let basket: Checkout[] = [];
-    if (localStorage.getItem('basket') !== null) {
-      basket = JSON.parse(localStorage.getItem('basket'));
-    }
-    return basket;
+    this.basketSubject.next(currentBasket);
+    this.notify.success('Item was removed successfully');
   }
 
   clearBasket() {
     localStorage.removeItem('basket');
-    this.basketSubject.next(undefined);
+    this.basketSubject.next(this.getDefaultBasket());
+  }
+
+  getDefaultBasket(): BasketViewModel {
+    return {
+      active: false,
+      assets: [],
+      cardNumber: '',
+      photoUrl: ''
+    };
   }
 }

@@ -1,29 +1,27 @@
-<ng-container *ngIf="basket != null">
-  <button [disabled]="basket.assets.length === 0" mat-button mat-icon-button *ngIf="basket.active === true"
-    [matMenuTriggerFor]="menu" type="button" style="margin-right: 20px">
-    <mat-icon [matBadge]="basket.assets.length" matBadgeColor="accent">
-      add_shopping_cart
-    </mat-icon>
-  </button>
-  <mat-menu #menu="matMenu" class="mat">
-    <mat-list dense>
-      <mat-list-item *ngFor="let item of basket.assets">
-        <img matListAvatar src="{{item.photoUrl || '../../../assets/img/book.jpg'}}" alt="...">
-        <div mat-line>
-          <h3> {{item.title}}</h3>
-          <p>{{item.author}}</p>
-        </div>
-        <button mat-icon-button matTooltip="Delete" color="warn" (click)="removeFromBasket(item.libraryAssetId)">
-          <mat-icon class="mat-18">delete</mat-icon>
-        </button>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-list>
-    <div style="margin-top: 20px;" class="bottom-buttons" fxLayoutAlign="space-between center">
-      <button mat-raised-button type="button" color="warn" style="margin-left: 10px;"
-        (click)="clearBasket()">Clear</button>
-      <button mat-raised-button type="button" color="primary" style="margin-right: 10px;"
-        (click)="checkoutBasket()">Checkout</button>
-    </div>
-  </mat-menu>
-</ng-container>
+<button [disabled]="basket.assets.length === 0" mat-button mat-icon-button *ngIf="basket.active === true"
+  [matMenuTriggerFor]="menu" type="button" style="margin-right: 20px">
+  <mat-icon [matBadge]="basket.assets.length" matBadgeColor="accent">
+    add_shopping_cart
+  </mat-icon>
+</button>
+<mat-menu #menu="matMenu" class="mat">
+  <mat-list dense>
+    <mat-list-item *ngFor="let item of basket.assets">
+      <img matListAvatar src="{{item.photoUrl || '../../../assets/img/book.jpg'}}" alt="...">
+      <div mat-line>
+        <h3> {{item.title}}</h3>
+        <p>{{item.author}}</p>
+      </div>
+      <button mat-icon-button matTooltip="Delete" color="warn" (click)="removeFromBasket(item.libraryAssetId)">
+        <mat-icon class="mat-18">delete</mat-icon>
+      </button>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
+  <div style="margin-top: 20px;" class="bottom-buttons" fxLayoutAlign="space-between center">
+    <button mat-raised-button type="button" color="warn" style="margin-left: 10px;"
+      (click)="clearBasket()">Clear</button>
+    <button mat-raised-button type="button" color="primary" style="margin-right: 10px;"
+      (click)="checkoutBasket()">Checkout</button>
+  </div>
+</mat-menu>

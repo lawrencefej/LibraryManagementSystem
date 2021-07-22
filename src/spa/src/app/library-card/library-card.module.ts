@@ -31,6 +31,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { LibraryCardCheckoutComponent } from './library-card-checkout/library-card-checkout.component';
 import { LibraryCardEditCanDeactivateGuardService } from './services/library-card-edit-can-deactivate-guard.service';
 import { LibraryCardCheckoutCanDeactivateGuardService } from './services/library-card-checkout-can-deactivate-guard.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -50,9 +52,11 @@ import { LibraryCardCheckoutCanDeactivateGuardService } from './services/library
     MatListModule,
     MatPaginatorModule,
     MatRadioModule,
+    MatSelectModule,
     MatSortModule,
     MatTableModule,
     MatTabsModule,
+    MatTooltipModule,
     ReactiveFormsModule,
     SharedModule
   ],

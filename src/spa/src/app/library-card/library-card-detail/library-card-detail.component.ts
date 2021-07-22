@@ -1,36 +1,45 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { merge, Observable, Subject } from 'rxjs';
+import { concatMap, takeUntil } from 'rxjs/operators';
 import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
+import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
+import { Pagination } from 'src/app/_models/pagination';
 import { BasketService } from 'src/app/_services/basket.service';
 import { CheckoutService } from 'src/app/_services/checkout.service';
 import { FeeService } from 'src/app/_services/fee.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { CheckoutForListDto, LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
-import { LibraryCardComponent } from '../library-card/library-card.component';
 
 @Component({
   templateUrl: './library-card-detail.component.html',
   styleUrls: ['./library-card-detail.component.css']
 })
-export class LibraryCardDetailComponent implements OnInit, OnDestroy {
+export class LibraryCardDetailComponent implements AfterViewInit, OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   @ViewChild('fileInput') myInputVariable: ElementRef;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   basket: BasketViewModel;
   card: LibraryCardForDetailedDto;
+  checkoutFilters = checkoutFilters;
   checkouts: CheckoutForListDto[];
   dataSource = new MatTableDataSource<CheckoutForListDto>();
-  displayedColumns = ['title', 'duedate', 'status', 'action'];
+  displayedColumns = ['title', 'duedate', 'dateReturned', 'status', 'action', 'renew'];
   isCardFormDirty?: boolean;
   isEditCard = false;
-  selected = new FormControl(1);
+  paginationOptions = new Pagination();
+  selectedFilter = new FormControl(checkoutFilters[0], [Validators.required]);
+  selected = new FormControl(0);
   states: StateDto[] = [];
+  pagination: Pagination;
 
   constructor(
     private readonly basketService: BasketService,
@@ -41,15 +50,23 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     public readonly dialog: MatDialog
   ) {
+    this.selectedFilter.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(() => this.loadData());
     this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.basket = basket));
   }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => {
       this.card = routeData.data.card;
-      this.checkouts = routeData.data.checkouts;
+      this.pagination = routeData.data.checkouts.pagination;
+      this.checkouts = routeData.data.checkouts.result;
       this.states = routeData.data.states;
       this.dataSource.data = this.checkouts;
+    });
+  }
+
+  ngAfterViewInit() {
+    merge(this.paginator.page, this.sort.sortChange).subscribe(() => {
+      this.loadData();
     });
   }
 
@@ -70,12 +87,29 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     this.basketService.clearBasket();
   }
 
-  public updateMember(element: any): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.width = '640px';
-    dialogConfig.data = element;
-    this.dialog.open(LibraryCardComponent, dialogConfig);
+  loadData(): void {
+    this.checkoutService
+      .getPaginatedCheckoutsForCard(
+        this.card.id,
+        this.paginator.pageIndex + 1,
+        this.paginator.pageSize,
+        this.sort.active,
+        this.sort.direction.toString(),
+        this.selectedFilter.value
+      )
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        response => {
+          console.log(response);
+
+          this.checkouts = response.result;
+          this.pagination = response.pagination;
+          this.dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
+        },
+        error => {
+          this.notify.error(error);
+        }
+      );
   }
 
   editCard(): void {
@@ -110,42 +144,57 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     this.myInputVariable.nativeElement.value = '';
   }
 
-  // returnAsset(checkout: CheckoutForListDto) {
-  //   this.notify
-  //     .confirm('Are you sure you want to return ' + checkout.title)
-  //     .afterClosed()
-  //     .subscribe(res => {
-  //       if (res) {
-  //         this.checkoutService.returnAsset(checkout.id).subscribe(
-  //           () => {
-  //             this.notify.success(checkout.title + 'was returned successfully');
-  //             this.getCheckoutsForMember();
-  //           },
-  //           error => {
-  //             this.notify.error(error);
-  //           }
-  //         );
-  //       }
-  //     });
-  // }
+  renewCheckout(checkout: CheckoutForListDto): void {
+    this.notify
+      .confirm('Are you sure you want to renew ' + checkout.title)
+      .afterClosed()
+      .pipe(
+        takeUntil(this.unsubscribe),
+        concatMap(response => {
+          if (response) {
+            return this.updateCheckout(checkout, true);
+          }
+        })
+      )
+      .subscribe(
+        () => {
+          this.notify.success(checkout.title + 'was renewed successfully');
+          this.loadData();
+        },
+        error => {
+          this.notify.error(error);
+        }
+      );
+  }
 
-  returnAsset(checkout: CheckoutForListDto) {
+  returnCheckout(checkout: CheckoutForListDto): void {
     this.notify
       .confirm('Are you sure you want to return ' + checkout.title)
       .afterClosed()
-      .subscribe(res => {
-        if (res) {
-          this.checkoutService.returnAsset(checkout.id).subscribe(
-            () => {
-              this.notify.success(checkout.title + 'was returned successfully');
-              // this.getCheckoutsForMember();
-            },
-            error => {
-              this.notify.error(error);
-            }
-          );
+      .pipe(
+        takeUntil(this.unsubscribe),
+        concatMap(response => {
+          if (response) {
+            return this.updateCheckout(checkout);
+          }
+        })
+      )
+      .subscribe(
+        () => {
+          this.notify.success(checkout.title + 'was returned successfully');
+          this.loadData();
+        },
+        error => {
+          this.notify.error(error);
         }
-      });
+      );
+  }
+
+  private updateCheckout(checkout: CheckoutForListDto, isRenew = false): Observable<void> {
+    return this.checkoutService.checkInAsset({
+      checkoutId: checkout.id,
+      isRenew
+    });
   }
 
   payFees() {
@@ -170,25 +219,4 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  // payFees(card: LibrarycardForListDto) {
-  //   this.notify
-  //     // .confirm('Are you sure you want to pay $' + card.fees)
-  //     .confirm('Are you sure you want to pay $')
-  //     .afterClosed()
-  //     .pipe(takeUntil(this.unsubscribe))
-  //     .subscribe(res => {
-  //       if (res) {
-  //         this.feeService.payFees(card.id).subscribe(
-  //           () => {
-  //             this.notify.success('Payment was successful');
-  //             this.card.fees = 0;
-  //           },
-  //           error => {
-  //             this.notify.error(error);
-  //           }
-  //         );
-  //       }
-  //     });
-  // }
 }

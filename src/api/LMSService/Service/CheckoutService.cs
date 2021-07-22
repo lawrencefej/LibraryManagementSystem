@@ -171,15 +171,11 @@ namespace LMSService.Service
 
         private async Task<PagedList<CheckoutForListDto>> FilterCheckouts(PaginationParams paginationParams, IQueryable<Checkout> checkouts)
         {
-            // checkouts = string.Equals(paginationParams.SearchString, "returned", StringComparison.OrdinalIgnoreCase)
-            //     ? checkouts.Where(x => x.Status == CheckoutStatus.Returned)
-            //     : checkouts.Where(x => x.Status == CheckoutStatus.Checkedout);
-
-            if (string.Equals(paginationParams.SearchString, "returned", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(paginationParams.SearchString, "returns", StringComparison.OrdinalIgnoreCase))
             {
                 checkouts = checkouts.Where(x => x.Status == CheckoutStatus.Returned);
             }
-            else if (string.Equals(paginationParams.SearchString, "checkedout", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(paginationParams.SearchString, "checkouts", StringComparison.OrdinalIgnoreCase))
             {
                 checkouts = checkouts.Where(x => x.Status == CheckoutStatus.Checkedout);
             }

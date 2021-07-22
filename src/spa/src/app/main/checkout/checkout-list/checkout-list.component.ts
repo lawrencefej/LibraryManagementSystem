@@ -7,24 +7,24 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { merge } from 'rxjs';
+import { merge, Subject } from 'rxjs';
 import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
+import { takeUntil } from 'rxjs/operators';
+import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
 
 @Component({
   templateUrl: './checkout-list.component.html',
   styleUrls: ['./checkout-list.component.css']
 })
 export class CheckoutListComponent implements AfterViewInit, OnInit {
+  private readonly unsubscribe = new Subject<void>();
+
   pagination: Pagination;
   checkouts: CheckoutForListDto[] = [];
   dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
   searchString = '';
   displayedColumns = ['title', 'libraryCardId', 'since', 'until', 'dateReturned', 'status'];
-  checkoutFilters = [
-    { id: 2, name: 'Checked Out', value: 'checkedOut' },
-    { id: 3, name: 'Returned', value: 'returned' },
-    { id: 1, name: 'All', value: 'all' }
-  ];
+  checkoutFilters = checkoutFilters;
   paginationOptions = new Pagination();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -36,7 +36,7 @@ export class CheckoutListComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       this.pagination = data.checkouts.pagination;
       this.checkouts = data.checkouts.result;
       this.dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
@@ -63,6 +63,7 @@ export class CheckoutListComponent implements AfterViewInit, OnInit {
         this.sort.direction.toString(),
         this.searchString
       )
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         (res: PaginatedResult<CheckoutForListDto[]>) => {
           this.checkouts = res.result;
