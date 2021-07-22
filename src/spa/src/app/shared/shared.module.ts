@@ -9,7 +9,6 @@ import { FooterComponent } from './navigation/footer/footer.component';
 import { HasRoleDirective } from '../_directives/has-role.directive';
 import { HeaderComponent } from './navigation/header/header.component';
 import { LoginLayoutComponent } from './layout/login-layout/login-layout.component';
-import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -23,10 +22,10 @@ import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.co
 import { RouterModule } from '@angular/router';
 import { ServerErrorComponent } from './error-pages/server-error/server-error.component';
 import { SidebarComponent } from './navigation/sidebar/sidebar.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   exports: [
-    // AppRoutingModule,
     CommonModule,
     ConfirmDialogComponent,
     DashboardLayoutComponent,
@@ -37,7 +36,6 @@ import { SidebarComponent } from './navigation/sidebar/sidebar.component';
     HasRoleDirective,
     HeaderComponent,
     LoginLayoutComponent,
-    // MaterialModule,
     NotFoundComponent,
     PhoneNumberPipe,
     PreventUnsavedComponent,
@@ -62,19 +60,18 @@ import { SidebarComponent } from './navigation/sidebar/sidebar.component';
     SidebarComponent
   ],
   imports: [
-    // AppRoutingModule,
-    RouterModule,
     CommonModule,
     FlexLayoutModule,
     FormsModule,
-    // MyMaterialModule,
-    ReactiveFormsModule,
-    RouterModule,
-    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatDialogModule,
     MatIconModule,
     MatListModule,
+    MatProgressSpinnerModule,
     MatToolbarModule,
-    MatDialogModule
+    ReactiveFormsModule,
+    RouterModule,
+    RouterModule
   ],
   entryComponents: [ConfirmDialogComponent, PreventUnsavedComponent]
 })

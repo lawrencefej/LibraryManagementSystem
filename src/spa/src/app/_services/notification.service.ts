@@ -40,19 +40,20 @@ export class NotificationService {
     this.snackBar.open(message, this.action, this.config);
   }
 
-  private getDialogConfig(msg: string): MatDialogConfig<any> {
+  private getDialogConfig(msg: string, subMsg?: string): MatDialogConfig<any> {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.width = '340px';
     dialogConfig.data = {
-      message: msg
+      message: msg,
+      subMessage: subMsg
     };
 
     return dialogConfig;
   }
 
-  confirm(msg: string): MatDialogRef<ConfirmDialogComponent, boolean> {
-    const dialogConfig = this.getDialogConfig(msg);
+  confirm(msg: string, subMsg?: string): MatDialogRef<ConfirmDialogComponent, boolean> {
+    const dialogConfig = this.getDialogConfig(msg, subMsg);
 
     return this.dialog.open(ConfirmDialogComponent, dialogConfig);
   }
