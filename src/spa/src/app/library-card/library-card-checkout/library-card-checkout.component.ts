@@ -1,10 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { AssetService } from 'src/app/_services/asset.service';
 import { BasketService } from 'src/app/_services/basket.service';
@@ -19,7 +20,8 @@ import { LibraryCardForDetailedDto, LibraryAssetForListDto } from 'src/dto/model
 export class LibraryCardCheckoutComponent implements OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @Input() card: LibraryCardForDetailedDto;
+  @Input() card!: LibraryCardForDetailedDto;
+  basket!: BasketViewModel;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   assets: LibraryAssetForListDto[] = [];
@@ -33,11 +35,17 @@ export class LibraryCardCheckoutComponent implements OnDestroy {
     private readonly basketService: BasketService,
     private readonly assetService: AssetService,
     private readonly notify: NotificationService
-  ) {}
+  ) {
+    this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.basket = basket));
+  }
 
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+  }
+
+  stopCheckouts(): boolean {
+    return !this.basket.active || this.basket.libraryCardId !== this.card.id;
   }
 
   searchAssets() {

@@ -11,6 +11,6 @@ export class FeeService {
   constructor(private http: HttpClient) {}
 
   payFees(libraryCardID: number) {
-    return this.http.post(this.baseUrl + libraryCardID, {});
+    return this.http.post<void>(this.baseUrl + libraryCardID, {});
   }
 }

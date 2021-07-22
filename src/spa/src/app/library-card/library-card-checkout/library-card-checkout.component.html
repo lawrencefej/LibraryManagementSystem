@@ -31,7 +31,8 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Details </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-icon-button matTooltip="Details" color="primary" (click)="addToCart(element)">
+        <button [disabled]="stopCheckouts()" mat-icon-button matTooltip="Details" color="primary"
+          (click)="addToCart(element)">
           <mat-icon class="mat-18">open_in_new</mat-icon>
         </button>
       </td>

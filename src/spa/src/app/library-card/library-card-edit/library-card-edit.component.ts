@@ -49,24 +49,12 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit(): void {
-    if (this.cardForm.dirty) {
-      this.notify
-        .confirm('Are you sure you want to discard these changes')
-        .afterClosed()
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe(response => {
-          if (response) {
-            this.closeTab.emit();
-          }
-        });
-    } else {
-      this.closeTab.emit();
-    }
+    this.closeTab.emit();
   }
 
   revert(): void {
     this.notify
-      .confirm('Are you sure you want to discard these changes')
+      .confirm('Are you sure you want to discard these changes?')
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(response => {
@@ -77,7 +65,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  populateForm(card: LibraryCardForDetailedDto) {
+  populateForm(card: LibraryCardForDetailedDto): void {
     this.cardForm = this.fb.group({
       id: new FormControl(card.id),
       firstName: new FormControl(card.firstName, Validators.compose([Validators.required, Validators.maxLength(25)])),
@@ -108,7 +96,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  editCard(card: LibraryCardForUpdate) {
+  editCard(card: LibraryCardForUpdate): void {
     card.address.stateId = card.address.state.id;
 
     this.cardService
@@ -126,7 +114,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       );
   }
 
-  displayStateName(state: StateDto) {
+  displayStateName(state: StateDto): string {
     return state.name;
   }
 
