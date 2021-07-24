@@ -6,11 +6,11 @@ import { CheckoutService } from 'src/app/_services/checkout.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { NotificationService } from 'src/app/_services/notification.service';
-import { merge, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   templateUrl: './checkout-list.component.html',
@@ -19,60 +19,62 @@ import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
 export class CheckoutListComponent implements AfterViewInit, OnInit {
   private readonly unsubscribe = new Subject<void>();
 
-  pagination: Pagination;
-  checkouts: CheckoutForListDto[] = [];
-  dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
-  searchString = '';
-  displayedColumns = ['title', 'libraryCardId', 'since', 'until', 'dateReturned', 'status'];
-  checkoutFilters = checkoutFilters;
-  paginationOptions = new Pagination();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  checkoutFilters = checkoutFilters;
+  checkouts: CheckoutForListDto[] = [];
+  dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
+  displayedColumns = ['title', 'libraryCardId', 'since', 'until', 'dateReturned', 'status'];
+  pagination: Pagination;
+  paginationOptions = new Pagination();
+  selectedFilter = new FormControl(checkoutFilters[0], [Validators.required]);
 
-  constructor(
-    private checkoutService: CheckoutService,
-    private route: ActivatedRoute,
-    private notify: NotificationService
-  ) {}
+  constructor(private checkoutService: CheckoutService, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       this.pagination = data.checkouts.pagination;
       this.checkouts = data.checkouts.result;
       this.dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
     });
-  }
 
-  ngAfterViewInit() {
-    merge(this.paginator.page, this.sort.sortChange).subscribe(() => {
-      this.loadData();
-    });
-  }
-
-  filterList(value: string) {
-    this.searchString = value;
-    this.loadData();
-  }
-
-  loadData() {
-    this.checkoutService
-      .getPaginatedCheckouts(
-        this.paginator.pageIndex + 1,
-        this.paginator.pageSize,
-        this.sort.active,
-        this.sort.direction.toString(),
-        this.searchString
+    this.selectedFilter.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe),
+        switchMap(() => this.getCheckouts())
       )
+      .subscribe(paginatedCheckouts => this.mapPagination(paginatedCheckouts));
+  }
+
+  ngAfterViewInit(): void {
+    merge(this.paginator.page, this.sort.sortChange)
+      .pipe(
+        takeUntil(this.unsubscribe),
+        switchMap(() => this.getCheckouts())
+      )
+      .subscribe(paginatedCheckouts => {
+        this.mapPagination(paginatedCheckouts);
+      });
+  }
+
+  loadData(): void {
+    this.getCheckouts()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(
-        (res: PaginatedResult<CheckoutForListDto[]>) => {
-          this.checkouts = res.result;
-          this.pagination = res.pagination;
-          this.dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
-        },
-        error => {
-          this.notify.error(error);
-        }
-      );
+      .subscribe(paginatedCheckouts => this.mapPagination(paginatedCheckouts));
+  }
+
+  private getCheckouts(): Observable<PaginatedResult<CheckoutForListDto[]>> {
+    return this.checkoutService.getPaginatedCheckouts(
+      this.paginator.pageIndex + 1,
+      this.paginator.pageSize,
+      this.sort.active,
+      this.sort.direction.toString(),
+      this.selectedFilter.value
+    );
+  }
+
+  private mapPagination(result: PaginatedResult<CheckoutForListDto[]>): void {
+    this.dataSource.data = result.result;
+    this.pagination = result.pagination;
   }
 }

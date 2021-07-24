@@ -22,7 +22,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   @Output() closeTab = new EventEmitter<void>();
   @Output() isFormDirty = new EventEmitter<boolean>();
 
-  cardForm: FormGroup;
+  cardForm!: FormGroup;
   filteredStates: Observable<StateDto[]> = of([]);
   validationMessages = validationMessages;
 
@@ -32,7 +32,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
     private readonly notify: NotificationService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.populateForm(this.card);
     this.filteredStates = this.cardForm.get('address.state').valueChanges.pipe(
       startWith(''),
@@ -104,7 +104,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         () => {
-          this.cardChange.emit(card);
+          this.cardChange.emit(card as LibraryCardForDetailedDto);
           this.closeTab.emit();
           this.notify.success('Card update successfully');
         },

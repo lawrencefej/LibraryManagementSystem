@@ -10,13 +10,13 @@ import { User } from 'src/app/_models/user';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
 
 @Component({
-  selector: 'app-user-profile',
+  selector: 'lms-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  @ViewChild('fileInput') myInputVariable: ElementRef;
-  user: User;
+  @ViewChild('fileInput') myInputVariable!: ElementRef;
+  user!: User;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,7 +26,7 @@ export class UserProfileComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.data.subscribe(res => {
       this.user = res.user;
     });
@@ -58,7 +58,7 @@ export class UserProfileComponent implements OnInit {
       });
   }
 
-  updatePhoto(event) {
+  updatePhoto(event: { target: { files: string | any[] } }): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       const fd = new FormData();

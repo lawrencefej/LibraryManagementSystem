@@ -3,20 +3,20 @@
 import { AddressDto } from './address-dto';
 import { CheckoutForListDto } from './checkout-for-list-dto';
 export interface LibraryCardForDetailedDto {
-  address?: AddressDto;
-  addressId?: number;
-  age?: number;
-  cardNumber?: null | string;
-  checkouts?: null | Array<CheckoutForListDto>;
-  created?: string;
-  email?: null | string;
-  fees?: number;
-  firstName?: null | string;
-  gender?: null | string;
-  id?: number;
-  lastName?: null | string;
-  libraryCardPhoto?: null | string;
-  phoneNumber?: null | string;
-  photoUrl?: null | string;
-  status?: null | string;
+  address: AddressDto;
+  addressId: number;
+  age: number;
+  cardNumber: string;
+  checkouts: Array<CheckoutForListDto>;
+  created: string;
+  email: string;
+  fees: number;
+  firstName: string;
+  gender: string;
+  id: number;
+  lastName: string;
+  libraryCardPhoto: string;
+  phoneNumber: string;
+  photoUrl: string;
+  status: string;
 }

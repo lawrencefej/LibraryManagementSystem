@@ -34,11 +34,11 @@ export class CheckoutService {
     return this.http.get<CheckoutForListDto[]>(this.baseUrl + '/search?SearchString=' + searchString);
   }
 
-  returnAsset(id: number) {
+  returnAsset(id: number): Observable<void> {
     return this.http.put<void>(this.baseUrl + id, {});
   }
 
-  checkInAsset(checkout: CheckoutForCheckInDto) {
+  checkInAsset(checkout: CheckoutForCheckInDto): Observable<void> {
     return this.http.put<void>(this.baseUrl, checkout);
   }
 
@@ -46,25 +46,25 @@ export class CheckoutService {
     return this.http.get<CheckoutForListDto[]>(this.baseUrl + 'asset/' + assetId);
   }
 
-  checkoutBasket(basket: BasketForCheckoutDto) {
+  checkoutBasket(basket: BasketForCheckoutDto): Observable<void> {
     return this.http.post<void>(this.baseUrl, basket);
   }
 
-  checkoutAsset(checkout: Checkout) {
-    return this.http.post(this.baseUrl, checkout);
+  checkoutAsset(checkout: Checkout): Observable<void> {
+    return this.http.post<void>(this.baseUrl, checkout);
   }
 
-  checkoutAssets(checkouts: Checkout[]) {
-    return this.http.post(this.baseUrl, checkouts);
+  checkoutAssets(checkouts: Checkout[]): Observable<void> {
+    return this.http.post<void>(this.baseUrl, checkouts);
   }
 
   getPaginatedCheckoutsForCard(
     userId: number,
-    page?: number,
-    itemsPerPage?: number,
-    orderBy?: string,
-    sortDirection?: string,
-    searchString?: string
+    page: number,
+    itemsPerPage: number,
+    orderBy: string,
+    sortDirection: string,
+    searchString: string
   ): Observable<PaginatedResult<CheckoutForListDto[]>> {
     const paginatedResult: PaginatedResult<CheckoutForListDto[]> = new PaginatedResult<CheckoutForListDto[]>();
 
@@ -86,7 +86,7 @@ export class CheckoutService {
       })
       .pipe(
         map(response => {
-          paginatedResult.result = response.body;
+          paginatedResult.result = response.body || [];
           if (response.headers.get('Pagination') != null) {
             paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
           }
@@ -96,11 +96,11 @@ export class CheckoutService {
   }
 
   getPaginatedCheckouts(
-    page?: number,
-    itemsPerPage?: number,
-    orderBy?: string,
-    sortDirection?: string,
-    searchString?: string
+    page: number,
+    itemsPerPage: number,
+    orderBy: string,
+    sortDirection: string,
+    searchString: string
   ): Observable<PaginatedResult<CheckoutForListDto[]>> {
     const paginatedResult: PaginatedResult<CheckoutForListDto[]> = new PaginatedResult<CheckoutForListDto[]>();
 

@@ -7,13 +7,12 @@ import { UserService } from 'src/app/_services/user.service';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
-  selector: 'app-user-profile-edit',
   templateUrl: './user-profile-edit.component.html',
   styleUrls: ['./user-profile-edit.component.css']
 })
 export class UserProfileEditComponent implements OnInit {
-  userForm: FormGroup;
-  user: User;
+  userForm!: FormGroup;
+  user!: User;
   validationMessages = {
     firstName: [
       { type: 'required', message: 'First Name is required' },
@@ -36,12 +35,12 @@ export class UserProfileEditComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.user = this.data.userForUpdate;
     this.populateForm(this.data.userForUpdate);
   }
 
-  populateForm(member: User) {
+  populateForm(member: User): void {
     // TODO add phone number validation
     this.userForm = this.fb.group({
       id: new FormControl(member.id),
@@ -56,7 +55,7 @@ export class UserProfileEditComponent implements OnInit {
     });
   }
 
-  closeDialog() {
+  closeDialog(): void {
     if (this.userForm.dirty) {
       this.notify.discardDialog('Are you sure you want to discard these changes');
     } else {
@@ -64,11 +63,11 @@ export class UserProfileEditComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.updateUser(this.userForm.value);
   }
 
-  updateUser(user: User) {
+  updateUser(user: User): void {
     this.userService.updateUser(this.authService.loggedInUser.id, user).subscribe(
       () => {
         this.mapUpdatedUser(user);
@@ -81,7 +80,7 @@ export class UserProfileEditComponent implements OnInit {
     );
   }
 
-  mapUpdatedUser(user: User) {
+  mapUpdatedUser(user: User): void {
     this.user.firstName = user.firstName;
     this.user.lastName = user.lastName;
     this.user.phoneNumber = user.phoneNumber;

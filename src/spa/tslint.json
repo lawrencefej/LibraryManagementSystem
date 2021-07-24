@@ -111,6 +111,12 @@
     "no-outputs-metadata-property": true,
     "template-banana-in-box": true,
     "template-no-negated-async": true,
+    "typedef": [
+      true,
+      "call-signature",
+      "property-declaration",
+      "parameter"
+    ],
     "typedef-whitespace": {
       "options": [
         {

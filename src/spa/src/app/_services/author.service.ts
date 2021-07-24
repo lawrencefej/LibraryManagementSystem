@@ -8,9 +8,10 @@ import { Observable } from 'rxjs';
 import { PaginatedResult } from '../_models/pagination';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { AuthorDto } from 'src/dto/models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthorService {
   baseUrl = environment.apiUrl + 'author/';
@@ -26,35 +27,29 @@ export class AuthorService {
   }
 
   searchAuthors(searchString: string): Observable<Author[]> {
-    return this.http.get<Author[]>(
-      this.baseUrl + 'search?SearchString=' + searchString
-    );
+    return this.http.get<Author[]>(this.baseUrl + 'search?SearchString=' + searchString);
   }
 
-  updateAuthors(author: Author) {
-    return this.http.put(this.baseUrl, author);
+  updateAuthors(author: Author): Observable<void> {
+    return this.http.put<void>(this.baseUrl, author);
   }
 
   getAssetForAuthor(authorId: number): Observable<LibraryAsset[]> {
-    return this.http.get<LibraryAsset[]>(
-      environment.apiUrl + 'catalog/author/' + authorId
-    );
+    return this.http.get<LibraryAsset[]>(environment.apiUrl + 'catalog/author/' + authorId);
   }
 
-  addAuthor(author: Author) {
-    return this.http.post(this.baseUrl, author);
+  addAuthor(author: Author): Observable<AuthorDto> {
+    return this.http.post<AuthorDto>(this.baseUrl, author);
   }
 
   getPaginatedAuthors(
-    page?: number,
-    itemsPerPage?: number,
-    orderBy?: string,
-    sortDirection?: string,
-    searchString?: string
+    page: number,
+    itemsPerPage: number,
+    orderBy: string,
+    sortDirection: string,
+    searchString: string
   ): Observable<PaginatedResult<Author[]>> {
-    const paginatedResult: PaginatedResult<Author[]> = new PaginatedResult<
-      Author[]
-    >();
+    const paginatedResult: PaginatedResult<Author[]> = new PaginatedResult<Author[]>();
 
     let params = new HttpParams();
 
@@ -70,15 +65,13 @@ export class AuthorService {
     return this.http
       .get<Checkout[]>(this.baseUrl, {
         observe: 'response',
-        params,
+        params
       })
       .pipe(
-        map((response) => {
-          paginatedResult.result = response.body;
+        map(response => {
+          paginatedResult.result = response.body || [];
           if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(
-              response.headers.get('Pagination')
-            );
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
           }
           return paginatedResult;
         })

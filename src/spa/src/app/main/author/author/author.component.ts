@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-author',
   templateUrl: './author.component.html',
   styleUrls: ['./author.component.css']
 })
@@ -44,20 +43,20 @@ export class AuthorComponent implements OnInit {
     private authorService: AuthorService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createAuthorForm();
     this.isUpdate();
   }
 
-  createAuthorForm() {
+  createAuthorForm(): void {
     this.authorForm = this.fb.group({
       id: new FormControl(0),
       firstName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
-      lastName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
+      lastName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)]))
     });
   }
 
-  isUpdate() {
+  isUpdate(): void {
     if (this.data) {
       this.populateForm(this.data);
       this.author = this.data;
@@ -67,19 +66,19 @@ export class AuthorComponent implements OnInit {
     }
   }
 
-  populateForm(data: Author) {
+  populateForm(data: Author): void {
     this.authorForm = this.fb.group({
       id: new FormControl(data.id),
       firstName: new FormControl(data.firstName, Validators.compose([Validators.required, Validators.maxLength(25)])),
-      lastName: new FormControl(data.lastName, Validators.compose([Validators.required, Validators.maxLength(25)])),
+      lastName: new FormControl(data.lastName, Validators.compose([Validators.required, Validators.maxLength(25)]))
     });
   }
 
-  revert() {
+  revert(): void {
     this.populateForm(this.author);
   }
 
-  closeDialog() {
+  closeDialog(): void {
     if (this.authorForm.dirty) {
       this.notify.discardDialog('Are you sure you want to delete this author');
     } else {
@@ -87,7 +86,7 @@ export class AuthorComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.authorForm.controls.id.value) {
       this.updateAuthor(this.authorForm.value);
     } else {
@@ -95,7 +94,7 @@ export class AuthorComponent implements OnInit {
     }
   }
 
-  addAuthor(author: Author) {
+  addAuthor(author: Author): void {
     this.authorService.addAuthor(author).subscribe(
       (createdAuthor: Author) => {
         this.dialogRef.close();
@@ -108,7 +107,7 @@ export class AuthorComponent implements OnInit {
     );
   }
 
-  updateAuthor(author: Author) {
+  updateAuthor(author: Author): void {
     this.authorService.updateAuthors(author).subscribe(
       () => {
         this.dialogRef.close(author);

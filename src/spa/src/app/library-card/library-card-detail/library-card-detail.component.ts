@@ -19,9 +19,9 @@ import { LibraryCardStatus } from '../Models/library-card-status.enum';
 export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild('fileInput') myInputVariable: ElementRef;
-  basket: BasketViewModel;
-  card: LibraryCardForDetailedDto;
+  @ViewChild('fileInput') myInputVariable!: ElementRef;
+  basket!: BasketViewModel;
+  card!: LibraryCardForDetailedDto;
   currentCheckouts: CheckoutForListDto[] = [];
   isCardFormDirty?: boolean;
   isCheckoutTab = false;
@@ -112,7 +112,7 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  updatePhoto(event): void {
+  updatePhoto(event: { target: { files: string | any[] } }): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       const fd = new FormData();

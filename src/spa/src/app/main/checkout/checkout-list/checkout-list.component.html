@@ -1,7 +1,7 @@
 <div class="mat-elevation-z8 main-container">
   <div class="filter-input flex">
     <mat-form-field style="margin-top: 20px;">
-      <mat-select (selectionChange)="filterList($event.value)" placeholder="Filter By">
+      <mat-select [formControl]="selectedFilter" placeholder="Filter By">
         <ng-container *ngFor="let type of checkoutFilters">
           <mat-option [value]="type">{{type}}</mat-option>
         </ng-container>

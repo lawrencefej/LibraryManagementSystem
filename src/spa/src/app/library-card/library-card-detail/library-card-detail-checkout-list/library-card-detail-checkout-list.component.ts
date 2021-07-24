@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { merge, Observable, Subject } from 'rxjs';
-import { concatMap, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { concatMap, switchMap, takeUntil } from 'rxjs/operators';
 import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
 import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
@@ -56,8 +56,6 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
     merge(this.paginator.page, this.sort.sortChange)
       .pipe(
         takeUntil(this.unsubscribe),
-        debounceTime(500),
-        distinctUntilChanged(),
         switchMap(() => this.getCheckouts())
       )
       .subscribe(paginatedCheckouts => {
@@ -76,14 +74,9 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
         checkoutFilters[0]
       )
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(
-        response => {
-          this.mapPagination(response);
-        },
-        error => {
-          this.notify.error(error);
-        }
-      );
+      .subscribe(response => {
+        this.mapPagination(response);
+      });
 
     this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => {
       this.basket = basket;
@@ -101,14 +94,7 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   loadData(): void {
     this.getCheckouts()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(
-        response => {
-          this.mapPagination(response);
-        },
-        error => {
-          this.notify.error(error);
-        }
-      );
+      .subscribe(paginatedCheckouts => this.mapPagination(paginatedCheckouts));
   }
 
   renewCheckout(checkout: CheckoutForListDto): void {
@@ -123,15 +109,10 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
           }
         })
       )
-      .subscribe(
-        () => {
-          this.notify.success(checkout.title + 'was renewed successfully');
-          this.loadData();
-        },
-        error => {
-          this.notify.error(error);
-        }
-      );
+      .subscribe(() => {
+        this.notify.success(checkout.title + 'was renewed successfully');
+        this.loadData();
+      });
   }
 
   returnCheckout(checkout: CheckoutForListDto): void {
@@ -146,18 +127,13 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
           }
         })
       )
-      .subscribe(
-        () => {
-          this.notify.success(checkout.title + 'was returned successfully');
-          this.loadData();
-        },
-        error => {
-          this.notify.error(error);
-        }
-      );
+      .subscribe(() => {
+        this.notify.success(checkout.title + 'was returned successfully');
+        this.loadData();
+      });
   }
 
-  private updateCheckout(checkout: CheckoutForListDto, isRenew = false): Observable<void> {
+  private updateCheckout(checkout: CheckoutForListDto, isRenew: boolean = false): Observable<void> {
     return this.checkoutService.checkInAsset({
       checkoutId: checkout.id,
       isRenew
@@ -175,7 +151,7 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
     );
   }
 
-  private mapPagination(result: PaginatedResult<CheckoutForListDto[]>) {
+  private mapPagination(result: PaginatedResult<CheckoutForListDto[]>): void {
     this.dataSource.data = result.result;
     this.pagination = result.pagination;
   }

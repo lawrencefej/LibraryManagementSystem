@@ -9,7 +9,7 @@ import { MemberService } from 'src/app/_services/member.service';
 import { StateService } from 'src/app/_services/state.service';
 import { stateValidator } from 'src/app/shared/validators/state.validator';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -18,11 +18,11 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class MemberComponent implements OnInit {
   stateControl = new FormControl('', Validators.compose([Validators.required, stateValidator]));
-  memberForm: FormGroup;
-  member: User;
+  memberForm!: FormGroup;
+  member!: User;
   showRevert = false;
   options: string[] = this.stateService.getStates();
-  filteredStates$: Observable<string[]>;
+  filteredStates$: Observable<string[]> = of([]);
 
   validationMessages = {
     firstName: [
