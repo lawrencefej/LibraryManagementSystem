@@ -84,6 +84,13 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
           this.notify.error(error);
         }
       );
+
+    this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => {
+      this.basket = basket;
+      if (this.basket.checkoutComplete) {
+        this.loadData();
+      }
+    });
   }
 
   ngOnDestroy(): void {

@@ -28,20 +28,21 @@ export class BasketService implements OnDestroy {
     this.unsubscribe.complete();
   }
 
-  initializeBasket(card: LibraryCardForDetailedDto) {
+  initializeBasket(card: LibraryCardForDetailedDto): void {
     const basket: BasketViewModel = {
       assets: [],
       cardNumber: card.cardNumber,
       photoUrl: card.photoUrl,
       libraryCardId: card.id,
-      active: true
+      active: true,
+      checkoutComplete: false
     };
 
     localStorage.setItem('basket', JSON.stringify(basket));
     this.basketSubject.next(basket);
   }
 
-  addAssetToCart(newAsset: LibraryAssetForListDto, card: LibraryCardForDetailedDto) {
+  addAssetToCart(newAsset: LibraryAssetForListDto, card: LibraryCardForDetailedDto): void {
     if (card.id !== this.currentBasket.libraryCardId) {
       this.notify.error('Please initialize the for for the current card first');
       return;
@@ -62,7 +63,7 @@ export class BasketService implements OnDestroy {
     }
   }
 
-  removeFromBasket(libraryAssetId: number) {
+  removeFromBasket(libraryAssetId: number): void {
     const currentBasket = this.currentBasket;
     const newItemList = currentBasket.assets.filter(item => item.libraryAssetId !== libraryAssetId);
     currentBasket.assets = [...newItemList];
@@ -71,9 +72,15 @@ export class BasketService implements OnDestroy {
     this.notify.success('Item was removed successfully');
   }
 
-  clearBasket() {
+  clearBasket(): void {
     localStorage.removeItem('basket');
     this.basketSubject.next(this.getDefaultBasket());
+  }
+
+  completeTransaction(): void {
+    const tranactionBasket = this.currentBasket;
+    tranactionBasket.checkoutComplete = true;
+    this.basketSubject.next(tranactionBasket);
   }
 
   getDefaultBasket(): BasketViewModel {
@@ -81,7 +88,8 @@ export class BasketService implements OnDestroy {
       active: false,
       assets: [],
       cardNumber: '',
-      photoUrl: ''
+      photoUrl: '',
+      checkoutComplete: false
     };
   }
 }

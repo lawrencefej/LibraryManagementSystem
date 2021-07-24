@@ -6,4 +6,5 @@ export interface BasketViewModel extends BasketForCheckoutDto {
   photoUrl: string;
   assets: LibraryAssetForBasketViewModel[];
   active: boolean;
+  checkoutComplete: boolean;
 }

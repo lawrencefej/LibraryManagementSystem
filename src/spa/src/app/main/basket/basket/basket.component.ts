@@ -36,6 +36,7 @@ export class BasketComponent {
     this.checkoutService.checkoutBasket(this.basket).subscribe(
       () => {
         this.notify.success('checked out successfully');
+        this.basketService.completeTransaction();
         this.clearBasket();
       },
       error => {

@@ -12,7 +12,6 @@
             <!-- <img src="{{card?.photoUrl || '../../../assets/img/user.png'}}" alt="Avatar" width="300"
               style="border-radius: 50%; border: 2px solid white;"> -->
             <div style="margin: 10px">
-              <!-- <ng-container *ngIf="!isCheckoutTab"> -->
               <ng-container>
                 <button *ngIf="!isEditTab" mat-raised-button color="accent" style="margin-right: 10px" type="button"
                   (click)="editCard()">
@@ -31,7 +30,6 @@
                   Change Photo
                 </button>
               </ng-container>
-
 
               <ng-container *ngIf="isAccountGood() && !isEditTab">
                 <button *ngIf="!basket.active" mat-raised-button color="primary" style="margin-right: 10px"
@@ -99,11 +97,9 @@
   </div>
   <div fxFlex="70" class="content">
     <mat-card class="tab-card mat-elevation-z4">
-      <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="tabClicked($event)" dynamicHeight>
+      <mat-tab-group [selectedIndex]="selectedTab.value" (selectedIndexChange)="tabClicked($event)" dynamicHeight>
         <mat-tab [disabled]="isEditTab" label="Current Checkouts">
-          <ng-template matTabContent>
-            <lms-library-card-detail-checkout-list [card]="card"></lms-library-card-detail-checkout-list>
-          </ng-template>
+          <lms-library-card-detail-checkout-list [card]="card"></lms-library-card-detail-checkout-list>
         </mat-tab>
         <mat-tab [disabled]="disableCheckouts()" label="Checkout Item">
           <ng-template matTabContent>

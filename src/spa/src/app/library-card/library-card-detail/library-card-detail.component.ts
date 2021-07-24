@@ -26,7 +26,7 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   isCardFormDirty?: boolean;
   isCheckoutTab = false;
   isEditTab = false;
-  selected = new FormControl(0);
+  selectedTab = new FormControl(0);
   states: StateDto[] = [];
 
   constructor(
@@ -37,7 +37,12 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     public readonly dialog: MatDialog
   ) {
-    this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.basket = basket));
+    this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => {
+      this.basket = basket;
+      if (this.basket.checkoutComplete) {
+        this.selectedTab.setValue(0);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -61,8 +66,8 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   }
 
   tabClicked(tabIndex: number): void {
-    this.selected.setValue(tabIndex);
-    if (this.selected.value === 2) {
+    this.selectedTab.setValue(tabIndex);
+    if (this.selectedTab.value === 2) {
       this.isEditTab = true;
     }
   }
@@ -74,18 +79,18 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   startCheckout(): void {
     this.isCheckoutTab = true;
     this.basketService.initializeBasket(this.card);
-    this.selected.setValue(1);
+    this.selectedTab.setValue(1);
   }
 
   endCheckout(): void {
     this.isCheckoutTab = false;
     this.basketService.clearBasket();
-    this.selected.setValue(0);
+    this.selectedTab.setValue(0);
   }
 
   editCard(): void {
     this.isEditTab = true;
-    this.selected.setValue(3);
+    this.selectedTab.setValue(3);
   }
 
   cancelEdit(): void {
@@ -98,12 +103,12 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
           if (response) {
             this.isEditTab = false;
             this.isCardFormDirty = false;
-            this.selected.setValue(0);
+            this.selectedTab.setValue(0);
           }
         });
     } else {
       this.isEditTab = false;
-      this.selected.setValue(0);
+      this.selectedTab.setValue(0);
     }
   }
 
