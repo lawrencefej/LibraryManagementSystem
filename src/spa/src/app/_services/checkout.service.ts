@@ -15,7 +15,6 @@ import { BasketForCheckoutDto, CheckoutForCheckInDto } from 'src/dto/models';
 })
 export class CheckoutService {
   private baseUrl = environment.apiUrl + 'checkout/';
-  private checkout = new Subject<Checkout>();
 
   constructor(private http: HttpClient) {}
 
@@ -48,7 +47,7 @@ export class CheckoutService {
   }
 
   checkoutBasket(basket: BasketForCheckoutDto) {
-    return this.http.post<void>(this.baseUrl + 'checkout/', basket);
+    return this.http.post<void>(this.baseUrl, basket);
   }
 
   checkoutAsset(checkout: Checkout) {
@@ -57,14 +56,6 @@ export class CheckoutService {
 
   checkoutAssets(checkouts: Checkout[]) {
     return this.http.post(this.baseUrl, checkouts);
-  }
-
-  getNewCheckout(): Observable<Checkout> {
-    return this.checkout.asObservable();
-  }
-
-  sendNewCheckout(checkout: Checkout) {
-    this.checkout.next(checkout);
   }
 
   getPaginatedCheckoutsForCard(

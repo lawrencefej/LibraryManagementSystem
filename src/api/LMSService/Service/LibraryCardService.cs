@@ -91,10 +91,13 @@ namespace LMSService.Service
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardById(int id)
         {
             LibraryCard card = await Context.LibraryCards.AsNoTracking()
+                .Include(m => m.Checkouts.Where(s => s.Status == CheckoutStatus.Checkedout)).ThenInclude(b => b.LibraryAsset)
+                .Include(m => m.Checkouts)
                 .Include(m => m.Member)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
-                    .ThenInclude(s => s.State).FirstOrDefaultAsync(c => c.Id == id);
+                .ThenInclude(s => s.State)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             return MapLibraryCard(card);
         }

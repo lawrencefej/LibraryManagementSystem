@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 import { AddressDto } from './address-dto';
+import { MemberGenderDto } from './member-gender-dto';
 export interface LibraryCardForUpdate {
-  address?: AddressDto;
-  email: string;
+  address: AddressDto;
+  email?: null | string;
   firstName: string;
-  gender?: null | string;
+  gender?: MemberGenderDto;
   id?: number;
   lastName: string;
   phoneNumber: string;
-  status?: null | string;
 }

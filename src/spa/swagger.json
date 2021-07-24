@@ -1887,7 +1887,7 @@
         }
       }
     },
-    "/api/Member/advancedSearch": {
+    "/api/Member/advancedsearch": {
       "get": {
         "tags": [
           "Member"
@@ -2687,6 +2687,10 @@
           "status": {
             "type": "string",
             "nullable": true
+          },
+          "libraryAssetId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -3209,6 +3213,13 @@
           "photoUrl": {
             "type": "string",
             "nullable": true
+          },
+          "checkouts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutForListDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3257,7 +3268,7 @@
       },
       "LibraryCardForUpdate": {
         "required": [
-          "email",
+          "address",
           "firstName",
           "lastName",
           "phoneNumber"
@@ -3270,32 +3281,28 @@
           },
           "firstName": {
             "maxLength": 25,
-            "minLength": 2,
+            "minLength": 1,
             "type": "string"
           },
           "lastName": {
             "maxLength": 25,
-            "minLength": 2,
+            "minLength": 1,
             "type": "string"
           },
           "email": {
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "nullable": true
           },
           "phoneNumber": {
-            "type": "string",
-            "format": "tel"
+            "minLength": 1,
+            "type": "string"
           },
           "address": {
             "$ref": "#/components/schemas/AddressDto"
           },
           "gender": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/MemberGenderDto"
           }
         },
         "additionalProperties": false

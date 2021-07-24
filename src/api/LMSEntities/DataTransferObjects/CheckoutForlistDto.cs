@@ -18,5 +18,7 @@ namespace LMSEntities.DataTransferObjects
 
         public string Status { get; set; }
 
+        public int LibraryAssetId { get; set; }
+
     }
 }

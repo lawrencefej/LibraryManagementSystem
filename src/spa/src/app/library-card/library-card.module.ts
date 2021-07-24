@@ -33,6 +33,7 @@ import { LibraryCardEditCanDeactivateGuardService } from './services/library-car
 import { LibraryCardCheckoutCanDeactivateGuardService } from './services/library-card-checkout-can-deactivate-guard.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { LibraryCardDetailCheckoutListComponent } from './library-card-detail/library-card-detail-checkout-list/library-card-detail-checkout-list.component';
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import { MatSelectModule } from '@angular/material/select';
     LibraryCardCheckoutComponent,
     LibraryCardComponent,
     LibraryCardDetailComponent,
+    LibraryCardDetailCheckoutListComponent,
     LibraryCardEditComponent,
     LibraryCardListComponent,
     LibraryCardSearchComponent

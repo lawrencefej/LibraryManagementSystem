@@ -1,9 +1,10 @@
 <div class="mat-elevation-z8">
   <div class="filter-input flex">
     <mat-form-field style="margin-top: 20px;">
-      <input matInput type="text" [formControl]="searchString" class="search-input" (keyup)="searchAssets()"
-        placeholder="Filter" autocomplete="off">
-      <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchString" (click)="clearSearch()">
+      <input matInput type="text" [formControl]="searchString" class="search-input" placeholder="Search"
+        autocomplete="off">
+      <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchString.value !== ''"
+        (click)="clearSearch()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
@@ -11,28 +12,28 @@
   <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="dataSource">
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
-      <td mat-cell *matCellDef="let element"> {{element.title | titlecase}} </td>
+      <td mat-cell *matCellDef="let asset"> {{asset.title | titlecase}} </td>
     </ng-container>
 
     <ng-container matColumnDef="authorName">
       <th mat-header-cell *matHeaderCellDef> Author </th>
-      <td mat-cell *matCellDef="let element"> {{element.authorName | titlecase}} </td>
+      <td mat-cell *matCellDef="let asset"> {{asset.authorName | titlecase}} </td>
     </ng-container>
 
     <ng-container matColumnDef="year">
       <th mat-header-cell *matHeaderCellDef> Year </th>
-      <td mat-cell *matCellDef="let element"> {{element.year}} </td>
+      <td mat-cell *matCellDef="let asset"> {{asset.year}} </td>
     </ng-container>
     <ng-container matColumnDef="assetType">
       <th mat-header-cell *matHeaderCellDef> Type </th>
-      <td mat-cell *matCellDef="let element"> {{element.assetType | titlecase}} </td>
+      <td mat-cell *matCellDef="let asset"> {{asset.assetType | titlecase}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Details </th>
-      <td mat-cell *matCellDef="let element">
-        <button [disabled]="stopCheckouts()" mat-icon-button matTooltip="Details" color="primary"
-          (click)="addToCart(element)">
+      <td mat-cell *matCellDef="let asset">
+        <button [disabled]="stopCheckouts(asset)" mat-icon-button matTooltip="Details" color="primary"
+          (click)="addToCart(asset)">
           <mat-icon class="mat-18">open_in_new</mat-icon>
         </button>
       </td>

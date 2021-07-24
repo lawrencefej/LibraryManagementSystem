@@ -6,6 +6,7 @@ export interface CheckoutForListDto {
   dateReturned?: null | string;
   dueDate?: string;
   id?: number;
+  libraryAssetId?: number;
   status?: null | string;
   title?: null | string;
 }

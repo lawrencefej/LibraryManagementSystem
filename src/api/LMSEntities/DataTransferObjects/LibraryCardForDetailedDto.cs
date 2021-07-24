@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace LMSEntities.DataTransferObjects
 {
@@ -19,6 +21,7 @@ namespace LMSEntities.DataTransferObjects
         public string LibraryCardPhoto { get; set; }
         public int Age { get; set; }
         public string PhotoUrl { get; set; }
+        public IList<CheckoutForListDto> Checkouts { get; set; } = new List<CheckoutForListDto>();
 
     }
 }
