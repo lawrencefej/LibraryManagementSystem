@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -11,6 +10,7 @@ import { FeeService } from 'src/app/_services/fee.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { CheckoutForListDto, LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
+import { LibraryCardStatus } from '../Models/library-card-status.enum';
 
 @Component({
   templateUrl: './library-card-detail.component.html',
@@ -52,8 +52,19 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
 
-  allowCheckouts(): boolean {
-    return this.basket.active || this.basket.libraryCardId === this.card.id;
+  disableCheckouts(): boolean {
+    return !this.basket.active || this.basket.libraryCardId !== this.card.id || this.isEditTab;
+  }
+
+  isAccountGood(): boolean {
+    return this.card.status === LibraryCardStatus.Good && this.card.fees === 0;
+  }
+
+  tabClicked(tabIndex: number): void {
+    this.selected.setValue(tabIndex);
+    if (this.selected.value === 2) {
+      this.isEditTab = true;
+    }
   }
 
   isFormDirty(isFormDirty: boolean): void {

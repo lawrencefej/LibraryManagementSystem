@@ -11,7 +11,7 @@ import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { AssetService } from 'src/app/_services/asset.service';
 import { BasketService } from 'src/app/_services/basket.service';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { LibraryCardForDetailedDto, LibraryAssetForListDto } from 'src/dto/models';
+import { LibraryCardForDetailedDto, LibraryAssetForListDto, LibraryAssetStatus } from 'src/dto/models';
 
 @Component({
   selector: 'lms-library-card-checkout',
@@ -85,6 +85,10 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
   }
 
   addToCart(newAsset: LibraryAssetForListDto): void {
+    if (newAsset.status === LibraryAssetStatus.Unavailable) {
+      this.notify.error(`${newAsset.title} is not available for checkout at this time.`);
+      return;
+    }
     if (this.card.id !== this.basket.libraryCardId) {
       this.notify.error('Please initialize the for for the current card first.');
       return;
@@ -109,6 +113,10 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
   }
 
   private shouldAssetBeDenied(newAsset: LibraryAssetForListDto): boolean {
+    if (newAsset.status === LibraryAssetStatus.Unavailable) {
+      return true;
+    }
+
     if (this.card.id !== this.basket.libraryCardId) {
       return true;
     }

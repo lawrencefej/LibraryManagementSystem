@@ -5,6 +5,7 @@ export interface LibraryAssetForListDto {
   authorName?: null | string;
   copiesAvailable?: number;
   id?: number;
+  status?: null | string;
   title?: null | string;
   year?: number;
 }

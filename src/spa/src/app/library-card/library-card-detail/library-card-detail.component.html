@@ -12,15 +12,8 @@
             <!-- <img src="{{card?.photoUrl || '../../../assets/img/user.png'}}" alt="Avatar" width="300"
               style="border-radius: 50%; border: 2px solid white;"> -->
             <div style="margin: 10px">
-              <ng-container *ngIf="!isCheckoutTab && isEditTab">
-                <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)" />
-                <button mat-raised-button color="primary" style="margin-right: 10px" type="button"
-                  (click)="fileInput.click()">
-                  Change Photo
-                </button>
-              </ng-container>
-
-              <ng-container *ngIf="!isCheckoutTab">
+              <!-- <ng-container *ngIf="!isCheckoutTab"> -->
+              <ng-container>
                 <button *ngIf="!isEditTab" mat-raised-button color="accent" style="margin-right: 10px" type="button"
                   (click)="editCard()">
                   Edit Details
@@ -31,7 +24,16 @@
                 </button>
               </ng-container>
 
-              <ng-container *ngIf="!isEditTab">
+              <ng-container *ngIf="isEditTab">
+                <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)" />
+                <button mat-raised-button color="primary" style="margin-right: 10px" type="button"
+                  (click)="fileInput.click()">
+                  Change Photo
+                </button>
+              </ng-container>
+
+
+              <ng-container *ngIf="isAccountGood() && !isEditTab">
                 <button *ngIf="!basket.active" mat-raised-button color="primary" style="margin-right: 10px"
                   type="button" (click)="startCheckout()">
                   Start Checkout
@@ -45,14 +47,16 @@
             <mat-divider></mat-divider>
             <h3>Status</h3>
             <mat-chip-list style="margin-top: 10px" class="mat-chip-list-stacked">
-              <mat-chip style="background-color: green; justify-content: center" selected [selectable]="false">
+              <mat-chip *ngIf="isAccountGood()" style="background-color: green; justify-content: center" selected
+                [selectable]="false">
                 {{ card.status }}
               </mat-chip>
-              <mat-chip *ngIf="card.status === 'Delinquent || Deactivated'" style="justify-content: center" selected
-                [selectable]="false" color="warn">
+              <mat-chip *ngIf="!isAccountGood()" style="justify-content: center" selected [selectable]="false"
+                color="warn">
                 {{ card.status }}
               </mat-chip>
-              <mat-chip *ngIf="card.fees" style="justify-content: center" [selectable]="false" selected color="warn">
+              <mat-chip *ngIf="card.fees > 0" style="justify-content: center" [selectable]="false" selected
+                color="warn">
                 <button mat-icon-button type="button" (click)="payFees()" aria-label="Payment icon-button">
                   Pay {{ card.fees | currency }}
                   <mat-icon>payment</mat-icon>
@@ -95,25 +99,19 @@
   </div>
   <div fxFlex="70" class="content">
     <mat-card class="tab-card mat-elevation-z4">
-      <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)" dynamicHeight>
-        <!-- <mat-tab *ngIf="!isEditTab && !isCheckoutTab" label="Current Checkouts"> -->
-        <mat-tab label="Current Checkouts">
+      <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="tabClicked($event)" dynamicHeight>
+        <mat-tab [disabled]="isEditTab" label="Current Checkouts">
           <ng-template matTabContent>
             <lms-library-card-detail-checkout-list [card]="card"></lms-library-card-detail-checkout-list>
           </ng-template>
         </mat-tab>
-        <!-- <mat-tab *ngIf="!isEditTab && allowCheckouts()"
-          [disabled]="card.fees > 0 || card.status === 'Delinquent' || card.status === 'Deactivated'"
-          label="Checkout Item"> -->
-        <mat-tab [disabled]="card.fees > 0 || card.status === 'Delinquent' || card.status === 'Deactivated'"
-          label="Checkout Item">
+        <mat-tab [disabled]="disableCheckouts()" label="Checkout Item">
           <ng-template matTabContent>
             <div class="example-small-box" fxFlexAlign="stretch">
               <lms-library-card-checkout [card]="card"></lms-library-card-checkout>
             </div>
           </ng-template>
         </mat-tab>
-        <!-- <mat-tab *ngIf="isEditTab" label="Edit Card"> -->
         <mat-tab label="Edit Card">
           <ng-template matTabContent>
             <lms-library-card-edit (closeTab)="cancelEdit()" [(card)]="card" (isFormDirty)="isFormDirty($event)"

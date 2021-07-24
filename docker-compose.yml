@@ -60,6 +60,7 @@ services:
       - spa-extensions-data:/home/node/.vscode-server/extensions
     environment:
       MACHINE_TYPE: computer
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity

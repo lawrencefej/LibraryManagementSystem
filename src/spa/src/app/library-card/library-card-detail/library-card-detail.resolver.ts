@@ -5,7 +5,7 @@ import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
 import { lmsResolverContants } from 'src/app/_resolver/resolver.constants';
 import { CheckoutService } from 'src/app/_services/checkout.service';
 import { StateService } from 'src/app/_services/state.service';
-import { ILibraryCardDetailResponse } from '../Models/ILibraryCardDetailResponse';
+import { ILibraryCardDetailResponse } from '../Models/library-card-detail-response';
 import { LibraryCardService } from '../services/library-card.service';
 
 @Injectable()

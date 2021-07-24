@@ -17,10 +17,10 @@ namespace LMSRepository.Extensions
                 e.Property(a => a.CardNumber).HasMaxLength(25).IsRequired();
                 e.HasIndex(a => a.CardNumber).IsUnique();
                 e.Property(a => a.Gender)
-                    .HasColumnType("varchar(10)")
+                    .HasColumnType("varchar(15)")
                     .IsRequired();
                 e.Property(a => a.Status)
-                    .HasColumnType("varchar(10)")
+                    .HasColumnType("varchar(15)")
                     .IsRequired();
                 e.Property(a => a.Fees).IsRequired();
                 e.Property(a => a.Created).IsRequired();
