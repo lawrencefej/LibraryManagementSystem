@@ -47,7 +47,7 @@ import { SharedModule } from './shared/shared.module';
 import { UserProfileResolver } from './_resolver/user-profile.resolver';
 import { UserService } from './_services/user.service';
 
-export function tokenGetter() {
+export function tokenGetter(): string {
   return localStorage.getItem('token');
 }
 

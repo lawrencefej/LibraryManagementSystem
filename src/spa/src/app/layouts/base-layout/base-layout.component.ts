@@ -5,10 +5,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   templateUrl: './base-layout.component.html',
   styleUrls: ['./base-layout.component.css']
 })
-export class BaseLayoutComponent implements OnInit, OnDestroy {
+export class BaseLayoutComponent {
   constructor() {}
-
-  ngOnInit() {}
-
-  ngOnDestroy() {}
 }
