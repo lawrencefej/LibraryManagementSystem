@@ -40,7 +40,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
     this.unsubscribe.complete();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       this.pagination = data.cards.pagination;
       this.cards = data.cards.result;
@@ -61,7 +61,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
     this.loadData();
   }
 
-  onSearchClear() {
+  onSearchClear(): void {
     this.searchString = '';
     this.filterList();
   }

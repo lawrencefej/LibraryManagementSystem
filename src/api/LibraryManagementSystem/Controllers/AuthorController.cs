@@ -3,6 +3,7 @@ using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.Controllers
@@ -20,6 +21,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("{authorId}", Name = nameof(GetAuthor))]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAuthor(int authorId)
         {
             LmsResponseHandler<AuthorDto> result = await _authorService.GetAuthorForController(authorId);
@@ -28,6 +31,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditAuthor(AuthorDto authorDto)
         {
             LmsResponseHandler<AuthorDto> result = await _authorService.EditAuthor(authorDto);
@@ -36,6 +41,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddAuthor(AuthorDto authorDto)
         {
             AuthorDto authorToReturn = await _authorService.AddAuthor(authorDto);
@@ -44,6 +51,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpDelete("{authorId}")]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteAuthor(int authorId)
         {
             LmsResponseHandler<AuthorDto> result = await _authorService.DeleteAuthor(authorId);
@@ -52,6 +61,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
             PagedList<AuthorDto> authors = await _authorService.GetPaginatedAuthors(paginationParams);

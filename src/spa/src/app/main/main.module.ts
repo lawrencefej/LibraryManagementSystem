@@ -9,8 +9,6 @@ import { AuthorComponent } from './author/author/author.component';
 import { AuthorListComponent } from './author/author-list/author-list.component';
 import { BasketComponent } from './basket/basket/basket.component';
 import { BasketDetailComponent } from './basket/basket-detail/basket-detail.component';
-import { CheckoutAssetComponent } from './checkout/checkout-asset/checkout-asset.component';
-import { CheckoutListComponent } from './checkout/checkout-list/checkout-list.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -64,8 +62,6 @@ import { RouterModule } from '@angular/router';
     AuthorListComponent,
     BasketComponent,
     BasketDetailComponent,
-    CheckoutAssetComponent,
-    CheckoutListComponent,
     MemberAdvancedSearchComponent,
     MemberCheckoutsComponent,
     MemberComponent,
@@ -106,14 +102,6 @@ import { RouterModule } from '@angular/router';
     MatTooltipModule,
     RouterModule,
     SharedModule
-    // ReactiveFormsModule,
-    // CommonModule,
   ]
-  // entryComponents: [
-  //   AdminComponent,
-  //   AssetComponent,
-  //   AuthorComponent,
-  //   MemberComponent,
-  //   UserProfileEditComponent]
 })
 export class MainModule {}

@@ -1,22 +1,21 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-
-import { ActivatedRoute } from '@angular/router';
-import { CheckoutService } from 'src/app/_services/checkout.service';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import { merge, Observable, Subject } from 'rxjs';
-import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
-import { FormControl, Validators } from '@angular/forms';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
+import { CheckoutService } from 'src/app/_services/checkout.service';
+import { CheckoutForListDto } from 'src/dto/models';
 
 @Component({
   templateUrl: './checkout-list.component.html',
   styleUrls: ['./checkout-list.component.css']
 })
-export class CheckoutListComponent implements AfterViewInit, OnInit {
+export class CheckoutListComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly unsubscribe = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -33,9 +32,7 @@ export class CheckoutListComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
-      this.pagination = data.checkouts.pagination;
-      this.checkouts = data.checkouts.result;
-      this.dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
+      this.mapPagination(data.initData);
     });
 
     this.selectedFilter.valueChanges
@@ -44,6 +41,11 @@ export class CheckoutListComponent implements AfterViewInit, OnInit {
         switchMap(() => this.getCheckouts())
       )
       .subscribe(paginatedCheckouts => this.mapPagination(paginatedCheckouts));
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   ngAfterViewInit(): void {
