@@ -36,3 +36,4 @@ export { UpdateAdminRoleDto } from './models/update-admin-role-dto';
 export { UserForLoginDto } from './models/user-for-login-dto';
 export { UserForUpdateDto } from './models/user-for-update-dto';
 export { UserRoleDto } from './models/user-role-dto';
+export { UserRoles } from './models/user-roles';

@@ -5,7 +5,7 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
 import { stateValidator } from 'src/app/shared/validators/state.validator';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { LibraryCardForDetailedDto, LibraryCardForUpdate, StateDto } from 'src/dto/models';
+import { LibraryCardForDetailedDto, LibraryCardForUpdate, MemberGenderDto, StateDto } from 'src/dto/models';
 import { LibraryCardService } from '../services/library-card.service';
 
 @Component({
@@ -25,6 +25,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   cardForm!: FormGroup;
   filteredStates: Observable<StateDto[]> = of([]);
   validationMessages = validationMessages;
+  genders = MemberGenderDto;
 
   constructor(
     private readonly cardService: LibraryCardService,
@@ -104,6 +105,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         () => {
+          this.isFormDirty.emit(false);
           this.cardChange.emit(card as LibraryCardForDetailedDto);
           this.closeTab.emit();
           this.notify.success('Card update successfully');

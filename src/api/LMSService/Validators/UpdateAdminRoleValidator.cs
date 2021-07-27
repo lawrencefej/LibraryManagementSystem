@@ -14,7 +14,7 @@ namespace LMSService.Validators
                 .WithMessage("Please select a valid user");
 
             RuleFor(r => r.Role).NotEmpty()
-                .IsEnumName(typeof(UserRoles))
+                .IsInEnum()
                 .WithMessage("Please select valid user role");
 
         }

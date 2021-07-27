@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace LMSEntities.DataTransferObjects
 {
     public class LibraryCardForUpdate

@@ -84,11 +84,11 @@ namespace LMSService.Service
             {
                 string oldRole = user.UserRoles.FirstOrDefault().Role.Name;
 
-                if (oldRole != userforUpdate.Role)
+                if (oldRole != userforUpdate.Role.ToString())
                 {
                     await _userManager.RemoveFromRoleAsync(user, oldRole);
 
-                    await _userManager.AddToRoleAsync(user, userforUpdate.Role);
+                    await _userManager.AddToRoleAsync(user, userforUpdate.Role.ToString());
 
                     return LmsResponseHandler<AdminUserForListDto>.Successful(Mapper.Map<AdminUserForListDto>(user));
                 }

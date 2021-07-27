@@ -37,7 +37,7 @@
     <mat-form-field fxFlex>
       <span matPrefix>+1 &nbsp;</span>
       <input matInput type="text" placeholder="Mobile" maxlength="10" formControlName="phoneNumber" required
-        autocomplete="test" />
+             autocomplete="test" />
       <mat-error *ngFor="let validation of validationMessages.phoneNumber">
         <mat-error *ngIf="
                 cardForm.get('phoneNumber').hasError(validation.type) &&
@@ -76,7 +76,7 @@
       <mat-form-field fxFlex>
         <!-- Added uncommon name to stop browser auto complete -->
         <input matInput type="text" name="zdfgfg" placeholder="State" formControlName="state" [matAutocomplete]="auto"
-          required autocomplete="test" />
+               required autocomplete="test" />
         <mat-autocomplete autoActiveFirstOption [displayWith]="displayStateName" #auto="matAutocomplete">
           <mat-option *ngFor="let state of filteredStates | async" [value]="state">
             {{ state.name }}
@@ -84,7 +84,7 @@
         </mat-autocomplete>
         <mat-error *ngFor="let validation of validationMessages.state">
           <mat-error
-            *ngIf="cardForm.get('address.state').hasError(validation.type) && (cardForm.get('address.state').dirty || cardForm.get('address.state').touched)">
+                     *ngIf="cardForm.get('address.state').hasError(validation.type) && (cardForm.get('address.state').dirty || cardForm.get('address.state').touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>
@@ -92,7 +92,7 @@
 
       <mat-form-field fxFlex>
         <input matInput type="text" maxlength="5" placeholder="Zipcode" formControlName="zipcode" required
-          autocomplete="test" />
+               autocomplete="test" />
         <mat-hint align="end">{{ cardForm.get('address.zipcode').value?.length }} / 5</mat-hint>
         <mat-error *ngFor="let validation of validationMessages.zipcode">
           <mat-error *ngIf="
@@ -107,14 +107,15 @@
   <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
     <div class="add-bottom-padding" fxLayout.lt-sm="column" fxFlex>
       <mat-radio-group formControlName="gender">
-        <mat-radio-button style="margin-right: 20px;" value="Male">Male</mat-radio-button>
-        <mat-radio-button style="margin-right: 20px;" value="Female">Female</mat-radio-button>
-        <mat-radio-button style="margin-right: 20px;" value="Other">Other</mat-radio-button>
+        <mat-radio-button style="margin-right: 20px;" *ngFor="let gender of genders | keyvalue" [value]="gender.value">
+          {{
+          gender.value }}
+        </mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="button-row" fxLayoutAlign="space-between center" fxFlex>
       <button mat-raised-button color="primary" type="submit"
-        [disabled]="cardForm.invalid || cardForm.pristine">Submit</button>
+              [disabled]="cardForm.invalid || cardForm.pristine">Submit</button>
       <button mat-raised-button color="accent" type="button" *ngIf="cardForm.dirty" (click)="revert()">Reset</button>
       <button mat-raised-button color="warn" type="button" (click)="cancelEdit()">Cancel</button>
     </div>

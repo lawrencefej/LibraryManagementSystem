@@ -23,7 +23,7 @@ namespace LMSService.Validators
                 .MaximumLength(25)
                 .WithMessage("{PropertyName} must not be more than 25 characters");
 
-            RuleFor(r => r.Email)
+            RuleFor(r => r.Email).NotEmpty()
                 .EmailAddress();
 
             RuleFor(r => r.PhoneNumber)

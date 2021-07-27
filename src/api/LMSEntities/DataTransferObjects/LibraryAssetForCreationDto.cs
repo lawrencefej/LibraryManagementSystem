@@ -22,16 +22,5 @@ namespace LMSEntities.DataTransferObjects
         public string Title { get; set; }
 
         public int Year { get; set; }
-
-        // [Required]
-        // public DateTime DateOfBirth { get; set; }
-
-        // public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        // {
-        //     if (AssetType == LibraryAssetTypeDto.Book && string.IsNullOrEmpty(Isbn))
-        //     {
-        //         yield return new ValidationResult($"ISBN is required when the type is {LibraryAssetTypeDto.Book}", new[] { nameof(Isbn) });
-        //     }
-        // }
     }
 }

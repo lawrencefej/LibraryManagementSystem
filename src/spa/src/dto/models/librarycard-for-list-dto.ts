@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface LibrarycardForListDto {
-  cardNumber?: null | string;
-  email?: null | string;
-  firstName?: null | string;
-  gender?: null | string;
-  id?: number;
-  lastName?: null | string;
+  cardNumber: string;
+  email: string;
+  firstName: string;
+  gender: string;
+  id: number;
+  lastName: string;
   libraryCardPhoto?: null | string;
-  phoneNumber?: null | string;
-  status?: null | string;
+  phoneNumber: string;
+  status: string;
 }

@@ -1,12 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface CheckoutForListDto {
-  cardNumber?: null | string;
-  checkoutDate?: string;
+  cardNumber: string;
+  checkoutDate: string;
   dateReturned?: null | string;
-  dueDate?: string;
-  id?: number;
-  libraryAssetId?: number;
-  status?: null | string;
-  title?: null | string;
+  dueDate: string;
+  id: number;
+  libraryAssetId: number;
+  status: string;
+  title: string;
 }
