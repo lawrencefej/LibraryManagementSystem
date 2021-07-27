@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
@@ -28,7 +28,6 @@ export class AdminComponent implements OnDestroy {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AdminUserForListDto,
-    private readonly fb: FormBuilder,
     public readonly dialogRef: MatDialogRef<AdminComponent>,
     private readonly dialog: MatDialog,
     public readonly notify: NotificationService,

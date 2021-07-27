@@ -7,7 +7,7 @@
           <input matInput placeholder="Email" formControlName="email" required>
           <mat-error *ngFor="let validation of validationMessages.email">
             <mat-error
-              *ngIf="loginForm.get('email').hasError(validation.type) && (loginForm.get('email').dirty || loginForm.get('email').touched)">
+                       *ngIf="loginForm.get('email').hasError(validation.type) && (loginForm.get('email').dirty || loginForm.get('email').touched)">
               {{validation.message}}
             </mat-error>
           </mat-error>
@@ -16,7 +16,7 @@
           <input matInput type="password" placeholder="Password" formControlName="password" required>
           <mat-error *ngFor="let validation of validationMessages.password">
             <mat-error
-              *ngIf="loginForm.get('password').hasError(validation.type) && (loginForm.get('password').dirty || loginForm.get('password').touched)">
+                       *ngIf="loginForm.get('password').hasError(validation.type) && (loginForm.get('password').dirty || loginForm.get('password').touched)">
               {{validation.message}}</mat-error>
           </mat-error>
         </mat-form-field>
