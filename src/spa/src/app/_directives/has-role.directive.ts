@@ -1,14 +1,15 @@
-import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-
-import { AuthService } from '../_services/auth.service';
-import { Observable } from 'rxjs/internal/Observable';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { User } from '../_models/user';
+import { AuthService } from '../_services/auth.service';
 
 @Directive({
   selector: '[appHasRole]'
 })
 export class HasRoleDirective implements OnInit {
+  private readonly unsubscribe = new Subject<void>();
+
   @Input() appHasRole: string[];
   isVisible = false;
   currentUser: User;
@@ -18,10 +19,11 @@ export class HasRoleDirective implements OnInit {
     private templateRef: TemplateRef<any>,
     private authService: AuthService
   ) {
-    this.authService.loggedInUser$.subscribe(user => this.currentUser = user);
+    // TODO take 1
+    this.authService.loggedInUser$.pipe(takeUntil(this.unsubscribe)).subscribe(user => (this.currentUser = user));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.currentUser.role) {
       this.viewContainerRef.clear();
     }

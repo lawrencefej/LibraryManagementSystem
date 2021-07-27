@@ -57,6 +57,10 @@ const routes: Routes = [
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
       },
       {
+        path: 'error',
+        loadChildren: () => import('./error/error.module').then(m => m.ErrorModule)
+      },
+      {
         path: 'members',
         component: MemberListComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },

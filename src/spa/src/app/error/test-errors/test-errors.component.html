@@ -1,0 +1,96 @@
+<div class="mat-elevation-z4" style="margin: auto; margin-top: 10%; width: 50%;">
+  <mat-card>
+    <mat-card-header align="center">
+      <mat-card-title>Error</mat-card-title>
+      <mat-card-subtitle>Test various errors</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form fxLayout="column" [formGroup]="userForm">
+        <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+          <mat-form-field appearance="fill" fxFlex>
+            <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+            <mat-error *ngFor="let validation of validationMessages.firstName">
+              <mat-error *ngIf="
+              userForm.get('firstName').hasError(validation.type) &&
+              (userForm.get('firstName').dirty || userForm.get('firstName').touched)">
+                {{ validation.message }}
+              </mat-error>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" fxFlex>
+            <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+            <mat-error *ngFor="let validation of validationMessages.lastName">
+              <mat-error *ngIf="
+            userForm.get('lastName').hasError(validation.type) &&
+            (userForm.get('lastName').dirty || userForm.get('lastName').touched)">
+                {{ validation.message }}
+              </mat-error>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+          <mat-form-field appearance="fill" fxFlex>
+            <input matInput type="text" placeholder="Email" formControlName="email" required />
+            <mat-error *ngFor="let validation of validationMessages.email">
+              <mat-error *ngIf="
+          userForm.get('email').hasError(validation.type) &&
+          (userForm.get('email').dirty || userForm.get('email').touched)">
+                {{ validation.message }}
+              </mat-error>
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+          <mat-radio-group style="margin: auto;" formControlName="role">
+            <mat-radio-button style="margin-left: 10px;" *ngFor="let role of userRoles | keyvalue"
+                              class="example-radio-button" [value]="role.value">
+              {{role.value}}
+            </mat-radio-button>
+          </mat-radio-group>
+          <mat-error *ngFor="let validation of validationMessages.role">
+            <mat-error
+                       *ngIf="userForm.get('role').hasError('validation.role') && (userForm.get('role').dirty || userForm.get('role').touched)">
+              {{ validation.message }}</mat-error>
+          </mat-error>
+          <ng-container *ngIf="userForm.get('role').errors">
+            <mat-error *ngFor="let item of userForm.get('role').errors.serverError">{{item}}</mat-error>
+          </ng-container>
+
+          <!-- <div style="margin-top: 20px;" fxLayoutAlign="space-between center" class="button-row" fxFlex>
+            <button mat-raised-button color="primary" type="submit">Submit</button>
+          </div> -->
+        </div>
+      </form>
+    </mat-card-content>
+    <mat-card-actions align="start">
+      <div style="margin: 20px;" fxLayout="row wrap" fxLayoutAlign="space-between center">
+        <button mat-raised-button color="primary" (click)="get500Error()" class="btn btn-outline-primary mr-3">Test 500
+          Error</button>
+        <button mat-raised-button color="primary" (click)="get400Error()" class="btn btn-outline-primary mr-3">Test 400
+          Error</button>
+        <button mat-raised-button color="primary" (click)="get401Error()" class="btn btn-outline-primary mr-3">Test 401
+          Error</button>
+        <button mat-raised-button color="primary" (click)="get404Error()" class="btn btn-outline-primary mr-3">Test 404
+          Error</button>
+        <button mat-raised-button color="primary" (click)="get400DotNetValidation()"
+                class="btn btn-outline-primary mr-3">
+          Dotnet Validation</button>
+        <button mat-raised-button color="primary" (click)="get400FluentValidation()"
+                class="btn btn-outline-primary mr-3">
+          Fluent Validation</button>
+      </div>
+
+    </mat-card-actions>
+    <mat-card-footer align="center">
+      <div *ngIf="validationErrors.length > 0" style="margin: 20px;" fxLayout="row wrap"
+           fxLayoutAlign="space-between center">
+        <mat-list role="list">
+          <mat-list-item style="color: red;" role="listitem" *ngFor="let error of validationErrors">{{error}}
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</div>
