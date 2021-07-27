@@ -1,8 +1,8 @@
 <div class="mat-elevation-z8 main-container">
   <div class="filter-input flex">
     <mat-form-field>
-      <input matInput [(ngModel)]="searchString" type="text" class="search-input" (keyup.enter)="filterList()"
-        placeholder="Filter" autocomplete="off">
+      <input matInput [formControl]="searchString" type="text" class="search-input" placeholder="Filter"
+        autocomplete="off">
       <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchString" (click)="onSearchClear()">
         <mat-icon>close</mat-icon>
       </button>

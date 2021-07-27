@@ -40,7 +40,7 @@ namespace LibraryManagementSystem.API.Helpers
             //     opt.MapFrom(d => d.DateOfBirth.CalculateAge());
             // });
             CreateMap<UserForUpdateDto, AppUser>();
-            CreateMap<UpdateAdminDto, AppUser>();
+            CreateMap<UpdateAdminRoleDto, AppUser>();
             CreateMap<UserForRegisterDto, AppUser>();
             CreateMap<AddAdminDto, AppUser>();
             CreateMap<MemberForCreation, AppUser>();
@@ -84,6 +84,11 @@ namespace LibraryManagementSystem.API.Helpers
                 .ForMember(dest => dest.AuthorName, opt =>
                 {
                     opt.MapFrom(src => src.AssetAuthors.FirstOrDefault().Author.FullName);
+                });
+            CreateMap<AppUser, AdminUserForListDto>()
+                .ForMember(dest => dest.Role, opt =>
+                {
+                    opt.MapFrom(src => src.UserRoles.FirstOrDefault().Role);
                 });
             // .ForMember(dest => dest.AssetType, opt =>
             // {
@@ -168,6 +173,7 @@ namespace LibraryManagementSystem.API.Helpers
                         opt.MapFrom(src => src.Role.NormalizedName);
                     });
             CreateMap<RoleDto, AppRole>();
+            CreateMap<AppRole, UserRoleDto>();
             CreateMap<LibraryAssetAuthorDto, LibraryAssetAuthor>().ReverseMap();
             CreateMap<LibraryAssetCategoryDto, LibraryAssetCategory>().ReverseMap();
             CreateMap<LibraryCardForCreationDto, LibraryCard>();

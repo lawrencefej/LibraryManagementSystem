@@ -7,7 +7,7 @@ export interface LibraryCardForUpdate {
   email?: null | string;
   firstName: string;
   gender?: MemberGenderDto;
-  id?: number;
+  id: number;
   lastName: string;
   phoneNumber: string;
 }

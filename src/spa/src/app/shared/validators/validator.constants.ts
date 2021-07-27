@@ -41,5 +41,9 @@ export const validationMessages = {
     { type: 'required', message: 'Zipcode is required' },
     { type: 'pattern', message: 'Please enter a valid Zipcode' }
   ],
-  gender: [{ type: 'required', message: 'Gender is required' }]
+  gender: [{ type: 'required', message: 'Gender is required' }],
+  role: [
+    { type: 'required', message: 'Role is required' },
+    { type: 'required', message: 'Please select a valid role' }
+  ]
 };

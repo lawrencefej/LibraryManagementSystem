@@ -18,6 +18,8 @@ namespace LMSContracts.Interfaces
 
         Task<LmsResponseHandler<LibraryCardForDetailedDto>> DeleteLibraryCard(int cardId);
 
+        Task<LmsResponseHandler<LibraryCardForDetailedDto>> ReactivateLibraryCard(int cardId);
+
         Task<LmsResponseHandler<LibraryCardForDetailedDto>> UpdateLibraryCard(LibraryCardForUpdate cardForUpdate);
     }
 }

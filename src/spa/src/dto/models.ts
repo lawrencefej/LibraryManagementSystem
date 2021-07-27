@@ -1,5 +1,6 @@
 export { AddAdminDto } from './models/add-admin-dto';
 export { AddressDto } from './models/address-dto';
+export { AdminUserForListDto } from './models/admin-user-for-list-dto';
 export { AssetPhoto } from './models/asset-photo';
 export { Author } from './models/author';
 export { AuthorDto } from './models/author-dto';
@@ -31,7 +32,7 @@ export { MemberGenderDto } from './models/member-gender-dto';
 export { ProblemDetails } from './models/problem-details';
 export { ResetPassword } from './models/reset-password';
 export { StateDto } from './models/state-dto';
-export { UpdateAdminDto } from './models/update-admin-dto';
+export { UpdateAdminRoleDto } from './models/update-admin-role-dto';
 export { UserForLoginDto } from './models/user-for-login-dto';
 export { UserForUpdateDto } from './models/user-for-update-dto';
 export { UserRoleDto } from './models/user-role-dto';

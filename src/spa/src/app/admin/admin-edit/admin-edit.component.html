@@ -1,7 +1,7 @@
 <div fxLayout="row wrap"
      fxLayoutAlign="space-between center">
   <h3>
-    Add User
+    Edit User
   </h3>
   <button style="margin-left: 50px;"
           mat-button
@@ -17,7 +17,7 @@
 <mat-dialog-content>
   <form fxLayout="column"
         [formGroup]="userForm"
-        (ngSubmit)="addUser(userForm.value)">
+        (ngSubmit)="editAdmin(userForm.value)">
     <div class="input-row"
          fxLayout="row"
          fxLayout.lt-md="column"
@@ -103,6 +103,12 @@
                 color="primary"
                 type="submit"
                 [disabled]="userForm.pristine || !userForm.valid">Submit</button>
+        <button mat-raised-button
+                color="accent"
+                type="button"
+                *ngIf="userForm.dirty"
+                (click)="revert()"
+                [disabled]="userForm.pristine || !userForm.valid">Reset</button>
         <button mat-raised-button
                 color="warn"
                 type="button"

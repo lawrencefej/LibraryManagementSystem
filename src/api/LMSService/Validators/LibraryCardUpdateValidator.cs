@@ -11,6 +11,12 @@ namespace LMSService.Validators
         {
             _validatorService = validatorService;
 
+            RuleFor(r => r.Id)
+                .NotEmpty()
+                .WithMessage("Please select a valid card")
+                .GreaterThanOrEqualTo(1)
+                .WithMessage("Please select a valid card");
+
             RuleFor(r => r.FirstName)
                 .NotEmpty()
                 .WithMessage("{PropertyName} is required")

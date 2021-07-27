@@ -45,11 +45,11 @@ export class LibraryCardService {
   }
 
   getCards(
-    page?: number,
-    itemsPerPage?: number,
-    orderBy?: string,
-    sortDirection?: string,
-    searchString?: string
+    page: number,
+    itemsPerPage: number,
+    orderBy: string,
+    sortDirection: string,
+    searchString: string
   ): Observable<PaginatedResult<LibrarycardForListDto[]>> {
     const paginatedResult: PaginatedResult<LibrarycardForListDto[]> = new PaginatedResult<LibrarycardForListDto[]>();
 

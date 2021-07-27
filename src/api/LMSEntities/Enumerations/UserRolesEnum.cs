@@ -1,6 +1,6 @@
 namespace LMSEntities.Enumerations
 {
-    public enum UserRoles
+    public enum LmsAppRoles
     {
         Member = 1,
         Admin = 2,

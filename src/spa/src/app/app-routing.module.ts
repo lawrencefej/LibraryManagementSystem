@@ -1,30 +1,27 @@
+import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-
-import { AdminListResolver } from './_resolver/admin-list.resolver';
-import { AdminPanelComponent } from './main/admin/admin-panel/admin-panel.component';
-import { AssetDetailComponent } from './main/libraryAssets/asset-detail/asset-detail.component';
-import { AssetDetailResolver } from './_resolver/asset-detail.resolver';
-import { AssetListComponent } from './main/libraryAssets/asset-list/asset-list.component';
-import { AssetListResolver } from './_resolver/asset-list.resolver';
-import { AuthGuard } from './_guards/auth.guard';
-import { AuthorAssetComponent } from './main/author/author-asset/author-asset.component';
-import { AuthorAssetResolver } from './_resolver/author-asset.resolver';
-import { AuthorListComponent } from './main/author/author-list/author-list.component';
-import { AuthorListResolver } from './_resolver/author-list.resolver';
-import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
-import { DashboardPanelComponent } from './dashboard/dashboard-panel/dashboard-panel.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { LoginComponent } from './auth/login/login.component';
-import { LoginLayoutComponent } from './shared/layout/login-layout/login-layout.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { DashboardPanelComponent } from './dashboard/dashboard-panel/dashboard-panel.component';
+import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
+import { AuthorAssetComponent } from './main/author/author-asset/author-asset.component';
+import { AuthorListComponent } from './main/author/author-list/author-list.component';
+import { AssetDetailComponent } from './main/libraryAssets/asset-detail/asset-detail.component';
+import { AssetListComponent } from './main/libraryAssets/asset-list/asset-list.component';
 import { MemberAdvancedSearchComponent } from './main/member/member-advanced-search/member-advanced-search.component';
 import { MemberDetailComponent } from './main/member/member-detail/member-detail.component';
-import { MemberDetailResolver } from './_resolver/member-detail.resolver';
 import { MemberListComponent } from './main/member/member-list/member-list.component';
-import { MemberListResolver } from './_resolver/member-list.resolver';
 import { MemberSearchComponent } from './main/member/member-search/member-search.component';
-import { NgModule } from '@angular/core';
-import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { UserProfileComponent } from './main/user/user-profile/user-profile.component';
+import { LoginLayoutComponent } from './shared/layout/login-layout/login-layout.component';
+import { AuthGuard } from './_guards/auth.guard';
+import { AssetDetailResolver } from './_resolver/asset-detail.resolver';
+import { AssetListResolver } from './_resolver/asset-list.resolver';
+import { AuthorAssetResolver } from './_resolver/author-asset.resolver';
+import { AuthorListResolver } from './_resolver/author-list.resolver';
+import { MemberDetailResolver } from './_resolver/member-detail.resolver';
+import { MemberListResolver } from './_resolver/member-list.resolver';
 import { UserProfileResolver } from './_resolver/user-profile.resolver';
 
 const routes: Routes = [
@@ -57,9 +54,7 @@ const routes: Routes = [
       },
       {
         path: 'admin',
-        component: AdminPanelComponent,
-        data: { allowedRoles: ['Admin'] },
-        resolve: { admins: AdminListResolver }
+        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
       },
       {
         path: 'members',

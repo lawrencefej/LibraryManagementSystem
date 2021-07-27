@@ -10,7 +10,6 @@ import { UserService } from 'src/app/_services/user.service';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
-  selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
@@ -44,7 +43,10 @@ export class AdminComponent implements OnInit {
     ]
   };
 
-  roles: Role[] = [{ id: 1, name: 'Librarian' }, { id: 2, name: 'Admin' }];
+  roles: Role[] = [
+    { id: 1, name: 'Librarian' },
+    { id: 2, name: 'Admin' }
+  ];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -57,12 +59,12 @@ export class AdminComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createUserForm();
     this.isUpdate();
   }
 
-  createUserForm() {
+  createUserForm(): void {
     this.userForm = this.fb.group({
       id: new FormControl(0),
       firstName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
@@ -72,7 +74,7 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  populateForm(user: User) {
+  populateForm(user: User): void {
     this.userForm = this.fb.group({
       id: new FormControl(user.id),
       firstName: new FormControl(user.firstName, Validators.compose([Validators.required, Validators.maxLength(25)])),
@@ -85,7 +87,7 @@ export class AdminComponent implements OnInit {
     this.userForm.controls.email.disable();
   }
 
-  isUpdate() {
+  isUpdate(): void {
     if (this.data) {
       this.populateForm(this.data);
       this.user = this.data;
@@ -95,7 +97,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  revert() {
+  revert(): void {
     this.populateForm(this.user);
   }
 
@@ -107,7 +109,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.userForm.controls.id.value) {
       this.userForm.controls.firstName.enable();
       this.userForm.controls.lastName.enable();
@@ -118,7 +120,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  addUser(user: User) {
+  addUser(user: User): void {
     this.adminService.addUser(user).subscribe(
       (createdMember: User) => {
         user = createdMember;
@@ -131,7 +133,7 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  updateUserRole(user: User) {
+  updateUserRole(user: User): void {
     this.adminService.updateUser(user).subscribe(
       () => {
         this.dialogRef.close(user);

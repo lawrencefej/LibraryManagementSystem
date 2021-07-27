@@ -47,8 +47,8 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => {
-      this.card = routeData.data.card;
-      this.states = routeData.data.states;
+      this.card = routeData.initData.card;
+      this.states = routeData.initData.states;
     });
   }
 

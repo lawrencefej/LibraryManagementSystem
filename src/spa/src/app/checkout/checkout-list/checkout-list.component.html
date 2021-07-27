@@ -54,7 +54,7 @@
       [ngClass]="{'hide':!(dataSource!=null && dataSource.data.length==0)}" class="no-data-row"></tr>
   </table>
 
-  <mat-paginator #paginator [length]="pagination?.totalItems" [pageIndex]="paginator.pageIndex"
+  <mat-paginator #paginator [length]="pagination.totalItems" [pageIndex]="paginator.pageIndex"
     [pageSizeOptions]="paginationOptions.pageSizeOptions" showFirstLastButtons>
   </mat-paginator>
 </div>

@@ -89,7 +89,8 @@ export class BasketService implements OnDestroy {
       assets: [],
       cardNumber: '',
       photoUrl: '',
-      checkoutComplete: false
+      checkoutComplete: false,
+      libraryCardId: 0
     };
   }
 }

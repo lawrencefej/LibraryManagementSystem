@@ -30,16 +30,6 @@ namespace LibraryManagementSystem.Controllers
             return ReturnPagination(cards);
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(LibraryCardForDetailedDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateCard(LibraryCardForCreationDto addCardDto)
-        {
-            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.AddLibraryCard(addCardDto);
-
-            return result.Succeeded ? CreatedAtRoute(nameof(GetById), new { cardId = result.Item.Id }, result.Item) : BadRequest(result.Errors);
-        }
-
         [HttpGet("{cardId}", Name = nameof(GetById))]
         [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -50,14 +40,14 @@ namespace LibraryManagementSystem.Controllers
             return ResultCheck(result);
         }
 
-        [HttpGet("cardnumber/{cardNumber}")]
-        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        [HttpPost]
+        [ProducesResponseType(typeof(LibraryCardForDetailedDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetLibraryCardByNumber(string cardNumber)
+        public async Task<IActionResult> CreateCard(LibraryCardForCreationDto addCardDto)
         {
-            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.GetLibraryCardByNumber(cardNumber);
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.AddLibraryCard(addCardDto);
 
-            return ResultCheck(result);
+            return result.Succeeded ? CreatedAtRoute(nameof(GetById), new { cardId = result.Item.Id }, result.Item) : BadRequest(result.Errors);
         }
 
         [HttpPut]
@@ -70,12 +60,32 @@ namespace LibraryManagementSystem.Controllers
             return ResultCheck(result);
         }
 
+        [HttpPut("activate/{cardId}")]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ReactivateCard(int cardId)
+        {
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.ReactivateLibraryCard(cardId);
+
+            return ResultCheck(result);
+        }
+
         [HttpDelete("{cardId}")]
         [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(int cardId)
         {
             LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.DeleteLibraryCard(cardId);
+
+            return ResultCheck(result);
+        }
+
+        [HttpGet("cardnumber/{cardNumber}")]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetLibraryCardByNumber(string cardNumber)
+        {
+            LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.GetLibraryCardByNumber(cardNumber);
 
             return ResultCheck(result);
         }

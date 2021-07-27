@@ -55,7 +55,9 @@ namespace LMSService.Service
 
             if (card != null)
             {
-                Context.Remove(card);
+
+                card.Status = LibraryCardStatus.Deactivated;
+                Context.Update(card);
                 await Context.SaveChangesAsync();
                 // TODO log who performed the action
 
@@ -66,13 +68,34 @@ namespace LMSService.Service
             return LmsResponseHandler<LibraryCardForDetailedDto>.Failed($"Selected Card does not exist");
         }
 
+        public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> ReactivateLibraryCard(int cardId)
+        {
+            LibraryCard card = await GetLibraryCard(cardId);
+
+            if (card != null)
+            {
+
+                card.Status = LibraryCardStatus.Good;
+                Context.Update(card);
+                await Context.SaveChangesAsync();
+                // TODO log who performed the action
+
+                Logger.LogInformation($"LibraryCard with ID {card} was activated");
+                return LmsResponseHandler<LibraryCardForDetailedDto>.Successful();
+            }
+
+            return LmsResponseHandler<LibraryCardForDetailedDto>.Failed($"Selected Card does not exist");
+        }
+
         public async Task<PagedList<LibrarycardForListDto>> GetAllLibraryCard(PaginationParams paginationParams)
         {
             IQueryable<LibraryCard> cards = Context.LibraryCards.AsNoTracking()
+                .Where(m => m.Status != LibraryCardStatus.Deactivated)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
-                    .ThenInclude(s => s.State)
-                .OrderBy(u => u.CardNumber).AsQueryable();
+                .ThenInclude(s => s.State)
+                .OrderBy(u => u.CardNumber)
+                .AsQueryable();
 
             return await FilterCards(paginationParams, cards);
         }
@@ -80,17 +103,19 @@ namespace LMSService.Service
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardByNumber(string cardNumber)
         {
             LibraryCard card = await Context.LibraryCards.AsNoTracking()
+                .Where(m => m.Status != LibraryCardStatus.Deactivated)
                 .Include(m => m.Member)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
                     .ThenInclude(s => s.State).FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
 
-            return MapLibraryCard(card);
+            return MapDetailReturn(card);
         }
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> GetLibraryCardById(int id)
         {
             LibraryCard card = await Context.LibraryCards.AsNoTracking()
+                .Where(m => m.Status != LibraryCardStatus.Deactivated)
                 .Include(m => m.Checkouts.Where(s => s.Status == CheckoutStatus.Checkedout)).ThenInclude(b => b.LibraryAsset)
                 .Include(m => m.Checkouts)
                 .Include(m => m.Member)
@@ -99,17 +124,18 @@ namespace LMSService.Service
                 .ThenInclude(s => s.State)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            return MapLibraryCard(card);
+            return MapDetailReturn(card);
         }
 
         private async Task<LibraryCard> GetLibraryCard(int id)
         {
             return await Context.LibraryCards.AsNoTracking()
-                    .Include(m => m.Member)
-                    .Include(m => m.LibraryCardPhoto)
-                    .Include(m => m.Address)
-                        .ThenInclude(s => s.State)
-                    .FirstOrDefaultAsync(c => c.Id == id);
+                .Where(m => m.Status != LibraryCardStatus.Deactivated)
+                .Include(m => m.Member)
+                .Include(m => m.LibraryCardPhoto)
+                .Include(m => m.Address)
+                .ThenInclude(s => s.State)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<PagedList<LibrarycardForListDto>> AdvancedLibraryCardSearch(LibraryCardForAdvancedSearch card, PaginationParams paginationParams)
@@ -181,7 +207,7 @@ namespace LMSService.Service
 
             if (result.Succeeded)
             {
-                result = await _userManager.AddToRoleAsync(member, nameof(UserRoles.Member));
+                result = await _userManager.AddToRoleAsync(member, nameof(LmsAppRoles.Member));
 
                 if (!result.Succeeded)
                 {
@@ -220,26 +246,12 @@ namespace LMSService.Service
                         ? cards.OrderBy(x => x.LastName)
                         : cards.OrderBy(x => x.Email);
 
-            PagedList<LibraryCard> cardsToReturn = await PagedList<LibraryCard>.CreateAsync(cards, paginationParams.PageNumber, paginationParams.PageSize);
-
-            return Mapper.Map<PagedList<LibrarycardForListDto>>(cardsToReturn);
+            return await MapPagination(cards, paginationParams);
         }
 
         private async Task<bool> DoesLibraryCardExist(string cardNumber)
         {
             return await Context.LibraryCards.AsNoTracking().AnyAsync(x => x.CardNumber == cardNumber);
-        }
-
-        private LmsResponseHandler<LibraryCardForDetailedDto> MapLibraryCard(LibraryCard card)
-        {
-            if (card != null)
-            {
-                LibraryCardForDetailedDto cardForReturn = Mapper.Map<LibraryCardForDetailedDto>(card);
-
-                return LmsResponseHandler<LibraryCardForDetailedDto>.Successful(cardForReturn);
-            }
-
-            return LmsResponseHandler<LibraryCardForDetailedDto>.Failed("");
         }
     }
 }

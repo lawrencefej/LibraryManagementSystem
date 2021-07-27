@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using LibraryManagementSystem.API.Helpers;
+using LibraryManagementSystem.Controllers;
 using LibraryManagementSystem.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.API.Controllers
@@ -16,7 +15,7 @@ namespace LibraryManagementSystem.API.Controllers
     [Authorize(Policy = Role.RequireAdminRole)]
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class AdminController : BaseApiController<AdminUserForListDto, AdminUserForListDto>
     {
         private readonly IAdminService _adminService;
         private readonly IMapper _mapper;
@@ -28,96 +27,62 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(typeof(AdminUserForListDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAdminUsers([FromQuery] PaginationParams paginationParams)
         {
-            IEnumerable<AppUser> users = await _adminService.GetAdminUsers();
+            PagedList<AdminUserForListDto> users = await _adminService.GetAdminUsers(paginationParams);
 
-            IEnumerable<UserForDetailedDto> usersToReturn = _mapper.Map<IEnumerable<UserForDetailedDto>>(users);
-
-            usersToReturn = _adminService.AddRoleToUsers(usersToReturn);
-
-            return Ok(usersToReturn);
+            return ReturnPagination(users);
         }
 
+        [HttpGet("{userId}", Name = nameof(GetAdmin))]
+        [ProducesResponseType(typeof(AdminUserForListDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAdmin(int userId)
+        {
+            LmsResponseHandler<AdminUserForListDto> result = await _adminService.GetAdminUser(userId);
+
+            return ResultCheck(result);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(AdminUserForListDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateUser(AddAdminDto addAdminDto)
+        {
+            LmsResponseHandler<AdminUserForListDto> result = await _adminService.CreateUser(addAdminDto);
+
+            return result.Succeeded ? CreatedAtRoute(nameof(GetAdmin), new { userId = result.Item.Id }, result.Item) : BadRequest(result.Errors);
+        }
+
+        [HttpPut]
+        [ProducesResponseType(typeof(AdminUserForListDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateUser(UpdateAdminRoleDto updateAdminDto)
+        {
+            LmsResponseHandler<AdminUserForListDto> result = await _adminService.UpdateUser(updateAdminDto);
+
+            return ResultCheck(result);
+        }
+
+        [HttpDelete("{userId}")]
+        [ProducesResponseType(typeof(AdminUserForListDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Delete(int userId)
+        {
+            LmsResponseHandler<AdminUserForListDto> result = await _adminService.DeleteUser(userId);
+
+            return ResultCheck(result);
+        }
 
         [ServiceFilter(typeof(DevOnlyActionFilter))]
         [HttpPost]
         [Route("password")]
         public async Task<IActionResult> CreateAdminWithPassword(AddAdminDto addAdminDto)
         {
-            LmsResponseHandler<UserForDetailedDto> result = await _adminService.CreateUser(addAdminDto);
+            LmsResponseHandler<AdminUserForListDto> result = await _adminService.CreateUser(addAdminDto, true);
 
             return result.Succeeded ? CreatedAtRoute(nameof(GetAdmin), new { id = result.Item.Id }, result.Item) : BadRequest(result.Errors);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(AddAdminDto addAdminDto)
-        {
-            addAdminDto.CallbackUrl = (Request.Scheme + "://" + Request.Host + "/resetpassword/");
-
-            AppUser user = _mapper.Map<AppUser>(addAdminDto);
-
-            user.UserName = user.Email;
-
-            IdentityResult result = await _adminService.CreateUser(user, "password");
-
-            if (result.Succeeded)
-            {
-                user = await _adminService.CompleteUserCreation(user, addAdminDto.Role, addAdminDto.CallbackUrl);
-
-                UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
-
-                userToReturn = _adminService.AddRoleToUser(userToReturn);
-
-                return CreatedAtRoute("Get", new { id = userToReturn.Id }, userToReturn);
-            }
-
-            foreach (IdentityError error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-
-            return BadRequest(ModelState);
-        }
-
-        [HttpGet("{id}", Name = nameof(GetAdmin))]
-        public async Task<IActionResult> GetAdmin(int id)
-        {
-            AppUser user = await _adminService.GetAdminUser(id);
-
-            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
-
-            return Ok(userToReturn);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Put(UpdateAdminDto updateAdminDto)
-        {
-            AppUser user = await _adminService.GetAdminUser(updateAdminDto.Id);
-
-            if (user == null)
-            {
-                return BadRequest("User for not found");
-            }
-
-            await _adminService.UpdateUser(user, updateAdminDto.Role);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            AppUser user = await _adminService.GetAdminUser(id);
-
-            if (user == null)
-            {
-                return NoContent();
-            }
-
-            await _adminService.DeleteUser(user);
-
-            return NoContent();
         }
     }
 }

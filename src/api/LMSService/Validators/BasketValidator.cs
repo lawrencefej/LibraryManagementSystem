@@ -9,8 +9,9 @@ namespace LMSService.Validators
     {
         public BasketValidator()
         {
-            RuleFor(r => r.LibraryCardId)
-                .GreaterThan(0)
+            RuleFor(r => r.LibraryCardId).NotEmpty()
+                .WithMessage("Please select a valid Library Card")
+                .GreaterThanOrEqualTo(1)
                 .WithMessage("Please select a valid Library Card");
 
             RuleFor(r => r.Assets)
@@ -23,8 +24,10 @@ namespace LMSService.Validators
                 .ChildRules(s =>
                 {
                     s.RuleFor(t => t.LibraryAssetId)
-                        .GreaterThan(0)
-                        .WithMessage("Please select a valid item to checkout");
+                    .NotEmpty()
+                    .WithMessage("Please select a valid item to checkout")
+                    .GreaterThanOrEqualTo(1)
+                    .WithMessage("Please select a valid item to checkout");
                 });
         }
 

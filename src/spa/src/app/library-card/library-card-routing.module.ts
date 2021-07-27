@@ -17,12 +17,12 @@ const routes: Routes = [
   {
     path: 'cards',
     component: LibraryCardListComponent,
-    resolve: { cards: LibraryCardListResolver }
+    resolve: { initData: LibraryCardListResolver }
   },
   {
     path: 'cards/:id',
     component: LibraryCardDetailComponent,
-    resolve: { data: LibraryCardDetailResolver },
+    resolve: { initData: LibraryCardDetailResolver },
     canDeactivate: [LibraryCardEditCanDeactivateGuardService, LibraryCardCheckoutCanDeactivateGuardService]
   },
   {

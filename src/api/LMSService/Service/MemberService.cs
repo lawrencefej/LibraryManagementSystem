@@ -61,7 +61,7 @@ namespace LMSService.Service
 
         public async Task<AppUser> CompleteAddMember(AppUser member)
         {
-            await _userManager.AddToRoleAsync(member, nameof(UserRoles.Member));
+            await _userManager.AddToRoleAsync(member, nameof(LmsAppRoles.Member));
 
             member.LibraryCard = await CreateNewCard(member.Id);
 
@@ -114,7 +114,7 @@ namespace LMSService.Service
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(UserRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(LmsAppRoles.Member)))
                 .OrderBy(u => u.Email).AsQueryable();
 
             if (!string.IsNullOrEmpty(paginationParams.SearchString))
@@ -172,7 +172,7 @@ namespace LMSService.Service
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(UserRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(LmsAppRoles.Member)))
                 .OrderBy(u => u.Email).AsQueryable();
 
             members = members
@@ -213,7 +213,7 @@ namespace LMSService.Service
                 .Include(p => p.ProfilePicture)
                 .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(UserRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(LmsAppRoles.Member)))
                 .OrderBy(u => u.Email).ToListAsync();
 
             return users;
@@ -233,7 +233,7 @@ namespace LMSService.Service
         public async Task<bool> DoesMemberExist(string email)
         {
             AppUser user = await _context.Users.AsNoTracking()
-                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(UserRoles.Member)))
+                .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(LmsAppRoles.Member)))
                 .FirstOrDefaultAsync(x => x.Email == email);
             return user != null;
         }
