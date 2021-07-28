@@ -12,7 +12,7 @@ export class AssetTypeService {
 
   constructor(private http: HttpClient) {}
 
-  getCategory(id): Observable<AssetType> {
+  getCategory(id: number): Observable<AssetType> {
     return this.http.get<AssetType>(this.baseUrl + id);
   }
 

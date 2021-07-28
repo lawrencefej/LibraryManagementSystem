@@ -4,7 +4,7 @@ import { TestErrorsComponent } from './test-errors/test-errors.component';
 
 const routes: Routes = [
   {
-    path: 'test',
+    path: 'error',
     component: TestErrorsComponent
   }
 ];
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ErrorRoutingModule {}
+export class TestRoutingModule {}

@@ -26,7 +26,7 @@
 
   <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="(isHandset$ | async) ? 56 : 0">
     <mat-sidenav [opened]="true" #sidenav [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [fixedInViewport]="(isHandset$ | async)" fixedTopGap="56">
+                 [fixedInViewport]="(isHandset$ | async)" fixedTopGap="56">
       <mat-card [style.backgroundColor]="'lightgray'">
         <mat-card-header>
           <div mat-card-avatar class="avatar">
@@ -38,14 +38,14 @@
         </mat-card-header>
       </mat-card>
       <mat-nav-list>
-        <app-sidebar></app-sidebar>
+        <lms-sidebar></lms-sidebar>
       </mat-nav-list>
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <app-progress-spinner></app-progress-spinner>
+      <lms-progress-spinner></lms-progress-spinner>
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <app-footer></app-footer>
+  <lms-footer></lms-footer>
 </div>

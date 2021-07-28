@@ -11,14 +11,17 @@ export class PhotoService {
 
   constructor(private http: HttpClient) {}
 
+  // tslint:disable-next-line: typedef
   changeMemberPhoto(data: any) {
     return this.http.post<Photo>(this.baseUrl + 'userPhoto', data);
   }
 
+  // tslint:disable-next-line: typedef
   changeUserPhoto(data: any) {
     return this.http.post<Photo>(this.baseUrl + 'user-profile-picture', data);
   }
 
+  // tslint:disable-next-line: typedef
   changeAssetPhoto(data: any) {
     return this.http.post<Photo>(this.baseUrl + 'assetPhoto', data);
   }

@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -10,7 +11,7 @@ export class FeeService {
 
   constructor(private http: HttpClient) {}
 
-  payFees(libraryCardID: number) {
+  payFees(libraryCardID: number): Observable<void> {
     return this.http.post<void>(this.baseUrl + libraryCardID, {});
   }
 }

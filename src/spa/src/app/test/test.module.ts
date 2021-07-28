@@ -9,13 +9,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { ErrorRoutingModule } from './error-routing.routing';
 import { TestErrorsComponent } from './test-errors/test-errors.component';
+import { TestRoutingModule } from './test-routing.routing';
 
 @NgModule({
   imports: [
     CommonModule,
-    ErrorRoutingModule,
+    TestRoutingModule,
     FlexLayoutModule,
     FormsModule,
     MatButtonModule,
@@ -30,4 +30,4 @@ import { TestErrorsComponent } from './test-errors/test-errors.component';
   declarations: [TestErrorsComponent],
   providers: []
 })
-export class ErrorModule {}
+export class TesModule {}

@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css']
 })
@@ -27,16 +25,19 @@ export class ForgotPasswordComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
+  // tslint:disable-next-line: typedef
   ngOnInit() {
     this.createResetForm();
   }
 
+  // tslint:disable-next-line: typedef
   createResetForm() {
     this.resetForm = this.fb.group({
       email: new FormControl('', Validators.compose([Validators.required, Validators.email]))
     });
   }
 
+  // tslint:disable-next-line: typedef
   onSubmit() {
     this.authService.sendForgotPasswordLink(this.resetForm.value).subscribe(
       () => {

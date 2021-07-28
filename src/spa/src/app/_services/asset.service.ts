@@ -1,15 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-
 import { Injectable } from '@angular/core';
-import { LibraryAsset } from '../_models/libraryAsset';
 import { Observable } from 'rxjs';
-import { PaginatedResult } from '../_models/pagination';
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { LibraryAssetForListDto } from 'src/dto/models/library-asset-for-list-dto';
-import { LibraryAssetForDetailedDto } from 'src/dto/models/library-asset-for-detailed-dto';
-import { LibraryAssetForUpdateDto } from 'src/dto/models/library-asset-for-update-dto';
 import { LibraryAssetForCreationDto } from 'src/dto/models/library-asset-for-creation-dto';
+import { LibraryAssetForDetailedDto } from 'src/dto/models/library-asset-for-detailed-dto';
+import { LibraryAssetForListDto } from 'src/dto/models/library-asset-for-list-dto';
+import { LibraryAssetForUpdateDto } from 'src/dto/models/library-asset-for-update-dto';
+import { environment } from 'src/environments/environment';
+import { LibraryAsset } from '../_models/libraryAsset';
+import { PaginatedResult } from '../_models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +34,7 @@ export class AssetService {
   //   return this.http.post(this.baseUrl, asset);
   // }
 
-  addAsset(assetForCreation: LibraryAssetForCreationDto) {
+  addAsset(assetForCreation: LibraryAssetForCreationDto): Observable<LibraryAssetForDetailedDto> {
     return this.http.post<LibraryAssetForDetailedDto>(this.baseUrl, assetForCreation);
   }
 
@@ -43,7 +42,7 @@ export class AssetService {
     return this.http.get<LibraryAsset[]>(this.baseUrl + 'search?SearchString=' + name);
   }
 
-  updateAsset(asset: LibraryAssetForUpdateDto) {
+  updateAsset(asset: LibraryAssetForUpdateDto): Observable<void> {
     return this.http.put<void>(this.baseUrl, asset);
   }
 
@@ -52,11 +51,11 @@ export class AssetService {
   // }
 
   getPaginatedAssets(
-    page?: number,
-    itemsPerPage?: number,
-    orderBy?: string,
-    sortDirection?: string,
-    searchString?: string
+    page: number,
+    itemsPerPage: number,
+    orderBy: string,
+    sortDirection: string,
+    searchString: string
   ): Observable<PaginatedResult<LibraryAssetForListDto[]>> {
     const paginatedResult: PaginatedResult<LibraryAssetForListDto[]> = new PaginatedResult<LibraryAssetForListDto[]>();
 
@@ -87,7 +86,7 @@ export class AssetService {
       );
   }
 
-  deleteAsset(assetId: number) {
+  deleteAsset(assetId: number): Observable<void> {
     return this.http.delete<void>(this.baseUrl + assetId);
   }
 }

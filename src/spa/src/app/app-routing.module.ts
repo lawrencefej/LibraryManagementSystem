@@ -16,6 +16,7 @@ import { MemberSearchComponent } from './main/member/member-search/member-search
 import { UserProfileComponent } from './main/user/user-profile/user-profile.component';
 import { LoginLayoutComponent } from './shared/layout/login-layout/login-layout.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { IsDevGuard } from './_guards/is-dev.guard';
 import { AssetDetailResolver } from './_resolver/asset-detail.resolver';
 import { AssetListResolver } from './_resolver/asset-list.resolver';
 import { AuthorAssetResolver } from './_resolver/author-asset.resolver';
@@ -57,8 +58,9 @@ const routes: Routes = [
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
       },
       {
-        path: 'error',
-        loadChildren: () => import('./error/error.module').then(m => m.ErrorModule)
+        path: 'test',
+        loadChildren: () => import('./test/test.module').then(m => m.TesModule),
+        canLoad: [IsDevGuard]
       },
       {
         path: 'members',

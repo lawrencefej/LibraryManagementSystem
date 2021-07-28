@@ -1,14 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
-import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MemberService {
   baseUrl = environment.apiUrl + 'member/';
@@ -32,28 +31,29 @@ export class MemberService {
     return this.http.get<User[]>(this.baseUrl + 'advancedSearch', { params });
   }
 
+  // tslint:disable-next-line: typedef
   updateMember(user: User) {
     return this.http.put(this.baseUrl, user);
   }
 
+  // tslint:disable-next-line: typedef
   deleteMember(memberId: number) {
     return this.http.delete(this.baseUrl + memberId);
   }
 
+  // tslint:disable-next-line: typedef
   AddMember(user: User) {
     return this.http.post(this.baseUrl, user);
   }
 
   getPaginatedMembers(
-    page?: number,
-    itemsPerPage?: number,
-    orderBy?: string,
-    sortDirection?: string,
-    searchString?: string
+    page: number,
+    itemsPerPage: number,
+    orderBy: string,
+    sortDirection: string,
+    searchString: string
   ): Observable<PaginatedResult<User[]>> {
-    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<
-      User[]
-    >();
+    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
 
     let params = new HttpParams();
 
@@ -69,15 +69,13 @@ export class MemberService {
     return this.http
       .get<User[]>(this.baseUrl + 'pagination', {
         observe: 'response',
-        params,
+        params
       })
       .pipe(
-        map((response) => {
+        map(response => {
           paginatedResult.result = response.body;
           if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(
-              response.headers.get('Pagination')
-            );
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
           }
           return paginatedResult;
         })

@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../_models/user';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -10,19 +11,22 @@ export class AdminService {
   constructor(private http: HttpClient) {}
   baseUrl = environment.apiUrl + 'admin/';
 
-  getAdmins() {
+  getAdmins(): Observable<User[]> {
     return this.http.get<User[]>(this.baseUrl);
   }
 
-  addUser(user: User) {
+  // tslint:disable-next-line: ban-types
+  addUser(user: User): Observable<Object> {
     return this.http.post(this.baseUrl, user);
   }
 
-  updateUser(user: User) {
+  // tslint:disable-next-line: ban-types
+  updateUser(user: User): Observable<Object> {
     return this.http.put(this.baseUrl, user);
   }
 
-  deleteUser(userId: number) {
+  // tslint:disable-next-line: ban-types
+  deleteUser(userId: number): Observable<Object> {
     return this.http.delete(this.baseUrl + userId);
   }
 }

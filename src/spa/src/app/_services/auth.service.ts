@@ -1,14 +1,14 @@
-import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { User } from '../_models/user';
-import { environment } from 'src/environments/environment';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators/';
+import { environment } from 'src/environments/environment';
+import { User } from '../_models/user';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
   baseurl = environment.apiUrl + 'auth/';
@@ -21,18 +21,18 @@ export class AuthService {
   currentPhotoUrl = this.photoUrl.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
-    this.loggedInUser$.subscribe((user) => (this.loggedInUser = user));
+    this.loggedInUser$.subscribe(user => (this.loggedInUser = user));
   }
 
-  changeMemberPhoto(photoUrl: string) {
+  changeMemberPhoto(photoUrl: string): void {
     this.photoUrl.next(photoUrl);
   }
 
-  changeUserDetails(user: User) {
+  changeUserDetails(user: User): void {
     this.loggedInUserSubject.next(user);
   }
 
-  login(model: any) {
+  login(model: any): Observable<any> {
     return this.http.post(this.baseurl + 'login', model).pipe(
       map((response: any) => {
         const user = response;
@@ -49,15 +49,18 @@ export class AuthService {
     );
   }
 
-  register(user: User) {
+  // tslint:disable-next-line: ban-types
+  register(user: User): Observable<Object> {
     return this.http.post(this.baseurl + 'auth/register', user);
   }
 
+  // tslint:disable-next-line: typedef
   loggedIn() {
     const token = localStorage.getItem('token');
     return !this.jwtHelper.isTokenExpired(token);
   }
 
+  // tslint:disable-next-line: typedef
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -65,14 +68,17 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  // tslint:disable-next-line: typedef
   sendForgotPasswordLink(model: any) {
     return this.http.post(this.baseurl + 'forgot-password', model);
   }
 
+  // tslint:disable-next-line: typedef
   resetPassword(model: any) {
     return this.http.post(this.baseurl + 'reset-password', model);
   }
 
+  // tslint:disable-next-line: typedef
   isAuthorized(allowedRoles: string[]) {
     // get token from local storage or state management
     const token = localStorage.getItem('token');

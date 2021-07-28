@@ -1,34 +1,26 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-
-import { ActivatedRoute } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MemberComponent } from '../member/member.component';
+import { ActivatedRoute } from '@angular/router';
+import { merge } from 'rxjs';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
+import { User } from 'src/app/_models/user';
 import { MemberService } from 'src/app/_services/member.service';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { User } from 'src/app/_models/user';
-import { merge } from 'rxjs';
+import { MemberComponent } from '../member/member.component';
 
 @Component({
-  selector: 'app-member-list',
   templateUrl: './member-list.component.html',
-  styleUrls: ['./member-list.component.css'],
+  styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent implements AfterViewInit, OnInit {
   members: User[] = [];
   pagination: Pagination;
   dataSource = new MatTableDataSource<User>(this.members);
   searchString = '';
-  displayedColumns = [
-    'libraryCardNumber',
-    'firstName',
-    'lastName',
-    'email',
-    'actions',
-  ];
+  displayedColumns = ['libraryCardNumber', 'firstName', 'lastName', 'email', 'actions'];
   paginationOptions = new Pagination();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -40,31 +32,31 @@ export class MemberListComponent implements AfterViewInit, OnInit {
     public dialog: MatDialog
   ) {}
 
-  ngOnInit() {
-    this.route.data.subscribe((data) => {
+  ngOnInit(): void {
+    this.route.data.subscribe(data => {
       this.pagination = data.members.pagination;
       this.members = data.members.result;
       this.dataSource = new MatTableDataSource<User>(this.members);
     });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     merge(this.paginator.page, this.sort.sortChange).subscribe(() => {
       this.loadData();
     });
   }
 
-  filterList() {
+  filterList(): void {
     this.searchString.trim().toLocaleLowerCase();
     this.loadData();
   }
 
-  onSearchClear() {
+  onSearchClear(): void {
     this.searchString = '';
     this.filterList();
   }
 
-  private getDialogConfig() {
+  private getDialogConfig(): MatDialogConfig<any> {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.width = '640px';
@@ -72,35 +64,35 @@ export class MemberListComponent implements AfterViewInit, OnInit {
     return dialogConfig;
   }
 
-  updateMember(element: any) {
+  updateMember(element: any): void {
     const dialogConfig = this.getDialogConfig();
     dialogConfig.data = element;
     this.dialog.open(MemberComponent, dialogConfig);
   }
 
-  openAddMemberDialog() {
+  openAddMemberDialog(): void {
     const dialogConfig = this.getDialogConfig();
 
     this.dialog.open(MemberComponent, dialogConfig);
   }
 
-  deleteAsset(member: User) {
+  deleteAsset(member: User): void {
     this.notify
       .confirm('Are you sure you sure you want to delete this member')
       .afterClosed()
-      .subscribe((res) => {
+      .subscribe(res => {
         if (res) {
           this.memberService.deleteMember(member.id).subscribe(
             () => {
               this.members.splice(
-                this.members.findIndex((x) => x.id === member.id),
+                this.members.findIndex(x => x.id === member.id),
                 1
               );
               this.notify.success('Member was deleted successfully');
               this.pagination.totalItems--;
               this.dataSource = new MatTableDataSource<User>(this.members);
             },
-            (error) => {
+            error => {
               this.notify.error(error);
             }
           );
@@ -108,7 +100,7 @@ export class MemberListComponent implements AfterViewInit, OnInit {
       });
   }
 
-  loadData() {
+  loadData(): void {
     this.memberService
       .getPaginatedMembers(
         this.paginator.pageIndex + 1,
@@ -122,7 +114,7 @@ export class MemberListComponent implements AfterViewInit, OnInit {
           this.members = res.result;
           this.dataSource = new MatTableDataSource<User>(this.members);
         },
-        (error) => {
+        error => {
           this.notify.error(error);
         }
       );

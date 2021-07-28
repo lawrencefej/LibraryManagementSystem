@@ -1,16 +1,15 @@
-import { Component, OnInit, Inject } from '@angular/core';
-
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { State } from 'src/app/_models/state';
-import { User } from 'src/app/_models/user';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { NotificationService } from 'src/app/_services/notification.service';
-import { MemberService } from 'src/app/_services/member.service';
-import { StateService } from 'src/app/_services/state.service';
-import { stateValidator } from 'src/app/shared/validators/state.validator';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { stateValidator } from 'src/app/shared/validators/state.validator';
+import { State } from 'src/app/_models/state';
+import { User } from 'src/app/_models/user';
+import { MemberService } from 'src/app/_services/member.service';
+import { NotificationService } from 'src/app/_services/notification.service';
+import { StateService } from 'src/app/_services/state.service';
 
 @Component({
   templateUrl: './member.component.html',
@@ -78,7 +77,7 @@ export class MemberComponent implements OnInit {
     private memberService: MemberService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createMemberForm();
     this.filteredStates$ = this.stateControl.valueChanges.pipe(
       startWith(''),
@@ -87,7 +86,7 @@ export class MemberComponent implements OnInit {
     this.isUpdate();
   }
 
-  updateState(value: any) {
+  updateState(value: any): void {
     this.memberForm.markAsDirty();
     this.memberForm.controls.state.setValue(value.source.value);
   }
@@ -97,7 +96,7 @@ export class MemberComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  isUpdate() {
+  isUpdate(): void {
     if (this.data) {
       this.populateForm(this.data);
       this.member = this.data;
@@ -107,11 +106,11 @@ export class MemberComponent implements OnInit {
     }
   }
 
-  revert() {
+  revert(): void {
     this.populateForm(this.member);
   }
 
-  createMemberForm() {
+  createMemberForm(): void {
     this.memberForm = this.fb.group({
       id: new FormControl(0),
       firstName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
@@ -126,7 +125,7 @@ export class MemberComponent implements OnInit {
     });
   }
 
-  populateForm(member: User) {
+  populateForm(member: User): void {
     this.memberForm = this.fb.group({
       id: new FormControl(member.id),
       firstName: new FormControl(member.firstName, Validators.compose([Validators.required, Validators.maxLength(25)])),
@@ -145,11 +144,11 @@ export class MemberComponent implements OnInit {
     this.stateControl.setValue(member.state);
   }
 
-  displayFn(state?: State) {
+  displayFn(state?: State): string {
     return state ? state.name : undefined;
   }
 
-  closeDialog() {
+  closeDialog(): void {
     if (this.memberForm.dirty) {
       this.notify.discardDialog('Are you sure you want to discard these changes');
     } else {
@@ -157,7 +156,7 @@ export class MemberComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.memberForm.controls.id.value) {
       this.updateMember(this.memberForm.value);
     } else {
@@ -165,7 +164,7 @@ export class MemberComponent implements OnInit {
     }
   }
 
-  addMember(member: User) {
+  addMember(member: User): void {
     this.memberService.AddMember(member).subscribe(
       (createdMember: User) => {
         member = createdMember;
@@ -179,7 +178,7 @@ export class MemberComponent implements OnInit {
     );
   }
 
-  updateMember(member: User) {
+  updateMember(member: User): void {
     this.memberService.updateMember(member).subscribe(
       () => {
         this.dialogRef.close();

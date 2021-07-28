@@ -1,12 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-
 import { ActivatedRoute } from '@angular/router';
+import { Photo } from 'src/app/_models/photo';
+import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/_services/auth.service';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { Photo } from 'src/app/_models/photo';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { User } from 'src/app/_models/user';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
 
 @Component({
@@ -32,7 +31,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  private getDialogConfig() {
+  private getDialogConfig(): MatDialogConfig<any> {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.width = '440px';
@@ -40,7 +39,7 @@ export class UserProfileComponent implements OnInit {
     return dialogConfig;
   }
 
-  public updateProfile() {
+  public updateProfile(): void {
     const dialogConfig = this.getDialogConfig();
     dialogConfig.data = {
       userForUpdate: this.user

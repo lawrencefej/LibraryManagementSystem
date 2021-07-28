@@ -1,13 +1,11 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { AuthService } from 'src/app/_services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmPasswordValidator } from 'src/app/shared/validators/password-match.validator';
+import { AuthService } from 'src/app/_services/auth.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 
 @Component({
-  selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
@@ -33,11 +31,11 @@ export class ResetPasswordComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createResetPasswordForm();
   }
 
-  createResetPasswordForm() {
+  createResetPasswordForm(): void {
     this.resetPasswordForm = this.fb.group(
       {
         userID: new FormControl(this.route.snapshot.params.id),
@@ -51,7 +49,7 @@ export class ResetPasswordComponent implements OnInit {
     );
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.authService.resetPassword(this.resetPasswordForm.value).subscribe(
       () => {
         this.notify.success('Password has been reset successfully');

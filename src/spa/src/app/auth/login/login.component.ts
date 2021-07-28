@@ -5,7 +5,6 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 
 @Component({
-  selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -34,12 +33,12 @@ export class LoginComponent implements OnInit {
     ]
   };
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/member-search  ';
     this.createLoginForm();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe(
         () => {
@@ -52,7 +51,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  createLoginForm() {
+  createLoginForm(): void {
     this.loginForm = this.fb.group({
       email: new FormControl(
         '',
