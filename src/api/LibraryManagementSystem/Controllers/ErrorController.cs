@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace LibraryManagementSystem.Controllers
     // [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
-    public class ErrorController : ControllerBase
+    public class ErrorController : BaseApiController<LibraryCardForDetailedDto, LibrarycardForListDto>
     {
         [Authorize]
         [HttpGet("auth")]
@@ -57,8 +58,18 @@ namespace LibraryManagementSystem.Controllers
         [AllowAnonymous]
         public IActionResult GetListErrors()
         {
-            // return BadRequest(new List<string>() { "Error 1", "Error 2" });
-            return BadRequest("string error");
+            LmsResponseHandler<LibraryCardForDetailedDto> result = LmsResponseHandler<LibraryCardForDetailedDto>.Failed(new List<string> { "Error 1", "Error 2", "Error 3" });
+
+            return ResultCheck(result);
+        }
+
+        [HttpGet("single")]
+        [AllowAnonymous]
+        public IActionResult GetListError()
+        {
+            LmsResponseHandler<LibraryCardForDetailedDto> result = LmsResponseHandler<LibraryCardForDetailedDto>.Failed("Error 1");
+
+            return ResultCheck(result);
         }
     }
 }

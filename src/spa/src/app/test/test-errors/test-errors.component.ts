@@ -64,6 +64,35 @@ export class TestErrorsComponent implements OnInit, OnDestroy {
       );
   }
 
+  get400ErrorWithMessage(): void {
+    this.http
+      .get(this.baseUrl + 'single')
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  get400ErrorWithList(): void {
+    this.http
+      .get(this.baseUrl + 'list')
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+          this.validationErrors = error;
+        }
+      );
+  }
+
   get500Error(): void {
     this.http
       .get(this.baseUrl + 'server-error')

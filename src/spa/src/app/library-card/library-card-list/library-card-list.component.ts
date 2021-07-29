@@ -23,7 +23,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
   pagination: Pagination;
   dataSource = new MatTableDataSource<LibrarycardForListDto>();
   searchString = new FormControl('');
-  displayedColumns = ['libraryCardNumber', 'firstName', 'lastName', 'email', 'actions'];
+  displayedColumns = ['libraryCardNumber', 'firstName', 'lastName', 'email', 'detail', 'delete'];
   paginationOptions = new Pagination();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -98,41 +98,10 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
         concatMap(() => this.cardService.deleteCard(card.id))
       )
       .subscribe(() => {
-        // if (res) {
-        // this.cardService.deleteCard(card.id).subscribe(() => {
-        // this.cards.splice(
-        //   this.cards.findIndex(x => x.id === card.id),
-        //   1
-        // );
         this.notify.success('Member was deleted successfully');
         this.pagination.totalItems--;
-        // this.dataSource = new MatTableDataSource<LibrarycardForListDto>(this.cards);
-        // this.dataSource = new MatTableDataSource<LibrarycardForListDto>(this.cards);
-        // });
-        // }
       });
   }
-
-  // loadData(): void {
-  //   this.cardService
-  //     .getCards(
-  //       this.paginator.pageIndex + 1,
-  //       this.paginator.pageSize,
-  //       this.sort.active,
-  //       this.sort.direction.toString(),
-  //       this.searchString.value
-  //     )
-  //     .pipe(takeUntil(this.unsubscribe))
-  //     .subscribe(
-  //       cards => {
-  //         this.cards = cards.result;
-  //         this.dataSource = new MatTableDataSource<LibrarycardForListDto>(this.cards);
-  //       },
-  //       error => {
-  //         this.notify.error(error);
-  //       }
-  //     );
-  // }
 
   private getCards(): Observable<PaginatedResult<LibrarycardForListDto[]>> {
     return this.cardService.getCards(

@@ -74,12 +74,19 @@
           Error</button>
         <button mat-raised-button color="primary" (click)="get404Error()" class="btn btn-outline-primary mr-3">Test 404
           Error</button>
+      </div>
+      <div style="margin: 20px;" fxLayout="row wrap" fxLayoutAlign="space-between center">
         <button mat-raised-button color="primary" (click)="get400DotNetValidation()"
                 class="btn btn-outline-primary mr-3">
           Dotnet Validation</button>
         <button mat-raised-button color="primary" (click)="get400FluentValidation()"
                 class="btn btn-outline-primary mr-3">
           Fluent Validation</button>
+        <button mat-raised-button color="primary" (click)="get400ErrorWithMessage()"
+                class="btn btn-outline-primary mr-3">
+          400 With message</button>
+        <button mat-raised-button color="primary" (click)="get400ErrorWithList()" class="btn btn-outline-primary mr-3">
+          400 list Message</button>
       </div>
 
     </mat-card-actions>

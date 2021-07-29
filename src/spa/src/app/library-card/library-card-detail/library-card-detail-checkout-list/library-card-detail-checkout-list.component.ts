@@ -30,7 +30,7 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   basket: BasketViewModel;
   checkoutFilters = checkoutFilters;
   dataSource = new MatTableDataSource<CheckoutForListDto>();
-  displayedColumns = ['title', 'checkoutdate', 'duedate', 'dateReturned', 'status', 'action', 'renew'];
+  displayedColumns = ['title', 'checkoutdate', 'duedate', 'dateReturned', 'status', 'return', 'renew'];
   isCardFormDirty?: boolean;
   isEditTab = false;
   isCheckoutTab = false;

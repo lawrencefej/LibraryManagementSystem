@@ -1,3 +1,4 @@
+export { AddAddressDto } from './models/add-address-dto';
 export { AddAdminDto } from './models/add-admin-dto';
 export { AddressDto } from './models/address-dto';
 export { AdminUserForListDto } from './models/admin-user-for-list-dto';

@@ -1,8 +1,7 @@
+import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
-import { Injectable } from '@angular/core';
 import { PreventUnsavedComponent } from '../shared/prevent-unsaved/prevent-unsaved.component';
 
 @Injectable({
@@ -27,6 +26,7 @@ export class NotificationService {
   error(message: string): void {
     this.action.fontcolor('black');
     this.config.panelClass = ['notification', 'error'];
+    this.config.duration = 10000;
     this.snackBar.open(message, this.action, this.config);
   }
 

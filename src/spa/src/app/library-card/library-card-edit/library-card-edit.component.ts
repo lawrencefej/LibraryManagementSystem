@@ -26,6 +26,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   filteredStates: Observable<StateDto[]> = of([]);
   validationMessages = validationMessages;
   genders = MemberGenderDto;
+  serverValidationErrors: string[] = [];
 
   constructor(
     private readonly cardService: LibraryCardService,
@@ -42,6 +43,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
     this.cardForm.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
       this.isFormDirty.emit(this.cardForm.dirty);
     });
+    this.setStateId();
   }
 
   ngOnDestroy(): void {
@@ -82,6 +84,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       gender: new FormControl(card.gender, Validators.required),
 
       address: new FormGroup({
+        id: new FormControl(card.address.id),
         street: new FormControl(
           card.address.street,
           Validators.compose([Validators.required, Validators.maxLength(50)])
@@ -98,26 +101,37 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   }
 
   editCard(card: LibraryCardForUpdate): void {
-    card.address.stateId = card.address.state.id;
-
     this.cardService
       .updateCard(card)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(
-        () => {
+        returnCard => {
           this.isFormDirty.emit(false);
-          this.cardChange.emit(card as LibraryCardForDetailedDto);
           this.closeTab.emit();
           this.notify.success('Card update successfully');
+          this.cardChange.emit(returnCard);
         },
         error => {
-          this.notify.error('Update was unsuccessful');
+          this.serverValidationErrors = error;
         }
       );
   }
 
   displayStateName(state: StateDto): string {
     return state.name;
+  }
+
+  private setStateId(): void {
+    this.cardForm
+      .get('address.state')
+      .valueChanges.pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        const newState: StateDto = this.cardForm.get('address.state').value;
+
+        if (newState) {
+          this.cardForm.get('address.stateId').setValue(newState.id);
+        }
+      });
   }
 
   private filterStates(value: any): StateDto[] {

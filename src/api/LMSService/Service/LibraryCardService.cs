@@ -26,6 +26,10 @@ namespace LMSService.Service
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> AddLibraryCard(LibraryCardForCreationDto addCardDto)
         {
+            if (Context.LibraryCards.Any(a => a.Email == addCardDto.Email))
+            {
+                return LmsResponseHandler<LibraryCardForDetailedDto>.Failed($"{addCardDto.Email} already exists");
+            }
 
             LibraryCard card = Mapper.Map<LibraryCard>(addCardDto);
 

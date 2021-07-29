@@ -47,7 +47,10 @@ namespace LibraryManagementSystem.Controllers
         {
             LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.AddLibraryCard(addCardDto);
 
-            return result.Succeeded ? CreatedAtRoute(nameof(GetById), new { cardId = result.Item.Id }, result.Item) : BadRequest(result.Errors);
+            return result.Succeeded
+                ? result.Succeeded ? CreatedAtRoute(nameof(GetById), new { cardId = result.Item.Id }, result.Item) : BadRequest(result.Errors)
+                : ReturnError(result);
+
         }
 
         [HttpPut]

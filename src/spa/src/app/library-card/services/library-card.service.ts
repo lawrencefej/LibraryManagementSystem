@@ -32,8 +32,8 @@ export class LibraryCardService {
   //   return this.http.get<User[]>(this.baseUrl + 'advancedSearch', { params });
   // }
 
-  updateCard(card: LibraryCardForUpdate): Observable<void> {
-    return this.http.put<void>(this.baseUrl, card);
+  updateCard(card: LibraryCardForUpdate): Observable<LibraryCardForDetailedDto> {
+    return this.http.put<LibraryCardForDetailedDto>(this.baseUrl, card);
   }
 
   deleteCard(cardId: number): Observable<void> {

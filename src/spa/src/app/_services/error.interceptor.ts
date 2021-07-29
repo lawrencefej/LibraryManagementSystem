@@ -30,18 +30,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                   }
                 }
                 throw modelStateErrors.flat();
-                // const modelStateErrors = [];
-                // // throwError(error.error.errors);
-                // for (const key in error.error.errors) {
-                //   if (error.error.errors[key]) {
-                //     modelStateErrors.push(error.error.errors[key]);
-                //   }
-                // }
-                // console.log('here', modelStateErrors);
-
-                // throwError(modelStateErrors);
               } else if (typeof error.error === 'object') {
-                this.notify.error(`Bad Request ${error.status}`);
+                if (error.error.length) {
+                  throw error.error;
+                } else {
+                  this.notify.error(`${error.error.title} ${error.status}`);
+                }
               } else {
                 this.notify.error(`${error.status}, ${error.error}`);
               }

@@ -17,7 +17,7 @@ namespace LMSEntities.DataTransferObjects
         public DateTime DateOfBirth { get; set; }
 
         [Required]
-        public AddressDto Address { get; set; }
+        public AddAddressDto Address { get; set; }
         [Required]
         public MemberGenderDto Gender { get; set; }
     }

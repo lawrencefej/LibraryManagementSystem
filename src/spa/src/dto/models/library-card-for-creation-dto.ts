@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { AddressDto } from './address-dto';
+import { AddAddressDto } from './add-address-dto';
 import { MemberGenderDto } from './member-gender-dto';
 export interface LibraryCardForCreationDto {
-  address: AddressDto;
+  address: AddAddressDto;
   dateOfBirth: string;
   email: string;
   firstName: string;

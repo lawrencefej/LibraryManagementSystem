@@ -1,3 +1,4 @@
+<lms-error-list [errors]="serverValidationErrors"></lms-error-list>
 <form style="margin-top: 10px;" fxLayout="column" [formGroup]="cardForm" (ngSubmit)="editCard(cardForm.value)">
   <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
     <mat-form-field fxFlex>
