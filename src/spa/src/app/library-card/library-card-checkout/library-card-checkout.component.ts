@@ -11,7 +11,7 @@ import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { AssetService } from 'src/app/_services/asset.service';
 import { BasketService } from 'src/app/_services/basket.service';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { LibraryCardForDetailedDto, LibraryAssetForListDto, LibraryAssetStatus } from 'src/dto/models';
+import { LibraryAssetForListDto, LibraryAssetStatus, LibraryCardForDetailedDto } from 'src/dto/models';
 
 @Component({
   selector: 'lms-library-card-checkout',
@@ -24,13 +24,13 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
   @Input()
   card!: LibraryCardForDetailedDto;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   basket!: BasketViewModel;
   currentCheckedoutAssets: LibraryAssetForBasketViewModel[] = [];
   dataSource = new MatTableDataSource<LibraryAssetForListDto>();
   displayedColumns = ['title', 'authorName', 'year', 'assetType', 'actions'];
-  pagination: Pagination;
+  pagination!: Pagination;
   paginationOptions = new Pagination();
   searchString = new FormControl('');
 
@@ -70,7 +70,7 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
     return !this.basket.active || this.basket.libraryCardId !== this.card.id || this.shouldAssetBeDenied(newAsset);
   }
 
-  searchAssets() {
+  searchAssets(): Observable<PaginatedResult<LibraryAssetForListDto[]>> {
     return this.searchString.valueChanges.pipe(
       takeUntil(this.unsubscribe),
       debounceTime(500),
@@ -79,7 +79,7 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
     );
   }
 
-  clearSearch() {
+  clearSearch(): void {
     this.searchString.setValue('');
     this.dataSource.data = [];
   }
@@ -152,7 +152,7 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
     }
   }
 
-  private mapPagination(result: PaginatedResult<LibraryAssetForListDto[]>) {
+  private mapPagination(result: PaginatedResult<LibraryAssetForListDto[]>): void {
     this.dataSource.data = result.result;
     this.pagination = result.pagination;
   }

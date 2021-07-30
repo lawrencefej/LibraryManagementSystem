@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { Subject } from 'rxjs/internal/Subject';
 import { LoaderService } from 'src/app/_services/loader.service';
 
@@ -10,7 +11,7 @@ import { LoaderService } from 'src/app/_services/loader.service';
 export class ProgressSpinnerComponent {
   isLoading: Subject<boolean> = this.loaderService.isLoading;
   color = 'accent';
-  mode = 'indeterminate';
+  mode = 'indeterminate' as ProgressSpinnerMode;
   value = 50;
 
   constructor(private loaderService: LoaderService) {}

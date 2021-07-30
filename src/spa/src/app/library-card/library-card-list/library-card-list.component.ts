@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { merge, Observable, Subject } from 'rxjs';
+import { EMPTY, merge, Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { NotificationService } from 'src/app/_services/notification.service';
@@ -20,11 +20,11 @@ import { LibraryCardService } from '../services/library-card.service';
 export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<LibrarycardForListDto>();
   displayedColumns = ['libraryCardNumber', 'firstName', 'lastName', 'email', 'detail', 'delete'];
-  pagination: Pagination;
+  pagination!: Pagination;
   paginationOptions = new Pagination();
   searchString = new FormControl('');
 
@@ -78,7 +78,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
     this.dialog.open(LibraryCardComponent, dialogConfig);
   }
 
-  // TODO Deactivate card instead
+  // TODO Deactivate card instead & fix server error
   deleteCard(card: LibrarycardForListDto): void {
     this.notify
       .confirm('Are you sure you sure you want to delete this member')
@@ -89,6 +89,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
           if (response) {
             return this.cardService.deleteCard(card.id);
           }
+          return EMPTY;
         })
       )
       .subscribe(() => {

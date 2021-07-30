@@ -40,6 +40,18 @@ export class NotificationService {
     this.snackBar.open(message, this.action, this.config);
   }
 
+  discardDialog(msg: string): MatDialogRef<PreventUnsavedComponent, void> {
+    const dialogConfig = this.getDialogConfig(msg);
+
+    return this.dialog.open(PreventUnsavedComponent, dialogConfig);
+  }
+
+  confirm(msg: string, subMsg?: string): MatDialogRef<ConfirmDialogComponent, boolean> {
+    const dialogConfig = this.getDialogConfig(msg, subMsg);
+
+    return this.dialog.open(ConfirmDialogComponent, dialogConfig);
+  }
+
   private getDialogConfig(msg: string, subMsg?: string): MatDialogConfig<any> {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -50,17 +62,5 @@ export class NotificationService {
     };
 
     return dialogConfig;
-  }
-
-  confirm(msg: string, subMsg?: string): MatDialogRef<ConfirmDialogComponent, boolean> {
-    const dialogConfig = this.getDialogConfig(msg, subMsg);
-
-    return this.dialog.open(ConfirmDialogComponent, dialogConfig);
-  }
-
-  discardDialog(msg: string): MatDialogRef<PreventUnsavedComponent, void> {
-    const dialogConfig = this.getDialogConfig(msg);
-
-    return this.dialog.open(PreventUnsavedComponent, dialogConfig);
   }
 }

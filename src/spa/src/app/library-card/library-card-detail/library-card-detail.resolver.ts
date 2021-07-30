@@ -8,6 +8,7 @@ import { LibraryCardService } from '../services/library-card.service';
 @Injectable()
 export class LibraryCardDetailResolver implements Resolve<ILibraryCardDetailResponse> {
   constructor(private readonly cardService: LibraryCardService, private readonly stateService: StateService) {}
+
   resolve(route: ActivatedRouteSnapshot): Observable<ILibraryCardDetailResponse> {
     return forkJoin({
       card: this.cardService.getCardById(route.params.id),

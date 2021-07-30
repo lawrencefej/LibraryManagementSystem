@@ -16,8 +16,8 @@ import { LibraryAssetService } from '../services/library-asset.service';
 export class LibraryAssetDetailComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild('fileInput') myInputVariable: ElementRef;
-  asset: LibraryAssetForDetailedDto;
+  @ViewChild('fileInput') myInputVariable?: ElementRef;
+  asset!: LibraryAssetForDetailedDto;
   displayedColumns = ['libraryCardId', 'until', 'status'];
   isCardFormDirty = false;
   isEditTab = false;
@@ -93,6 +93,6 @@ export class LibraryAssetDetailComponent implements OnInit, OnDestroy {
           this.notify.success('Photo changed successfully');
         });
     }
-    this.myInputVariable.nativeElement.value = '';
+    this.myInputVariable!.nativeElement.value = '';
   }
 }

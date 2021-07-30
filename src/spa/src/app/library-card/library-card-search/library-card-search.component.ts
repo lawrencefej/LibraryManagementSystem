@@ -12,8 +12,9 @@ import { LibraryCardService } from '../services/library-card.service';
   styleUrls: ['./library-card-search.component.css']
 })
 export class LibraryCardSearchComponent implements OnInit {
-  card: LibraryCardForDetailedDto;
-  searchForm: FormGroup;
+  card?: LibraryCardForDetailedDto;
+  searchForm!: FormGroup;
+  // TODO move to central
   validationMessages = {
     cardNumber: [
       {
@@ -32,11 +33,11 @@ export class LibraryCardSearchComponent implements OnInit {
     public dialog: MatDialog
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createSearchForm();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.cardService.getCardByCardNumber(this.searchForm.controls.cardNumber.value).subscribe(
       card => {
         if (card != null) {
@@ -53,7 +54,7 @@ export class LibraryCardSearchComponent implements OnInit {
     );
   }
 
-  createSearchForm() {
+  createSearchForm(): void {
     this.searchForm = this.fb.group({
       cardNumber: new FormControl(
         '',
@@ -66,7 +67,7 @@ export class LibraryCardSearchComponent implements OnInit {
     });
   }
 
-  openCardDialog() {
+  openCardDialog(): void {
     this.dialog.open(LibraryCardComponent, {
       width: '640px',
       disableClose: true
@@ -74,7 +75,8 @@ export class LibraryCardSearchComponent implements OnInit {
   }
 
   selectCard(): void {
-    this.router.navigate(['/library-card/cards', this.card.id]);
+    // tslint:disable-next-line: no-non-null-assertion
+    this.router.navigate(['/library-card/cards', this.card!.id]);
   }
 
   fillList(): void {

@@ -113,7 +113,8 @@
       <mat-form-field appearance="fill" fxFlex>
         <input matInput type="text" maxlength="5" placeholder="Zipcode" formControlName="zipcode" required
                autocomplete="test" />
-        <mat-hint align="end">{{ cardForm.get('address.zipcode').value?.length }} / 5</mat-hint>
+        <mat-hint *ngIf="cardForm.get('address.zipcode')" align="end">{{ cardForm.get('address.zipcode').value?.length
+          }} / 5</mat-hint>
         <mat-error *ngFor="let validation of validationMessages.zipcode">
           <mat-error *ngIf="
                 cardForm.get('address.zipcode').hasError(validation.type) &&

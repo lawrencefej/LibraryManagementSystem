@@ -10,7 +10,7 @@ export class LibraryCardEditCanDeactivateGuardService implements CanDeactivate<L
 
   canDeactivate(component: LibraryCardDetailComponent): Observable<boolean> | boolean {
     if (component.isCardFormDirty) {
-      return this.notify.confirm('Are you sure you want to discard these changes?').afterClosed();
+      return !this.notify.confirm('Are you sure you want to discard these changes?').afterClosed();
     } else {
       return true;
     }

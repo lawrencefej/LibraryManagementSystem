@@ -20,7 +20,7 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   cardForm!: FormGroup;
-  filteredStates: Observable<StateDto[]> = of([]);
+  filteredStates?: Observable<StateDto[]> = of([]);
   genders = MemberGenderDto;
   serverValidationErrors: string[] = [];
   states!: StateDto[];
@@ -105,7 +105,7 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
   }
 
   private watchStateChanges(): void {
-    this.filteredStates = this.cardForm.get('address.state').valueChanges.pipe(
+    this.filteredStates = this.cardForm.get('address.state')?.valueChanges.pipe(
       startWith(''),
       map(s => (s ? this.filterStates(s) : this.states.slice()))
     );
@@ -114,12 +114,12 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
   private setStateId(): void {
     this.cardForm
       .get('address.state')
-      .valueChanges.pipe(takeUntil(this.unsubscribe))
+      ?.valueChanges.pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
-        const newState: StateDto = this.cardForm.get('address.state').value;
+        const newState: StateDto = this.cardForm.get('address.state')?.value;
 
         if (newState) {
-          this.cardForm.get('address.stateId').setValue(newState.id);
+          this.cardForm.get('address.stateId')?.setValue(newState.id);
         }
       });
   }

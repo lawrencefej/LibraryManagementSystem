@@ -50,9 +50,9 @@ export class AdminService {
       .pipe(
         map(response => {
           const paginatedResult: PaginatedResult<AdminUserForListDto[]> = new PaginatedResult<AdminUserForListDto[]>();
-          paginatedResult.result = response.body;
+          paginatedResult.result = response.body || [];
           if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination')!);
           }
           return paginatedResult;
         })

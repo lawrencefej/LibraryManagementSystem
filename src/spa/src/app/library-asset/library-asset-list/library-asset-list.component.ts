@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { merge, Observable, Subject } from 'rxjs';
+import { EMPTY, merge, Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { NotificationService } from 'src/app/_services/notification.service';
@@ -20,11 +20,11 @@ import { LibraryAssetService } from '../services/library-asset.service';
 export class LibraryAssetListComponent implements AfterViewInit, OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<LibraryAssetForListDto>();
   displayedColumns = ['title', 'authorName', 'year', 'assetType', 'detail', 'delete'];
-  pagination: Pagination;
+  pagination!: Pagination;
   paginationOptions = new Pagination();
   searchString = new FormControl('');
 
@@ -88,6 +88,8 @@ export class LibraryAssetListComponent implements AfterViewInit, OnInit, OnDestr
           if (response) {
             return this.assetService.deleteAsset(asset.id);
           }
+
+          return EMPTY;
         })
       )
       .subscribe(() => {

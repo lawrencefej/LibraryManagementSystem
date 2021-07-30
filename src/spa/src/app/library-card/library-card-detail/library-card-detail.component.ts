@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
 import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
 import { BasketService } from 'src/app/_services/basket.service';
@@ -143,6 +143,8 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
           if (response) {
             return this.feeService.payFees(this.card.id);
           }
+
+          return EMPTY;
         })
       )
       .subscribe(

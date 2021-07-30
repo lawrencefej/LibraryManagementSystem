@@ -9,7 +9,7 @@ import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
 import { CheckoutSharedService } from 'src/app/shared/services/checkout-shared.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { lmsResolverContants } from 'src/app/_resolver/resolver.constants';
-import { CheckoutForListDto, LibraryAssetForListDto } from 'src/dto/models';
+import { CheckoutForListDto, LibraryAssetForDetailedDto } from 'src/dto/models';
 
 @Component({
   selector: 'lms-library-asset-detail-checkout-list',
@@ -20,20 +20,20 @@ export class LibraryAssetDetailCheckoutListComponent implements AfterViewInit, O
   private readonly unsubscribe = new Subject<void>();
 
   @Input()
-  asset: LibraryAssetForListDto;
+  asset!: LibraryAssetForDetailedDto;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   checkoutFilters = checkoutFilters;
   dataSource = new MatTableDataSource<CheckoutForListDto>();
   displayedColumns = ['title', 'checkoutdate', 'duedate', 'dateReturned', 'status'];
   isCardFormDirty?: boolean;
-  isEditTab = false;
   isCheckoutTab = false;
+  isEditTab = false;
+  pagination!: Pagination;
   paginationOptions = new Pagination();
-  selectedFilter = new FormControl(checkoutFilters[0], [Validators.required]);
   selected = new FormControl(0);
-  pagination: Pagination;
+  selectedFilter = new FormControl(checkoutFilters[0], [Validators.required]);
 
   constructor(private readonly checkoutSharedService: CheckoutSharedService) {}
 

@@ -18,13 +18,13 @@ import { CheckoutForListDto } from 'src/dto/models';
 export class CheckoutListComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   checkoutFilters = checkoutFilters;
   checkouts: CheckoutForListDto[] = [];
   dataSource = new MatTableDataSource<CheckoutForListDto>(this.checkouts);
   displayedColumns = ['title', 'libraryCardId', 'since', 'until', 'dateReturned', 'status'];
-  pagination: Pagination;
+  pagination!: Pagination;
   paginationOptions = new Pagination();
   selectedFilter = new FormControl(checkoutFilters[0], [Validators.required]);
 

@@ -24,7 +24,7 @@ export function stateValidator(control: AbstractControl): {
   const state: StateDto = control.value;
 
   if (states.some(x => x.id === state.id)) {
-    return null;
+    return { stateValidator: false };
   } else {
     return { stateValidator: true };
   }

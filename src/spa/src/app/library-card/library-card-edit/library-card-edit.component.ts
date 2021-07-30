@@ -23,7 +23,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   @Output() isFormDirty = new EventEmitter<boolean>();
 
   cardForm!: FormGroup;
-  filteredStates: Observable<StateDto[]> = of([]);
+  filteredStates?: Observable<StateDto[]> = of([]);
   validationMessages = validationMessages;
   genders = MemberGenderDto;
   serverValidationErrors: string[] = [];
@@ -36,7 +36,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.populateForm(this.card);
-    this.filteredStates = this.cardForm.get('address.state').valueChanges.pipe(
+    this.filteredStates = this.cardForm.get('address.state')?.valueChanges.pipe(
       startWith(''),
       map(s => (s ? this.filterStates(s) : this.states.slice()))
     );
@@ -124,12 +124,12 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   private setStateId(): void {
     this.cardForm
       .get('address.state')
-      .valueChanges.pipe(takeUntil(this.unsubscribe))
+      ?.valueChanges.pipe(takeUntil(this.unsubscribe))
       .subscribe(() => {
-        const newState: StateDto = this.cardForm.get('address.state').value;
+        const newState: StateDto = this.cardForm.get('address.state')?.value;
 
         if (newState) {
-          this.cardForm.get('address.stateId').setValue(newState.id);
+          this.cardForm.get('address.stateId')?.setValue(newState.id);
         }
       });
   }

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
-
+import { takeUntil } from 'rxjs/operators';
 import { BasketService } from 'src/app/_services/basket.service';
 import { CheckoutService } from 'src/app/_services/checkout.service';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { takeUntil } from 'rxjs/operators';
 import { BasketViewModel } from '../models/basket-view-model';
 
 @Component({
@@ -24,15 +23,15 @@ export class BasketComponent {
     this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.basket = basket));
   }
 
-  removeFromBasket(assetId: number) {
+  removeFromBasket(assetId: number): void {
     this.basketService.removeFromBasket(assetId);
   }
 
-  clearBasket() {
+  clearBasket(): void {
     this.basketService.clearBasket();
   }
 
-  checkoutBasket() {
+  checkoutBasket(): void {
     this.checkoutService.checkoutBasket(this.basket).subscribe(
       () => {
         this.notify.success('checked out successfully');

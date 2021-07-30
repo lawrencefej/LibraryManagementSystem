@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { merge, Observable, Subject } from 'rxjs';
+import { EMPTY, merge, Observable, Subject } from 'rxjs';
 import { concatMap, switchMap, takeUntil } from 'rxjs/operators';
 import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
 import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
@@ -24,11 +24,11 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   private readonly unsubscribe = new Subject<void>();
 
   @Input()
-  card: LibraryCardForDetailedDto;
+  card!: LibraryCardForDetailedDto;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  basket: BasketViewModel;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  basket?: BasketViewModel;
   checkoutFilters = checkoutFilters;
   dataSource = new MatTableDataSource<CheckoutForListDto>();
   displayedColumns = ['title', 'checkoutdate', 'duedate', 'dateReturned', 'status', 'return', 'renew'];
@@ -38,7 +38,7 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   paginationOptions = new Pagination();
   selectedFilter = new FormControl(checkoutFilters[0], [Validators.required]);
   selected = new FormControl(0);
-  pagination: Pagination;
+  pagination!: Pagination;
 
   constructor(
     private readonly basketService: BasketService,
@@ -116,6 +116,8 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
           if (response) {
             return this.updateCheckout(checkout, true);
           }
+
+          return EMPTY;
         })
       )
       .subscribe(() => {
@@ -134,6 +136,8 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
           if (response) {
             return this.updateCheckout(checkout);
           }
+
+          return EMPTY;
         })
       )
       .subscribe(() => {

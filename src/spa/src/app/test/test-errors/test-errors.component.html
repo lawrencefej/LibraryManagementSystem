@@ -54,7 +54,7 @@
                        *ngIf="userForm.get('role').hasError('validation.role') && (userForm.get('role').dirty || userForm.get('role').touched)">
               {{ validation.message }}</mat-error>
           </mat-error>
-          <ng-container *ngIf="userForm.get('role').errors">
+          <ng-container *ngIf="userForm.get('role')?.errors">
             <mat-error *ngFor="let item of userForm.get('role').errors.serverError">{{item}}</mat-error>
           </ng-container>
 

@@ -1,9 +1,9 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
-import { NotificationService } from './notification.service';
-import { BasketViewModel } from '../main/basket/models/basket-view-model';
-import { LibraryAssetForListDto, LibraryCardForDetailedDto } from 'src/dto/models';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LibraryAssetForListDto, LibraryCardForDetailedDto } from 'src/dto/models';
+import { BasketViewModel } from '../main/basket/models/basket-view-model';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 export class BasketService implements OnDestroy {
   private readonly unsubscribe = new Subject<void>();
   private basketSubject = new BehaviorSubject<BasketViewModel>(this.getDefaultBasket());
-  private currentBasket: BasketViewModel;
+  private currentBasket!: BasketViewModel;
 
   basket$: Observable<BasketViewModel> = this.basketSubject.asObservable();
 

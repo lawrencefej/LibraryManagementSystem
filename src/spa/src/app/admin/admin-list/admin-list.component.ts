@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { merge, Observable, Subject } from 'rxjs';
+import { EMPTY, merge, Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { NotificationService } from 'src/app/_services/notification.service';
@@ -21,12 +21,12 @@ import { AdminService } from '../services/admin.service';
 export class AdminListComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<AdminUserForListDto>();
   displayedColumns = ['firstName', 'lastName', 'email', 'role', 'actions'];
   paginationOptions = new Pagination();
-  pagination: Pagination;
+  pagination!: Pagination;
   searchString = new FormControl('');
 
   constructor(
@@ -102,8 +102,10 @@ export class AdminListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(returnUser => {
         if (returnUser) {
           const updatedUser = this.dataSource.data.find(a => a.id === returnUser.id);
-          const index = this.dataSource.data.indexOf(updatedUser);
-          this.dataSource.data[index].role.name = returnUser.role;
+          if (updatedUser) {
+            const index = this.dataSource.data.indexOf(updatedUser);
+            this.dataSource.data[index].role.name = returnUser.role;
+          }
         }
       });
   }
@@ -120,6 +122,8 @@ export class AdminListComponent implements OnInit, OnDestroy, AfterViewInit {
           if (response) {
             return this.adminService.deleteUser(user.id);
           }
+
+          return EMPTY;
         })
       )
       .subscribe(() => {
