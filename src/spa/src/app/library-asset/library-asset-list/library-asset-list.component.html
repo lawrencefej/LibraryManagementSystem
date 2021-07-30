@@ -1,8 +1,8 @@
 <div class="mat-elevation-z8 main-container">
-  <div class="filter-input flex">
-    <mat-form-field>
-      <input matInput [(ngModel)]="searchString" type="text" class="search-input" (keyup.enter)="filterList()"
-             placeholder="Filter" autocomplete="off">
+  <div style="margin: 20px;" class="filter-input flex">
+    <mat-form-field style="margin-top: 10px;">
+      <input matInput [formControl]="searchString" type="text" class="search-input" placeholder="Filter"
+             autocomplete="off">
       <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchString" (click)="onSearchClear()">
         <mat-icon>close</mat-icon>
       </button>
@@ -10,35 +10,44 @@
     <a mat-button color="primary" (click)="openAddAssetDialog()" class="create-button">Add New</a>
   </div>
   <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="dataSource">
+    <ng-container matColumnDef="libraryCardNumber">
+      <th mat-header-cell *matHeaderCellDef> Card# </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.cardNumber}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
-      <td mat-cell *matCellDef="let element"> {{element.title | titlecase}} </td>
+      <td mat-cell *matCellDef="let asset"> {{asset.title | titlecase}} </td>
     </ng-container>
 
     <ng-container matColumnDef="authorName">
-      <th mat-header-cell *matHeaderCellDef> Author </th>
-      <td mat-cell *matCellDef="let element"> {{element.authorName | titlecase}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Author </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.authorName}} </td>
     </ng-container>
 
     <ng-container matColumnDef="year">
-      <th mat-header-cell *matHeaderCellDef> Year </th>
-      <td mat-cell *matCellDef="let element"> {{element.year}} </td>
-    </ng-container>
-    <ng-container matColumnDef="assetType">
-      <th mat-header-cell *matHeaderCellDef> Type </th>
-      <td mat-cell *matCellDef="let element"> {{element.assetType | titlecase}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Year </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.year}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="actions">
+    <ng-container matColumnDef="assetType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.assetType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="detail">
       <th mat-header-cell *matHeaderCellDef> Details </th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-icon-button matTooltip="Details" color="primary" [routerLink]="['/catalog-old/', element.id]">
+      <td mat-cell *matCellDef="let asset">
+        <button mat-icon-button matTooltip="Details" color="primary" [routerLink]="['/catalog/detail/', asset.id]">
           <mat-icon class="mat-18">reorder</mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Edit" color="accent" (click)="updateAsset(element)">
-          <mat-icon class="mat-18">edit</mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteAsset(element)">
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let asset">
+        <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteAsset(asset)">
           <mat-icon class="mat-18">delete</mat-icon>
         </button>
       </td>
@@ -47,7 +56,7 @@
     <!-- No Data column -->
     <ng-container matColumnDef="noData">
       <td mat-footer-cell *matFooterCellDef colspan="7">
-        No items found at this time &#x2639;. Please refine your search.
+        No cards found at this time &#x2639;. Please refine your search or try the advanced search feature.
       </td>
     </ng-container>
 

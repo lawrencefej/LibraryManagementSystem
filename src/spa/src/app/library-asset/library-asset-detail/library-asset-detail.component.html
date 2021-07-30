@@ -1,0 +1,125 @@
+<div flexLayout="row" class="container">
+  <div fxFlex="30" class="side-bar content">
+    <mat-card class="mat-elevation-z4" style="text-align: center">
+      <mat-card-title>{{ asset.title }}</mat-card-title>
+      <mat-card-subtitle *ngFor="let author of asset.authors">{{ author.fullName }}</mat-card-subtitle>
+      <mat-card-content>
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center text-center">
+            <!-- <img src="https://picsum.photos/500" alt="Admin" width="450" style="border: 2px solid white" /> -->
+            <img src="{{asset?.photoUrl || 'https://picsum.photos/500'}}" alt="Avatar" width="450"
+                 style="border: 2px solid white;">
+            <!-- <img src="{{asset?.photoUrl || '../../../assets/img/user.png'}}" alt="Avatar" width="450"
+                 style="border: 2px solid white;"> -->
+            <div style="margin: 10px">
+              <ng-container>
+                <button *ngIf="!isEditTab" mat-raised-button color="accent" style="margin-right: 10px" type="button"
+                        (click)="editCard()">
+                  Edit Details
+                </button>
+                <button *ngIf="isEditTab" mat-raised-button color="accent" style="margin-right: 10px" type="button"
+                        (click)="cancelEdit()">
+                  Cancel Edit
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="isEditTab">
+                <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)" />
+                <button mat-raised-button color="primary" style="margin-right: 10px" type="button"
+                        (click)="fileInput.click()">
+                  Change Photo
+                </button>
+              </ng-container>
+
+            </div>
+            <mat-divider></mat-divider>
+            <h3>Status</h3>
+            <mat-chip-list style="margin-top: 10px" class="mat-chip-list-stacked">
+              <mat-chip *ngIf="asset.status === assetStatus.Available"
+                        style="background-color: green; justify-content: center" selected [selectable]="false">
+                {{ asset.status }}
+              </mat-chip>
+              <mat-chip *ngIf="asset.status === assetStatus.Unavailable" style="justify-content: center" selected
+                        [selectable]="false" color="warn">
+                {{ asset.status }}
+              </mat-chip>
+            </mat-chip-list>
+            <ng-container>
+              <ng-container *ngIf="asset.isbn">
+                <h3>ISBN</h3>
+                <p>
+                  {{ asset.isbn }}
+                </p>
+              </ng-container>
+              <ng-container>
+                <h3>Type</h3>
+                <p>
+                  {{ asset.assetType }}
+                </p>
+              </ng-container>
+              <ng-container>
+                <h3>Category</h3>
+                <p *ngFor="let category of asset.categories">
+                  {{ category.name }}
+                </p>
+              </ng-container>
+              <ng-container>
+                <h3>Location</h3>
+                <p>
+                  {{ asset.deweyIndex}}
+                </p>
+              </ng-container>
+              <ng-container>
+                <h3>Copies Available</h3>
+                <p>
+                  {{ asset.copiesAvailable}}
+                </p>
+              </ng-container>
+              <ng-container>
+                <h3>Number of Copies</h3>
+                <p>
+                  {{ asset.numberOfCopies }}
+                </p>
+              </ng-container>
+              <ng-container>
+                <h3>Year</h3>
+                <p>
+                  {{ asset.year }}
+                </p>
+              </ng-container>
+              <ng-container>
+                <h3>Added</h3>
+                <p>
+                  {{ asset.added | date: 'longDate' }}
+                </p>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex="70" class="content">
+    <mat-card class="tab-card mat-elevation-z4">
+      <mat-tab-group [selectedIndex]="selectedTab.value" (selectedIndexChange)="tabClicked($event)" dynamicHeight>
+        <mat-tab [disabled]="isEditTab" label="Current Checkouts">
+          <lms-library-asset-detail-checkout-list [asset]="asset"></lms-library-asset-detail-checkout-list>
+        </mat-tab>
+        <mat-tab [disabled]="isEditTab" label="Description">
+          <ng-template matTabContent>
+            <div class="example-small-box" fxFlexAlign="stretch">
+              <p>{{ asset.description }}</p>
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Edit Card">
+          <ng-template matTabContent>
+            <lms-library-asset-edit></lms-library-asset-edit>
+            <!-- <lms-library-card-edit (closeTab)="cancelEdit()" [(card)]="card" (isFormDirty)="isFormDirty($event)"
+                                   [states]="states"></lms-library-card-edit> -->
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

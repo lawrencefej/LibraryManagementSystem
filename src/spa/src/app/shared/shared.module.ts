@@ -23,6 +23,7 @@ import { SidebarComponent } from './navigation/sidebar/sidebar.component';
 import { PhoneNumberPipe } from './pipes/phone-number.pipe';
 import { PreventUnsavedComponent } from './prevent-unsaved/prevent-unsaved.component';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
+import { CheckoutSharedService } from './services/checkout-shared.service';
 
 @NgModule({
   exports: [
@@ -34,8 +35,8 @@ import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.co
     FooterComponent,
     FormsModule,
     HasRoleDirective,
-    IsDevDirective,
     HeaderComponent,
+    IsDevDirective,
     LoginLayoutComponent,
     NotFoundComponent,
     PhoneNumberPipe,
@@ -51,8 +52,8 @@ import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.co
     DefaultLayoutComponent,
     FooterComponent,
     HasRoleDirective,
-    IsDevDirective,
     HeaderComponent,
+    IsDevDirective,
     LoginLayoutComponent,
     NotFoundComponent,
     PhoneNumberPipe,
@@ -72,9 +73,9 @@ import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.co
     MatProgressSpinnerModule,
     MatToolbarModule,
     ReactiveFormsModule,
-    RouterModule,
     RouterModule
   ],
+  providers: [CheckoutSharedService],
   entryComponents: [ConfirmDialogComponent, PreventUnsavedComponent]
 })
 export class SharedModule {}

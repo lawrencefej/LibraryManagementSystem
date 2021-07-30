@@ -9,7 +9,7 @@ import { BasketService } from 'src/app/_services/basket.service';
 import { FeeService } from 'src/app/_services/fee.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
-import { CheckoutForListDto, LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
+import { LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
 import { LibraryCardStatus } from '../Models/library-card-status.enum';
 
 @Component({
@@ -22,7 +22,6 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') myInputVariable!: ElementRef;
   basket!: BasketViewModel;
   card!: LibraryCardForDetailedDto;
-  currentCheckouts: CheckoutForListDto[] = [];
   isCardFormDirty?: boolean;
   isCheckoutTab = false;
   isEditTab = false;
@@ -112,7 +111,7 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  updatePhoto(event: { target: { files: string | any[] } }): void {
+  updatePhoto(event: any): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       const fd = new FormData();

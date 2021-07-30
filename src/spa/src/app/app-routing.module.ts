@@ -44,18 +44,23 @@ const routes: Routes = [
       { path: 'member-search', component: MemberSearchComponent },
       { path: 'advanced-search', component: MemberAdvancedSearchComponent },
       {
-        path: 'catalog',
+        // TODO remove when the Library-asset Module is complete
+        path: 'catalog-old',
         component: AssetListComponent,
         resolve: { assets: AssetListResolver }
       },
       {
-        path: 'catalog/:id',
+        path: 'catalog-old/:id',
         component: AssetDetailComponent,
         resolve: { asset: AssetDetailResolver }
       },
       {
         path: 'admin',
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+      },
+      {
+        path: 'catalog',
+        loadChildren: () => import('./library-asset/library-asset.module').then(m => m.LibraryAssetModule)
       },
       {
         path: 'test',

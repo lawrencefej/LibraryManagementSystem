@@ -9,27 +9,27 @@ import { merge, Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { LibrarycardForListDto } from 'src/dto/models';
-import { LibraryCardComponent } from '../library-card/library-card.component';
-import { LibraryCardService } from '../services/library-card.service';
+import { LibraryAssetForListDto } from 'src/dto/models';
+import { LibraryAssetComponent } from '../library-asset/library-asset.component';
+import { LibraryAssetService } from '../services/library-asset.service';
 
 @Component({
-  templateUrl: './library-card-list.component.html',
-  styleUrls: ['./library-card-list.component.css']
+  templateUrl: './library-asset-list.component.html',
+  styleUrls: ['./library-asset-list.component.css']
 })
-export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestroy {
+export class LibraryAssetListComponent implements AfterViewInit, OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  dataSource = new MatTableDataSource<LibrarycardForListDto>();
-  displayedColumns = ['libraryCardNumber', 'firstName', 'lastName', 'email', 'detail', 'delete'];
+  dataSource = new MatTableDataSource<LibraryAssetForListDto>();
+  displayedColumns = ['title', 'authorName', 'year', 'assetType', 'detail', 'delete'];
   pagination: Pagination;
   paginationOptions = new Pagination();
   searchString = new FormControl('');
 
   constructor(
-    private readonly cardService: LibraryCardService,
+    private readonly assetService: LibraryAssetService,
     private readonly notify: NotificationService,
     private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog
@@ -43,27 +43,27 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
   ngOnInit(): void {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => this.mapPagination(routeData.initData));
 
-    this.searchCards();
+    this.searchAssets();
   }
 
   ngAfterViewInit(): void {
     merge(this.paginator.page, this.sort.sortChange)
       .pipe(
         takeUntil(this.unsubscribe),
-        switchMap(() => this.getCards())
+        switchMap(() => this.getAssets())
       )
       .subscribe(paginatedCards => {
         this.mapPagination(paginatedCards);
       });
   }
 
-  searchCards(): void {
+  searchAssets(): void {
     this.searchString.valueChanges
       .pipe(
         takeUntil(this.unsubscribe),
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(() => this.getCards())
+        switchMap(() => this.getAssets())
       )
       .subscribe(paginatedResult => this.mapPagination(paginatedResult));
   }
@@ -72,27 +72,26 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
     this.searchString.setValue('');
   }
 
-  openAddCardDialog(): void {
+  openAddAssetDialog(): void {
     const dialogConfig = this.getDialogConfig();
 
-    this.dialog.open(LibraryCardComponent, dialogConfig);
+    this.dialog.open(LibraryAssetComponent, dialogConfig);
   }
 
-  // TODO Deactivate card instead
-  deleteCard(card: LibrarycardForListDto): void {
+  deleteAsset(asset: LibraryAssetForListDto): void {
     this.notify
-      .confirm('Are you sure you sure you want to delete this member')
+      .confirm('Are you sure you sure you want to delete this item')
       .afterClosed()
       .pipe(
         takeUntil(this.unsubscribe),
         concatMap(response => {
           if (response) {
-            return this.cardService.deleteCard(card.id);
+            return this.assetService.deleteAsset(asset.id);
           }
         })
       )
       .subscribe(() => {
-        this.notify.success('Member was deleted successfully');
+        this.notify.success('Item was deleted successfully');
         this.pagination.totalItems--;
       });
   }
@@ -105,8 +104,8 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
     return dialogConfig;
   }
 
-  private getCards(): Observable<PaginatedResult<LibrarycardForListDto[]>> {
-    return this.cardService.getCards(
+  private getAssets(): Observable<PaginatedResult<LibraryAssetForListDto[]>> {
+    return this.assetService.getAssets(
       this.paginator.pageIndex + 1,
       this.paginator.pageSize,
       this.sort.active,
@@ -115,7 +114,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
     );
   }
 
-  private mapPagination(result: PaginatedResult<LibrarycardForListDto[]>): void {
+  private mapPagination(result: PaginatedResult<LibraryAssetForListDto[]>): void {
     this.dataSource.data = result.result;
     this.pagination = result.pagination;
   }

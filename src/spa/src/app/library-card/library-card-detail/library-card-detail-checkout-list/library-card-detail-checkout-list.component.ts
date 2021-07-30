@@ -7,6 +7,7 @@ import { merge, Observable, Subject } from 'rxjs';
 import { concatMap, switchMap, takeUntil } from 'rxjs/operators';
 import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
 import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
+import { CheckoutSharedService } from 'src/app/shared/services/checkout-shared.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { lmsResolverContants } from 'src/app/_resolver/resolver.constants';
 import { BasketService } from 'src/app/_services/basket.service';
@@ -42,15 +43,9 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   constructor(
     private readonly basketService: BasketService,
     private readonly checkoutService: CheckoutService,
+    private readonly checkoutSharedService: CheckoutSharedService,
     private readonly notify: NotificationService
-  ) {
-    this.selectedFilter.valueChanges
-      .pipe(
-        takeUntil(this.unsubscribe),
-        switchMap(() => this.getCheckouts())
-      )
-      .subscribe(paginatedCheckouts => this.mapPagination(paginatedCheckouts));
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     merge(this.paginator.page, this.sort.sortChange)
@@ -64,19 +59,8 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   }
 
   ngOnInit(): void {
-    this.checkoutService
-      .getPaginatedCheckoutsForCard(
-        this.card.id,
-        lmsResolverContants.pageNumber,
-        lmsResolverContants.pageSize,
-        '',
-        '',
-        checkoutFilters[0]
-      )
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(response => {
-        this.mapPagination(response);
-      });
+    this.initializeData();
+    this.filterCheckouts();
 
     this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => {
       this.basket = basket;
@@ -89,6 +73,31 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+  }
+
+  initializeData(): void {
+    this.checkoutSharedService
+      .getCheckoutsForCard(
+        this.card.id,
+        lmsResolverContants.pageNumber,
+        lmsResolverContants.pageSize,
+        '',
+        '',
+        checkoutFilters[0]
+      )
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(response => {
+        this.mapPagination(response);
+      });
+  }
+
+  filterCheckouts(): void {
+    this.selectedFilter.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe),
+        switchMap(() => this.getCheckouts())
+      )
+      .subscribe(paginatedCheckouts => this.mapPagination(paginatedCheckouts));
   }
 
   loadData(): void {
@@ -141,7 +150,7 @@ export class LibraryCardDetailCheckoutListComponent implements AfterViewInit, On
   }
 
   private getCheckouts(): Observable<PaginatedResult<CheckoutForListDto[]>> {
-    return this.checkoutService.getPaginatedCheckoutsForCard(
+    return this.checkoutSharedService.getCheckoutsForCard(
       this.card.id,
       this.paginator.pageIndex + 1,
       this.paginator.pageSize,

@@ -1,12 +1,13 @@
 <div flexLayout="row" class="container">
   <div fxFlex="30" class="side-bar content">
     <mat-card class="mat-elevation-z4" style="text-align: center">
+      <mat-card-title>{{ card.firstName }} {{ card.lastName }}</mat-card-title>
+      <mat-card-subtitle>{{ card.email}}</mat-card-subtitle>
       <mat-card-content>
         <div class="card-body">
-          <h1>{{ card.firstName }} {{ card.lastName }}</h1>
           <div class="d-flex flex-column align-items-center text-center">
             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" width="300"
-              style="border-radius: 50%; border: 2px solid white" />
+                 style="border-radius: 50%; border: 2px solid white" />
             <!-- <img src="{{card?.photoUrl || 'https://picsum.photos/500'}}" alt="Avatar" width="300"
               style="border-radius: 50%; border: 2px solid white;"> -->
             <!-- <img src="{{card?.photoUrl || '../../../assets/img/user.png'}}" alt="Avatar" width="300"
@@ -14,11 +15,11 @@
             <div style="margin: 10px">
               <ng-container>
                 <button *ngIf="!isEditTab" mat-raised-button color="accent" style="margin-right: 10px" type="button"
-                  (click)="editCard()">
+                        (click)="editCard()">
                   Edit Details
                 </button>
                 <button *ngIf="isEditTab" mat-raised-button color="accent" style="margin-right: 10px" type="button"
-                  (click)="cancelEdit()">
+                        (click)="cancelEdit()">
                   Cancel Edit
                 </button>
               </ng-container>
@@ -26,18 +27,18 @@
               <ng-container *ngIf="isEditTab">
                 <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)" />
                 <button mat-raised-button color="primary" style="margin-right: 10px" type="button"
-                  (click)="fileInput.click()">
+                        (click)="fileInput.click()">
                   Change Photo
                 </button>
               </ng-container>
 
               <ng-container *ngIf="isAccountGood() && !isEditTab">
                 <button *ngIf="!basket.active" mat-raised-button color="primary" style="margin-right: 10px"
-                  type="button" (click)="startCheckout()">
+                        type="button" (click)="startCheckout()">
                   Start Checkout
                 </button>
                 <button *ngIf="basket.active" mat-raised-button color="primary" style="margin-right: 10px" type="button"
-                  (click)="endCheckout()">
+                        (click)="endCheckout()">
                   End Checkout
                 </button>
               </ng-container>
@@ -46,15 +47,15 @@
             <h3>Status</h3>
             <mat-chip-list style="margin-top: 10px" class="mat-chip-list-stacked">
               <mat-chip *ngIf="isAccountGood()" style="background-color: green; justify-content: center" selected
-                [selectable]="false">
+                        [selectable]="false">
                 {{ card.status }}
               </mat-chip>
               <mat-chip *ngIf="!isAccountGood()" style="justify-content: center" selected [selectable]="false"
-                color="warn">
+                        color="warn">
                 {{ card.status }}
               </mat-chip>
               <mat-chip *ngIf="card.fees > 0" style="justify-content: center" [selectable]="false" selected
-                color="warn">
+                        color="warn">
                 <button mat-icon-button type="button" (click)="payFees()" aria-label="Payment icon-button">
                   Pay {{ card.fees | currency }}
                   <mat-icon>payment</mat-icon>
@@ -73,10 +74,6 @@
               <h3>Phone Number</h3>
               <p>
                 {{ card.phoneNumber | phoneNumber }}
-              </p>
-              <h3>Email</h3>
-              <p>
-                {{ card.email }}
               </p>
               <h3>Age</h3>
               <p>
@@ -111,7 +108,7 @@
         <mat-tab label="Edit Card">
           <ng-template matTabContent>
             <lms-library-card-edit (closeTab)="cancelEdit()" [(card)]="card" (isFormDirty)="isFormDirty($event)"
-              [states]="states"></lms-library-card-edit>
+                                   [states]="states"></lms-library-card-edit>
           </ng-template>
         </mat-tab>
       </mat-tab-group>

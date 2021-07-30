@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LibraryCardAdvancedSearchComponent } from './library-card-advanced-search/library-card-advanced-search.component';
 import { LibraryCardDetailComponent } from './library-card-detail/library-card-detail.component';
 import { LibraryCardDetailResolver } from './library-card-detail/library-card-detail.resolver';
@@ -17,12 +17,16 @@ const routes: Routes = [
   {
     path: 'cards',
     component: LibraryCardListComponent,
-    resolve: { initData: LibraryCardListResolver }
+    resolve: {
+      initData: LibraryCardListResolver
+    }
   },
   {
     path: 'cards/:id',
     component: LibraryCardDetailComponent,
-    resolve: { initData: LibraryCardDetailResolver },
+    resolve: {
+      initData: LibraryCardDetailResolver
+    },
     canDeactivate: [LibraryCardEditCanDeactivateGuardService, LibraryCardCheckoutCanDeactivateGuardService]
   },
   {

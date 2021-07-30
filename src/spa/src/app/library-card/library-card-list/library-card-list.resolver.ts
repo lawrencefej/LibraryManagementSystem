@@ -9,6 +9,7 @@ import { LibraryCardService } from '../services/library-card.service';
 @Injectable()
 export class LibraryCardListResolver implements Resolve<PaginatedResult<LibrarycardForListDto[]>> {
   constructor(private readonly cardService: LibraryCardService) {}
+
   resolve(): Observable<PaginatedResult<LibrarycardForListDto[]>> {
     return this.cardService.getCards(lmsResolverContants.pageNumber, lmsResolverContants.pageSize, '', '', '');
   }

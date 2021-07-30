@@ -11,16 +11,16 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class LibraryCardService {
-  baseUrl = environment.apiUrl + 'librarycard/';
+  baseUrl = environment.apiUrl + 'librarycard';
 
   constructor(private http: HttpClient) {}
 
-  getCardById(libraryCardId: number): Observable<LibraryCardForDetailedDto> {
-    return this.http.get<LibraryCardForDetailedDto>(this.baseUrl + libraryCardId);
+  getCardById(cardId: number): Observable<LibraryCardForDetailedDto> {
+    return this.http.get<LibraryCardForDetailedDto>(`${this.baseUrl}/${cardId}`);
   }
 
   getCardByCardNumber(cardNumber: string): Observable<LibraryCardForDetailedDto> {
-    return this.http.get<LibraryCardForDetailedDto>(this.baseUrl + 'cardnumber/' + cardNumber);
+    return this.http.get<LibraryCardForDetailedDto>(`${this.baseUrl}/cardnumber/${cardNumber}`);
   }
 
   // advancedCardSearch(member: User): Observable<User[]> {
@@ -33,15 +33,15 @@ export class LibraryCardService {
   // }
 
   updateCard(card: LibraryCardForUpdate): Observable<LibraryCardForDetailedDto> {
-    return this.http.put<LibraryCardForDetailedDto>(this.baseUrl, card);
+    return this.http.put<LibraryCardForDetailedDto>(`${this.baseUrl}`, card);
   }
 
   deleteCard(cardId: number): Observable<void> {
-    return this.http.delete<void>(this.baseUrl + cardId);
+    return this.http.delete<void>(`${this.baseUrl}/${cardId}`);
   }
 
   AddCard(card: LibraryCardForCreationDto): Observable<LibrarycardForListDto> {
-    return this.http.post<LibrarycardForListDto>(this.baseUrl, card);
+    return this.http.post<LibrarycardForListDto>(`${this.baseUrl}`, card);
   }
 
   getCards(
@@ -65,7 +65,7 @@ export class LibraryCardService {
     }
 
     return this.http
-      .get<LibrarycardForListDto[]>(this.baseUrl, {
+      .get<LibrarycardForListDto[]>(`${this.baseUrl}`, {
         observe: 'response',
         params
       })
