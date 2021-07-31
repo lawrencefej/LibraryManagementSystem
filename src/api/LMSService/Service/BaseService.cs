@@ -60,7 +60,7 @@ namespace LMSService.Service
 
             Logger.LogInformation($"Unsuccessful Item retrieval");
 
-            return LmsResponseHandler<TDetail>.Failed("");
+            return LmsResponseHandler<TDetail>.Failed("No data was found");
         }
 
         protected async Task<PagedList<TList>> MapPagination(IQueryable<TBase> queryableList, PaginationParams paginationParams)

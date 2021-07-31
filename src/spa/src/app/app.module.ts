@@ -20,6 +20,7 @@ import { ResponsiveNavComponent } from './core/responsive-nav/responsive-nav.com
 import { DashboardModule } from './dashboard/dashboard.module';
 import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
 import { MainModule } from './main/main.module';
+import { SearchModule } from './search/search.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthGuard } from './_guards/auth.guard';
 import { AdminListResolver } from './_resolver/admin-list.resolver';
@@ -54,12 +55,12 @@ export function tokenGetter(): string {
   exports: [],
   declarations: [AppComponent, BaseLayoutComponent, ResponsiveNavComponent],
   imports: [
+    // ErrorModule,
     AuthModule,
     BrowserAnimationsModule,
     BrowserModule,
     CommonModule,
     DashboardModule,
-    // ErrorModule,
     HttpClientModule,
     LayoutModule,
     MainModule,
@@ -71,6 +72,7 @@ export function tokenGetter(): string {
     MatMenuModule,
     MatSidenavModule,
     MatToolbarModule,
+    SearchModule,
     SharedModule,
     JwtModule.forRoot({
       config: {

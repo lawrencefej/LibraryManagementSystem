@@ -20,8 +20,8 @@ export class LibraryCardSearchComponent implements OnInit {
       {
         type: 'maxlength',
         message: 'Card number cannot be more than 18 digits'
-      }
-      // { type: 'pattern', message: 'Please enter a valid card Number' },
+      },
+      { type: 'pattern', message: 'Please enter a valid card Number' }
     ]
   };
 

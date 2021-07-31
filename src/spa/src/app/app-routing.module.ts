@@ -32,15 +32,21 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'member-search', pathMatch: 'full' },
+      // { path: '', redirectTo: 'member-search', pathMatch: 'full' },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'library-card',
         loadChildren: () => import('./library-card/library-card.module').then(m => m.LibraryCardModule)
       },
+      // {
+      //   path: 'home',
+      //   component: SearchLibraryCardComponent
+      // },
       {
         path: 'checkout',
         loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule)
       },
+      // TODO remove when the Library-card Module is complete
       { path: 'member-search', component: MemberSearchComponent },
       { path: 'advanced-search', component: MemberAdvancedSearchComponent },
       {
@@ -112,7 +118,7 @@ const routes: Routes = [
       { path: 'reset-password/:id/:code', component: ResetPasswordComponent }
     ]
   },
-  { path: '**', redirectTo: 'member-search', pathMatch: 'full' }
+  { path: '**', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

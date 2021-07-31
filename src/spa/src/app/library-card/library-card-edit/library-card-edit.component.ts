@@ -17,7 +17,8 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   @Input() card!: LibraryCardForDetailedDto;
-  @Input() states!: StateDto[];
+  @Input() states: StateDto[] = [];
+
   @Output() cardChange = new EventEmitter<LibraryCardForDetailedDto>();
   @Output() closeTab = new EventEmitter<void>();
   @Output() isFormDirty = new EventEmitter<boolean>();

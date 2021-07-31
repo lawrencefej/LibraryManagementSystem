@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -142,6 +143,7 @@ namespace LMSService.Service
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        // TODO fix filter
         public async Task<PagedList<LibrarycardForListDto>> AdvancedLibraryCardSearch(LibraryCardForAdvancedSearch card, PaginationParams paginationParams)
         {
             IQueryable<LibraryCard> cards = Context.LibraryCards.AsNoTracking()
@@ -150,18 +152,47 @@ namespace LMSService.Service
                     .ThenInclude(s => s.State)
                 .OrderBy(u => u.CardNumber).AsQueryable();
 
+            // cards = cards
+            //     .Where(x => x.FirstName.Contains(card.FirstName)
+            //     || x.Email.Contains(card.LastName)
+            //     || x.Email.Contains(card.Email)
+            //     || x.PhoneNumber.Contains(card.PhoneNumber)
+            //     || x.Address.Zipcode.Contains(card.Zipcode)
+            //     || x.DateOfBirth == card.DateOfBirth
+            //     );
+
             cards = cards
-                .Where(x => x.FirstName.Contains(card.FirstName)
-                || x.Email.Contains(card.LastName)
-                || x.Email.Contains(card.Email)
-                || x.PhoneNumber.Contains(card.PhoneNumber)
-                || x.Address.Zipcode.Contains(card.Zipcode)
-                || x.DateOfBirth == card.DateOfBirth
+                .Where(x => x.FirstName == card.FirstName
+                && x.Email == card.LastName
+                && x.Email == card.Email
+                && x.PhoneNumber == card.PhoneNumber
+                && x.Address.Zipcode == card.Zipcode
+                && x.DateOfBirth == card.DateOfBirth
                 );
 
             paginationParams.SearchString = null;
 
             return await FilterCards(paginationParams, cards);
+        }
+
+        public async Task<IEnumerable<LibraryCardForDetailedDto>> AdvancedLibraryCardSearch(LibraryCardForAdvancedSearch card)
+        {
+            IQueryable<LibraryCard> cards = Context.LibraryCards.AsNoTracking()
+                .Include(m => m.LibraryCardPhoto)
+                .Include(m => m.Address)
+                    .ThenInclude(s => s.State)
+                .OrderBy(u => u.CardNumber).AsQueryable();
+
+            List<LibraryCard> assetToReturn = await cards
+                .Where(x => x.FirstName.Contains(card.FirstName)
+                || x.Email.Contains(card.LastName)
+                || x.Email.Contains(card.Email)
+                || x.PhoneNumber == card.PhoneNumber
+                || x.Address.Zipcode.Contains(card.Zipcode)
+                || x.DateOfBirth == card.DateOfBirth
+                ).ToListAsync();
+
+            return Mapper.Map<IEnumerable<LibraryCardForDetailedDto>>(assetToReturn);
         }
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> UpdateLibraryCard(LibraryCardForUpdate cardForUpdate)

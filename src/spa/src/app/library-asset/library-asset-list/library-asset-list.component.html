@@ -3,7 +3,8 @@
     <mat-form-field style="margin-top: 10px;">
       <input matInput [formControl]="searchString" type="text" class="search-input" placeholder="Filter"
              autocomplete="off">
-      <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchString" (click)="onSearchClear()">
+      <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchString.dirty"
+              (click)="onSearchClear()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>

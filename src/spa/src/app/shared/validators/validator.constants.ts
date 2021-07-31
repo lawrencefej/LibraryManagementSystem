@@ -46,5 +46,39 @@ export const validationMessages = {
   role: [
     { type: 'required', message: 'Role is required' },
     { type: 'required', message: 'Please select a valid role' }
+  ],
+  cardNumber: [
+    { type: 'pattern', message: 'Please enter a valid card Number' },
+    { type: 'required', message: 'Please enter a valid card Number' }
   ]
+};
+
+export const libraryAssetValidationMessages = {
+  title: [
+    { type: 'required', message: 'Title is required' },
+    { type: 'maxlength', message: 'Title cannot be more than 25 characters' }
+  ],
+  author: [
+    { type: 'required', message: 'Author is required' },
+    {
+      type: 'maxlength',
+      message: 'Author cannot be more than 25 characters'
+    },
+    { type: 'authorError', message: 'Please select a valid author' }
+  ],
+  year: [
+    { type: 'required', message: 'Year is required' },
+    { type: 'pattern', message: 'Please enter a valid year' }
+  ],
+  numberOfCopies: [{ type: 'required', message: 'Number of copies is required' }],
+  description: [
+    { type: 'required', message: 'Description is required' },
+    {
+      type: 'maxlength',
+      message: 'description cannot be more than 500 characters'
+    }
+  ],
+  categoryId: [{ type: 'required', message: 'Category is required' }],
+  assetTypeId: [{ type: 'required', message: 'Type is required' }],
+  isbn: [{ type: 'required', message: 'ISBN is required' }]
 };

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LibraryManagementSystem.API.Helpers;
 using LMSContracts.Interfaces;
@@ -91,6 +92,15 @@ namespace LibraryManagementSystem.Controllers
             LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.GetLibraryCardByNumber(cardNumber);
 
             return ResultCheck(result);
+        }
+
+        [HttpGet("advancedSearch/")]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AdvancedLibraryCardSearch([FromQuery] LibraryCardForAdvancedSearch cardDetails)
+        {
+            IEnumerable<LibraryCardForDetailedDto> cards = await _libraryCardService.AdvancedLibraryCardSearch(cardDetails);
+
+            return Ok(cards);
         }
     }
 }

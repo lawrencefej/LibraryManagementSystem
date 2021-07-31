@@ -23,15 +23,6 @@ export class LibraryCardService {
     return this.http.get<LibraryCardForDetailedDto>(`${this.baseUrl}/cardnumber/${cardNumber}`);
   }
 
-  // advancedCardSearch(member: User): Observable<User[]> {
-  //   let params = new HttpParams();
-
-  //   params = params.set('firstName', member.firstName);
-  //   params = params.set('lastName', member.lastName);
-  //   params = params.set('email', member.email);
-  //   return this.http.get<User[]>(this.baseUrl + 'advancedSearch', { params });
-  // }
-
   updateCard(card: LibraryCardForUpdate): Observable<LibraryCardForDetailedDto> {
     return this.http.put<LibraryCardForDetailedDto>(`${this.baseUrl}`, card);
   }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
@@ -7,6 +8,8 @@ namespace LMSContracts.Interfaces
     public interface ILibraryCardService
     {
         Task<LmsResponseHandler<LibraryCardForDetailedDto>> AddLibraryCard(LibraryCardForCreationDto addCardDto);
+
+        Task<IEnumerable<LibraryCardForDetailedDto>> AdvancedLibraryCardSearch(LibraryCardForAdvancedSearch card);
 
         Task<PagedList<LibrarycardForListDto>> AdvancedLibraryCardSearch(LibraryCardForAdvancedSearch card, PaginationParams paginationParams);
 
