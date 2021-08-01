@@ -22,7 +22,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ErrorModule } from '../error/error.module';
 import { SharedModule } from '../shared/shared.module';
-import { LibraryCardAdvancedSearchComponent } from './library-card-advanced-search/library-card-advanced-search.component';
 import { LibraryCardCheckoutComponent } from './library-card-checkout/library-card-checkout.component';
 import { LibraryCardDetailCheckoutListComponent } from './library-card-detail/library-card-detail-checkout-list/library-card-detail-checkout-list.component';
 import { LibraryCardDetailComponent } from './library-card-detail/library-card-detail.component';
@@ -31,7 +30,6 @@ import { LibraryCardEditComponent } from './library-card-edit/library-card-edit.
 import { LibraryCardListComponent } from './library-card-list/library-card-list.component';
 import { LibraryCardListResolver } from './library-card-list/library-card-list.resolver';
 import { LibraryCardRoutingModule } from './library-card-routing.module';
-import { LibraryCardSearchComponent } from './library-card-search/library-card-search.component';
 import { LibraryCardComponent } from './library-card/library-card.component';
 import { LibraryCardCheckoutCanDeactivateGuardService } from './services/library-card-checkout-can-deactivate-guard.service';
 import { LibraryCardEditCanDeactivateGuardService } from './services/library-card-edit-can-deactivate-guard.service';
@@ -66,14 +64,12 @@ import { LibraryCardService } from './services/library-card.service';
     SharedModule
   ],
   declarations: [
-    LibraryCardAdvancedSearchComponent,
     LibraryCardCheckoutComponent,
     LibraryCardComponent,
     LibraryCardDetailComponent,
     LibraryCardDetailCheckoutListComponent,
     LibraryCardEditComponent,
-    LibraryCardListComponent,
-    LibraryCardSearchComponent
+    LibraryCardListComponent
   ],
   providers: [
     LibraryCardDetailResolver,

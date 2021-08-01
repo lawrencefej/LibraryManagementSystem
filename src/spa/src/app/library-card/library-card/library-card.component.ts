@@ -22,10 +22,10 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
   cardForm!: FormGroup;
   filteredStates?: Observable<StateDto[]> = of([]);
   genders = MemberGenderDto;
-  serverValidationErrors: string[] = [];
-  states!: StateDto[];
-  validationMessages = validationMessages;
   minMaxDates!: MinMaxDates;
+  serverValidationErrors: string[] = [];
+  states: StateDto[] = [];
+  validationMessages = validationMessages;
 
   constructor(
     private readonly appConfig: AppConfigService,
@@ -45,6 +45,8 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createForm();
+
+    // TODO make this a service instead
     this.stateService
       .getStatesObject()
       .pipe(takeUntil(this.unsubscribe))

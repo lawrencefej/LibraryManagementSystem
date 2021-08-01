@@ -7,6 +7,7 @@ import { LibraryCardForDetailedDto } from 'src/dto/models/library-card-for-detai
 import { LibraryCardComponent } from '../library-card/library-card.component';
 import { LibraryCardService } from '../services/library-card.service';
 
+// TODO remove
 @Component({
   templateUrl: './library-card-search.component.html',
   styleUrls: ['./library-card-search.component.css']

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PaginatedResult } from 'src/app/_models/pagination';
 import {
+  AuthorDto,
   LibraryAssetForCreationDto,
   LibraryAssetForDetailedDto,
   LibraryAssetForListDto,
@@ -13,24 +14,33 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class LibraryAssetService {
-  baseUrl = environment.apiUrl + 'catalog';
+  baseUrl = environment.apiUrl;
+  assetUrl = this.baseUrl + 'catalog';
 
   constructor(private readonly http: HttpClient) {}
 
   getAsset(assetId: number): Observable<LibraryAssetForDetailedDto> {
-    return this.http.get<LibraryAssetForDetailedDto>(`${this.baseUrl}/${assetId}`);
+    return this.http.get<LibraryAssetForDetailedDto>(`${this.assetUrl}/${assetId}`);
   }
 
   addAsset(assetForCreation: LibraryAssetForCreationDto): Observable<LibraryAssetForDetailedDto> {
-    return this.http.post<LibraryAssetForDetailedDto>(`${this.baseUrl}`, assetForCreation);
+    return this.http.post<LibraryAssetForDetailedDto>(`${this.assetUrl}`, assetForCreation);
   }
 
   updateAsset(asset: LibraryAssetForUpdateDto): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}`, asset);
+    return this.http.put<void>(`${this.assetUrl}`, asset);
   }
 
   deleteAsset(assetId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${assetId}`);
+    return this.http.delete<void>(`${this.assetUrl}/${assetId}`);
+  }
+
+  getAuthors(searchString: string): Observable<AuthorDto[]> {
+    let params = new HttpParams();
+    params = params.append('searchString', searchString);
+    return this.http
+      .get<AuthorDto[]>(`${this.assetUrl}/author`, { observe: 'response', params })
+      .pipe(map(response => response.body));
   }
 
   getAssets(
@@ -54,7 +64,7 @@ export class LibraryAssetService {
     }
 
     return this.http
-      .get<LibraryAssetForListDto[]>(`${this.baseUrl}`, {
+      .get<LibraryAssetForListDto[]>(`${this.assetUrl}`, {
         observe: 'response',
         params
       })
