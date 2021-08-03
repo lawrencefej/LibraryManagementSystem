@@ -224,10 +224,10 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
     const initial = this.categories.filter(category => category.name.toLowerCase().includes(filterValue));
 
     // Filter selected categories
-    // return initial.filter(
-    //   category => !this.selectedCategories.find(selectedCategory => category.id === selectedCategory.id)
-    // );
-    return this.categories.filter(category => category.name.toLowerCase().includes(filterValue));
+    return initial.filter(
+      category => !this.selectedCategories.find(selectedCategory => category.id === selectedCategory.id)
+    );
+    // return this.categories.filter(category => category.name.toLowerCase().includes(filterValue));
   }
 
   private watchAuthorFormChanges(): void {
@@ -238,9 +238,19 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   }
 
   private filterAuthors(value: any): AuthorDto[] {
+    console.log(value);
+
     let filterValue: string;
 
-    value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
+    // value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
+
+    if (value.id > 0) {
+      filterValue = value.fullName.toLowerCase();
+    } else {
+      // if (value !== undefined) {
+      filterValue = value.toLowerCase();
+      // }
+    }
 
     const initial = this.authors.filter(author => author.fullName.toLowerCase().includes(filterValue));
 

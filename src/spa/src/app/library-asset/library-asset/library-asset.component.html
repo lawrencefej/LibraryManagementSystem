@@ -180,8 +180,9 @@
         <div style="justify-content: center;" fxLayout="column">
           <mat-form-field>
             <input [formControl]="authorForm" matInput type="text" #authorInput placeholder="Add Author"
-                   [matAutocomplete]="auto" required autocomplete="test" name="sdffd">
-            <mat-autocomplete autoActiveFirstOption [displayWith]="displayAuthorName" #auto="matAutocomplete">
+                   [matAutocomplete]="authorAutoComplete" required autocomplete="test" name="sdffd">
+            <mat-autocomplete autoActiveFirstOption [displayWith]="displayAuthorName"
+                              #authorAutoComplete="matAutocomplete">
               <mat-option *ngFor="let author of filteredAuthors$ | async" [value]="author">
                 {{ author.fullName }}
               </mat-option>
@@ -210,10 +211,11 @@
           <div fxLayout="row">
             <mat-form-field>
               <input [formControl]="categoryForm" matInput type="text" #categoryInput placeholder="Add Category"
-                     [matAutocomplete]="auto" required autocomplete="test" name="sdffd">
-              <mat-autocomplete autoActiveFirstOption [displayWith]="displayCategoryName" #auto="matAutocomplete">
+                     [matAutocomplete]="categoryAutoComplete" required autocomplete="test" name="sdffd">
+              <mat-autocomplete autoActiveFirstOption [displayWith]="displayCategoryName"
+                                #categoryAutoComplete="matAutocomplete">
                 <mat-option *ngFor="let category of filteredCategories$ | async" [value]="category">
-                  {{ category }}
+                  {{ category.name }}
                 </mat-option>
               </mat-autocomplete>
               <button *ngIf="categoryForm.valid" (click)="addCategory(categoryForm.value)" matSuffix mat-icon-button
