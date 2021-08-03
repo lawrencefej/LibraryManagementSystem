@@ -1,11 +1,13 @@
 <div flexLayout="row" class="container">
   <div fxFlex="30" class="side-bar content">
     <mat-card class="mat-elevation-z4" style="text-align: center">
-      <mat-card-title>{{ asset.title }}</mat-card-title>
-      <mat-card-subtitle *ngFor="let author of asset.authors">{{ author.fullName }}</mat-card-subtitle>
+      <mat-card-title>{{ asset.title | titlecase }}</mat-card-title>
+      <!-- TODO disply only first -->
+      <mat-card-subtitle *ngFor="let author of asset.authors">{{ author.fullName | titlecase }}</mat-card-subtitle>
       <mat-card-content>
         <div class="card-body">
           <div class="d-flex flex-column align-items-center text-center">
+            <!-- Todo remove -->
             <!-- <img src="https://picsum.photos/500" alt="Admin" width="450" style="border: 2px solid white" /> -->
             <img src="{{asset?.photoUrl || 'https://picsum.photos/500'}}" alt="Avatar" width="450"
                  style="border: 2px solid white;">

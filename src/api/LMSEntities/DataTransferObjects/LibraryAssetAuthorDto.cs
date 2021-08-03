@@ -6,7 +6,6 @@ namespace LMSEntities.DataTransferObjects
     {
         public int Id { get; set; }
 
-        [Required]
         public int LibrayAssetId { get; set; }
 
         [Required]

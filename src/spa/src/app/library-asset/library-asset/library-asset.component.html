@@ -1,8 +1,8 @@
-<!-- <div fxLayout="row" fxLayoutAlign="end center">
-  <button mat-button matSuffix mat-icon-button tabIndex="-1" aria-label="clear" (click)="closeDialog()">
+<div fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button matSuffix mat-icon-button tabIndex="-1" aria-label="clear" (click)="cancel()">
     <mat-icon>close</mat-icon>
   </button>
-</div> -->
+</div>
 <div fxLayout="row wrap" fxLayoutAlign="center center">
   <h2>
     Add New Item test
@@ -10,7 +10,7 @@
 </div>
 
 <mat-dialog-content>
-  <form fxLayout="column" [formGroup]="assetForm" (ngSubmit)="addAsset()">
+  <form fxLayout="column" [formGroup]="assetForm">
     <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
       <mat-form-field fxFlex>
         <input matInput type="text" placeholder="Title" formControlName="title" required autocomplete="test" />
@@ -22,21 +22,6 @@
           </mat-error>
         </mat-error>
       </mat-form-field>
-      <!-- <mat-form-field fxFlex>
-        <input matInput placeholder="Search Author" formControlName="author" required [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" autoActiveFirstOption>
-          <mat-option *ngFor="let author of authors" [value]="author">
-            {{author.fullName}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngFor="let validation of validationMessages.author">
-          <mat-error *ngIf="
-            assetForm.get('author').hasError(validation.type) &&
-                  (assetForm.get('author').dirty || assetForm.get('author').touched)">
-            {{ validation.message }}
-          </mat-error>
-        </mat-error>
-      </mat-form-field> -->
     </div>
     <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
       <mat-form-field fxFlex>
@@ -51,22 +36,6 @@
           </mat-error>
         </mat-error>
       </mat-form-field>
-      <!-- <mat-form-field fxFlex>
-        <mat-select [(value)]="selectedCategory" placeholder="Category" formControlName="categoryId" required>
-          <ng-container>
-            <mat-option *ngFor="let category of (categories$ | async)" [value]="category.id">
-              {{category.name}}
-            </mat-option>
-          </ng-container>
-        </mat-select>
-        <mat-error *ngFor="let validation of validationMessages.categoryId">
-          <mat-error *ngIf="
-            assetForm.get('categoryId').hasError(validation.type) &&
-                  (assetForm.get('categoryId').dirty || assetForm.get('categoryId').touched)">
-            {{ validation.message }}
-          </mat-error>
-        </mat-error>
-      </mat-form-field> -->
     </div>
     <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
       <mat-form-field fxFlex>
@@ -81,9 +50,6 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- <mat-form-field fxFlex>
-        <mat-select [(value)]="selectedAssetType" (valueChange)="onItemChange($event)" placeholder="Type"
-                    formControlName="assetTypeId" required> -->
       <mat-form-field fxFlex>
         <mat-select placeholder="Type" formControlName="assetType" required>
           <ng-container *ngFor="let type of assetType | keyvalue">
@@ -118,59 +84,6 @@
           </mat-error>
         </mat-error>
       </mat-form-field>
-    </div>
-
-    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
-      <!-- <ng-container formArrayName="assetCategories">
-        <h4>Categories</h4> -->
-      <!-- <button type="button" (click)="addFormCategory()">+ Add another Category</button> -->
-      <!-- <ng-container *ngFor="let item of assetCategories?.controls; let i = index">
-          <div [formGroupName]="i">
-            <mat-form-field fxFlex>
-
-              <input matInput type="text" placeholder="Category {{i + 1}}" formControlName="category" required> -->
-      <!-- <input matInput type="text" placeholder="Category" required> -->
-
-      <!-- </mat-form-field>
-          </div>
-        </ng-container>
-      </ng-container> -->
-      <!-- <mat-form-field fxFlex>
-          <input matInput type="number" placeholder="Number of Copies" formControlName="numberOfCopies" required min="1">
-          <mat-error *ngFor="let validation of validationMessages.assetTypeId">
-            <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
-              {{ validation.message }}
-            </mat-error>
-          </mat-error>
-        </mat-form-field> -->
-
-      <!-- <mat-form-field fxFlex>
-          <input matInput type="text" placeholder="ISBN" formControlName="isbn" required>
-          <mat-error *ngFor="let validation of validationMessages.isbn">
-            <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
-              {{ validation.message }}
-            </mat-error>
-          </mat-error>
-        </mat-form-field> -->
-    </div>
-
-    <div style="margin-top: 50px;" class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"
-         fxLayoutGap.lt-md="0px">
-      <!-- <div class="add-bottom-padding" fxLayout.lt-sm="column" fxFlex>
-        <mat-form-field class="full-width-input">
-          <input matInput type="number" placeholder="Current Copies Available" formControlName="copiesAvailable"
-                 required min="1">
-          <mat-error
-                     *ngIf="assetForm.get('numberOfCopies').hasError('required') && (assetForm.get('numberOfCopies').dirty || assetForm.get('numberOfCopies').touched)">
-            Number of copies is required</mat-error>
-        </mat-form-field>
-      </div> -->
-      <div class="button-row" fxLayoutAlign="space-between center" fxFlex>
-        <button mat-raised-button color="primary" type="submit"
-                [disabled]="assetForm.invalid || assetForm.pristine">Submit</button>
-        <button mat-raised-button color="accent" type="reset" [disabled]="!assetForm.dirty">Reset</button>
-        <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
-      </div>
     </div>
   </form>
   <div style="margin-top: 20px;" class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"
@@ -239,3 +152,12 @@
     </div>
   </div>
 </mat-dialog-content>
+<mat-dialog-actions align="end">
+  <div class="button-row" fxLayoutAlign="space-between center" fxFlex>
+    <button mat-raised-button color="accent" type="reset" (click)="reset()"
+            [disabled]="!assetForm.dirty && selectedAuthors.length === 0 && selectedCategories.length === 0">Reset</button>
+    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="disableSubmit()"
+            (click)="addAsset(assetForm.value)">Submit</button>
+  </div>
+</mat-dialog-actions>

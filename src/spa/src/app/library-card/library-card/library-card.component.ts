@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
@@ -31,7 +31,6 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
     private readonly appConfig: AppConfigService,
     private readonly dialog: MatDialog,
     private readonly cardService: LibraryCardService,
-    private readonly dialogRef: MatDialogRef<LibraryCardComponent>,
     private readonly fb: FormBuilder,
     private readonly notify: NotificationService,
     private readonly router: Router,
@@ -62,13 +61,11 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         returnCard => {
-          this.dialogRef.close();
+          this.dialog.closeAll();
           this.router.navigateByUrl(`/library-card/cards/${returnCard.id}`);
-          this.notify.success('Card update successfully');
+          this.notify.success('Card was added successfully');
         },
-        error => {
-          this.serverValidationErrors = error;
-        }
+        error => (this.serverValidationErrors = error)
       );
   }
 

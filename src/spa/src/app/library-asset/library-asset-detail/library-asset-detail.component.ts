@@ -26,7 +26,7 @@ export class LibraryAssetDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private photoService: PhotoService,
-    private readonly assertService: LibraryAssetService,
+    private readonly assetService: LibraryAssetService,
     private readonly dialog: MatDialog,
     private readonly notify: NotificationService,
     private readonly route: ActivatedRoute
@@ -38,10 +38,7 @@ export class LibraryAssetDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => {
-      this.asset = routeData.initData;
-      console.log(this.asset);
-    });
+    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => (this.asset = routeData.initData));
   }
 
   tabClicked(tabIndex: number): void {

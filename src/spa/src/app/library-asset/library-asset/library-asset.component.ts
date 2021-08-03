@@ -6,7 +6,14 @@ import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { libraryAssetValidationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { AuthorDto, CategoryDto, LibraryAssetType } from 'src/dto/models';
+import {
+  AuthorDto,
+  CategoryDto,
+  LibraryAssetAuthorDto,
+  LibraryAssetCategoryDto,
+  LibraryAssetForCreationDto,
+  LibraryAssetType
+} from 'src/dto/models';
 import { CategoryService } from '../services/category.service';
 import { LibraryAssetService } from '../services/library-asset.service';
 
@@ -18,28 +25,20 @@ import { LibraryAssetService } from '../services/library-asset.service';
 export class LibraryAssetComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('authorInput') authorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement>;
   assetForm!: FormGroup;
   assetType = LibraryAssetType;
-  categories: CategoryDto[] = [];
+  authorForm = new FormControl('', Validators.required);
   authors: AuthorDto[] = [];
-  filteredCategories$?: Observable<CategoryDto[]> = of([]);
+  categories: CategoryDto[] = [];
+  categoryForm = new FormControl('', Validators.required);
   filteredAuthors$?: Observable<AuthorDto[]> = of([]);
-  // selectedAuthors: AuthorDto[] = [
-  //   { id: 1, fullName: 'Ashley Rennebeck' },
-  //   { id: 2, fullName: 'Carlina Schuster' }
-  // ];
-  // selectedCategories: CategoryDto[] = [
-  //   { id: 1, name: 'Computer science and Information Technology' },
-  //   { id: 2, name: 'Philosophy and psychology' }
-  // ];
+  filteredCategories$?: Observable<CategoryDto[]> = of([]);
   selectedAuthors: AuthorDto[] = [];
   selectedCategories: CategoryDto[] = [];
   serverValidationErrors: string[] = [];
   validationMessages = libraryAssetValidationMessages;
-  categoryForm = new FormControl('', Validators.required);
-  authorForm = new FormControl('', Validators.required);
 
   constructor(
     private readonly assetService: LibraryAssetService,
@@ -48,9 +47,7 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly notify: NotificationService,
     private readonly router: Router
-  ) {
-    this.getCategoryList();
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.unsubscribe.next();
@@ -60,29 +57,27 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createForm();
     this.watchAssetTypeChanges();
-    // this.watchCategoryChanges();
     this.watchCategoryFormChanges();
     this.watchAuthorFormChanges();
-    // this.getCategoryList();
+    this.getCategoryList();
     this.getAuthors();
-    this.filteredCategories$.subscribe(data => {
-      console.log(data);
-    });
   }
 
-  // watchCategoryChanges(): void {
-  //   this.categoryForm.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
-  //     // const category = this.categoryForm.value;
+  addAsset(asset: LibraryAssetForCreationDto): void {
+    asset.assetAuthors = this.mapSelectedAuthor();
+    asset.assetCategories = this.mapSelectedCategories();
 
-  //     // if (category) {
-  //     //   this.selectedCategories.push(category);
-  //     // }
-  //     console.log(this.categories);
-  //   });
-  // }
-
-  addAsset(): void {
-    console.log(this.assetForm.value);
+    this.assetService
+      .addAsset(asset)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        returnedAsset => {
+          this.dialog.closeAll();
+          this.router.navigateByUrl(`/catalog/detail/${returnedAsset.id}`);
+          this.notify.success('Card added successfully');
+        },
+        error => (this.serverValidationErrors = error)
+      );
   }
 
   displayCategoryName(category: CategoryDto): string {
@@ -93,31 +88,25 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
     return author.fullName;
   }
 
-  // private getAuthors(): void {
-  //   this.assetForm.get('')?.valueChanges.pipe(
-  //     takeUntil(this.unsubscribe),
-  //     debounceTime(500),
-  //     distinctUntilChanged(),
-  //     switchMap(() => this.assetService.getAuthors(this.assetForm.get('')?.value))
-  //   );
-  // }
   cancel(): void {
-    if (this.assetForm.dirty) {
+    if (this.assetForm.dirty || this.selectedAuthors.length > 0 || this.selectedCategories.length > 0) {
       this.notify.discardDialog('Are you sure you want to discard these changes');
     } else {
       this.dialog.closeAll();
     }
   }
 
-  private watchAssetTypeChanges(): void {
-    this.assetForm
-      .get('assetType')
-      ?.valueChanges.pipe(takeUntil(this.unsubscribe))
-      .subscribe(value => {
-        if (value === this.assetType.Book) {
-          this.assetForm.controls.isbn.enable();
-        } else {
-          this.assetForm.controls.isbn.disable();
+  reset(): void {
+    // Move strings to constants
+    this.notify
+      .confirm('Are you sure you want to discard these changes', 'Note! These changes cannot be reversed')
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(respose => {
+        if (respose) {
+          this.assetForm.reset();
+          this.selectedAuthors = [];
+          this.selectedCategories = [];
         }
       });
   }
@@ -148,24 +137,35 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
     this.selectedCategories.splice(index, 1);
   }
 
-  // get assetCategories(): FormArray {
-  //   return this.assetForm.get('assetCategories') as FormArray;
-  // }
+  disableSubmit(): boolean {
+    return (
+      this.assetForm.invalid ||
+      this.assetForm.pristine ||
+      this.selectedAuthors.length <= 0 ||
+      this.selectedCategories.length <= 0
+    );
+  }
 
-  // addFormCategory(): void {
-  //   console.log(this.assetForm.get('assetCategories')?.value);
-  //   console.log(this.assetForm.value);
+  private mapSelectedCategories(): LibraryAssetCategoryDto[] {
+    return this.selectedCategories.map(a => ({ categoryId: a.id }));
+  }
 
-  //   this.assetCategories.push(this.addAssetCategory());
-  // }
+  private mapSelectedAuthor(): LibraryAssetAuthorDto[] {
+    return this.selectedAuthors.map((a, index) => ({ authorId: a.id, order: index }));
+  }
 
-  // removeFormCategory(index: number): void {
-  //   this.assetCategories.removeAt(index);
-  // }
-
-  // private getCategories(): void {
-  //   this.categoryService.categories$.pipe(takeUntil(this.unsubscribe));
-  // }
+  private watchAssetTypeChanges(): void {
+    this.assetForm
+      .get('assetType')
+      ?.valueChanges.pipe(takeUntil(this.unsubscribe))
+      .subscribe(value => {
+        if (value === this.assetType.Book) {
+          this.assetForm.controls.isbn.enable();
+        } else {
+          this.assetForm.controls.isbn.disable();
+        }
+      });
+  }
 
   private addAssetCategory(): FormGroup {
     return this.fb.group({
@@ -176,10 +176,6 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
 
   private createForm(): void {
     this.assetForm = this.fb.group({
-      assetAuthors: new FormControl('', Validators.compose([Validators.required])),
-      // assetCategories: new FormControl('', Validators.required),
-      // assetCategories: this.fb.array([new FormControl('', Validators.required)]),
-      assetCategories: this.fb.array([this.addAssetCategory()]),
       assetType: new FormControl('', Validators.required),
       description: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(200)])),
       isbn: new FormControl({ value: '', disabled: true }, Validators.required),
@@ -197,24 +193,10 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   }
 
   private getCategoryList(): void {
-    this.categoryService.categories$.pipe(takeUntil(this.unsubscribe)).subscribe(categories => {
-      this.categories = categories;
-      console.log(categories);
-    });
+    this.categoryService.categories$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(categories => (this.categories = categories));
   }
-
-  // private filterCategories(value: any): CategoryDto[] {
-  //   let filterValue: string;
-
-  //   value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
-
-  //   const initial = this.categories.filter(category => category.name.toLowerCase().includes(filterValue));
-
-  //   // Filter selected categories
-  //   return initial.filter(
-  //     category => !this.selectedCategories.find(selectedCategory => category.id === selectedCategory.id)
-  //   );
-  // }
 
   private filterCategories(value: any): CategoryDto[] {
     let filterValue: string;
@@ -227,7 +209,6 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
     return initial.filter(
       category => !this.selectedCategories.find(selectedCategory => category.id === selectedCategory.id)
     );
-    // return this.categories.filter(category => category.name.toLowerCase().includes(filterValue));
   }
 
   private watchAuthorFormChanges(): void {
@@ -238,8 +219,6 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   }
 
   private filterAuthors(value: any): AuthorDto[] {
-    console.log(value);
-
     let filterValue: string;
 
     // value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
@@ -247,9 +226,7 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
     if (value.id > 0) {
       filterValue = value.fullName.toLowerCase();
     } else {
-      // if (value !== undefined) {
       filterValue = value.toLowerCase();
-      // }
     }
 
     const initial = this.authors.filter(author => author.fullName.toLowerCase().includes(filterValue));

@@ -3,6 +3,6 @@
 export interface LibraryAssetAuthorDto {
   authorId: number;
   id?: number;
-  librayAssetId: number;
+  librayAssetId?: number;
   order: number;
 }
