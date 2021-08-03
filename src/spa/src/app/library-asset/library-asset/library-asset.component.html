@@ -99,6 +99,7 @@
         </mat-error>
       </mat-form-field>
     </div>
+
     <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
       <mat-form-field fxFlex>
         <input matInput type="number" placeholder="Number of Copies" formControlName="numberOfCopies" required min="1">
@@ -118,6 +119,41 @@
         </mat-error>
       </mat-form-field>
     </div>
+
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <!-- <ng-container formArrayName="assetCategories">
+        <h4>Categories</h4> -->
+      <!-- <button type="button" (click)="addFormCategory()">+ Add another Category</button> -->
+      <!-- <ng-container *ngFor="let item of assetCategories?.controls; let i = index">
+          <div [formGroupName]="i">
+            <mat-form-field fxFlex>
+
+              <input matInput type="text" placeholder="Category {{i + 1}}" formControlName="category" required> -->
+      <!-- <input matInput type="text" placeholder="Category" required> -->
+
+      <!-- </mat-form-field>
+          </div>
+        </ng-container>
+      </ng-container> -->
+      <!-- <mat-form-field fxFlex>
+          <input matInput type="number" placeholder="Number of Copies" formControlName="numberOfCopies" required min="1">
+          <mat-error *ngFor="let validation of validationMessages.assetTypeId">
+            <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field> -->
+
+      <!-- <mat-form-field fxFlex>
+          <input matInput type="text" placeholder="ISBN" formControlName="isbn" required>
+          <mat-error *ngFor="let validation of validationMessages.isbn">
+            <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field> -->
+    </div>
+
     <div style="margin-top: 50px;" class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"
          fxLayoutGap.lt-md="0px">
       <!-- <div class="add-bottom-padding" fxLayout.lt-sm="column" fxFlex>
@@ -137,4 +173,67 @@
       </div>
     </div>
   </form>
+  <div style="margin-top: 20px;" class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"
+       fxLayoutGap.lt-md="0px">
+    <div fxFlex="50">
+      <ng-container>
+        <div style="justify-content: center;" fxLayout="column">
+          <mat-form-field>
+            <input [formControl]="authorForm" matInput type="text" #authorInput placeholder="Add Author"
+                   [matAutocomplete]="auto" required autocomplete="test" name="sdffd">
+            <mat-autocomplete autoActiveFirstOption [displayWith]="displayAuthorName" #auto="matAutocomplete">
+              <mat-option *ngFor="let author of filteredAuthors$ | async" [value]="author">
+                {{ author.fullName }}
+              </mat-option>
+            </mat-autocomplete>
+            <button *ngIf="authorForm.valid" (click)="addAuthor(authorForm.value)" matSuffix mat-icon-button
+                    color="primary" aria-label="Add">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-form-field>
+          <ng-container>
+            <h4>Selected Authors</h4>
+            <mat-chip-list class="mat-chip-list-stacked">
+              <mat-chip style="max-width: fit-content;" selected color="accent" (removed)="removeAuthor
+              (author)" *ngFor="let author of selectedAuthors">{{ author.fullName }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+
+    <div fxFlex="50">
+      <ng-container>
+        <div fxLayout="column">
+          <div fxLayout="row">
+            <mat-form-field>
+              <input [formControl]="categoryForm" matInput type="text" #categoryInput placeholder="Add Category"
+                     [matAutocomplete]="auto" required autocomplete="test" name="sdffd">
+              <mat-autocomplete autoActiveFirstOption [displayWith]="displayCategoryName" #auto="matAutocomplete">
+                <mat-option *ngFor="let category of filteredCategories$ | async" [value]="category">
+                  {{ category }}
+                </mat-option>
+              </mat-autocomplete>
+              <button *ngIf="categoryForm.valid" (click)="addCategory(categoryForm.value)" matSuffix mat-icon-button
+                      color="primary" aria-label="Add">
+                <mat-icon>add</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+          <ng-container>
+            <h4>Selected Categories</h4>
+            <mat-chip-list class="mat-chip-list-stacked">
+              <mat-chip style="max-width: fit-content;" selected (removed)="removeCategory(category)"
+                        *ngFor="let category of selectedCategories">{{
+                category.name }}<mat-icon matChipRemove>cancel
+                </mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
 </mat-dialog-content>

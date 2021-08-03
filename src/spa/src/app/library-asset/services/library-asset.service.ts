@@ -39,8 +39,8 @@ export class LibraryAssetService {
     let params = new HttpParams();
     params = params.append('searchString', searchString);
     return this.http
-      .get<AuthorDto[]>(`${this.assetUrl}/author`, { observe: 'response', params })
-      .pipe(map(response => response.body));
+      .get<AuthorDto[]>(`${this.baseUrl}author`, { observe: 'response', params })
+      .pipe(map(response => response.body || []));
   }
 
   getAssets(

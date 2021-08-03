@@ -56,28 +56,6 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
     this.minMaxDates = this.appConfig.calculateMinMaxDate();
   }
 
-  createForm(): void {
-    this.cardForm = this.fb.group({
-      firstName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
-      lastName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
-      email: new FormControl(
-        '',
-        Validators.compose([Validators.required, Validators.email, Validators.maxLength(100)])
-      ),
-      phoneNumber: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
-      gender: new FormControl('', Validators.required),
-      dateOfBirth: new FormControl('', Validators.required),
-
-      address: new FormGroup({
-        street: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(50)])),
-        city: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
-        zipcode: new FormControl('', Validators.compose([Validators.required, Validators.pattern('^[0-9]{5}$')])),
-        stateId: new FormControl('', Validators.compose([Validators.required])),
-        state: new FormControl('', Validators.compose([Validators.required, stateValidator]))
-      })
-    });
-  }
-
   addCard(card: LibraryCardForCreationDto): void {
     this.cardService
       .AddCard(card)
@@ -132,5 +110,27 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
     value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
 
     return this.states.filter(state => state.name.toLowerCase().includes(filterValue));
+  }
+
+  private createForm(): void {
+    this.cardForm = this.fb.group({
+      firstName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
+      lastName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
+      email: new FormControl(
+        '',
+        Validators.compose([Validators.required, Validators.email, Validators.maxLength(100)])
+      ),
+      phoneNumber: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
+      gender: new FormControl('', Validators.required),
+      dateOfBirth: new FormControl('', Validators.required),
+
+      address: new FormGroup({
+        street: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(50)])),
+        city: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
+        zipcode: new FormControl('', Validators.compose([Validators.required, Validators.pattern('^[0-9]{5}$')])),
+        stateId: new FormControl('', Validators.compose([Validators.required])),
+        state: new FormControl('', Validators.compose([Validators.required, stateValidator]))
+      })
+    });
   }
 }

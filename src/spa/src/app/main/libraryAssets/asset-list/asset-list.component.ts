@@ -1,18 +1,17 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-
-import { ActivatedRoute } from '@angular/router';
-import { AssetComponent } from '../asset/asset.component';
-import { AssetService } from 'src/app/_services/asset.service';
-import { LibraryAsset } from 'src/app/_models/libraryAsset';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { ActivatedRoute } from '@angular/router';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LibraryAsset } from 'src/app/_models/libraryAsset';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
+import { AssetService } from 'src/app/_services/asset.service';
+import { NotificationService } from 'src/app/_services/notification.service';
 import { LibraryAssetForListDto } from 'src/dto/models/library-asset-for-list-dto';
+import { AssetComponent } from '../asset/asset.component';
 
 @Component({
   templateUrl: './asset-list.component.html',
@@ -22,14 +21,14 @@ export class AssetListComponent implements AfterViewInit, OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   assets: LibraryAssetForListDto[] = [];
-  pagination: Pagination;
+  pagination!: Pagination;
   dataSource = new MatTableDataSource<LibraryAssetForListDto>(this.assets);
   searchString = '';
   displayedColumns = ['title', 'authorName', 'year', 'assetType', 'actions'];
   paginationOptions = new Pagination();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private assetService: AssetService,
