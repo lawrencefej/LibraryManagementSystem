@@ -107,8 +107,9 @@
           </mat-form-field>
           <ng-container>
             <h4>Selected Authors</h4>
-            <mat-chip-list class="mat-chip-list-stacked">
-              <mat-chip style="max-width: fit-content;" selected color="accent" (removed)="removeAuthor
+            <mat-chip-list cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="dropAuthor($event)"
+                           class="mat-chip-list-stacked">
+              <mat-chip cdkDrag style="max-width: fit-content;" selected color="accent" (removed)="removeAuthor
               (author)" *ngFor="let author of selectedAuthors">{{ author.fullName }}
                 <mat-icon matChipRemove>cancel</mat-icon>
               </mat-chip>
@@ -139,8 +140,9 @@
           </div>
           <ng-container>
             <h4>Selected Categories</h4>
-            <mat-chip-list class="mat-chip-list-stacked">
-              <mat-chip style="max-width: fit-content;" selected (removed)="removeCategory(category)"
+            <mat-chip-list cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="dropCategory($event)"
+                           class="mat-chip-list-stacked">
+              <mat-chip cdkDrag style="max-width: fit-content;" selected (removed)="removeCategory(category)"
                         *ngFor="let category of selectedCategories">{{
                 category.name }}<mat-icon matChipRemove>cancel
                 </mat-icon>

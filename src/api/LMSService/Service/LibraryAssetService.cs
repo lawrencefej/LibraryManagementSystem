@@ -92,9 +92,9 @@ namespace LMSService.Service
             IQueryable<LibraryAsset> assets = Context.LibraryAssets.AsNoTracking()
                 .Include(p => p.Photo)
                 .Include(p => p.AssetCategories)
-                    .ThenInclude(c => c.Category)
-                .Include(s => s.AssetAuthors)
-                    .ThenInclude(a => a.Author)
+                .ThenInclude(c => c.Category)
+                .Include(s => s.AssetAuthors.OrderBy(o => o.Order))
+                .ThenInclude(a => a.Author)
                 .AsQueryable();
 
             return await FilterAssets(paginationParams, assets);
@@ -121,9 +121,9 @@ namespace LMSService.Service
             return await Context.LibraryAssets
                 .Include(p => p.Photo)
                 .Include(p => p.AssetCategories)
-                    .ThenInclude(ba => ba.Category)
-                .Include(s => s.AssetAuthors)
-                    .ThenInclude(ba => ba.Author)
+                .ThenInclude(ba => ba.Category)
+                .Include(s => s.AssetAuthors.OrderBy(o => o.Order))
+                .ThenInclude(ba => ba.Author)
                 .FirstOrDefaultAsync(a => a.Id == assetId);
         }
 

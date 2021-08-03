@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -38,6 +39,7 @@ import { LibraryAssetService } from './services/library-asset.service';
   imports: [
     CommonModule,
     LibraryAssetRoutingModule,
+    DragDropModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,

@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -122,6 +123,14 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
       this.categoryInput.nativeElement.value = '';
       this.categoryForm.setValue('');
     }
+  }
+
+  dropCategory(event: CdkDragDrop<CategoryDto[]>): void {
+    moveItemInArray(this.selectedCategories, event.previousIndex, event.currentIndex);
+  }
+
+  dropAuthor(event: CdkDragDrop<AuthorDto[]>): void {
+    moveItemInArray(this.selectedAuthors, event.previousIndex, event.currentIndex);
   }
 
   addAuthor(author: AuthorDto): void {
