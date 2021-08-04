@@ -116,9 +116,8 @@
         </mat-tab>
         <mat-tab label="Edit Card">
           <ng-template matTabContent>
-            <lms-library-asset-edit></lms-library-asset-edit>
-            <!-- <lms-library-card-edit (closeTab)="cancelEdit()" [(card)]="card" (isFormDirty)="isFormDirty($event)"
-                                   [states]="states"></lms-library-card-edit> -->
+            <lms-library-asset-edit (closeTab)="cancelEdit()" [(asset)]="asset" (isFormDirty)="isFormDirty($event)">
+            </lms-library-asset-edit>
           </ng-template>
         </mat-tab>
       </mat-tab-group>

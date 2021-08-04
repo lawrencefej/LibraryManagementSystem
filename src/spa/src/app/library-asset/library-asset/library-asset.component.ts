@@ -176,13 +176,6 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
       });
   }
 
-  private addAssetCategory(): FormGroup {
-    return this.fb.group({
-      category: ['', Validators.compose([Validators.required])],
-      categoryId: ['', Validators.compose([Validators.required])]
-    });
-  }
-
   private createForm(): void {
     this.assetForm = this.fb.group({
       assetType: new FormControl('', Validators.required),

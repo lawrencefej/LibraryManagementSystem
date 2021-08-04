@@ -1,1 +1,154 @@
-<p>library-asset-edit works!</p>
+<mat-dialog-content>
+  <form fxLayout="column" [formGroup]="assetForm">
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <input matInput type="text" placeholder="Title" formControlName="title" required autocomplete="test" />
+        <mat-error *ngFor="let validation of validationMessages.title">
+          <mat-error *ngIf="
+            assetForm.get('title').hasError(validation.type) &&
+                  (assetForm.get('title').dirty || assetForm.get('title').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <textarea matInput type="text" maxlength="200" placeholder="Description" formControlName="description"
+                  required></textarea>
+        <mat-hint align="end">{{ assetForm.get('description').value?.length }} / 200</mat-hint>
+        <mat-error *ngFor="let validation of validationMessages.description">
+          <mat-error *ngIf="
+            assetForm.get('description').hasError(validation.type) &&
+                (assetForm.get('description').dirty || assetForm.get('description').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <input matInput type="text" placeholder="Year" formControlName="year" required maxlength="4"
+               autocomplete="test" />
+        <mat-error *ngFor="let validation of validationMessages.year">
+          <mat-error *ngIf="
+            assetForm.get('year').hasError(validation.type) &&
+                  (assetForm.get('year').dirty || assetForm.get('year').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <mat-select placeholder="Type" formControlName="assetType" required>
+          <ng-container *ngFor="let type of assetType | keyvalue">
+            <mat-option [value]="type.value">{{ type.value }}</mat-option>
+          </ng-container>
+        </mat-select>
+        <mat-error *ngFor="let validation of validationMessages.assetTypeId">
+          <mat-error *ngIf="
+            assetForm.get('assetType').hasError(validation.type) &&
+                  (assetForm.get('assetType').dirty || assetForm.get('assetType').touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field fxFlex>
+        <input matInput type="number" placeholder="Number of Copies" formControlName="numberOfCopies" required min="1">
+        <mat-error *ngFor="let validation of validationMessages.assetTypeId">
+          <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <input matInput type="text" placeholder="ISBN" formControlName="isbn" required>
+        <mat-error *ngFor="let validation of validationMessages.isbn">
+          <mat-error *ngIf="assetForm.hasError(validation.type) && (assetForm.dirty || assetForm.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+  <div style="margin-top: 20px;" class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"
+       fxLayoutGap.lt-md="0px">
+    <div fxFlex="50">
+      <ng-container>
+        <div style="justify-content: center;" fxLayout="column">
+          <mat-form-field>
+            <input [formControl]="authorForm" matInput type="text" #authorInput placeholder="Add Author"
+                   [matAutocomplete]="authorAutoComplete" required autocomplete="test" name="sdffd">
+            <mat-autocomplete autoActiveFirstOption [displayWith]="displayAuthorName"
+                              #authorAutoComplete="matAutocomplete">
+              <mat-option *ngFor="let author of filteredAuthors$ | async" [value]="author">
+                {{ author.fullName }}
+              </mat-option>
+            </mat-autocomplete>
+            <button *ngIf="authorForm.valid" (click)="addAuthor(authorForm.value)" matSuffix mat-icon-button
+                    color="primary" aria-label="Add">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-form-field>
+          <ng-container>
+            <h4>Selected Authors</h4>
+            <mat-chip-list cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="dropAuthor($event)"
+                           class="mat-chip-list-stacked">
+              <mat-chip cdkDrag style="max-width: fit-content;" selected color="accent" (removed)="removeAuthor
+              (author)" *ngFor="let author of selectedAuthors">{{ author.fullName }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+
+    <div fxFlex="50">
+      <ng-container>
+        <div fxLayout="column">
+          <!-- <div fxLayout="row"> -->
+          <mat-form-field>
+            <input [formControl]="categoryForm" matInput type="text" #categoryInput placeholder="Add Category"
+                   [matAutocomplete]="categoryAutoComplete" required autocomplete="test" name="sdffd">
+            <mat-autocomplete autoActiveFirstOption [displayWith]="displayCategoryName"
+                              #categoryAutoComplete="matAutocomplete">
+              <mat-option *ngFor="let category of filteredCategories$ | async" [value]="category">
+                {{ category.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <button *ngIf="categoryForm.valid" (click)="addCategory(categoryForm.value)" matSuffix mat-icon-button
+                    color="primary" aria-label="Add">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-form-field>
+          <!-- </div> -->
+          <ng-container>
+            <h4>Selected Categories</h4>
+            <mat-chip-list cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="dropCategory($event)"
+                           class="mat-chip-list-stacked">
+              <mat-chip cdkDrag style="max-width: fit-content;" selected (removed)="removeCategory(category)"
+                        *ngFor="let category of selectedCategories">{{
+                category.name }}<mat-icon matChipRemove>cancel
+                </mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div style="margin-top: 20px;" class="button-row" fxLayoutAlign="space-between center" fxFlex>
+    <button mat-raised-button color="accent" type="reset" (click)="reset()"
+            [disabled]="!assetForm.dirty && selectedAuthors.length === 0 && selectedCategories.length === 0">Reset</button>
+    <button mat-raised-button color="warn" type="button" (click)="cancelEdit()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="disableSubmit()"
+            (click)="editAsset(assetForm.value)">Submit</button>
+  </div>
+</mat-dialog-actions>

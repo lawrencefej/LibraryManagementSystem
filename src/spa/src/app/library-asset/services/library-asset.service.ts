@@ -27,8 +27,8 @@ export class LibraryAssetService {
     return this.http.post<LibraryAssetForDetailedDto>(`${this.assetUrl}`, assetForCreation);
   }
 
-  updateAsset(asset: LibraryAssetForUpdateDto): Observable<void> {
-    return this.http.put<void>(`${this.assetUrl}`, asset);
+  updateAsset(asset: LibraryAssetForUpdateDto): Observable<LibraryAssetForDetailedDto> {
+    return this.http.put<LibraryAssetForDetailedDto>(`${this.assetUrl}`, asset);
   }
 
   deleteAsset(assetId: number): Observable<void> {

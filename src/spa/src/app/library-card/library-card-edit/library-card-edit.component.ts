@@ -69,7 +69,41 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  populateForm(card: LibraryCardForDetailedDto): void {
+  editCard(card: LibraryCardForUpdate): void {
+    this.cardService
+      .updateCard(card)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        returnCard => {
+          this.isFormDirty.emit(false);
+          this.closeTab.emit();
+          this.notify.success('Card updated successfully');
+          this.cardChange.emit(returnCard);
+        },
+        error => {
+          this.serverValidationErrors = error;
+        }
+      );
+  }
+
+  displayStateName(state: StateDto): string {
+    return state.name;
+  }
+
+  private setStateId(): void {
+    this.cardForm
+      .get('address.state')
+      ?.valueChanges.pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        const newState: StateDto = this.cardForm.get('address.state')?.value;
+
+        if (newState) {
+          this.cardForm.get('address.stateId')?.setValue(newState.id);
+        }
+      });
+  }
+
+  private populateForm(card: LibraryCardForDetailedDto): void {
     this.cardForm = this.fb.group({
       id: new FormControl(card.id),
       firstName: new FormControl(card.firstName, Validators.compose([Validators.required, Validators.maxLength(25)])),
@@ -99,40 +133,6 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
         state: new FormControl(card.address.state, Validators.compose([Validators.required, stateValidator]))
       })
     });
-  }
-
-  editCard(card: LibraryCardForUpdate): void {
-    this.cardService
-      .updateCard(card)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(
-        returnCard => {
-          this.isFormDirty.emit(false);
-          this.closeTab.emit();
-          this.notify.success('Card update successfully');
-          this.cardChange.emit(returnCard);
-        },
-        error => {
-          this.serverValidationErrors = error;
-        }
-      );
-  }
-
-  displayStateName(state: StateDto): string {
-    return state.name;
-  }
-
-  private setStateId(): void {
-    this.cardForm
-      .get('address.state')
-      ?.valueChanges.pipe(takeUntil(this.unsubscribe))
-      .subscribe(() => {
-        const newState: StateDto = this.cardForm.get('address.state')?.value;
-
-        if (newState) {
-          this.cardForm.get('address.stateId')?.setValue(newState.id);
-        }
-      });
   }
 
   private filterStates(value: any): StateDto[] {

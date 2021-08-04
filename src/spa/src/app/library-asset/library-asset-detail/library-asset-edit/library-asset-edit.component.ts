@@ -1,9 +1,20 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { libraryAssetValidationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
-import { LibraryAssetForDetailedDto } from 'src/dto/models';
+import {
+  AuthorDto,
+  CategoryDto,
+  LibraryAssetAuthorDto,
+  LibraryAssetCategoryDto,
+  LibraryAssetForDetailedDto,
+  LibraryAssetForUpdateDto,
+  LibraryAssetType
+} from 'src/dto/models';
+import { CategoryService } from '../../services/category.service';
 import { LibraryAssetService } from '../../services/library-asset.service';
 
 @Component({
@@ -16,19 +27,28 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
 
   // TODO Cleanup
   @Input() asset!: LibraryAssetForDetailedDto;
-  // @Input() states!: StateDto[];
   @Output() assetChange = new EventEmitter<LibraryAssetForDetailedDto>();
   @Output() closeTab = new EventEmitter<void>();
   @Output() isFormDirty = new EventEmitter<boolean>();
+  @ViewChild('authorInput') authorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement>;
 
   assetForm!: FormGroup;
-  // filteredStates?: Observable<StateDto[]> = of([]);
-  validationMessages = libraryAssetValidationMessages;
-  // genders = MemberGenderDto;
+  assetType = LibraryAssetType;
+  authorForm = new FormControl('', Validators.required);
+  authors: AuthorDto[] = [];
+  categories: CategoryDto[] = [];
+  categoryForm = new FormControl('', Validators.required);
+  filteredAuthors$?: Observable<AuthorDto[]> = of([]);
+  filteredCategories$?: Observable<CategoryDto[]> = of([]);
+  selectedAuthors: AuthorDto[] = [];
+  selectedCategories: CategoryDto[] = [];
   serverValidationErrors: string[] = [];
+  validationMessages = libraryAssetValidationMessages;
 
   constructor(
     private readonly assetService: LibraryAssetService,
+    private readonly categoryService: CategoryService,
     private readonly fb: FormBuilder,
     private readonly notify: NotificationService
   ) {}
@@ -38,32 +58,190 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.populateForm(this.asset);
+    this.watchAssetTypeChanges();
+    this.watchCategoryFormChanges();
+    this.watchAuthorFormChanges();
+    this.getCategoryList();
+    this.getAuthors();
+    this.assetForm.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+      this.isFormDirty.emit(this.assetForm.dirty);
+    });
+  }
+
+  editAsset(asset: LibraryAssetForUpdateDto): void {
+    asset.assetAuthors = this.mapSelectedAuthor();
+    asset.assetCategories = this.mapSelectedCategories();
+
+    this.assetService
+      .updateAsset(asset)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        returnedAsset => {
+          this.isFormDirty.emit(false);
+          this.closeTab.emit();
+          // TODO return from server
+          this.notify.success('Card updated successfully');
+          this.assetChange.emit(returnedAsset);
+        },
+        error => (this.serverValidationErrors = error)
+      );
+  }
 
   cancelEdit(): void {
     this.closeTab.emit();
   }
 
-  populateForm(asset: LibraryAssetForDetailedDto): void {
+  displayCategoryName(category: CategoryDto): string {
+    return category.name;
+  }
+
+  displayAuthorName(author: AuthorDto): string {
+    return author.fullName;
+  }
+
+  dropCategory(event: CdkDragDrop<CategoryDto[]>): void {
+    moveItemInArray(this.selectedCategories, event.previousIndex, event.currentIndex);
+  }
+
+  dropAuthor(event: CdkDragDrop<AuthorDto[]>): void {
+    moveItemInArray(this.selectedAuthors, event.previousIndex, event.currentIndex);
+  }
+
+  reset(): void {
+    // Move strings to constants
+    this.notify
+      .confirm('Are you sure you want to discard these changes', 'Note! These changes cannot be reversed')
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(respose => {
+        if (respose) {
+          this.populateForm(this.asset);
+          this.selectedAuthors = this.asset.authors;
+          this.selectedCategories = this.asset.categories;
+          this.isFormDirty.emit(false);
+        }
+      });
+  }
+
+  disableSubmit(): boolean {
+    return (
+      this.assetForm.invalid ||
+      this.assetForm.pristine ||
+      this.areArraysEqual(this.asset.authors, this.selectedAuthors) ||
+      this.areArraysEqual(this.asset.categories, this.selectedCategories)
+    );
+  }
+
+  private areArraysEqual(first: any[], second: any[]): boolean {
+    return JSON.stringify(first) === JSON.stringify(second);
+  }
+
+  private mapSelectedCategories(): LibraryAssetCategoryDto[] {
+    return this.selectedCategories.map(a => ({ categoryId: a.id }));
+  }
+
+  private mapSelectedAuthor(): LibraryAssetAuthorDto[] {
+    return this.selectedAuthors.map((a, index) => ({ authorId: a.id, order: index }));
+  }
+
+  private getAuthors(): void {
+    this.authorForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap(value => this.assetService.getAuthors(value))
+      )
+      .subscribe(authors => (this.authors = authors));
+  }
+
+  private getCategoryList(): void {
+    this.categoryService.categories$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(categories => (this.categories = categories));
+  }
+
+  private watchAuthorFormChanges(): void {
+    this.filteredAuthors$ = this.authorForm.valueChanges.pipe(
+      startWith(''),
+      map(s => this.filterAuthors(s))
+    );
+  }
+
+  private filterAuthors(value: any): AuthorDto[] {
+    let filterValue: string;
+
+    // value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
+
+    if (value.id > 0) {
+      filterValue = value.fullName.toLowerCase();
+    } else {
+      filterValue = value.toLowerCase();
+    }
+
+    const initial = this.authors.filter(author => author.fullName.toLowerCase().includes(filterValue));
+
+    // Filter selected authors
+    return initial.filter(author => !this.selectedAuthors.find(selectedAuthor => author.id === selectedAuthor.id));
+  }
+
+  private watchCategoryFormChanges(): void {
+    this.filteredCategories$ = this.categoryForm.valueChanges.pipe(
+      startWith(''),
+      map(s => this.filterCategories(s))
+    );
+  }
+
+  private filterCategories(value: any): CategoryDto[] {
+    let filterValue: string;
+
+    value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
+
+    const initial = this.categories.filter(category => category.name.toLowerCase().includes(filterValue));
+
+    // Filter selected categories
+    return initial.filter(
+      category => !this.selectedCategories.find(selectedCategory => category.id === selectedCategory.id)
+    );
+  }
+
+  private watchAssetTypeChanges(): void {
+    this.assetForm
+      .get('assetType')
+      ?.valueChanges.pipe(takeUntil(this.unsubscribe))
+      .subscribe(value => {
+        if (value === this.assetType.Book) {
+          console.log(value);
+          this.assetForm.controls.isbn.enable();
+        } else {
+          this.assetForm.controls.isbn.disable();
+        }
+      });
+  }
+
+  private populateForm(asset: LibraryAssetForDetailedDto): void {
     this.assetForm = this.fb.group({
       id: new FormControl(asset.id),
-      title: new FormControl(asset.title, Validators.compose([Validators.required, Validators.maxLength(25)])),
-      author: new FormControl(asset.authors, Validators.compose([Validators.required])),
-      // authorId: new FormControl(asset.author.id, Validators.compose([Validators.required])),
-      year: new FormControl(
-        asset.year,
-        Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(4)])
-      ),
-      numberOfCopies: new FormControl(asset.numberOfCopies, Validators.required),
+      assetType: new FormControl(asset.assetType, Validators.required),
       copiesAvailable: new FormControl(asset.copiesAvailable, Validators.required),
       description: new FormControl(
         asset.description,
         Validators.compose([Validators.required, Validators.maxLength(500)])
       ),
-      categories: new FormControl(asset.categories, Validators.required),
-      assetType: new FormControl(asset.assetType, Validators.required),
-      // statusId: new FormControl(asset.assetType.id, Validators.required),
-      isbn: new FormControl({ value: asset.isbn, disabled: true }, Validators.required)
+      isbn: new FormControl({ value: asset.isbn, disabled: true }, Validators.required),
+      numberOfCopies: new FormControl(asset.numberOfCopies, Validators.required),
+      title: new FormControl(asset.title, Validators.compose([Validators.required, Validators.maxLength(25)])),
+      year: new FormControl(
+        asset.year,
+        Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(4)])
+      )
     });
+
+    if (this.assetForm.get('assetType')?.value === this.assetType.Book) {
+      this.assetForm.controls.isbn.enable();
+    }
+    this.selectedAuthors = asset.authors;
+    this.selectedCategories = asset.categories;
   }
 }
