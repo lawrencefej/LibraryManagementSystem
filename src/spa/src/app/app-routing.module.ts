@@ -87,12 +87,16 @@ const routes: Routes = [
       },
       {
         path: 'authors',
+        loadChildren: () => import('./author/author.module').then(m => m.AuthorModule)
+      },
+      {
+        path: 'authors-old',
         component: AuthorListComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },
         resolve: { authors: AuthorListResolver }
       },
       {
-        path: 'authors/:id',
+        path: 'authors-old/:id',
         component: AuthorAssetComponent,
         data: { allowedRoles: ['Admin', 'Librarian'] },
         resolve: { author: AuthorAssetResolver }

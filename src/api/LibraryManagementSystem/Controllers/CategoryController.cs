@@ -45,7 +45,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-
+            // TODO do not allow delete if category is assigned to assets
             await _categoryService.DeleteCategory(id);
 
             return await _categoryService.GetCategory(id);
