@@ -55,6 +55,7 @@ namespace LibraryManagementSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteAuthor(int authorId)
         {
+            // TODO do not allow delete if author has books
             LmsResponseHandler<AuthorDto> result = await _authorService.DeleteAuthor(authorId);
 
             return ResultCheck(result);
