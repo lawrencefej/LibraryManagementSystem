@@ -122,22 +122,20 @@
     <div fxFlex="50">
       <ng-container>
         <div fxLayout="column">
-          <div fxLayout="row">
-            <mat-form-field>
-              <input [formControl]="categoryForm" matInput type="text" #categoryInput placeholder="Add Category"
-                     [matAutocomplete]="categoryAutoComplete" required autocomplete="test" name="sdffd">
-              <mat-autocomplete autoActiveFirstOption [displayWith]="displayCategoryName"
-                                #categoryAutoComplete="matAutocomplete">
-                <mat-option *ngFor="let category of filteredCategories$ | async" [value]="category">
-                  {{ category.name }}
-                </mat-option>
-              </mat-autocomplete>
-              <button *ngIf="categoryForm.valid" (click)="addCategory(categoryForm.value)" matSuffix mat-icon-button
-                      color="primary" aria-label="Add">
-                <mat-icon>add</mat-icon>
-              </button>
-            </mat-form-field>
-          </div>
+          <mat-form-field>
+            <input [formControl]="categoryForm" matInput type="text" #categoryInput placeholder="Add Category"
+                   [matAutocomplete]="categoryAutoComplete" required autocomplete="test" name="sdffd">
+            <mat-autocomplete autoActiveFirstOption [displayWith]="displayCategoryName"
+                              #categoryAutoComplete="matAutocomplete">
+              <mat-option *ngFor="let category of filteredCategories$ | async" [value]="category">
+                {{ category.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <button *ngIf="categoryForm.valid" (click)="addCategory(categoryForm.value)" matSuffix mat-icon-button
+                    color="primary" aria-label="Add">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-form-field>
           <ng-container>
             <h4>Selected Categories</h4>
             <mat-chip-list cdkDropList cdkDropListOrientation="vertical" (cdkDropListDropped)="dropCategory($event)"

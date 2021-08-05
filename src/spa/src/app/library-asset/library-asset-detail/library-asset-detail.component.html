@@ -2,12 +2,11 @@
   <div fxFlex="30" class="side-bar content">
     <mat-card class="mat-elevation-z4" style="text-align: center">
       <mat-card-title>{{ asset.title | titlecase }}</mat-card-title>
-      <!-- TODO disply only first -->
-      <mat-card-subtitle *ngFor="let author of asset.authors">{{ author.fullName | titlecase }}</mat-card-subtitle>
+      <mat-card-subtitle>{{ asset.authors[0]?.fullName | titlecase }}</mat-card-subtitle>
       <mat-card-content>
         <div class="card-body">
           <div class="d-flex flex-column align-items-center text-center">
-            <!-- Todo remove -->
+            <!-- TODO remove -->
             <!-- <img src="https://picsum.photos/500" alt="Admin" width="450" style="border: 2px solid white" /> -->
             <img src="{{asset?.photoUrl || 'https://picsum.photos/500'}}" alt="Avatar" width="450"
                  style="border: 2px solid white;">
@@ -61,8 +60,8 @@
               </ng-container>
               <ng-container>
                 <h3>Category</h3>
-                <p *ngFor="let category of asset.categories">
-                  {{ category.name }}
+                <p>
+                  {{ asset.categories[0]?.name }}
                 </p>
               </ng-container>
               <ng-container>
@@ -104,15 +103,33 @@
   <div fxFlex="70" class="content">
     <mat-card class="tab-card mat-elevation-z4">
       <mat-tab-group [selectedIndex]="selectedTab.value" (selectedIndexChange)="tabClicked($event)" dynamicHeight>
-        <mat-tab [disabled]="isEditTab" label="Current Checkouts">
-          <lms-library-asset-detail-checkout-list [asset]="asset"></lms-library-asset-detail-checkout-list>
-        </mat-tab>
-        <mat-tab [disabled]="isEditTab" label="Description">
+        <mat-tab [disabled]="isEditTab" label="More Details">
           <ng-template matTabContent>
-            <div class="example-small-box" fxFlexAlign="stretch">
-              <p>{{ asset.description }}</p>
+            <div fxFlexAlign="stretch">
+              <ng-container *ngIf="asset.authors.length > 1">
+                <mat-divider></mat-divider>
+                <mat-card-title mat-subheader>Authors</mat-card-title>
+                <ul *ngFor="let category of asset.authors">
+                  <li>{{ category.fullName }}</li>
+                </ul>
+              </ng-container>
+              <ng-container *ngIf="asset.categories.length > 1">
+                <mat-divider></mat-divider>
+                <mat-card-title mat-subheader>Categories</mat-card-title>
+                <ul *ngFor="let category of asset.categories">
+                  <li>{{ category.name }}</li>
+                </ul>
+              </ng-container>
+              <ng-container>
+                <mat-divider></mat-divider>
+                <mat-card-title mat-subheader>Description</mat-card-title>
+                <p style="margin-left: 20px;">{{ asset.description }}</p>
+              </ng-container>
             </div>
           </ng-template>
+        </mat-tab>
+        <mat-tab [disabled]="isEditTab" label="Current Checkouts">
+          <lms-library-asset-detail-checkout-list [asset]="asset"></lms-library-asset-detail-checkout-list>
         </mat-tab>
         <mat-tab label="Edit Card">
           <ng-template matTabContent>

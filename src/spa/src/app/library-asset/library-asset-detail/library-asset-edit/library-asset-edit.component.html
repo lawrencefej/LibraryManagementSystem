@@ -14,9 +14,9 @@
     </div>
     <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
       <mat-form-field fxFlex>
-        <textarea matInput type="text" maxlength="200" placeholder="Description" formControlName="description"
+        <textarea matInput type="text" maxlength="250" placeholder="Description" formControlName="description"
                   required></textarea>
-        <mat-hint align="end">{{ assetForm.get('description').value?.length }} / 200</mat-hint>
+        <mat-hint align="end">{{ assetForm.get('description').value?.length }} / 250</mat-hint>
         <mat-error *ngFor="let validation of validationMessages.description">
           <mat-error *ngIf="
             assetForm.get('description').hasError(validation.type) &&
@@ -145,8 +145,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <div style="margin-top: 20px;" class="button-row" fxLayoutAlign="space-between center" fxFlex>
-    <button mat-raised-button color="accent" type="reset" (click)="reset()"
-            [disabled]="!assetForm.dirty && selectedAuthors.length === 0 && selectedCategories.length === 0">Reset</button>
+    <button mat-raised-button color="accent" type="reset" (click)="reset()" [disabled]="disableReset()">Reset</button>
     <button mat-raised-button color="warn" type="button" (click)="cancelEdit()">Cancel</button>
     <button mat-raised-button color="primary" type="submit" [disabled]="disableSubmit()"
             (click)="editAsset(assetForm.value)">Submit</button>

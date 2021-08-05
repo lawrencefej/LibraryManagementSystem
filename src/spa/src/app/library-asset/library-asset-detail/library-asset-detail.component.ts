@@ -1,13 +1,11 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { LibraryAssetForDetailedDto, LibraryAssetStatus } from 'src/dto/models';
-import { LibraryAssetService } from '../services/library-asset.service';
 
 @Component({
   templateUrl: './library-asset-detail.component.html',
@@ -26,8 +24,6 @@ export class LibraryAssetDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private photoService: PhotoService,
-    private readonly assetService: LibraryAssetService,
-    private readonly dialog: MatDialog,
     private readonly notify: NotificationService,
     private readonly route: ActivatedRoute
   ) {}

@@ -46,16 +46,16 @@ export class NotificationService {
     return this.dialog.open(PreventUnsavedComponent, dialogConfig);
   }
 
-  confirm(msg: string, subMsg?: string): MatDialogRef<ConfirmDialogComponent, boolean> {
-    const dialogConfig = this.getDialogConfig(msg, subMsg);
+  confirm(msg: string, subMsg?: string, size?: string): MatDialogRef<ConfirmDialogComponent, boolean> {
+    const dialogConfig = this.getDialogConfig(msg, subMsg, size);
 
     return this.dialog.open(ConfirmDialogComponent, dialogConfig);
   }
 
-  private getDialogConfig(msg: string, subMsg?: string): MatDialogConfig<any> {
+  private getDialogConfig(msg: string, subMsg?: string, size: string = '500'): MatDialogConfig<any> {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.width = '340px';
+    dialogConfig.width = size;
     dialogConfig.data = {
       message: msg,
       subMessage: subMsg

@@ -1,8 +1,10 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { cloneDeep, isEqual } from 'lodash';
 import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { messages } from 'src/app/shared/message.constants';
 import { libraryAssetValidationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
 import {
@@ -25,7 +27,6 @@ import { LibraryAssetService } from '../../services/library-asset.service';
 export class LibraryAssetEditComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  // TODO Cleanup
   @Input() asset!: LibraryAssetForDetailedDto;
   @Output() assetChange = new EventEmitter<LibraryAssetForDetailedDto>();
   @Output() closeTab = new EventEmitter<void>();
@@ -81,12 +82,37 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
         returnedAsset => {
           this.isFormDirty.emit(false);
           this.closeTab.emit();
-          // TODO return from server
           this.notify.success('Card updated successfully');
           this.assetChange.emit(returnedAsset);
         },
         error => (this.serverValidationErrors = error)
       );
+  }
+
+  addAuthor(author: AuthorDto): void {
+    if (author.id > 0) {
+      this.selectedAuthors.push(author);
+      this.authorInput.nativeElement.value = '';
+      this.authorForm.setValue('');
+    }
+  }
+
+  removeAuthor(author: AuthorDto): void {
+    const index = this.selectedAuthors.indexOf(author);
+    this.selectedAuthors.splice(index, 1);
+  }
+
+  addCategory(category: CategoryDto): void {
+    if (category.id > 0) {
+      this.selectedCategories.push(category);
+      this.categoryInput.nativeElement.value = '';
+      this.categoryForm.setValue('');
+    }
+  }
+
+  removeCategory(category: CategoryDto): void {
+    const index = this.selectedCategories.indexOf(category);
+    this.selectedCategories.splice(index, 1);
   }
 
   cancelEdit(): void {
@@ -110,28 +136,31 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
-    // Move strings to constants
     this.notify
-      .confirm('Are you sure you want to discard these changes', 'Note! These changes cannot be reversed')
+      .confirm(messages.discard.main, messages.discard.submsg)
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(respose => {
         if (respose) {
           this.populateForm(this.asset);
-          this.selectedAuthors = this.asset.authors;
-          this.selectedCategories = this.asset.categories;
+
+          this.selectedAuthors = cloneDeep(this.asset.authors);
+          this.selectedCategories = cloneDeep(this.asset.categories);
           this.isFormDirty.emit(false);
         }
       });
   }
 
+  disableReset(): boolean {
+    return this.assetForm.pristine && this.areAuthorsCategoriesUnChanged();
+  }
+
   disableSubmit(): boolean {
-    return (
-      this.assetForm.invalid ||
-      this.assetForm.pristine ||
-      this.areArraysEqual(this.asset.authors, this.selectedAuthors) ||
-      this.areArraysEqual(this.asset.categories, this.selectedCategories)
-    );
+    return this.assetForm.invalid || (this.assetForm.pristine && this.areAuthorsCategoriesUnChanged());
+  }
+
+  private areAuthorsCategoriesUnChanged(): boolean {
+    return isEqual(this.asset.authors, this.selectedAuthors) && isEqual(this.asset.categories, this.selectedCategories);
   }
 
   private areArraysEqual(first: any[], second: any[]): boolean {
@@ -172,8 +201,6 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
   private filterAuthors(value: any): AuthorDto[] {
     let filterValue: string;
 
-    // value.name ? (filterValue = value.name.toLowerCase()) : (filterValue = value.toLowerCase());
-
     if (value.id > 0) {
       filterValue = value.fullName.toLowerCase();
     } else {
@@ -212,7 +239,6 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
       ?.valueChanges.pipe(takeUntil(this.unsubscribe))
       .subscribe(value => {
         if (value === this.assetType.Book) {
-          console.log(value);
           this.assetForm.controls.isbn.enable();
         } else {
           this.assetForm.controls.isbn.disable();
@@ -227,11 +253,11 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
       copiesAvailable: new FormControl(asset.copiesAvailable, Validators.required),
       description: new FormControl(
         asset.description,
-        Validators.compose([Validators.required, Validators.maxLength(500)])
+        Validators.compose([Validators.required, Validators.maxLength(250)])
       ),
       isbn: new FormControl({ value: asset.isbn, disabled: true }, Validators.required),
       numberOfCopies: new FormControl(asset.numberOfCopies, Validators.required),
-      title: new FormControl(asset.title, Validators.compose([Validators.required, Validators.maxLength(25)])),
+      title: new FormControl(asset.title, Validators.compose([Validators.required, Validators.maxLength(50)])),
       year: new FormControl(
         asset.year,
         Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(4)])
@@ -241,7 +267,8 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
     if (this.assetForm.get('assetType')?.value === this.assetType.Book) {
       this.assetForm.controls.isbn.enable();
     }
-    this.selectedAuthors = asset.authors;
-    this.selectedCategories = asset.categories;
+
+    this.selectedAuthors = cloneDeep(asset.authors);
+    this.selectedCategories = cloneDeep(asset.categories);
   }
 }

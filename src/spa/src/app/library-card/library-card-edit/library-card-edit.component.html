@@ -116,7 +116,7 @@
     </div>
     <div class="button-row" fxLayoutAlign="space-between center" fxFlex>
       <button mat-raised-button color="primary" type="submit"
-              [disabled]="cardForm.invalid || cardForm.pristine">Submit</button>
+              [disabled]="cardForm.invalid && cardForm.pristine">Submit</button>
       <button mat-raised-button color="accent" type="button" *ngIf="cardForm.dirty" (click)="revert()">Reset</button>
       <button mat-raised-button color="warn" type="button" (click)="cancelEdit()">Cancel</button>
     </div>

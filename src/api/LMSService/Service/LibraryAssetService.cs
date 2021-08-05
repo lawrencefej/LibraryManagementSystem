@@ -81,7 +81,7 @@ namespace LMSService.Service
                 await Context.SaveChangesAsync();
                 Logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
 
-                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(Mapper.Map<LibraryAssetForDetailedDto>(asset));
+                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(Mapper.Map<LibraryAssetForDetailedDto>(await GetAsset(asset.Id)));
             }
 
             return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"Item with title: '{libraryAssetForUpdate.Title}' does not exist");

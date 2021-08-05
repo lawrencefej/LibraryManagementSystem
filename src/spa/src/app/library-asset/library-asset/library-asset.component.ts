@@ -179,7 +179,7 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   private createForm(): void {
     this.assetForm = this.fb.group({
       assetType: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(200)])),
+      description: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(250)])),
       isbn: new FormControl({ value: '', disabled: true }, Validators.required),
       numberOfCopies: new FormControl('', Validators.required),
       title: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
