@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-
+import { Component, Input } from '@angular/core';
 import { ChartOptions } from 'chart.js';
 
 @Component({
@@ -8,9 +7,9 @@ import { ChartOptions } from 'chart.js';
   styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent {
-  @Input() pieChartData: any[];
-  @Input() pieChartLabels: any[];
-  @Input() chartName: string;
+  @Input() pieChartData: any[] = [];
+  @Input() pieChartLabels: any[] = [];
+  @Input() chartName!: string;
 
   constructor() {}
   public pieChartOptions: ChartOptions = {
@@ -23,5 +22,4 @@ export class PieChartComponent {
   ];
   public pieChartLegend = true;
   pieChartType = 'pie';
-
 }

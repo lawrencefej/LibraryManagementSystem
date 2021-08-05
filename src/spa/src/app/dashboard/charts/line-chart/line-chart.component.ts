@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
-
-import { ChartModel } from 'src/app/_models/chartModel';
-import { Color } from 'ng2-charts';
 import { Data } from '@angular/router';
+import { Color } from 'ng2-charts';
+import { ChartModel } from 'src/app/_models/chartModel';
 
 @Component({
   selector: 'app-line-chart',
@@ -10,9 +9,9 @@ import { Data } from '@angular/router';
   styleUrls: ['./line-chart.component.css']
 })
 export class LineChartComponent {
-  @Input() lineChartData: any[];
-  @Input() lineChartLabels: any[];
-  @Input() chartName: string;
+  @Input() lineChartData: any[] = [];
+  @Input() lineChartLabels: any[] = [];
+  @Input() chartName!: string;
 
   lineChartOptions: any = {
     responsive: true,
@@ -45,10 +44,10 @@ export class LineChartComponent {
     this.lineChartData = [{ data: [] }];
   }
 
-  chartData: ChartModel;
-  data: Data[];
-  chartData2: ChartModel;
-  data2: Data[];
+  chartData!: ChartModel;
+  data: Data[] = [];
+  chartData2!: ChartModel;
+  data2: Data[] = [];
   localLabel: any;
-  LocalBarChartLabels: any[];
+  LocalBarChartLabels: any[] = [];
 }

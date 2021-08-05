@@ -31,8 +31,8 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
   @Output() assetChange = new EventEmitter<LibraryAssetForDetailedDto>();
   @Output() closeTab = new EventEmitter<void>();
   @Output() isFormDirty = new EventEmitter<boolean>();
-  @ViewChild('authorInput') authorInput: ElementRef<HTMLInputElement>;
-  @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('authorInput') authorInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('categoryInput') categoryInput!: ElementRef<HTMLInputElement>;
 
   assetForm!: FormGroup;
   assetType = LibraryAssetType;
@@ -103,7 +103,7 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
   }
 
   addCategory(category: CategoryDto): void {
-    if (category.id > 0) {
+    if (category.id === undefined || category.id > 0) {
       this.selectedCategories.push(category);
       this.categoryInput.nativeElement.value = '';
       this.categoryForm.setValue('');
@@ -168,7 +168,7 @@ export class LibraryAssetEditComponent implements OnInit, OnDestroy {
   }
 
   private mapSelectedCategories(): LibraryAssetCategoryDto[] {
-    return this.selectedCategories.map(a => ({ categoryId: a.id }));
+    return this.selectedCategories.map(a => ({ categoryId: a.id! }));
   }
 
   private mapSelectedAuthor(): LibraryAssetAuthorDto[] {

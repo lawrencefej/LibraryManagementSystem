@@ -17,8 +17,8 @@ export class LoginComponent implements OnInit {
     public notification: NotificationService
   ) {}
 
-  returnUrl: string;
-  loginForm: FormGroup;
+  returnUrl!: string;
+  loginForm!: FormGroup;
   validationMessages = {
     email: [
       { type: 'required', message: 'Email is required' },

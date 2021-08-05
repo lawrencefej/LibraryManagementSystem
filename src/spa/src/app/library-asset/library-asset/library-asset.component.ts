@@ -27,8 +27,8 @@ import { LibraryAssetService } from '../services/library-asset.service';
 export class LibraryAssetComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild('authorInput') authorInput: ElementRef<HTMLInputElement>;
-  @ViewChild('categoryInput') categoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('authorInput') authorInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('categoryInput') categoryInput!: ElementRef<HTMLInputElement>;
   assetForm!: FormGroup;
   assetType = LibraryAssetType;
   authorForm = new FormControl('', Validators.required);
@@ -118,7 +118,7 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   }
 
   addCategory(category: CategoryDto): void {
-    if (category.id > 0) {
+    if (category.id === undefined || category.id > 0) {
       this.selectedCategories.push(category);
       this.categoryInput.nativeElement.value = '';
       this.categoryForm.setValue('');
@@ -156,7 +156,7 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   }
 
   private mapSelectedCategories(): LibraryAssetCategoryDto[] {
-    return this.selectedCategories.map(a => ({ categoryId: a.id }));
+    return this.selectedCategories.map(a => ({ categoryId: a.id! }));
   }
 
   private mapSelectedAuthor(): LibraryAssetAuthorDto[] {

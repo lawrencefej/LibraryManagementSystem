@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./total-card.component.css']
 })
 export class TotalCardComponent {
-  @Input() iconName: string;
-  @Input() name: string;
-  @Input() totalNumber: number;
+  @Input() iconName!: string;
+  @Input() name!: string;
+  @Input() totalNumber!: number;
 
   constructor() {}
 }

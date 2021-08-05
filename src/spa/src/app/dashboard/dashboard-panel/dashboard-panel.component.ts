@@ -27,16 +27,16 @@ export class DashboardPanelComponent implements OnInit {
   categoryDistributionLabel: any;
   categoryChartName = 'Category Distribution';
 
-  totalMembers: number;
+  totalMembers!: number;
   totalMembersName = 'Total Members';
   totalMembersIcon = 'account_box';
-  totalItems: number;
+  totalItems!: number;
   totalItemsName = 'Total Items';
   totalItemsIcon = 'library_books';
-  totalAuthors: number;
+  totalAuthors!: number;
   totalAuthorsName = 'Total Authors';
   totalAuthorsIcon = 'person';
-  totalCheckouts: number;
+  totalCheckouts!: number;
   totalCheckoutsName = 'Total Checkouts';
   totalCheckoutsIcon = 'library_add';
 

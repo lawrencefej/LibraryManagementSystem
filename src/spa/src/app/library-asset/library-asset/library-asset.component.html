@@ -27,7 +27,7 @@
       <mat-form-field fxFlex>
         <textarea matInput type="text" maxlength="200" placeholder="Description" formControlName="description"
                   required></textarea>
-        <mat-hint align="end">{{ assetForm.get('description').value?.length }} / 200</mat-hint>
+        <mat-hint align="end">{{ assetForm.get('description')?.value.length }} / 200</mat-hint>
         <mat-error *ngFor="let validation of validationMessages.description">
           <mat-error *ngIf="
             assetForm.get('description').hasError(validation.type) &&

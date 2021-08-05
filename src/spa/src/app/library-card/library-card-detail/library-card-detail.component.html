@@ -81,7 +81,7 @@
               </p>
               <h3>Address</h3>
               <address>{{ card.address.street }}</address>
-              <address>{{ card.address.city }}, {{ card.address.state.name }} {{ card.address.zipcode }}</address>
+              <address>{{ card.address.city }}, {{ card.address.state?.name }} {{ card.address.zipcode }}</address>
               <h3>Member Since</h3>
               <p>
                 {{ card.created | date: 'longDate' }}

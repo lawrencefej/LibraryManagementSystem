@@ -10,9 +10,9 @@ import { AuthService } from '../_services/auth.service';
 export class HasRoleDirective implements OnInit {
   private readonly unsubscribe = new Subject<void>();
 
-  @Input() appHasRole: string[];
+  @Input() appHasRole: string[] = [];
   isVisible = false;
-  currentUser: User;
+  currentUser!: User;
 
   constructor(
     private viewContainerRef: ViewContainerRef,

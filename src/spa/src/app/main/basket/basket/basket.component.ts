@@ -13,7 +13,7 @@ import { BasketViewModel } from '../models/basket-view-model';
 })
 export class BasketComponent {
   private readonly unsubscribe = new Subject<void>();
-  public basket: BasketViewModel;
+  public basket!: BasketViewModel;
 
   constructor(
     private basketService: BasketService,
