@@ -73,5 +73,9 @@
         </mat-expansion-panel>
       </mat-accordion>
     </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" [routerLink]="['/library-card/cards']" [queryParams]="{ new:true }">New
+        Card</button>
+    </mat-card-actions>
   </mat-card>
 </div>

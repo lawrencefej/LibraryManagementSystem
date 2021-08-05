@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, of, Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
+import { messages } from 'src/app/shared/message.constants';
 import { stateValidator } from 'src/app/shared/validators/state.validator';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
@@ -58,7 +59,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
 
   revert(): void {
     this.notify
-      .confirm('Are you sure you want to discard these changes?')
+      .confirm(messages.discard.main, messages.discard.submsg)
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(response => {

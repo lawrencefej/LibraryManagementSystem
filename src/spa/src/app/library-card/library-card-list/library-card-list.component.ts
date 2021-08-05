@@ -29,6 +29,7 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
   searchString = new FormControl('');
 
   constructor(
+    private readonly activatedroute: ActivatedRoute,
     private readonly cardService: LibraryCardService,
     private readonly notify: NotificationService,
     private readonly route: ActivatedRoute,
@@ -41,6 +42,12 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   ngOnInit(): void {
+    this.activatedroute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe(params => {
+      console.log(params);
+      if (params.new) {
+        this.openAddCardDialog();
+      }
+    });
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => this.mapPagination(routeData.initData));
 
     this.searchCards();

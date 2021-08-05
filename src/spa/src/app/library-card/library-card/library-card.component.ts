@@ -74,6 +74,7 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
       this.notify.discardDialog('Are you sure you want to discard these changes');
     } else {
       this.dialog.closeAll();
+      this.router.navigateByUrl('/library-card/cards');
     }
   }
 

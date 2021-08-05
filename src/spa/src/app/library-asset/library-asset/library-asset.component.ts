@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { messages } from 'src/app/shared/message.constants';
 import { libraryAssetValidationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
 import {
@@ -98,9 +99,8 @@ export class LibraryAssetComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
-    // Move strings to constants
     this.notify
-      .confirm('Are you sure you want to discard these changes', 'Note! These changes cannot be reversed')
+      .confirm(messages.discard.main, messages.discard.submsg)
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(respose => {
