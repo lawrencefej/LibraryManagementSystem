@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { messages } from 'src/app/shared/message.constants';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { AuthorDto } from 'src/dto/models';
@@ -26,7 +27,7 @@ export interface AuthorForCreation {
 export class AuthorComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  author: AuthorDto;
+  author?: AuthorDto;
   authorForm: FormGroup;
   isEditAuthor = false;
   serverValidationErrors: string[] = [];
@@ -54,7 +55,7 @@ export class AuthorComponent implements OnInit, OnDestroy {
   isEdit(author: AuthorDto): void {
     if (author) {
       this.populateForm(author);
-      author = cloneDeep(author);
+      this.author = cloneDeep(author);
       this.isEditAuthor = true;
     } else {
       this.createForm();
@@ -63,13 +64,14 @@ export class AuthorComponent implements OnInit, OnDestroy {
 
   addAuthor(author: AuthorForCreation): void {
     author.fullName = `${author.firstName} ${author.lastName}`;
+
     this.authorService
       .addAuthor(author)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         returnAuthor => {
           this.dialog.closeAll();
-          this.router.navigateByUrl(`/author/detail/${returnAuthor.id}`);
+          this.router.navigateByUrl(`/authors/detail/${returnAuthor.id}`);
           this.notify.success('author was added successfully');
         },
         error => (this.serverValidationErrors = error)
@@ -83,7 +85,6 @@ export class AuthorComponent implements OnInit, OnDestroy {
       .subscribe(
         returnAuthor => {
           this.dialogRef.close(returnAuthor);
-          this.router.navigateByUrl(`/author/detail/${returnAuthor.id}`);
           this.notify.success('author was updated successfully');
         },
         error => (this.serverValidationErrors = error)
@@ -94,10 +95,7 @@ export class AuthorComponent implements OnInit, OnDestroy {
     if (this.authorForm.dirty) {
       this.notify.discardDialog('Are you sure you want to discard these changes');
     } else {
-      console.log('here');
-
       this.dialog.closeAll();
-      // this.router.navigateByUrl('/authors/home');
     }
   }
 
@@ -105,20 +103,32 @@ export class AuthorComponent implements OnInit, OnDestroy {
     this.populateForm(this.author);
   }
 
+  reset(): void {
+    this.notify
+      .confirm(messages.discard.main, messages.discard.submsg)
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(respose => {
+        if (respose) {
+          this.authorForm.reset();
+        }
+      });
+  }
+
   private createForm(): void {
     this.authorForm = this.fb.group({
-      // id: new FormControl(0),
       firstName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
-      lastName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)]))
-      // fullName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(50)]))
+      lastName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(25)])),
+      description: new FormControl('', Validators.compose([Validators.maxLength(250)]))
     });
   }
 
-  private populateForm(data: AuthorDto): void {
+  private populateForm(author: AuthorDto): void {
     this.authorForm = this.fb.group({
-      id: new FormControl(data.id),
-      fullName: new FormControl(data.fullName, Validators.compose([Validators.required, Validators.maxLength(50)]))
-      // lastName: new FormControl(data.lastName, Validators.compose([Validators.required, Validators.maxLength(25)]))
+      id: new FormControl(author.id),
+      // TODO Validate full name or split into multiple properties
+      fullName: new FormControl(author.fullName, Validators.compose([Validators.required, Validators.maxLength(50)])),
+      description: new FormControl(author.description || '', Validators.compose([Validators.maxLength(250)]))
     });
   }
 }

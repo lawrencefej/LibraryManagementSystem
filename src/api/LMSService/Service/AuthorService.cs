@@ -57,6 +57,7 @@ namespace LMSService.Service
 
             if (author != null)
             {
+                _mapper.Map(authorDto, author);
                 _context.Update(author);
                 await _context.SaveChangesAsync();
 

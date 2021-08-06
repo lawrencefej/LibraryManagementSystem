@@ -81,7 +81,6 @@ export class AuthorAssetListComponent implements AfterViewInit, OnInit, OnDestro
   }
 
   private mapPagination(result: PaginatedResult<LibraryAssetForListDto[]>): void {
-    console.log(this.assets);
     this.dataSource.data = result.result;
     this.pagination = result.pagination;
   }

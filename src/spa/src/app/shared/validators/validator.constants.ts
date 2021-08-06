@@ -50,7 +50,8 @@ export const validationMessages = {
   cardNumber: [
     { type: 'pattern', message: 'Please enter a valid card Number' },
     { type: 'required', message: 'Please enter a valid card Number' }
-  ]
+  ],
+  description: [{ type: 'maxlength', message: 'description cannot be more than 250 characters' }]
 };
 
 export const libraryAssetValidationMessages = {

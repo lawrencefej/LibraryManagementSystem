@@ -82,7 +82,7 @@ export class AuthorListComponent implements OnInit, OnDestroy, AfterViewInit {
   private getDialogConfig(): MatDialogConfig<any> {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.width = '640px';
+    dialogConfig.width = '500px';
 
     return dialogConfig;
   }
@@ -98,8 +98,6 @@ export class AuthorListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private mapPagination(result: PaginatedResult<AuthorDto[]>): void {
-    console.log(result);
-
     this.dataSource.data = result.result;
     this.pagination = result.pagination;
   }
