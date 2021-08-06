@@ -1,1 +1,19 @@
-<p>author-detail works!</p>
+<div class="main-container">
+  <mat-card class="mat-elevation-z4">
+    <mat-card-title mat-subheader align="center">{{ author.fullName | titlecase }}</mat-card-title>
+    <mat-card-content>
+      <div fxLayoutAlign="end center">
+        <!-- TODO Wire button -->
+        <button mat-raised-button color="primary">Add Item For {{ author.fullName }}</button>
+      </div>
+      <mat-tab-group>
+        <mat-tab label="Item">
+          <lms-author-asset-list [author]="author" [assets]="assetsForAuthor"></lms-author-asset-list>
+        </mat-tab>
+        <mat-tab label="Description">
+          {{ author.description }}
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

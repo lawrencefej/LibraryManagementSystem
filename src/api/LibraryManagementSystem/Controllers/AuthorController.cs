@@ -66,6 +66,7 @@ namespace LibraryManagementSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
+            // TODO Fix pagination
             PagedList<AuthorDto> authors = await _authorService.GetPaginatedAuthors(paginationParams);
 
             return ReturnPagination(authors);

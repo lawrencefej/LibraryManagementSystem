@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { StateService } from 'src/app/_services/state.service';
-import { ILibraryCardDetailResponse } from '../Models/library-card-detail-response';
+import { ILibraryCardDetailResponse } from '../models/library-card-detail-response';
 import { LibraryCardService } from '../services/library-card.service';
 
 @Injectable()

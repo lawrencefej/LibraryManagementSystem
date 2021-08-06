@@ -10,7 +10,7 @@ import { FeeService } from 'src/app/_services/fee.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
-import { LibraryCardStatus } from '../Models/library-card-status.enum';
+import { LibraryCardStatus } from '../models/library-card-status.enum';
 
 @Component({
   templateUrl: './library-card-detail.component.html',

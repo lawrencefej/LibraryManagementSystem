@@ -13,6 +13,7 @@ namespace LMSService.Service
 {
     public class AuthorService : IAuthorService
     {
+        // TODO fix to use base api
         private readonly DataContext _context;
         private readonly ILogger<AuthorService> _logger;
         private readonly IMapper _mapper;

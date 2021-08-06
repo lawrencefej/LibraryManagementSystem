@@ -1,1 +1,67 @@
-<p>author works!</p>
+<div fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button matSuffix mat-icon-button tabIndex="-1" aria-label="clear" (click)="cancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <ng-container *ngIf="isEditAuthor; else showAddTemplate">
+    <mat-card-title mat-subheader>Edit Author</mat-card-title>
+  </ng-container>
+  <ng-template #showAddTemplate>
+    <mat-card-title mat-subheader>Add New Author</mat-card-title>
+  </ng-template>
+</div>
+<lms-error-list [errors]="serverValidationErrors"></lms-error-list>
+
+<!-- <mat-dialog-content> -->
+<form fxLayout="column" [formGroup]="authorForm">
+  <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+    <mat-form-field appearance="fill" fxFlex>
+      <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+      <mat-error *ngFor="let validation of validationMessages.firstName">
+        <mat-error *ngIf="
+          authorForm.get('firstName').hasError(validation.type) &&
+                    (authorForm.get('firstName').dirty || authorForm.get('firstName').touched)">
+          {{ validation.message }}
+        </mat-error>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" fxFlex>
+      <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+      <mat-error *ngFor="let validation of validationMessages.lastName">
+        <mat-error *ngIf="
+          authorForm.get('lastName').hasError(validation.type) &&
+                    (authorForm.get('lastName').dirty || authorForm.get('lastName').touched)">
+          {{ validation.message }}
+        </mat-error>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+    <mat-form-field appearance="fill" fxFlex>
+      <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+      <mat-error *ngFor="let validation of validationMessages.lastName">
+        <mat-error *ngIf="
+          authorForm.get('lastName').hasError(validation.type) &&
+                    (authorForm.get('lastName').dirty || authorForm.get('lastName').touched)">
+          {{ validation.message }}
+        </mat-error>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+    <div fxLayoutAlign="space-between center" class="button-row" fxFlex>
+      <button mat-raised-button color="accent" type="button" *ngIf="isEditAuthor" (click)="revert()"
+              [disabled]="authorForm.pristine || !authorForm.valid">Reset</button>
+      <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit"
+              [disabled]="authorForm.pristine || !authorForm.valid">Submit</button>
+      <button *ngIf="isEditAuthor" mat-raised-button color="primary" type="submit"
+              [disabled]="authorForm.pristine || !authorForm.valid">Save</button>
+    </div>
+  </div>
+</form>
+<!-- </mat-dialog-content> -->

@@ -87,7 +87,7 @@ export class AuthorService {
     }
 
     return this.httpService
-      .get<LibraryAssetForListDto[]>(`${this.authorUrl}/${authorId}`, {
+      .get<LibraryAssetForListDto[]>(`${this.baseUrl}catalog/author/${authorId}`, {
         observe: 'response',
         params
       })
