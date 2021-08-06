@@ -5,8 +5,6 @@ import { LoginComponent } from './auth/login/login.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { DashboardPanelComponent } from './dashboard/dashboard-panel/dashboard-panel.component';
 import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
-import { AuthorAssetComponent } from './main/author/author-asset/author-asset.component';
-import { AuthorListComponent } from './main/author/author-list/author-list.component';
 import { AssetDetailComponent } from './main/libraryAssets/asset-detail/asset-detail.component';
 import { AssetListComponent } from './main/libraryAssets/asset-list/asset-list.component';
 import { MemberAdvancedSearchComponent } from './main/member/member-advanced-search/member-advanced-search.component';
@@ -19,8 +17,6 @@ import { AuthGuard } from './_guards/auth.guard';
 import { IsDevGuard } from './_guards/is-dev.guard';
 import { AssetDetailResolver } from './_resolver/asset-detail.resolver';
 import { AssetListResolver } from './_resolver/asset-list.resolver';
-import { AuthorAssetResolver } from './_resolver/author-asset.resolver';
-import { AuthorListResolver } from './_resolver/author-list.resolver';
 import { MemberDetailResolver } from './_resolver/member-detail.resolver';
 import { MemberListResolver } from './_resolver/member-list.resolver';
 import { UserProfileResolver } from './_resolver/user-profile.resolver';
@@ -88,18 +84,6 @@ const routes: Routes = [
       {
         path: 'authors',
         loadChildren: () => import('./author/author.module').then(m => m.AuthorModule)
-      },
-      {
-        path: 'authors-old',
-        component: AuthorListComponent,
-        data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { authors: AuthorListResolver }
-      },
-      {
-        path: 'authors-old/:id',
-        component: AuthorAssetComponent,
-        data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { author: AuthorAssetResolver }
       },
       {
         path: 'dashboard',

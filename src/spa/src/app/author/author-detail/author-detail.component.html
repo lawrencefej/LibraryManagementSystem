@@ -4,10 +4,15 @@
     <mat-card-content>
       <mat-tab-group>
         <mat-tab label="Items">
-          <lms-author-asset-list [author]="author" [assets]="assetsForAuthor"></lms-author-asset-list>
+          <ng-template matTabContent>
+            <lms-author-asset-list [author]="author" [assets]="assetsForAuthor"></lms-author-asset-list>
+          </ng-template>
         </mat-tab>
+
         <mat-tab label="Description">
-          {{ author.description }}
+          <ng-template matTabContent>
+            {{ author.description }}
+          </ng-template>
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>

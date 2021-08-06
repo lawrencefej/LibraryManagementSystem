@@ -28,9 +28,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
-import { AuthorAssetComponent } from './author/author-asset/author-asset.component';
-import { AuthorListComponent } from './author/author-list/author-list.component';
-import { AuthorComponent } from './author/author/author.component';
 import { BasketDetailComponent } from './basket/basket-detail/basket-detail.component';
 import { BasketComponent } from './basket/basket/basket.component';
 import { AssetCheckoutComponent } from './libraryAssets/asset-checkout/asset-checkout.component';
@@ -53,9 +50,6 @@ import { UserProfileComponent } from './user/user-profile/user-profile.component
     AssetComponent,
     AssetDetailComponent,
     AssetListComponent,
-    AuthorAssetComponent,
-    AuthorComponent,
-    AuthorListComponent,
     BasketComponent,
     BasketDetailComponent,
     MemberAdvancedSearchComponent,

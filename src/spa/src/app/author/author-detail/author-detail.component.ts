@@ -46,6 +46,10 @@ export class AuthorDetailComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(returnAuthor => (this.author = returnAuthor));
+      .subscribe(returnAuthor => {
+        if (returnAuthor) {
+          this.author = returnAuthor;
+        }
+      });
   }
 }
