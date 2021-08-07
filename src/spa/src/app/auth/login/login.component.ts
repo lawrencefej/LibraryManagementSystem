@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { validationMessages } from 'src/app/shared/validators/validator.constants';
 import { AuthService } from 'src/app/_services/auth.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 
@@ -8,7 +10,13 @@ import { NotificationService } from 'src/app/_services/notification.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  private readonly unsubscribe = new Subject<void>();
+
+  loginForm!: FormGroup;
+  returnUrl!: string;
+  validationMessages = validationMessages;
+
   constructor(
     public authService: AuthService,
     private router: Router,
@@ -17,21 +25,10 @@ export class LoginComponent implements OnInit {
     public notification: NotificationService
   ) {}
 
-  returnUrl!: string;
-  loginForm!: FormGroup;
-  validationMessages = {
-    email: [
-      { type: 'required', message: 'Email is required' },
-      { type: 'pattern', message: 'Enter a valid email' }
-    ],
-    password: [
-      { type: 'required', message: 'Password is required' },
-      {
-        type: 'minlength',
-        message: 'Password must be at least 4 characters long'
-      }
-    ]
-  };
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/member-search  ';

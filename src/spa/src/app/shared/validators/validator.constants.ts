@@ -16,7 +16,8 @@ export const validationMessages = {
   email: [
     { type: 'required', message: 'Email is required' },
     { type: 'email', message: 'Please enter a valid Email' },
-    { type: 'maxlength', message: 'Email cannot be more than 100 characters' }
+    { type: 'maxlength', message: 'Email cannot be more than 100 characters' },
+    { type: 'pattern', message: 'Enter a valid email' }
   ],
   phoneNumber: [
     { type: 'required', message: 'Phone Number is required' },
@@ -55,7 +56,14 @@ export const validationMessages = {
       message: 'Card number cannot be more than 18 digits'
     }
   ],
-  description: [{ type: 'maxlength', message: 'description cannot be more than 250 characters' }]
+  description: [{ type: 'maxlength', message: 'description cannot be more than 250 characters' }],
+  password: [
+    { type: 'required', message: 'Password is required' },
+    {
+      type: 'minlength',
+      message: 'Password must be at least 4 characters long'
+    }
+  ]
 };
 
 export const libraryAssetValidationMessages = {
