@@ -5,20 +5,10 @@ import { LoginComponent } from './auth/login/login.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { DashboardPanelComponent } from './dashboard/dashboard-panel/dashboard-panel.component';
 import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
-import { AssetDetailComponent } from './main/libraryAssets/asset-detail/asset-detail.component';
-import { AssetListComponent } from './main/libraryAssets/asset-list/asset-list.component';
-import { MemberAdvancedSearchComponent } from './main/member/member-advanced-search/member-advanced-search.component';
-import { MemberDetailComponent } from './main/member/member-detail/member-detail.component';
-import { MemberListComponent } from './main/member/member-list/member-list.component';
-import { MemberSearchComponent } from './main/member/member-search/member-search.component';
 import { UserProfileComponent } from './main/user/user-profile/user-profile.component';
 import { LoginLayoutComponent } from './shared/layout/login-layout/login-layout.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { IsDevGuard } from './_guards/is-dev.guard';
-import { AssetDetailResolver } from './_resolver/asset-detail.resolver';
-import { AssetListResolver } from './_resolver/asset-list.resolver';
-import { MemberDetailResolver } from './_resolver/member-detail.resolver';
-import { MemberListResolver } from './_resolver/member-list.resolver';
 import { UserProfileResolver } from './_resolver/user-profile.resolver';
 
 const routes: Routes = [
@@ -43,19 +33,19 @@ const routes: Routes = [
         loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule)
       },
       // TODO remove when the Library-card Module is complete
-      { path: 'member-search', component: MemberSearchComponent },
-      { path: 'advanced-search', component: MemberAdvancedSearchComponent },
-      {
-        // TODO remove when the Library-asset Module is complete
-        path: 'catalog-old',
-        component: AssetListComponent,
-        resolve: { assets: AssetListResolver }
-      },
-      {
-        path: 'catalog-old/:id',
-        component: AssetDetailComponent,
-        resolve: { asset: AssetDetailResolver }
-      },
+      // { path: 'member-search', component: MemberSearchComponent },
+      // { path: 'advanced-search', component: MemberAdvancedSearchComponent },
+      // {
+      //   // TODO remove when the Library-asset Module is complete
+      //   path: 'catalog-old',
+      //   component: AssetListComponent,
+      //   resolve: { assets: AssetListResolver }
+      // },
+      // {
+      //   path: 'catalog-old/:id',
+      //   component: AssetDetailComponent,
+      //   resolve: { asset: AssetDetailResolver }
+      // },
       {
         path: 'admin',
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
@@ -69,18 +59,18 @@ const routes: Routes = [
         loadChildren: () => import('./test/test.module').then(m => m.TesModule),
         canLoad: [IsDevGuard]
       },
-      {
-        path: 'members',
-        component: MemberListComponent,
-        data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { members: MemberListResolver }
-      },
-      {
-        path: 'members/:id',
-        component: MemberDetailComponent,
-        data: { allowedRoles: ['Admin', 'Librarian'] },
-        resolve: { member: MemberDetailResolver }
-      },
+      // {
+      //   path: 'members',
+      //   component: MemberListComponent,
+      //   data: { allowedRoles: ['Admin', 'Librarian'] },
+      //   resolve: { members: MemberListResolver }
+      // },
+      // {
+      //   path: 'members/:id',
+      //   component: MemberDetailComponent,
+      //   data: { allowedRoles: ['Admin', 'Librarian'] },
+      //   resolve: { member: MemberDetailResolver }
+      // },
       {
         path: 'authors',
         loadChildren: () => import('./author/author.module').then(m => m.AuthorModule)

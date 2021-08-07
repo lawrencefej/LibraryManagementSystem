@@ -28,39 +28,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
-import { BasketDetailComponent } from './basket/basket-detail/basket-detail.component';
 import { BasketComponent } from './basket/basket/basket.component';
-import { AssetCheckoutComponent } from './libraryAssets/asset-checkout/asset-checkout.component';
-import { AssetDetailComponent } from './libraryAssets/asset-detail/asset-detail.component';
-import { AssetListComponent } from './libraryAssets/asset-list/asset-list.component';
-import { AssetComponent } from './libraryAssets/asset/asset.component';
-import { MemberAdvancedSearchComponent } from './member/member-advanced-search/member-advanced-search.component';
-import { MemberCheckoutsComponent } from './member/member-checkouts/member-checkouts.component';
-import { MemberDetailComponent } from './member/member-detail/member-detail.component';
-import { MemberListComponent } from './member/member-list/member-list.component';
-import { MemberSearchComponent } from './member/member-search/member-search.component';
-import { MemberComponent } from './member/member/member.component';
 import { UserProfileEditComponent } from './user/user-profile-edit/user-profile-edit.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 
 @NgModule({
-  exports: [BasketComponent, BasketDetailComponent],
-  declarations: [
-    AssetCheckoutComponent,
-    AssetComponent,
-    AssetDetailComponent,
-    AssetListComponent,
-    BasketComponent,
-    BasketDetailComponent,
-    MemberAdvancedSearchComponent,
-    MemberCheckoutsComponent,
-    MemberComponent,
-    MemberDetailComponent,
-    MemberListComponent,
-    MemberSearchComponent,
-    UserProfileComponent,
-    UserProfileEditComponent
-  ],
+  exports: [BasketComponent],
+  declarations: [BasketComponent, UserProfileComponent, UserProfileEditComponent],
   imports: [
     MatAutocompleteModule,
     MatAutocompleteModule,

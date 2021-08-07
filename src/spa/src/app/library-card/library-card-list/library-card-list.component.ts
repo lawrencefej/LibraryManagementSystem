@@ -43,7 +43,6 @@ export class LibraryCardListComponent implements AfterViewInit, OnInit, OnDestro
 
   ngOnInit(): void {
     this.activatedroute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe(params => {
-      console.log(params);
       if (params.new) {
         this.openAddCardDialog();
       }
