@@ -48,8 +48,12 @@ export const validationMessages = {
     { type: 'required', message: 'Please select a valid role' }
   ],
   cardNumber: [
-    { type: 'pattern', message: 'Please enter a valid card Number' },
-    { type: 'required', message: 'Please enter a valid card Number' }
+    { type: 'pattern', message: 'Please enter a valid card number' },
+    { type: 'required', message: 'Card number is required' },
+    {
+      type: 'maxlength',
+      message: 'Card number cannot be more than 18 digits'
+    }
   ],
   description: [{ type: 'maxlength', message: 'description cannot be more than 250 characters' }]
 };

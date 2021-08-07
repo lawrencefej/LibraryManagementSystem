@@ -1,4 +1,4 @@
-import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '../_models/user';
@@ -7,7 +7,7 @@ import { AuthService } from '../_services/auth.service';
 @Directive({
   selector: '[appHasRole]'
 })
-export class HasRoleDirective implements OnInit {
+export class HasRoleDirective implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   @Input() appHasRole: string[] = [];
@@ -21,6 +21,11 @@ export class HasRoleDirective implements OnInit {
   ) {
     // TODO take 1
     this.authService.loggedInUser$.pipe(takeUntil(this.unsubscribe)).subscribe(user => (this.currentUser = user));
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   ngOnInit(): void {
