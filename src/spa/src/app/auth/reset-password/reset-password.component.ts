@@ -1,27 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmPasswordValidator } from 'src/app/shared/validators/password-match.validator';
+import { Subject } from 'rxjs';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { MustMatch } from 'src/app/shared/validators/password-match.validator';
+import { validationMessages } from 'src/app/shared/validators/validator.constants';
 import { AuthService } from 'src/app/_services/auth.service';
-import { NotificationService } from 'src/app/_services/notification.service';
 
 @Component({
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit {
-  resetPasswordForm: FormGroup;
+export class ResetPasswordComponent implements OnInit, OnDestroy {
+  private readonly unsubscribe = new Subject<void>();
 
-  validationMessages = {
-    password: [
-      { type: 'required', message: 'Password is required' },
-      { type: 'minlength', message: 'Password must be at least 4 characters long' }
-    ],
-    confirmPassword: [
-      { type: 'required', message: 'Confirm password is required' },
-      { type: 'confirmPasswordMatch', message: 'Password and Confirm Password do not match' }
-    ]
-  };
+  resetPasswordForm: FormGroup;
+  validationMessages = validationMessages;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +24,11 @@ export class ResetPasswordComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder
   ) {}
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
 
   ngOnInit(): void {
     this.createResetPasswordForm();
@@ -44,21 +43,16 @@ export class ResetPasswordComponent implements OnInit {
         confirmPassword: new FormControl('', [Validators.required])
       },
       {
-        validator: ConfirmPasswordValidator
+        validators: MustMatch('password', 'confirmPassword')
       }
     );
   }
 
   onSubmit(): void {
-    this.authService.resetPassword(this.resetPasswordForm.value).subscribe(
-      () => {
-        this.notify.success('Password has been reset successfully');
-        this.resetPasswordForm.reset();
-        this.router.navigate(['/login']);
-      },
-      error => {
-        this.notify.error(error);
-      }
-    );
+    this.authService.resetPassword(this.resetPasswordForm.value).subscribe(() => {
+      this.notify.success('Password has been reset successfully');
+      this.resetPasswordForm.reset();
+      this.router.navigate(['/login']);
+    });
   }
 }

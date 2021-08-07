@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BaseLayoutComponent } from '../layouts/base-layout/base-layout.component';
+import { BaseLayoutComponent } from '../layout/base-layout/base-layout.component';
 import { AuthGuard } from '../_guards/auth.guard';
 import { SearchLibraryCardComponent } from './search-library-card/search-library-card.component';
 
 const routes: Routes = [
-  // {
-  //   path: 'home',
-  //   component: SearchLibraryCardComponent
-  // }
   {
     path: '',
     component: BaseLayoutComponent,

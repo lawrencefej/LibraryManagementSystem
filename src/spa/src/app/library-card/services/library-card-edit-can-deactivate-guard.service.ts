@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { Observable } from 'rxjs';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { LibraryCardDetailComponent } from '../library-card-detail/library-card-detail.component';
 
 @Injectable()

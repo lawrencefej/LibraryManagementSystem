@@ -8,9 +8,9 @@ import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/o
 import { BasketViewModel } from 'src/app/basket/models/basket-view-model';
 import { LibraryAssetForBasketViewModel } from 'src/app/basket/models/library-asset-for-basket-view-model';
 import { BasketService } from 'src/app/basket/services/basket.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { AssetService } from 'src/app/_services/asset.service';
-import { NotificationService } from 'src/app/_services/notification.service';
 import { LibraryAssetForListDto, LibraryAssetStatus, LibraryCardForDetailedDto } from 'src/dto/models';
 
 @Component({

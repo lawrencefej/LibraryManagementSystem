@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { BasketForCheckoutDto, LibraryAssetForListDto, LibraryCardForDetailedDto } from 'src/dto/models';
 import { environment } from 'src/environments/environment';
 import { BasketViewModel } from '../models/basket-view-model';

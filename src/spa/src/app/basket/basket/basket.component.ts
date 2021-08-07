@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { BasketViewModel } from '../models/basket-view-model';
 import { BasketService } from '../services/basket.service';
 

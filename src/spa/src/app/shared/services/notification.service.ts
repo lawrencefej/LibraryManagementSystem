@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
-import { PreventUnsavedComponent } from '../shared/prevent-unsaved/prevent-unsaved.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { PreventUnsavedComponent } from '../prevent-unsaved/prevent-unsaved.component';
 
 @Injectable({
   providedIn: 'root'

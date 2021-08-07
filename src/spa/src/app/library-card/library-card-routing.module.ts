@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BaseLayoutComponent } from '../layout/base-layout/base-layout.component';
+import { AuthGuard } from '../_guards/auth.guard';
 import { LibraryCardDetailComponent } from './library-card-detail/library-card-detail.component';
 import { LibraryCardDetailResolver } from './library-card-detail/library-card-detail.resolver';
 import { LibraryCardListComponent } from './library-card-list/library-card-list.component';
@@ -9,19 +11,27 @@ import { LibraryCardEditCanDeactivateGuardService } from './services/library-car
 
 const routes: Routes = [
   {
-    path: 'cards',
-    component: LibraryCardListComponent,
-    resolve: {
-      initData: LibraryCardListResolver
-    }
-  },
-  {
-    path: 'cards/:id',
-    component: LibraryCardDetailComponent,
-    resolve: {
-      initData: LibraryCardDetailResolver
-    },
-    canDeactivate: [LibraryCardEditCanDeactivateGuardService, LibraryCardCheckoutCanDeactivateGuardService]
+    path: '',
+    component: BaseLayoutComponent,
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'cards',
+        component: LibraryCardListComponent,
+        resolve: {
+          initData: LibraryCardListResolver
+        }
+      },
+      {
+        path: 'cards/:id',
+        component: LibraryCardDetailComponent,
+        resolve: {
+          initData: LibraryCardDetailResolver
+        },
+        canDeactivate: [LibraryCardEditCanDeactivateGuardService, LibraryCardCheckoutCanDeactivateGuardService]
+      }
+    ]
   }
 ];
 

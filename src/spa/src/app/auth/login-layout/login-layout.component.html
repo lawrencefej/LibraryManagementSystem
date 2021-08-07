@@ -1,0 +1,18 @@
+<!-- <div class="navigation-container">
+  <lms-header></lms-header>
+  <router-outlet></router-outlet>
+  <lms-footer></lms-footer>
+
+</div> -->
+
+
+<div class="navigation-container">
+  <mat-toolbar color="primary" class="navigation-toolbar">
+    <div class="navbar-logo" routerLink="/home">
+      <img src="{{'../../../assets/img/lmsnavlogo.png'}}">
+    </div>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+  <!-- TODO Make footer sticky -->
+  <!-- <lms-footer></lms-footer> -->
+</div>

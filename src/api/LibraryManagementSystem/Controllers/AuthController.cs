@@ -67,6 +67,7 @@ namespace LibraryManagementSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(ResetPassword resetPassword)
         {
+            // TODO Fix Dto's
             AppUser user = await _authService.FindUserByEmail(resetPassword.Email);
 
             if (!await _authService.IsResetEligible(user))

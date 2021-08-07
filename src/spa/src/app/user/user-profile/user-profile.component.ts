@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Photo } from 'src/app/_models/photo';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/_services/auth.service';
-import { NotificationService } from 'src/app/_services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
 

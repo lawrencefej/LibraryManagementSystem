@@ -1,13 +1,24 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { BaseLayoutComponent } from '../layout/base-layout/base-layout.component';
+import { AuthGuard } from '../_guards/auth.guard';
 import { AdminListComponent } from './admin-list/admin-list.component';
 import { AdminListResolver } from './admin-list/admin-list.resolver';
 
 const routes: Routes = [
   {
-    path: 'home',
-    component: AdminListComponent,
-    resolve: { initData: AdminListResolver }
+    path: '',
+    component: BaseLayoutComponent,
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'home',
+        component: AdminListComponent,
+        resolve: { initData: AdminListResolver },
+        data: { allowedRoles: ['Admin'] }
+      }
+    ]
   }
 ];
 

@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { NotificationService } from './notification.service';
+import { NotificationService } from '../shared/services/notification.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { LibraryAssetForDetailedDto, LibraryAssetStatus } from 'src/dto/models';
 

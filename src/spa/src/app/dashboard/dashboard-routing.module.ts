@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BaseLayoutComponent } from '../layout/base-layout/base-layout.component';
+import { DashboardLayoutComponent } from '../shared/layout/dashboard-layout/dashboard-layout.component';
 import { AuthGuard } from '../_guards/auth.guard';
-import { TestErrorsComponent } from './test-errors/test-errors.component';
 
 const routes: Routes = [
   {
@@ -12,8 +12,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'error',
-        component: TestErrorsComponent
+        path: 'home',
+        component: DashboardLayoutComponent,
+        data: { allowedRoles: ['Admin'] }
       }
     ]
   }
@@ -23,4 +24,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TestRoutingModule {}
+export class DashboardRoutingModule {}

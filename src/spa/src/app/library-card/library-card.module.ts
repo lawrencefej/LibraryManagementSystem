@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -40,7 +41,6 @@ import { LibraryCardService } from './services/library-card.service';
     CommonModule,
     ErrorModule,
     FlexLayoutModule,
-    FormsModule,
     LibraryCardRoutingModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -53,6 +53,7 @@ import { LibraryCardService } from './services/library-card.service';
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     MatRadioModule,
     MatSelectModule,
@@ -66,14 +67,14 @@ import { LibraryCardService } from './services/library-card.service';
   declarations: [
     LibraryCardCheckoutComponent,
     LibraryCardComponent,
-    LibraryCardDetailComponent,
     LibraryCardDetailCheckoutListComponent,
+    LibraryCardDetailComponent,
     LibraryCardEditComponent,
     LibraryCardListComponent
   ],
   providers: [
-    LibraryCardDetailResolver,
     LibraryCardCheckoutCanDeactivateGuardService,
+    LibraryCardDetailResolver,
     LibraryCardEditCanDeactivateGuardService,
     LibraryCardListResolver,
     LibraryCardService

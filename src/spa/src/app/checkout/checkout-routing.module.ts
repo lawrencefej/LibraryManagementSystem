@@ -1,10 +1,24 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, Router } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { BaseLayoutComponent } from '../layout/base-layout/base-layout.component';
+import { AuthGuard } from '../_guards/auth.guard';
 import { CheckoutListComponent } from './checkout-list/checkout-list.component';
 import { CheckoutListResolver } from './checkout-list/checkout-list.resolver';
 
 const routes: Routes = [
-  { path: 'home', component: CheckoutListComponent, resolve: { initData: CheckoutListResolver } }
+  {
+    path: '',
+    component: BaseLayoutComponent,
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'home',
+        component: CheckoutListComponent,
+        resolve: { initData: CheckoutListResolver }
+      }
+    ]
+  }
 ];
 
 @NgModule({

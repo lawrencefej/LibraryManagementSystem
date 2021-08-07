@@ -9,10 +9,10 @@ import { BasketViewModel } from 'src/app/basket/models/basket-view-model';
 import { BasketService } from 'src/app/basket/services/basket.service';
 import { checkoutFilters } from 'src/app/shared/constants/checkout.constant';
 import { CheckoutSharedService } from 'src/app/shared/services/checkout-shared.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { lmsResolverContants } from 'src/app/_resolver/resolver.constants';
 import { CheckoutService } from 'src/app/_services/checkout.service';
-import { NotificationService } from 'src/app/_services/notification.service';
 import { CheckoutForListDto, LibraryCardForDetailedDto } from 'src/dto/models';
 
 @Component({

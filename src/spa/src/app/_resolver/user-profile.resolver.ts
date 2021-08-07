@@ -1,12 +1,11 @@
-import { Observable, of } from 'rxjs';
-import { Resolve, Router } from '@angular/router';
-
-import { AuthService } from '../_services/auth.service';
 import { Injectable } from '@angular/core';
-import { NotificationService } from '../_services/notification.service';
-import { User } from '../_models/user';
-import { UserService } from '../_services/user.service';
+import { Resolve, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { NotificationService } from '../shared/services/notification.service';
+import { User } from '../_models/user';
+import { AuthService } from '../_services/auth.service';
+import { UserService } from '../_services/user.service';
 
 @Injectable()
 export class UserProfileResolver implements Resolve<User> {
