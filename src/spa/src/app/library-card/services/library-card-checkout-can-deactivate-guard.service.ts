@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { BasketService } from 'src/app/_services/basket.service';
+import { BasketService } from 'src/app/basket/services/basket.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { LibraryCardDetailComponent } from '../library-card-detail/library-card-detail.component';
 

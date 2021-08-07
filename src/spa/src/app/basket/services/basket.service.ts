@@ -1,21 +1,22 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LibraryAssetForListDto, LibraryCardForDetailedDto } from 'src/dto/models';
-import { BasketViewModel } from '../main/basket/models/basket-view-model';
-import { NotificationService } from './notification.service';
+import { NotificationService } from 'src/app/_services/notification.service';
+import { BasketForCheckoutDto, LibraryAssetForListDto, LibraryCardForDetailedDto } from 'src/dto/models';
+import { environment } from 'src/environments/environment';
+import { BasketViewModel } from '../models/basket-view-model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BasketService implements OnDestroy {
-  private readonly unsubscribe = new Subject<void>();
+  private baseUrl = environment.apiUrl;
   private basketSubject = new BehaviorSubject<BasketViewModel>(this.getDefaultBasket());
   private currentBasket!: BasketViewModel;
+  private readonly unsubscribe = new Subject<void>();
 
   basket$: Observable<BasketViewModel> = this.basketSubject.asObservable();
 
-  constructor(private notify: NotificationService) {
+  constructor(private readonly notify: NotificationService, private readonly httpService: HttpClient) {
     const basketFromLS = JSON.parse(localStorage.getItem('basket'));
     if (basketFromLS) {
       this.basketSubject.next(basketFromLS);
@@ -92,5 +93,9 @@ export class BasketService implements OnDestroy {
       checkoutComplete: false,
       libraryCardId: 0
     };
+  }
+
+  checkoutBasket(basket: BasketForCheckoutDto): Observable<void> {
+    return this.httpService.post<void>(`${this.baseUrl}checkout/`, basket);
   }
 }

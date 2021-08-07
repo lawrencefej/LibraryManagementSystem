@@ -16,6 +16,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
+import { BasketModule } from './basket/basket.module';
 import { ResponsiveNavComponent } from './core/responsive-nav/responsive-nav.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { BaseLayoutComponent } from './layouts/base-layout/base-layout.component';
@@ -37,7 +38,6 @@ import { AdminService } from './_services/admin.service';
 import { AssetService } from './_services/asset.service';
 import { AuthService } from './_services/auth.service';
 import { AuthorService } from './_services/author.service';
-import { BasketService } from './_services/basket.service';
 import { ErrorInterceptor } from './_services/error.interceptor';
 import { LoaderInterceptor } from './_services/loader-interceptor';
 import { LoaderService } from './_services/loader.service';
@@ -55,8 +55,8 @@ export function tokenGetter(): string {
   exports: [],
   declarations: [AppComponent, BaseLayoutComponent, ResponsiveNavComponent],
   imports: [
-    // ErrorModule,
     AuthModule,
+    BasketModule,
     BrowserAnimationsModule,
     BrowserModule,
     CommonModule,
@@ -94,7 +94,6 @@ export function tokenGetter(): string {
     AuthorAssetResolver,
     AuthorListResolver,
     AuthorService,
-    BasketService,
     CheckoutDetailResolver,
     CheckoutListResolver,
     LoaderService,
@@ -109,8 +108,6 @@ export function tokenGetter(): string {
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
-  // entryComponents: [
-  // ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

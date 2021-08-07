@@ -18,34 +18,15 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     children: [
-      // { path: '', redirectTo: 'member-search', pathMatch: 'full' },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'library-card',
         loadChildren: () => import('./library-card/library-card.module').then(m => m.LibraryCardModule)
       },
-      // {
-      //   path: 'home',
-      //   component: SearchLibraryCardComponent
-      // },
       {
         path: 'checkout',
         loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule)
       },
-      // TODO remove when the Library-card Module is complete
-      // { path: 'member-search', component: MemberSearchComponent },
-      // { path: 'advanced-search', component: MemberAdvancedSearchComponent },
-      // {
-      //   // TODO remove when the Library-asset Module is complete
-      //   path: 'catalog-old',
-      //   component: AssetListComponent,
-      //   resolve: { assets: AssetListResolver }
-      // },
-      // {
-      //   path: 'catalog-old/:id',
-      //   component: AssetDetailComponent,
-      //   resolve: { asset: AssetDetailResolver }
-      // },
       {
         path: 'admin',
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
@@ -59,18 +40,6 @@ const routes: Routes = [
         loadChildren: () => import('./test/test.module').then(m => m.TesModule),
         canLoad: [IsDevGuard]
       },
-      // {
-      //   path: 'members',
-      //   component: MemberListComponent,
-      //   data: { allowedRoles: ['Admin', 'Librarian'] },
-      //   resolve: { members: MemberListResolver }
-      // },
-      // {
-      //   path: 'members/:id',
-      //   component: MemberDetailComponent,
-      //   data: { allowedRoles: ['Admin', 'Librarian'] },
-      //   resolve: { member: MemberDetailResolver }
-      // },
       {
         path: 'authors',
         loadChildren: () => import('./author/author.module').then(m => m.AuthorModule)

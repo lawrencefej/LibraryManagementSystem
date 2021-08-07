@@ -1,3 +1,4 @@
+<lms-error-list [errors]="serverValidationErrors"></lms-error-list>
 <button [disabled]="basket.assets.length === 0" mat-button mat-icon-button *ngIf="basket.active === true"
         [matMenuTriggerFor]="menu" type="button" style="margin-right: 20px">
   <mat-icon [matBadge]="basket.assets.length" matBadgeColor="accent">

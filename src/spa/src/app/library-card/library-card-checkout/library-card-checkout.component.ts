@@ -5,11 +5,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
-import { BasketViewModel } from 'src/app/main/basket/models/basket-view-model';
-import { LibraryAssetForBasketViewModel } from 'src/app/main/basket/models/library-asset-for-basket-view-model';
+import { BasketViewModel } from 'src/app/basket/models/basket-view-model';
+import { LibraryAssetForBasketViewModel } from 'src/app/basket/models/library-asset-for-basket-view-model';
+import { BasketService } from 'src/app/basket/services/basket.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { AssetService } from 'src/app/_services/asset.service';
-import { BasketService } from 'src/app/_services/basket.service';
 import { NotificationService } from 'src/app/_services/notification.service';
 import { LibraryAssetForListDto, LibraryAssetStatus, LibraryCardForDetailedDto } from 'src/dto/models';
 

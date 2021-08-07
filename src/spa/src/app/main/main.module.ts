@@ -28,13 +28,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
-import { BasketComponent } from './basket/basket/basket.component';
 import { UserProfileEditComponent } from './user/user-profile-edit/user-profile-edit.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 
 @NgModule({
-  exports: [BasketComponent],
-  declarations: [BasketComponent, UserProfileComponent, UserProfileEditComponent],
+  exports: [],
+  declarations: [UserProfileComponent, UserProfileEditComponent],
   imports: [
     MatAutocompleteModule,
     MatAutocompleteModule,

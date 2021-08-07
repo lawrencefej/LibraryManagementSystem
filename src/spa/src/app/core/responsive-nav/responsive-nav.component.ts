@@ -1,10 +1,9 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, shareReplay } from 'rxjs/operators';
-
-import { AuthService } from 'src/app/_services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, shareReplay, takeUntil } from 'rxjs/operators';
 import { User } from 'src/app/_models/user';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'lms-responsive-nav',
@@ -12,6 +11,8 @@ import { User } from 'src/app/_models/user';
   styleUrls: ['./responsive-nav.component.css']
 })
 export class ResponsiveNavComponent implements OnInit, OnDestroy {
+  private readonly unsubscribe = new Subject<void>();
+
   photoUrl: string;
   loggedInUser: User;
 
@@ -22,14 +23,19 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
 
   constructor(private breakpointObserver: BreakpointObserver, public authService: AuthService) {}
 
-  ngOnInit() {
-    this.authService.currentPhotoUrl.subscribe(photoUrl => (this.photoUrl = photoUrl));
-    this.authService.loggedInUser$.subscribe(user => (this.loggedInUser = user));
+  ngOnInit(): void {
+    this.authService.currentPhotoUrl
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(photoUrl => (this.photoUrl = photoUrl));
+    this.authService.loggedInUser$.pipe(takeUntil(this.unsubscribe)).subscribe(user => (this.loggedInUser = user));
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
   }
 }
