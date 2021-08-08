@@ -21,6 +21,7 @@ export function tokenGetter(): string {
   // declarations: [AppComponent, BaseLayoutComponent, ResponsiveNavComponent],
   declarations: [AppComponent],
   imports: [
+    // TODO Fix wht this is called in the auth guard then remove
     AuthModule,
     // BasketModule,
     BrowserAnimationsModule,

@@ -14,6 +14,8 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    console.log(next);
+
     const allowedRoles = next.firstChild.data.allowedRoles as Array<string>;
 
     if (allowedRoles) {
@@ -35,12 +37,12 @@ export class AuthGuard implements CanActivate {
 
   blockAccess(): boolean {
     this.notification.error('Access Denied');
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth/login']);
     return false;
   }
 
   login(state: any): boolean {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
     return false;
   }
 }
