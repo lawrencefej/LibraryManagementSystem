@@ -17,9 +17,10 @@ export class BasketService implements OnDestroy {
   basket$: Observable<BasketViewModel> = this.basketSubject.asObservable();
 
   constructor(private readonly notify: NotificationService, private readonly httpService: HttpClient) {
-    const basketFromLS = JSON.parse(localStorage.getItem('basket'));
+    // const basketFromLS = JSON.parse(localStorage.getItem('basket'));
+    const basketFromLS = localStorage.getItem('basket');
     if (basketFromLS) {
-      this.basketSubject.next(basketFromLS);
+      this.basketSubject.next(JSON.parse(basketFromLS));
     }
     this.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => (this.currentBasket = basket));
   }

@@ -14,7 +14,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 export class ResetPasswordComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  resetPasswordForm: FormGroup;
+  resetPasswordForm!: FormGroup;
   validationMessages = validationMessages;
 
   constructor(

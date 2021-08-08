@@ -36,16 +36,18 @@ export class BasketComponent implements OnInit, OnDestroy {
   }
 
   checkoutBasket(): void {
-    this.basketService
-      .checkoutBasket(this.basket)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(
-        () => {
-          this.notify.success('items checked out successfully');
-          this.basketService.completeTransaction();
-          this.clearBasket();
-        },
-        error => (this.serverValidationErrors = error)
-      );
+    if (this.basket) {
+      this.basketService
+        .checkoutBasket(this.basket)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(
+          () => {
+            this.notify.success('items checked out successfully');
+            this.basketService.completeTransaction();
+            this.clearBasket();
+          },
+          error => (this.serverValidationErrors = error)
+        );
+    }
   }
 }

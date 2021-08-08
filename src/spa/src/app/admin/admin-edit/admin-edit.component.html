@@ -15,8 +15,8 @@
         <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
         <mat-error *ngFor="let validation of validationMessages.firstName">
           <mat-error *ngIf="
-              userForm.get('firstName').hasError(validation.type) &&
-                    (userForm.get('firstName').dirty || userForm.get('firstName').touched)">
+              userForm.get('firstName')?.hasError(validation.type) &&
+                    (userForm.get('firstName')?.dirty || userForm.get('firstName')?.touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>
@@ -26,8 +26,8 @@
         <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
         <mat-error *ngFor="let validation of validationMessages.lastName">
           <mat-error *ngIf="
-              userForm.get('lastName').hasError(validation.type) &&
-                    (userForm.get('lastName').dirty || userForm.get('lastName').touched)">
+              userForm.get('lastName')?.hasError(validation.type) &&
+                    (userForm.get('lastName')?.dirty || userForm.get('lastName')?.touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>
@@ -38,8 +38,8 @@
         <input matInput type="text" placeholder="Email" formControlName="email" required />
         <mat-error *ngFor="let validation of validationMessages.email">
           <mat-error *ngIf="
-              userForm.get('email').hasError(validation.type) &&
-                  (userForm.get('email').dirty || userForm.get('email').touched)">
+              userForm.get('email')?.hasError(validation.type) &&
+                  (userForm.get('email')?.dirty || userForm.get('email')?.touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>
@@ -55,7 +55,7 @@
       </mat-radio-group>
       <mat-error *ngFor="let validation of validationMessages.role">
         <mat-error
-                   *ngIf="userForm.get('role').hasError('validation.role') && (userForm.get('role').dirty || userForm.get('role').touched)">
+                   *ngIf="userForm.get('role')?.hasError('validation.role') && (userForm.get('role')?.dirty || userForm.get('role')?.touched)">
           {{ validation.message }}</mat-error>
       </mat-error>
 

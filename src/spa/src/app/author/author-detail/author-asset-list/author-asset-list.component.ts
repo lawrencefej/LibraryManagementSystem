@@ -18,7 +18,7 @@ export class AuthorAssetListComponent implements AfterViewInit, OnInit, OnDestro
   private readonly unsubscribe = new Subject<void>();
 
   @Input()
-  author: AuthorDto;
+  author!: AuthorDto;
   @Input()
   assets!: PaginatedResult<LibraryAssetForListDto[]>;
 

@@ -13,8 +13,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 export class ResponsiveNavComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  photoUrl: string;
-  loggedInUser: User;
+  photoUrl!: string;
+  loggedInUser!: User;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches),

@@ -13,6 +13,7 @@ export function ConfirmPasswordValidator(control: AbstractControl): void {
   }
 }
 
+// TODO Validate and then delete one
 // custom validator to check that two fields match
 // export function MustMatch(controlName: string, matchingControlName: string): (formGroup: FormGroup) => void {
 //   return (formGroup: FormGroup) => {
@@ -39,12 +40,12 @@ export function MustMatch(controlName: string, matchingControlName: string): Val
     const control = controls.get(controlName);
     const checkControl = controls.get(matchingControlName);
 
-    if (checkControl.errors && !checkControl.errors.matching) {
+    if (checkControl?.errors && !checkControl?.errors.matching) {
       return null;
     }
 
-    if (control.value !== checkControl.value) {
-      controls.get(matchingControlName).setErrors({ matching: true });
+    if (control?.value !== checkControl?.value) {
+      controls.get(matchingControlName)?.setErrors({ matching: true });
       return { matching: true };
     } else {
       return null;

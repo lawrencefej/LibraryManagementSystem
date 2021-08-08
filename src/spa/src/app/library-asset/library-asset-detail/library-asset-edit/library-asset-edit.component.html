@@ -5,8 +5,8 @@
         <input matInput type="text" placeholder="Title" formControlName="title" required autocomplete="test" />
         <mat-error *ngFor="let validation of validationMessages.title">
           <mat-error *ngIf="
-            assetForm.get('title').hasError(validation.type) &&
-                  (assetForm.get('title').dirty || assetForm.get('title').touched)">
+            assetForm.get('title')?.hasError(validation.type) &&
+                  (assetForm.get('title')?.dirty || assetForm.get('title')?.touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>
@@ -19,8 +19,8 @@
         <mat-hint align="end">{{ assetForm.get('description')?.value.length }} / 250</mat-hint>
         <mat-error *ngFor="let validation of validationMessages.description">
           <mat-error *ngIf="
-            assetForm.get('description').hasError(validation.type) &&
-                (assetForm.get('description').dirty || assetForm.get('description').touched)">
+            assetForm.get('description')?.hasError(validation.type) &&
+                (assetForm.get('description')?.dirty || assetForm.get('description')?.touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>
@@ -32,8 +32,8 @@
                autocomplete="test" />
         <mat-error *ngFor="let validation of validationMessages.year">
           <mat-error *ngIf="
-            assetForm.get('year').hasError(validation.type) &&
-                  (assetForm.get('year').dirty || assetForm.get('year').touched)">
+            assetForm.get('year')?.hasError(validation.type) &&
+                  (assetForm.get('year')?.dirty || assetForm.get('year')?.touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>
@@ -47,8 +47,8 @@
         </mat-select>
         <mat-error *ngFor="let validation of validationMessages.assetTypeId">
           <mat-error *ngIf="
-            assetForm.get('assetType').hasError(validation.type) &&
-                  (assetForm.get('assetType').dirty || assetForm.get('assetType').touched)">
+            assetForm.get('assetType')?.hasError(validation.type) &&
+                  (assetForm.get('assetType')?.dirty || assetForm.get('assetType')?.touched)">
             {{ validation.message }}
           </mat-error>
         </mat-error>

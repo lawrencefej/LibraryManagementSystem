@@ -28,7 +28,7 @@ export class AuthorComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   author?: AuthorDto;
-  authorForm: FormGroup;
+  authorForm!: FormGroup;
   isEditAuthor = false;
   serverValidationErrors: string[] = [];
   validationMessages = validationMessages;
@@ -52,7 +52,7 @@ export class AuthorComponent implements OnInit, OnDestroy {
     this.isEdit(this.data);
   }
 
-  isEdit(author: AuthorDto): void {
+  isEdit(author?: AuthorDto): void {
     if (author) {
       this.populateForm(author);
       this.author = cloneDeep(author);
@@ -100,7 +100,7 @@ export class AuthorComponent implements OnInit, OnDestroy {
   }
 
   revert(): void {
-    this.populateForm(this.author);
+    this.populateForm(this.author!);
   }
 
   reset(): void {

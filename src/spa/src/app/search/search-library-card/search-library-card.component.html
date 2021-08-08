@@ -57,7 +57,7 @@
             <ng-container>
               <mat-list-item role="listitem">
                 <h4 style="margin-right: 10px;">Address: </h4>
-                <address>{{ card.address.street }}, {{ card.address.city }}, {{ card.address.state.name }} </address>
+                <address>{{ card.address.street }}, {{ card.address.city }}, {{ card.address.state?.name }} </address>
               </mat-list-item>
               <mat-divider></mat-divider>
             </ng-container>
