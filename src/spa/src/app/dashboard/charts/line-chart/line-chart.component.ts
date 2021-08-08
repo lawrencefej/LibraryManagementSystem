@@ -4,7 +4,7 @@ import { Color } from 'ng2-charts';
 import { ChartModel } from 'src/app/_models/chartModel';
 
 @Component({
-  selector: 'app-line-chart',
+  selector: 'lms-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css']
 })

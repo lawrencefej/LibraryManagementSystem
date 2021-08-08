@@ -5,7 +5,6 @@ import { ReportService } from 'src/app/_services/report.service';
 import { TotalsReport } from 'src/app/_models/totalsReport';
 
 @Component({
-  selector: 'app-dashboard-panel',
   templateUrl: './dashboard-panel.component.html',
   styleUrls: ['./dashboard-panel.component.css']
 })
@@ -42,7 +41,7 @@ export class DashboardPanelComponent implements OnInit {
 
   constructor(private reportService: ReportService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getDailyActivity();
     this.getAssetTypeDistribution();
     this.getCategoryDistribution();
@@ -50,7 +49,7 @@ export class DashboardPanelComponent implements OnInit {
     this.getTotals();
   }
 
-  getDailyActivity() {
+  getDailyActivity(): void {
     this.reportService.getCheckoutByDay().subscribe((checkouts: ChartModel) => {
       this.reportService.getReturnByDay().subscribe((returns: ChartModel) => {
         this.dailyActivityData = [
@@ -68,7 +67,7 @@ export class DashboardPanelComponent implements OnInit {
     });
   }
 
-  getMonthlyActivity() {
+  getMonthlyActivity(): void {
     this.reportService.getCheckoutByMonth().subscribe((checkouts: ChartModel) => {
       this.reportService.getReturnsByMonth().subscribe((returns: ChartModel) => {
         this.monthlyActivityData = [
@@ -86,21 +85,21 @@ export class DashboardPanelComponent implements OnInit {
     });
   }
 
-  getAssetTypeDistribution() {
+  getAssetTypeDistribution(): void {
     this.reportService.getAssetDistribution().subscribe((chartModel: ChartModel) => {
       this.assetTypeDistributionData = chartModel.data.map(a => a.count);
       this.assetTypeDistributionLabel = chartModel.data.map(a => a.name);
     });
   }
 
-  getCategoryDistribution() {
+  getCategoryDistribution(): void {
     this.reportService.getCategoryDistribution().subscribe((chartModel: ChartModel) => {
       this.categoryDistributionData = chartModel.data.map(a => a.count);
       this.categoryDistributionLabel = chartModel.data.map(a => a.name);
     });
   }
 
-  getTotals() {
+  getTotals(): void {
     this.reportService.getTotals().subscribe((result: TotalsReport) => {
       this.totalAuthors = result.totalAuthors;
       this.totalCheckouts = result.totalCheckouts;

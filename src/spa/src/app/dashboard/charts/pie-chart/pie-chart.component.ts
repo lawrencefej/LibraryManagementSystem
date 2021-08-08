@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ChartOptions } from 'chart.js';
 
 @Component({
-  selector: 'app-pie-chart',
+  selector: 'lms-pie-chart',
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })

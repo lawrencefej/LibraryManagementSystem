@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-total-card',
+  selector: 'lms-total-card',
   templateUrl: './total-card.component.html',
   styleUrls: ['./total-card.component.css']
 })

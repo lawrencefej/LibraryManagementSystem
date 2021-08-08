@@ -1,20 +1,18 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LibraryCardCheckoutComponent } from './library-card-checkout.component';
 
 describe('LibraryCardCheckoutComponent', () => {
   let component: LibraryCardCheckoutComponent;
   let fixture: ComponentFixture<LibraryCardCheckoutComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ LibraryCardCheckoutComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [LibraryCardCheckoutComponent]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LibraryCardCheckoutComponent);

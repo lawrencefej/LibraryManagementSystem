@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChartOptions, ChartType } from 'chart.js';
 
 @Component({
-  selector: 'app-bar-chart',
+  selector: 'lms-bar-chart',
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.css']
 })
-export class BarChartComponent implements OnInit {
+export class BarChartComponent {
   @Input() barChartData: any[] = [];
   @Input() barChartLabels: any[] = [];
   @Input() chartName!: string;
@@ -18,6 +18,4 @@ export class BarChartComponent implements OnInit {
   public barChartLegend = true;
 
   constructor() {}
-
-  ngOnInit() {}
 }
