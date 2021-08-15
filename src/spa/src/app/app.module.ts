@@ -8,17 +8,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from './layout/layout.module';
 import { SearchModule } from './search/search.module';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
-import { ErrorInterceptor } from './_services/error.interceptor';
-import { LoaderInterceptor } from './_services/loader-interceptor';
+import { LoaderInterceptor } from './_interceptors/loader-interceptor';
 
 @NgModule({
-  // declarations: [AppComponent, BaseLayoutComponent, ResponsiveNavComponent],
   declarations: [AppComponent],
   imports: [
     // TODO Fix wht this is called in the auth guard then remove
     // AuthModule,
-    // BasketModule,
     BrowserAnimationsModule,
     BrowserModule,
     CommonModule,

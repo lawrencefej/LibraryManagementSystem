@@ -52,10 +52,8 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap(() => {
           if (this.authenticationService.allowTokenRefresh()) {
-            console.log('renew token');
             return this.authenticationService.refreshToken();
           } else {
-            console.log('ignore');
             return EMPTY;
           }
         }),

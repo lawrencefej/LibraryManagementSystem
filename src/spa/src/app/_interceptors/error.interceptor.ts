@@ -4,7 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
 import { NotificationService } from '../shared/services/notification.service';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from '../_services/authentication.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {

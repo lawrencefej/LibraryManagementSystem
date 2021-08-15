@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { Subject } from 'rxjs/internal/Subject';
-import { LoaderService } from 'src/app/_services/loader.service';
+import { LoaderService } from 'src/app/_interceptors/loader.service';
 
 @Component({
   selector: 'lms-progress-spinner',
@@ -14,5 +14,5 @@ export class ProgressSpinnerComponent {
   mode = 'indeterminate' as ProgressSpinnerMode;
   value = 50;
 
-  constructor(private loaderService: LoaderService) {}
+  constructor(private readonly loaderService: LoaderService) {}
 }

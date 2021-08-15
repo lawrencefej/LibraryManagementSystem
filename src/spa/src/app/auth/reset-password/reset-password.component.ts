@@ -18,11 +18,11 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   validationMessages = validationMessages;
 
   constructor(
-    private route: ActivatedRoute,
-    private authService: AuthService,
-    private notify: NotificationService,
-    private router: Router,
-    private fb: FormBuilder
+    private readonly authService: AuthService,
+    private readonly fb: FormBuilder,
+    private readonly notify: NotificationService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnDestroy(): void {
