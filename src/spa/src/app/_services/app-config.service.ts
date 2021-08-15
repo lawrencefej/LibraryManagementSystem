@@ -9,6 +9,9 @@ export interface MinMaxDates {
   providedIn: 'root'
 })
 export class AppConfigService {
+  readonly tokenInterval: number = 300000;
+  readonly logoutInterval: number = 1000 * 3600;
+
   constructor() {}
 
   calculateMinMaxDate(): MinMaxDates {

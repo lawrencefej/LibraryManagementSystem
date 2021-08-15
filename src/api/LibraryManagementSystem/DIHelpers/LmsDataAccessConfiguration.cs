@@ -1,5 +1,5 @@
-﻿using LibraryManagementSystem.Helpers;
-using LMSRepository.Data;
+﻿using LMSRepository.Data;
+using LMSService.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;

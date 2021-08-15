@@ -1,14 +1,11 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
-using LibraryManagementSystem.Helpers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
+using LMSEntities.Helpers;
 using LMSEntities.Models;
-using LMSService.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace LibraryManagementSystem.API.Controllers
 {
@@ -17,72 +14,46 @@ namespace LibraryManagementSystem.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly AppSettings _appSettings;
-        private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authService;
 
-        public AuthController(ILogger<AuthController> logger, IAuthService authService,
-            IMapper mapper, IOptions<AppSettings> appSettings)
+        public AuthController(IAuthService authService)
         {
-            _mapper = mapper;
-            _appSettings = appSettings.Value;
-            _logger = logger;
             _authService = authService;
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(typeof(LoginUserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            AppUser user = await _authService.FindUserByEmail(userForLoginDto.Email);
+            LmsResponseHandler<LoginUserDto> result = await _authService.Login(userForLoginDto);
 
-            if (user != null)
-            {
-                var result = await _authService.SignInUser(user, userForLoginDto.Password);
-
-                if (result.Succeeded)
-                {
-                    var appUser = await _authService.GetUser(userForLoginDto.Email);
-
-                    var userToReturn = _mapper.Map<UserForDetailedDto>(appUser);
-
-                    userToReturn = await _authService.AddRoleToUser(userToReturn, appUser);
-
-                    _logger.LogInformation("Successful Login by Id: {0}, Email: {1}", user.Id, user.Email);
-
-                    return Ok(new
-                    {
-                        token = await _authService.GenerateJwtToken(appUser, _appSettings.Token),
-                        // token = LmsTokens.GenerateJwtToken(appUser, _appSettings.Token),
-                        user = userToReturn
-                    });
-                }
-            }
-
-            _logger.LogWarning("Unsuccessful login by user: {0}", userForLoginDto.Email);
-            return BadRequest("Email or Password does not match");
+            return result.Succeeded ? Ok(result.Item) : BadRequest(result.Error);
         }
 
         [HttpPost("forgot-password")]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(ResetPassword resetPassword)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest)
         {
             // TODO Fix Dto's
-            AppUser user = await _authService.FindUserByEmail(resetPassword.Email);
+            AppUser user = await _authService.FindUserByEmail(forgotPasswordRequest.Email);
 
             if (!await _authService.IsResetEligible(user))
             {
                 // Don't reveal that the user does not exist or is not confirmed
-                return Ok();
+                return NoContent();
             }
 
             await _authService.ForgotPassword(user, Request.Scheme, Request.Host);
 
             // TODO confirm if this should be NoContent
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost("reset-password")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {
@@ -95,7 +66,26 @@ namespace LibraryManagementSystem.API.Controllers
 
             Microsoft.AspNetCore.Identity.IdentityResult result = await _authService.ResetPassword(user, resetPassword.Password, resetPassword.Code);
 
-            return result.Succeeded ? Ok() : BadRequest(result.Errors);
+            return result.Succeeded ? NoContent() : BadRequest(result.Errors);
+        }
+
+        [HttpPost("refresh")]
+        [ProducesResponseType(typeof(TokenResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> RefreshToken(TokenRequestDto tokenRequest)
+        {
+            LmsResponseHandler<TokenResponseDto> result = await _authService.RefreshToken(tokenRequest);
+
+            return result.Succeeded ? Ok(result.Item) : Unauthorized();
+        }
+
+        [HttpPost("revoke")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RevokeToken(TokenRequestDto tokenRequest)
+        {
+            await _authService.RevokeToken(tokenRequest);
+
+            return NoContent();
         }
     }
 }

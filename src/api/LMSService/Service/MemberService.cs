@@ -179,7 +179,7 @@ namespace LMSService.Service
                 .Where(x => x.FirstName.Contains(member.FirstName)
                 || x.Email.Contains(member.LastName)
                 || x.Email.Contains(member.Email)
-                || x.PhoneNumber.Contains(member.PhoneNumber)
+                // || x.PhoneNumber.Contains(member.PhoneNumber)
                 );
 
             return await members.ToListAsync();

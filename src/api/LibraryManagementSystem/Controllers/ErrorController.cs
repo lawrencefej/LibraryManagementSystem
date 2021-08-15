@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
@@ -70,6 +71,19 @@ namespace LibraryManagementSystem.Controllers
             LmsResponseHandler<LibraryCardForDetailedDto> result = LmsResponseHandler<LibraryCardForDetailedDto>.Failed("Error 1");
 
             return ResultCheck(result);
+        }
+
+        [HttpGet("test")]
+        [AllowAnonymous]
+        public IActionResult GetTest()
+        {
+            Console.WriteLine(Request);
+            return Ok(GetIpAddress());
+        }
+
+        private string GetIpAddress()
+        {
+            return HttpContext.Connection.RemoteIpAddress.ToString();
         }
     }
 }

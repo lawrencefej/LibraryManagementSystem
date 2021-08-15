@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
+import { SessionService } from 'src/app/_services/session.service';
 import { LibraryCardForDetailedDto } from 'src/dto/models';
 
 @Component({
@@ -14,7 +15,7 @@ export class SearchLibraryCardComponent implements OnDestroy {
   validationMessages = validationMessages;
   showResult = false;
 
-  constructor() {}
+  constructor(private readonly sessionService: SessionService) {}
 
   ngOnDestroy(): void {
     this.unsubscribe.next();
@@ -28,5 +29,6 @@ export class SearchLibraryCardComponent implements OnDestroy {
 
   tabClicked(): void {
     this.showResult = false;
+    this.sessionService.resetLogoutTimer();
   }
 }

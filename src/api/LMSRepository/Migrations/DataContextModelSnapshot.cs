@@ -78,21 +78,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "844be891-c169-4d8d-9bb2-746e04a0d34b",
+                            ConcurrencyStamp = "14685dc8-e243-455d-bc7b-1e54eaae219c",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "55e02bbf-09cb-40a0-b5f1-e230db018a8a",
+                            ConcurrencyStamp = "940c9957-e156-47ee-a1ae-89e5e349cff8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "d98c12f4-a318-4f9a-9e1b-60ac3cd3769c",
+                            ConcurrencyStamp = "eef49f00-b5ac-46c4-822a-d2eeb52cc600",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -295,36 +295,6 @@ namespace LMSRepository.Migrations
                     b.ToTable("CheckoutHistory");
                 });
 
-            modelBuilder.Entity("LMSEntities.Models.CheckoutItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("CheckoutId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("LibraryAssetId")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("RenewalCount")
-                        .HasColumnType("tinyint unsigned");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CheckoutId");
-
-                    b.HasIndex("LibraryAssetId");
-
-                    b.ToTable("CheckoutItems");
-                });
-
             modelBuilder.Entity("LMSEntities.Models.Hold", b =>
                 {
                     b.Property<int>("Id")
@@ -469,7 +439,7 @@ namespace LMSRepository.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasColumnType("varchar(10)");
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -486,7 +456,7 @@ namespace LMSRepository.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("varchar(10)");
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id");
 
@@ -530,6 +500,46 @@ namespace LMSRepository.Migrations
                     b.ToTable("Photos");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Photo");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Invalidated")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("JwtId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RequestIp")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Used")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.ReserveAsset", b =>
@@ -1084,25 +1094,6 @@ namespace LMSRepository.Migrations
                     b.Navigation("LibraryCard");
                 });
 
-            modelBuilder.Entity("LMSEntities.Models.CheckoutItem", b =>
-                {
-                    b.HasOne("LMSEntities.Models.Checkout", "Checkout")
-                        .WithMany()
-                        .HasForeignKey("CheckoutId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
-                        .WithMany()
-                        .HasForeignKey("LibraryAssetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Checkout");
-
-                    b.Navigation("LibraryAsset");
-                });
-
             modelBuilder.Entity("LMSEntities.Models.Hold", b =>
                 {
                     b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
@@ -1173,6 +1164,17 @@ namespace LMSRepository.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.RefreshToken", b =>
+                {
+                    b.HasOne("LMSEntities.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.ReserveAsset", b =>

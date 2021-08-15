@@ -22,15 +22,16 @@ namespace LibraryManagementSystem.API.Helpers
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
-                     })
-                     .ForMember(dest => dest.LibraryCardNumber, opt =>
-                     {
-                         opt.MapFrom(src => src.LibraryCard.Id);
-                     })
-                     .ForMember(dest => dest.Fees, opt =>
-                     {
-                         opt.MapFrom(src => src.LibraryCard.Fees);
                      });
+            CreateMap<AppUser, LoginUserDto>()
+                    .ForMember(dest => dest.PhotoUrl, opt =>
+                    {
+                        opt.MapFrom(src => src.ProfilePicture.Url);
+                    })
+                    .ForMember(dest => dest.Role, opt =>
+                    {
+                        opt.MapFrom(src => src.UserRoles.FirstOrDefault().Role.Name);
+                    });
             CreateMap<UserForUpdateDto, AppUser>();
             CreateMap<UpdateAdminRoleDto, AppUser>();
             CreateMap<UserForRegisterDto, AppUser>();

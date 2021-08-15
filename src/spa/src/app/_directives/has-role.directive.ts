@@ -1,8 +1,9 @@
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
+import { LoginUserDto } from 'src/dto/models';
 import { User } from '../_models/user';
-import { AuthService } from '../_services/auth.service';
+import { AuthenticationService } from '../_services/authentication.service';
 
 @Directive({
   selector: '[appHasRole]'
@@ -13,14 +14,14 @@ export class HasRoleDirective implements OnInit, OnDestroy {
   @Input() appHasRole: string[] = [];
   isVisible = false;
   currentUser!: User;
+  user!: LoginUserDto;
 
   constructor(
-    private viewContainerRef: ViewContainerRef,
-    private templateRef: TemplateRef<any>,
-    private authService: AuthService
+    authenticationService: AuthenticationService,
+    private readonly templateRef: TemplateRef<any>,
+    private readonly viewContainerRef: ViewContainerRef
   ) {
-    // TODO take 1
-    this.authService.loggedInUser$.pipe(takeUntil(this.unsubscribe)).subscribe(user => (this.currentUser = user));
+    authenticationService.loggedInUser$.pipe(take(1)).subscribe(user => (this.user = user));
   }
 
   ngOnDestroy(): void {
@@ -29,27 +30,16 @@ export class HasRoleDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (!this.currentUser.role) {
+    // clear view if no roles
+    if (!this.user?.role || this.user == null) {
       this.viewContainerRef.clear();
+      return;
     }
 
-    // If the user has the role needed to
-    // render this component we can add it
-    if (this.appHasRole.includes(this.currentUser.role)) {
-      // If it is already visible (which can happen if
-      // his roles changed) we do not need to add it a second time
-      if (!this.isVisible) {
-        // We update the `isVisible` property and add the
-        // templateRef to the view using the
-        // 'createEmbeddedView' method of the viewContainerRef
-        this.isVisible = true;
-        this.viewContainerRef.createEmbeddedView(this.templateRef);
-      }
+    // if (this.user?.roles.some(r => this.appHasRole.includes(r))) {
+    if (this.appHasRole.includes(this.user.role)) {
+      this.viewContainerRef.createEmbeddedView(this.templateRef);
     } else {
-      // If the user does not have the role,
-      // we update the `isVisible` property and clear
-      // the contents of the viewContainerRef
-      this.isVisible = false;
       this.viewContainerRef.clear();
     }
   }

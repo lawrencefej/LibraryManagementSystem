@@ -26,6 +26,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ILibraryCardService, LibraryCardService>();
             services.AddScoped<IValidatorService, ValidatorService>();
+            services.AddScoped<ITokenService, TokenService>();
             // services.AddScoped<LogUserActivity>();
             services.AddScoped<DevOnlyActionFilter>();
             services.AddScoped<Seed>();

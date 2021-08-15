@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +26,7 @@ import { SearchService } from './services/search.service';
     MatButtonModule,
     MatCardModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,

@@ -27,14 +27,14 @@
   <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="(isHandset$ | async) ? 56 : 0">
     <mat-sidenav [opened]="true" #sidenav [mode]="(isHandset$ | async) ? 'over' : 'side'"
                  [fixedInViewport]="(isHandset$ | async)" fixedTopGap="56">
-      <mat-card [style.backgroundColor]="'lightgray'">
+      <mat-card *ngIf="userObservable | async as user" [style.backgroundColor]="'lightgray'">
         <mat-card-header>
           <div mat-card-avatar class="avatar">
-            <img class="profile-picture" src="{{photoUrl || '../../../assets/img/user.png'}}">
+            <img class="profile-picture" src="{{user.photoUrl || '../../../assets/img/user.png'}}">
           </div>
 
-          <mat-card-title>{{loggedInUser.firstName}}, {{loggedInUser.lastName}}</mat-card-title>
-          <mat-card-subtitle>{{loggedInUser.role}}</mat-card-subtitle>
+          <mat-card-title>{{user.firstName}}, {{user.lastName}}</mat-card-title>
+          <mat-card-subtitle>{{user.role}}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
       <mat-nav-list>

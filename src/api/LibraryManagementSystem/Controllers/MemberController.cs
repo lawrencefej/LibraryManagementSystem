@@ -124,7 +124,7 @@ namespace LibraryManagementSystem.Controllers
 
                 UserForDetailedDto MemberToReturn = _mapper.Map<UserForDetailedDto>(member);
 
-                MemberToReturn.LibraryCardNumber = member.LibraryCard.Id;
+                // MemberToReturn.LibraryCardNumber = member.LibraryCard.Id;
 
                 return CreatedAtAction(nameof(GetMember), new { id = MemberToReturn.Id }, MemberToReturn);
             }

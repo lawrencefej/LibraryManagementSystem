@@ -1,20 +1,18 @@
-import {
-  HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-  HTTP_INTERCEPTORS
-} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
 import { NotificationService } from '../shared/services/notification.service';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private readonly notify: NotificationService, private readonly router: Router) {}
+  constructor(
+    private readonly notify: NotificationService,
+    private readonly router: Router,
+    private readonly authService: AuthenticationService
+  ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -42,6 +40,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
             case 401:
               this.notify.error('Unauthorized');
+              this.authService.logout().pipe(take(1)).subscribe();
               break;
             case 403:
               this.notify.error('Forbiden');
@@ -60,36 +59,15 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
         }
 
-        // TODO use route to error components for certain errors
-        // if (error instanceof HttpErrorResponse) {
-        //   if (error.status === (401 || 403)) {
-        //     return throwError(error.statusText);
-        //   }
-        //   const applicationError = error.headers.get('Application-Error');
-        //   if (applicationError) {
-        //     console.error(applicationError);
-        //     return throwError(applicationError);
-        //   }
-
-        //   const serverError = error.error;
-        //   let modalStateErrors = '';
-        //   if (serverError && typeof serverError === 'object') {
-        //     for (const key in serverError) {
-        //       if (serverError[key]) {
-        //         modalStateErrors += serverError[key] + '\n';
-        //       }
-        //     }
-        //   }
-        //   return throwError(modalStateErrors || serverError || 'server Error');
-        // }
         return throwError(error);
       })
     );
   }
 }
 
-export const ErrorinterceptorProvider = {
-  provide: HTTP_INTERCEPTORS,
-  useClass: ErrorInterceptor,
-  multi: true
-};
+// TODO Confirm if this can be removed
+// export const ErrorinterceptorProvider = {
+//   provide: HTTP_INTERCEPTORS,
+//   useClass: ErrorInterceptor,
+//   multi: true
+// };

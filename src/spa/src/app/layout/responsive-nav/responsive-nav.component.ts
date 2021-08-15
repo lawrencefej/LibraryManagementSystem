@@ -1,9 +1,11 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { map, shareReplay, takeUntil } from 'rxjs/operators';
+import { EMPTY, Observable, Subject } from 'rxjs';
+import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { User } from 'src/app/_models/user';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { SessionService } from 'src/app/_services/session.service';
+import { LoginUserDto } from 'src/dto/models';
 
 @Component({
   selector: 'lms-responsive-nav',
@@ -15,19 +17,25 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
 
   photoUrl!: string;
   loggedInUser!: User;
+  user!: LoginUserDto;
+  userObservable: Observable<LoginUserDto>;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches),
     shareReplay()
   );
 
-  constructor(private breakpointObserver: BreakpointObserver, public authService: AuthService) {}
+  constructor(
+    private readonly authenticationService: AuthenticationService,
+    private readonly breakpointObserver: BreakpointObserver,
+    private readonly sessionService: SessionService
+  ) {}
 
   ngOnInit(): void {
-    this.authService.currentPhotoUrl
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(photoUrl => (this.photoUrl = photoUrl));
-    this.authService.loggedInUser$.pipe(takeUntil(this.unsubscribe)).subscribe(user => (this.loggedInUser = user));
+    this.userObservable = this.authenticationService.loggedInUser$;
+
+    this.trackTokenRefreshTimer();
+    this.trackLogoutRefreshTimer();
   }
 
   ngOnDestroy(): void {
@@ -36,6 +44,32 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authService.logout();
+    this.authenticationService.logout().pipe(takeUntil(this.unsubscribe)).subscribe();
+  }
+
+  private trackTokenRefreshTimer(): void {
+    this.sessionService.tokenTimerObservable
+      .pipe(
+        switchMap(() => {
+          if (this.authenticationService.allowTokenRefresh()) {
+            console.log('renew token');
+            return this.authenticationService.refreshToken();
+          } else {
+            console.log('ignore');
+            return EMPTY;
+          }
+        }),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe();
+  }
+
+  private trackLogoutRefreshTimer(): void {
+    this.sessionService.logoutTimerObservable
+      .pipe(
+        takeUntil(this.unsubscribe),
+        switchMap(() => this.authenticationService.logout())
+      )
+      .subscribe();
   }
 }

@@ -271,6 +271,36 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    JwtId = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RequestIp = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Token = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Used = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Invalidated = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "LibraryAssetAuthors",
                 columns: table => new
                 {
@@ -368,9 +398,9 @@ namespace LMSRepository.Migrations
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     MemberId = table.Column<int>(type: "int", nullable: false),
                     AddressId = table.Column<int>(type: "int", nullable: false),
-                    Gender = table.Column<string>(type: "varchar(10)", nullable: false)
+                    Gender = table.Column<string>(type: "varchar(15)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Status = table.Column<string>(type: "varchar(10)", nullable: false)
+                    Status = table.Column<string>(type: "varchar(15)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -554,44 +584,14 @@ namespace LMSRepository.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "CheckoutItems",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LibraryAssetId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CheckoutId = table.Column<int>(type: "int", nullable: false),
-                    RenewalCount = table.Column<byte>(type: "tinyint unsigned", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CheckoutItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CheckoutItems_Checkouts_CheckoutId",
-                        column: x => x.CheckoutId,
-                        principalTable: "Checkouts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CheckoutItems_LibraryAssets_LibraryAssetId",
-                        column: x => x.LibraryAssetId,
-                        principalTable: "LibraryAssets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "844be891-c169-4d8d-9bb2-746e04a0d34b", "Member", "MEMBER" },
-                    { 2, "55e02bbf-09cb-40a0-b5f1-e230db018a8a", "Admin", "ADMIN" },
-                    { 3, "d98c12f4-a318-4f9a-9e1b-60ac3cd3769c", "Librarian", "LIBRARIAN" }
+                    { 1, "14685dc8-e243-455d-bc7b-1e54eaae219c", "Member", "MEMBER" },
+                    { 2, "940c9957-e156-47ee-a1ae-89e5e349cff8", "Admin", "ADMIN" },
+                    { 3, "eef49f00-b5ac-46c4-822a-d2eeb52cc600", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(
@@ -705,16 +705,6 @@ namespace LMSRepository.Migrations
                 column: "LibraryCardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CheckoutItems_CheckoutId",
-                table: "CheckoutItems",
-                column: "CheckoutId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CheckoutItems_LibraryAssetId",
-                table: "CheckoutItems",
-                column: "LibraryAssetId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Checkouts_LibraryAssetId",
                 table: "Checkouts",
                 column: "LibraryAssetId");
@@ -792,6 +782,11 @@ namespace LMSRepository.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReserveAssets_LibraryAssetId",
                 table: "ReserveAssets",
                 column: "LibraryAssetId");
@@ -823,7 +818,7 @@ namespace LMSRepository.Migrations
                 name: "CheckoutHistory");
 
             migrationBuilder.DropTable(
-                name: "CheckoutItems");
+                name: "Checkouts");
 
             migrationBuilder.DropTable(
                 name: "Holds");
@@ -838,13 +833,13 @@ namespace LMSRepository.Migrations
                 name: "Photos");
 
             migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
                 name: "ReserveAssets");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Checkouts");
 
             migrationBuilder.DropTable(
                 name: "Authors");

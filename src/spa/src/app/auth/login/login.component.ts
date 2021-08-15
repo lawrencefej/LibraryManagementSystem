@@ -5,7 +5,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { UserForLoginDto } from 'src/dto/models';
 
 @Component({
   templateUrl: './login.component.html',
@@ -19,11 +20,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   validationMessages = validationMessages;
 
   constructor(
-    public authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    public notification: NotificationService
+    private readonly authenticationService: AuthenticationService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly fb: FormBuilder,
+    public readonly notification: NotificationService
   ) {}
 
   ngOnDestroy(): void {
@@ -36,13 +37,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.createLoginForm();
   }
 
-  onSubmit(): void {
+  onSubmit(model: UserForLoginDto): void {
     if (this.loginForm.valid) {
-      this.authService
-        .login(this.loginForm.value)
+      this.authenticationService
+        .login(model)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(() => {
-          this.router.navigate([this.returnUrl]);
+          this.router.navigateByUrl(this.returnUrl);
         });
     }
   }

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
 import { ChartModel } from 'src/app/_models/chartModel';
-import { ReportService } from 'src/app/_services/report.service';
 import { TotalsReport } from 'src/app/_models/totalsReport';
+import { ReportService } from 'src/app/_services/report.service';
 
 @Component({
   templateUrl: './dashboard-panel.component.html',
@@ -41,6 +40,7 @@ export class DashboardPanelComponent implements OnInit {
 
   constructor(private reportService: ReportService) {}
 
+  // TODO Handle token refresh and polling data
   ngOnInit(): void {
     this.getDailyActivity();
     this.getAssetTypeDistribution();

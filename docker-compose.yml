@@ -27,6 +27,9 @@ services:
       AppSettings__DbUser: librarydb
       AppSettings__DbPassword: Password123
       AppSettings__DatabaseName: librarydb
+      AppSettings__Secret: unmoving-dole-outskirts-debunk
+      AppSettings__TokenLifetime: 60
+      AppSettings__RefreshTokenLifetime: 5
       EmailSettings__apikey: zdvvd
       EmailSettings__Host: zdvvd
       EmailSettings__Password: zdvvd

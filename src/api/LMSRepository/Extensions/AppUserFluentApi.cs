@@ -29,6 +29,14 @@ namespace LMSRepository.Extensions
                 e.Property(a => a.Created).IsRequired();
             });
 
+            modelBuilder.Entity<RefreshToken>(e =>
+            {
+                e.Property(a => a.Token).IsRequired();
+                e.Property(a => a.ExpiryDate).IsRequired();
+                e.Property(a => a.JwtId).IsRequired();
+                e.Property(a => a.RequestIp).IsRequired();
+            });
+
             modelBuilder.Entity<AppRole>().HasData(
                     new AppRole { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
                     new AppRole { Id = 2, Name = "Admin", NormalizedName = "ADMIN" },

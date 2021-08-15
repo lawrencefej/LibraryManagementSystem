@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,10 +33,12 @@ namespace LibraryManagementSystem.DIHelpers
                 {
                     Options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        // TODO validate issue
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
                             .GetBytes(token)),
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 

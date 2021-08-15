@@ -58,7 +58,7 @@ namespace LMSRepository.Data
 
             foreach (AddAdminDto user in users)
             {
-                await _adminService.CreateUser(user);
+                await _adminService.CreateUser(user, true);
             }
         }
 

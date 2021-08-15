@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { SearchLibraryCardComponent } from './search/search-library-card/search-library-card.component';
 import { IsDevGuard } from './_guards/is-dev.guard';
 
 const routes: Routes = [
@@ -23,9 +22,14 @@ const routes: Routes = [
   //     }
   //   ]
   // },
+  // {
+  //   path: '',
+  //   component: SearchLibraryCardComponent
+  // },
   {
     path: '',
-    component: SearchLibraryCardComponent
+    redirectTo: 'home',
+    pathMatch: 'full'
   },
   {
     path: 'admin',
@@ -67,8 +71,8 @@ const routes: Routes = [
   // },
   {
     path: '**',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    redirectTo: 'home'
+    // pathMatch: 'full'
   }
 ];
 

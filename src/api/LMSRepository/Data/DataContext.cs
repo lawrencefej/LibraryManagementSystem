@@ -26,6 +26,7 @@ namespace LMSRepository.Data
         public DbSet<ReserveAsset> ReserveAssets { get; set; }
         public DbSet<AssetPhoto> AssetPhotos { get; set; }
         public DbSet<UserProfilePhoto> UserProfilePhotos { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
