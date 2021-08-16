@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { User } from 'src/app/_models/user';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 import { UserService } from 'src/app/_services/user.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class UserProfileEditComponent implements OnInit {
     private dialog: MatDialog,
     public notify: NotificationService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +68,7 @@ export class UserProfileEditComponent implements OnInit {
   }
 
   updateUser(user: User): void {
-    this.userService.updateUser(this.authService.loggedInUser.id, user).subscribe(
+    this.userService.updateUser(this.authService.userValue.id!, user).subscribe(
       () => {
         this.mapUpdatedUser(user);
         this.dialogRef.close(this.user);

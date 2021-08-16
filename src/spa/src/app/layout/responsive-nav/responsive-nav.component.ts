@@ -18,7 +18,7 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
   photoUrl!: string;
   loggedInUser!: User;
   user!: LoginUserDto;
-  userObservable: Observable<LoginUserDto>;
+  userObservable: Observable<LoginUserDto> = this.authenticationService.loggedInUser$;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches),
@@ -32,8 +32,6 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userObservable = this.authenticationService.loggedInUser$;
-
     this.trackTokenRefreshTimer();
     this.trackLogoutRefreshTimer();
   }

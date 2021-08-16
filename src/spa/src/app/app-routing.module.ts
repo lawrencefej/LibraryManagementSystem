@@ -3,18 +3,12 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { IsDevGuard } from './_guards/is-dev.guard';
 
 const routes: Routes = [
-  // TODO Fix no path route issues
   // {
   //   path: '',
   //   component: BaseLayoutComponent,
   //   runGuardsAndResolvers: 'always',
   //   canActivate: [AuthGuard],
   //   children: [
-  //     {
-  //       path: 'dashboard',
-  //       component: DashboardPanelComponent,
-  //       data: { allowedRoles: ['Admin'] }
-  //     },
   //     {
   //       path: 'user-profile',
   //       component: UserProfileComponent,
@@ -26,6 +20,7 @@ const routes: Routes = [
   //   path: '',
   //   component: SearchLibraryCardComponent
   // },
+  // TODO Fix no path route issues
   {
     path: '',
     redirectTo: 'home',

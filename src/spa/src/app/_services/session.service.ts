@@ -12,8 +12,8 @@ export class SessionService {
   private readonly stopLogoutTimer = new Subject<void>();
   private readonly stopTimer = new Subject<void>();
 
-  logoutTimerObservable: Observable<number>;
-  tokenTimerObservable: Observable<number>;
+  logoutTimerObservable!: Observable<number>;
+  tokenTimerObservable!: Observable<number>;
 
   constructor(private readonly appConfig: AppConfigService) {
     this.initializeTokenTimer();

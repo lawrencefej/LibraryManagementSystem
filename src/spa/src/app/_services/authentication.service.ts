@@ -22,7 +22,7 @@ export class AuthenticationService implements OnDestroy {
   baseUrl = environment.apiUrl + 'auth/';
   private readonly jwtHelper = new JwtHelperService();
   private readonly unsubscribe = new Subject<void>();
-  private loggedInUserSubject = new BehaviorSubject<LoginUserDto>(null);
+  private loggedInUserSubject = new BehaviorSubject<LoginUserDto>({});
 
   loggedInUser$ = this.loggedInUserSubject.asObservable();
 
@@ -78,12 +78,16 @@ export class AuthenticationService implements OnDestroy {
   }
 
   isLoggedIn(): boolean {
-    return this.loggedInUserSubject.value && !this.jwtHelper.isTokenExpired(this.loggedInUserSubject.value.token);
+    if (this.loggedInUserSubject.value) {
+      return this.loggedInUserSubject.value && !this.jwtHelper.isTokenExpired(this.loggedInUserSubject.value.token!);
+    } else {
+      return false;
+    }
   }
 
-  isTokenExpired(): boolean {
-    return !!this.jwtHelper.isTokenExpired(this.loggedInUserSubject.value.token);
-  }
+  // isTokenExpired(): boolean {
+  //   return !!this.jwtHelper.isTokenExpired(this.loggedInUserSubject.value.token);
+  // }
 
   sendForgotPasswordLink(model: ForgotPasswordRequest): Observable<void> {
     return this.httpService.post<void>(`${this.baseUrl}forgot-password`, model);
@@ -112,23 +116,34 @@ export class AuthenticationService implements OnDestroy {
     this.setCurrentUser(user);
   }
 
-  allowTokenRefresh(): boolean {
-    return (
-      (this.jwtHelper.getTokenExpirationDate(this.loggedInUserSubject.value.token).getTime() - new Date().getTime()) /
-        60000 <=
-      5
-    );
+  changeUserDetails(newUser: LoginUserDto): void {
+    const user: LoginUserDto = this.loggedInUserSubject.value;
+    user.email = newUser.email;
+    user.firstName = newUser.firstName;
+    user.lastName = newUser.lastName;
+    user.photoUrl = newUser.photoUrl;
+    user.role = newUser.role;
+    user.id = newUser.id;
+    this.setCurrentUser(user);
   }
 
-  // TODO fix
-  changeUserDetails(user: LoginUserDto): void {
-    this.loggedInUserSubject.next(user);
+  allowTokenRefresh(): boolean {
+    if (this.loggedInUserSubject.value.token) {
+      return (
+        (this.jwtHelper.getTokenExpirationDate(this.loggedInUserSubject.value.token)!.getTime() -
+          new Date().getTime()) /
+          60000 <=
+        5
+      );
+    } else {
+      return false;
+    }
   }
 
   private getTokens(): TokenRequestDto {
     return {
-      refreshToken: this.loggedInUserSubject.value.refreshToken,
-      token: this.loggedInUserSubject.value.token
+      refreshToken: this.loggedInUserSubject.value.refreshToken!,
+      token: this.loggedInUserSubject.value.token!
     };
   }
 }

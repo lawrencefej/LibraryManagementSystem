@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { MustMatch } from 'src/app/shared/validators/password-match.validator';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 @Component({
   templateUrl: './reset-password.component.html',
@@ -18,7 +18,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   validationMessages = validationMessages;
 
   constructor(
-    private readonly authService: AuthService,
+    private readonly authService: AuthenticationService,
     private readonly fb: FormBuilder,
     private readonly notify: NotificationService,
     private readonly route: ActivatedRoute,

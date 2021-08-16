@@ -13,15 +13,15 @@ import { User } from '../_models/user';
 export class AuthService {
   baseurl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
-  loggedInUser: User;
+  loggedInUser!: User;
   decodedToken: any;
-  private loggedInUserSubject = new BehaviorSubject<User>(null);
-  loggedInUser$ = this.loggedInUserSubject.asObservable();
+  // private loggedInUserSubject = new BehaviorSubject<User>(null);
+  // loggedInUser$ = this.loggedInUserSubject.asObservable();
   private photoUrl = new BehaviorSubject<string>('../../assets/user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
-    this.loggedInUser$.subscribe(user => (this.loggedInUser = user));
+    // this.loggedInUser$.subscribe(user => (this.loggedInUser = user));
   }
 
   changeMemberPhoto(photoUrl: string): void {
@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   changeUserDetails(user: User): void {
-    this.loggedInUserSubject.next(user);
+    // this.loggedInUserSubject.next(user);
   }
 
   login(model: any): Observable<any> {
@@ -57,7 +57,7 @@ export class AuthService {
   // tslint:disable-next-line: typedef
   loggedIn() {
     const token = localStorage.getItem('token');
-    return !this.jwtHelper.isTokenExpired(token);
+    return !this.jwtHelper.isTokenExpired(token!);
   }
 
   // tslint:disable-next-line: typedef
@@ -84,7 +84,7 @@ export class AuthService {
     const token = localStorage.getItem('token');
 
     // decode token to read the payload details
-    const decodeToken = this.jwtHelper.decodeToken(token);
+    const decodeToken = this.jwtHelper.decodeToken(token!);
 
     // check if it was decoded successfully, if not the token is not valid, deny access
     if (!decodeToken) {

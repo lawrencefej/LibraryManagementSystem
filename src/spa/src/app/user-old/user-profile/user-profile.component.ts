@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Photo } from 'src/app/_models/photo';
 import { User } from 'src/app/_models/user';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 import { PhotoService } from 'src/app/_services/photo.service';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
 
@@ -20,7 +20,7 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private photoService: PhotoService,
-    private authService: AuthService,
+    private authService: AuthenticationService,
     private notify: NotificationService,
     private dialog: MatDialog
   ) {}
@@ -49,10 +49,10 @@ export class UserProfileComponent implements OnInit {
       .afterClosed()
       .subscribe(data => {
         if (data) {
-          this.user = data;
-          this.authService.loggedInUser = this.user;
-          this.authService.changeUserDetails(this.user);
-          localStorage.setItem('user', JSON.stringify(this.authService.loggedInUser));
+          // this.user = data;
+          // this.authService.loggedInUser = this.user;
+          // this.authService.changeUserDetails(this.user);
+          // localStorage.setItem('user', JSON.stringify(this.authService.loggedInUser));
         }
       });
   }
@@ -68,8 +68,8 @@ export class UserProfileComponent implements OnInit {
           this.notify.success('Photo changed successfully');
           this.user.photoUrl = res.url;
           this.authService.changeMemberPhoto(this.user.photoUrl);
-          this.authService.loggedInUser.photoUrl = this.user.photoUrl;
-          localStorage.setItem('user', JSON.stringify(this.authService.loggedInUser));
+          // this.authService.loggedInUser.photoUrl = this.user.photoUrl;
+          // localStorage.setItem('user', JSON.stringify(this.authService.loggedInUser));
         },
         error => {
           this.notify.error(error);

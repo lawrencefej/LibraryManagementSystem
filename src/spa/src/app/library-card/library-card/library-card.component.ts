@@ -44,12 +44,7 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createForm();
-
-    // TODO make this a service instead
-    this.stateService
-      .getStatesObject()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(state => (this.states = state));
+    this.getStates();
     this.watchStateChanges();
     this.setStateId();
     this.minMaxDates = this.appConfig.calculateMinMaxDate();
@@ -80,6 +75,13 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
 
   displayStateName(state: StateDto): string {
     return state.name;
+  }
+
+  private getStates(): void {
+    this.stateService
+      .getStatesObject()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(state => (this.states = state));
   }
 
   private watchStateChanges(): void {

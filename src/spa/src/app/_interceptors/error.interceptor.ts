@@ -64,10 +64,3 @@ export class ErrorInterceptor implements HttpInterceptor {
     );
   }
 }
-
-// TODO Confirm if this can be removed
-// export const ErrorinterceptorProvider = {
-//   provide: HTTP_INTERCEPTORS,
-//   useClass: ErrorInterceptor,
-//   multi: true
-// };
