@@ -517,10 +517,10 @@ namespace LMSRepository.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Url = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Url = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DateAdded = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    PublicId = table.Column<string>(type: "longtext", nullable: true)
+                    PublicId = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Discriminator = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -589,9 +589,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "14685dc8-e243-455d-bc7b-1e54eaae219c", "Member", "MEMBER" },
-                    { 2, "940c9957-e156-47ee-a1ae-89e5e349cff8", "Admin", "ADMIN" },
-                    { 3, "eef49f00-b5ac-46c4-822a-d2eeb52cc600", "Librarian", "LIBRARIAN" }
+                    { 1, "4063f725-61c2-4173-bba6-bde93bdfd108", "Member", "MEMBER" },
+                    { 2, "25c2925b-749b-4716-9367-5c908707354a", "Admin", "ADMIN" },
+                    { 3, "1c4c33ed-86cc-49db-8c94-49372f65a1f4", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(

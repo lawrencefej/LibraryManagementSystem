@@ -30,16 +30,16 @@ services:
       AppSettings__Secret: unmoving-dole-outskirts-debunk
       AppSettings__TokenLifetime: 60
       AppSettings__RefreshTokenLifetime: 5
-      EmailSettings__apikey: zdvvd
-      EmailSettings__Host: zdvvd
-      EmailSettings__Password: zdvvd
-      EmailSettings__Port: 1234
-      EmailSettings__Username: zdvvd
-      EmailSettings__Email: zdvvd
-      EmailSettings__Name: zdvvd
-      CloudinarySettings__Name: dgngdndngn
-      CloudinarySettings__ApiKey: dgngdndngn
-      CloudinarySettings__ApiSecret: dgngdndngn
+      # EmailSettings__apikey: zdvvd
+      # EmailSettings__Host: zdvvd
+      # EmailSettings__Password: zdvvd
+      # EmailSettings__Port: 1234
+      # EmailSettings__Username: zdvvd
+      # EmailSettings__Email: zdvvd
+      # EmailSettings__Name: zdvvd
+      # CloudinarySettings__Name: dgngdndngn
+      # CloudinarySettings__ApiKey: dgngdndngn
+      # CloudinarySettings__ApiSecret: dgngdndngn
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity

@@ -18,13 +18,12 @@ namespace LMSService.Service
     {
         private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        // private readonly IEmailSender _emailSender;
 
-        public MemberService(DataContext context, UserManager<AppUser> userManager, IEmailSender emailSender)
+        public MemberService(DataContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _emailSender = emailSender;
         }
 
         public async Task<IdentityResult> CreateMember(AppUser user)
@@ -65,7 +64,8 @@ namespace LMSService.Service
 
             member.LibraryCard = await CreateNewCard(member.Id);
 
-            await MemberWelcomeMessage(member);
+            // TODO fix email
+            // await MemberWelcomeMessage(member);
 
             return member;
         }
@@ -83,17 +83,17 @@ namespace LMSService.Service
             return newCard;
         }
 
-        private async Task MemberWelcomeMessage(AppUser user)
-        {
-            var body = $"Welcome {TitleCase(user.FirstName)}, " +
-                $"<p>A Sentinel Library account has been created for you.</p> " +
-                $"<p>Your Library Card Number is {user.LibraryCard.Id}</p> " +
-                $" " +
-                $"<p>Thanks.</p> " +
-                $"<p>Management</p>";
+        // private async Task MemberWelcomeMessage(AppUser user)
+        // {
+        //     var body = $"Welcome {TitleCase(user.FirstName)}, " +
+        //         $"<p>A Sentinel Library account has been created for you.</p> " +
+        //         $"<p>Your Library Card Number is {user.LibraryCard.Id}</p> " +
+        //         $" " +
+        //         $"<p>Thanks.</p> " +
+        //         $"<p>Management</p>";
 
-            await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
-        }
+        //     await _emailSender.SendEmail(user.Email, "Welcome Letter", body);
+        // }
 
         public static string TitleCase(string strText)
         {

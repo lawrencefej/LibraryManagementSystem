@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Text;
+using LMSEntities.Configuration;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Role = LibraryManagementSystem.API.Helpers.Role;
@@ -12,8 +14,11 @@ namespace LibraryManagementSystem.DIHelpers
 {
     public static class LmsIdentityConfiguration
     {
-        public static void AddIdentityConfiguration(this IServiceCollection services, string token)
+        public static void AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+
+            JwtSettings jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+
             IdentityBuilder builder = services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireDigit = false;
@@ -35,7 +40,7 @@ namespace LibraryManagementSystem.DIHelpers
                     {
                         // TODO validate issue
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-                            .GetBytes(token)),
+                            .GetBytes(jwtSettings.Secret)),
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ClockSkew = TimeSpan.Zero

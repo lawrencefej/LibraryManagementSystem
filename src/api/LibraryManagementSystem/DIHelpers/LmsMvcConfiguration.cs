@@ -1,10 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
-using LibraryManagementSystem.API;
 using LMSRepository.Interfaces.Helpers;
 using LMSService.Validators;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 

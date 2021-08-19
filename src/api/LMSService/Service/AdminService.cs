@@ -22,10 +22,9 @@ namespace LMSService.Service
         // private readonly IEmailSender _emailSender;
 
         public AdminService(DataContext context, UserManager<AppUser> userManager,
-            IEmailSender emailSender, ILogger<AdminService> logger, IMapper mapper) : base(context, mapper, logger)
+            ILogger<AdminService> logger, IMapper mapper) : base(context, mapper, logger)
         {
             _userManager = userManager;
-            // _emailSender = emailSender;
         }
 
         public async Task<LmsResponseHandler<AdminUserForListDto>> CreateUser(AddAdminDto addAdminDto, bool password = false)

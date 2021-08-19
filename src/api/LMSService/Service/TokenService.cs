@@ -7,11 +7,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
+using LMSEntities.Configuration;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
-using LMSService.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -21,14 +21,14 @@ namespace LMSService.Service
 {
     public class TokenService : ITokenService
     {
-        private readonly AppSettings _appSettings;
+        private readonly JwtSettings _jwtSettings;
         private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
 
-        public TokenService(IOptions<AppSettings> appSettings, DataContext dataContext, UserManager<AppUser> userManager)
+        public TokenService(IOptions<JwtSettings> jwtSettings, DataContext dataContext, UserManager<AppUser> userManager)
         {
             _userManager = userManager;
-            _appSettings = appSettings.Value;
+            _jwtSettings = jwtSettings.Value;
             _context = dataContext;
         }
 
@@ -109,7 +109,7 @@ namespace LMSService.Service
             RefreshToken refreshToken = new()
             {
                 JwtId = token,
-                ExpiryDate = DateTime.UtcNow.AddDays(_appSettings.RefreshTokenLifetime),
+                ExpiryDate = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenLifetime),
                 Token = RandomString(35) + Guid.NewGuid(),
                 UserId = userId,
                 RequestIp = ipAddress
@@ -130,14 +130,14 @@ namespace LMSService.Service
                 new Claim(ClaimTypes.Role, user.UserRoles.FirstOrDefault().Role.Name)
             };
 
-            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_appSettings.Secret));
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
 
             SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha512Signature);
 
             SecurityTokenDescriptor tokenDescriptor = new()
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(_appSettings.TokenLifetime),
+                Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.TokenLifetime),
                 SigningCredentials = creds
             };
 
@@ -155,7 +155,7 @@ namespace LMSService.Service
                 ValidateAudience = false, //you might want to validate the audience and issuer depending on your use case
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
                 ValidateLifetime = false, //here we are saying that we don't care about the token's expiration date
                 ClockSkew = TimeSpan.Zero
             };

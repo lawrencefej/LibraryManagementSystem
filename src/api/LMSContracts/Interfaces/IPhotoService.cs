@@ -1,13 +1,16 @@
 ﻿using System.Threading.Tasks;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace LMSContracts.Interfaces
 {
     public interface IPhotoService
     {
-        Task<ResponseHandler> AddPhotoForUser(UserPhotoDto userPhotoDto);
+        Task<LmsResponseHandler<PhotoResponseDto>> AddPhotoForCard(IFormFile file, int cardId);
 
-        Task<ResponseHandler> AddPhotoForAsset(AssetPhotoDto assetPhotoDto);
+        Task<LmsResponseHandler<PhotoResponseDto>> AddPhotoForAsset(IFormFile file, int assetId);
+
+        Task<LmsResponseHandler<PhotoResponseDto>> AddPhotoForUser(IFormFile file, int userId);
     }
 }

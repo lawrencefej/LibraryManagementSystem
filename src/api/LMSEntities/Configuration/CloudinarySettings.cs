@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LibraryManagementSystem.Configuration.Entities
+namespace LMSEntities.Configuration
 {
     public class CloudinarySettings
     {
         [Required]
-        public string CloudName { get; set; }
+        public string Name { get; set; }
 
         [Required]
         public string ApiKey { get; set; }

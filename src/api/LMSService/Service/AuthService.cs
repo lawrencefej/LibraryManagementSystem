@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -18,7 +17,7 @@ namespace LMSService.Service
 {
     public class AuthService : IAuthService
     {
-        private readonly IEmailSender _emailSender;
+        // private readonly IEmailSender _emailSender;
         private readonly IHttpContextAccessor _context;
         private readonly ILogger<AuthService> _logger;
         private readonly IMapper _mapper;
@@ -28,7 +27,6 @@ namespace LMSService.Service
 
         public AuthService(UserManager<AppUser> userManager,
                            SignInManager<AppUser> signInManager,
-                           IEmailSender emailSender,
                            ILogger<AuthService> logger,
                            IMapper mapper, ITokenService tokenService,
                            IHttpContextAccessor context)
@@ -38,7 +36,6 @@ namespace LMSService.Service
             _tokenService = tokenService;
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
             _context = context;
         }
 
@@ -71,7 +68,8 @@ namespace LMSService.Service
 
             string body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking <a href='{callbackUrl}'>here</a>:";
 
-            await _emailSender.SendEmail(user.Email, "Reset Password", body);
+            // TODO fix email
+            // await _emailSender.SendEmail(user.Email, "Reset Password", body);
         }
 
         public async Task<IdentityResult> ResetPassword(AppUser user, string password, string code)

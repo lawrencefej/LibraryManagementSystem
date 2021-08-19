@@ -4,6 +4,6 @@ namespace LMSContracts.Interfaces
 {
     public interface IPaymentService
     {
-        Task PayFees(int libraryCardID);
+        Task PayFees(int libraryCardId);
     }
 }

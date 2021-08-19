@@ -1,7 +1,6 @@
 ﻿using LibraryManagementSystem.Helpers;
 using LMSContracts.Interfaces;
 using LMSRepository.Data;
-using LMSService.Helpers;
 using LMSService.Service;
 using LMSService.Validators.services;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +18,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IMemberService, MemberService>();
-            services.AddTransient<IEmailSender, EmailSender>();
+            // services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IAuthService, AuthService>();

@@ -15,8 +15,8 @@ namespace LMSEntities.DataTransferObjects
         public string Email { get; set; }
 
         public string Password { get; set; }
-        // TODO Make this an enum
 
+        // TODO Make this an enum
         [Required]
         public string Role { get; set; }
 

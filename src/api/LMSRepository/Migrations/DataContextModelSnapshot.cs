@@ -78,21 +78,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "14685dc8-e243-455d-bc7b-1e54eaae219c",
+                            ConcurrencyStamp = "4063f725-61c2-4173-bba6-bde93bdfd108",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "940c9957-e156-47ee-a1ae-89e5e349cff8",
+                            ConcurrencyStamp = "25c2925b-749b-4716-9367-5c908707354a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "eef49f00-b5ac-46c4-822a-d2eeb52cc600",
+                            ConcurrencyStamp = "1c4c33ed-86cc-49db-8c94-49372f65a1f4",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -488,12 +488,12 @@ namespace LMSRepository.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PublicId")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

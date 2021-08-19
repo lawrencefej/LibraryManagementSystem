@@ -2,8 +2,8 @@
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSRepository.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.Controllers
@@ -13,55 +13,35 @@ namespace LibraryManagementSystem.Controllers
     [ApiController]
     public class PhotoController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IPhotoService _photoService;
 
-        public PhotoController(DataContext context, IPhotoService photoService)
+        public PhotoController(IPhotoService photoService)
         {
-            _context = context;
             _photoService = photoService;
         }
 
-        [HttpPost("userphoto")]
-        public async Task<IActionResult> AddPhotoForUser([FromForm] UserPhotoDto userPhotoDto)
+        [HttpPost("userphoto/{userId}")]
+        public async Task<IActionResult> AddPhotoForUser(int userId, IFormFile file)
         {
-            ResponseHandler result = await _photoService.AddPhotoForUser(userPhotoDto);
+            LmsResponseHandler<PhotoResponseDto> result = await _photoService.AddPhotoForUser(file, userId);
 
-            if (result.IsSuccessful)
-            {
-                return Ok(result.Result);
-            }
-
-            //return CreatedAtAction("GetPhoto", new { id = photo.Id }, photo);
-            return BadRequest(result.Message);
+            return result.Succeeded ? Ok(result.Item) : BadRequest(result.Error);
         }
 
-        [HttpPost("assetphoto")]
-        public async Task<IActionResult> AddPhotoForAsset([FromForm] AssetPhotoDto assetPhotoDto)
+        [HttpPost("libraryCard/{cardId}")]
+        public async Task<IActionResult> AddPhotoForCard(int cardId, IFormFile file)
         {
-            ResponseHandler result = await _photoService.AddPhotoForAsset(assetPhotoDto);
+            LmsResponseHandler<PhotoResponseDto> result = await _photoService.AddPhotoForCard(file, cardId);
 
-            if (result.IsSuccessful)
-            {
-                return Ok(result.Result);
-            }
-
-            //return CreatedAtAction("GetPhoto", new { id = photo.Id }, photo);
-            return BadRequest(result.Message);
+            return result.Succeeded ? Ok(result.Item) : BadRequest(result.Error);
         }
 
-        [HttpPost("librarycardphoto")]
-        public async Task<IActionResult> AddPhotoForLibraryCard([FromForm] AssetPhotoDto assetPhotoDto)
+        [HttpPost("assetphoto/{assetId}")]
+        public async Task<IActionResult> AddPhotoForAsset(int assetId, IFormFile file)
         {
-            ResponseHandler result = await _photoService.AddPhotoForAsset(assetPhotoDto);
+            LmsResponseHandler<PhotoResponseDto> result = await _photoService.AddPhotoForAsset(file, assetId);
 
-            if (result.IsSuccessful)
-            {
-                return Ok(result.Result);
-            }
-
-            //return CreatedAtAction("GetPhoto", new { id = photo.Id }, photo);
-            return BadRequest(result.Message);
+            return result.Succeeded ? Ok(result.Item) : BadRequest(result.Error);
         }
     }
 }

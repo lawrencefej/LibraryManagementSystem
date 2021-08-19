@@ -1,9 +1,8 @@
-﻿using EmailService.Configuration;
-using LibraryManagementSystem.DIHelpers;
+﻿using LibraryManagementSystem.DIHelpers;
 using LibraryManagementSystem.Extensions;
 using LibraryManagementSystem.Helpers;
+using LMSEntities.Configuration;
 using LMSRepository.Data;
-using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
 using LMSService.Helpers;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PhotoLibrary.Configuration;
 using Serilog;
 
 namespace LibraryManagementSystem.API
@@ -33,17 +31,17 @@ namespace LibraryManagementSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO validate configs
             services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
 
-            AppSettings appSettings = GetAppSettings(services);
-
             //IdentityModelEventSource.ShowPII = true;
-            services.AddDataAccessServices(appSettings);
-            services.AddIdentityConfiguration(appSettings.Token);
+            services.AddDataAccessServices(Configuration);
+            services.AddIdentityConfiguration(Configuration);
             services.AddMvcConfiguration();
+            services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
+            services.Configure<SmtpSettings>(Configuration.GetSection(nameof(SmtpSettings)));
+            services.Configure<DbSettings>(Configuration.GetSection(nameof(DbSettings)));
             services.Configure<CloudinarySettings>(Configuration.GetSection(nameof(CloudinarySettings)));
-            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
-            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection(nameof(CloudinarySettings)).Get<PhotoSettings>());
             services.AddThirdPartyConfiguration();
             services.AddCombinedInterfaces();
 
@@ -61,17 +59,7 @@ namespace LibraryManagementSystem.API
                 config.RootPath = "wwwroot";
                 // config.RootPath = "ClientApp/dist";
             });
-            //services.AddOData();
 
-        }
-
-        private AppSettings GetAppSettings(IServiceCollection services)
-        {
-            IConfigurationSection appSettingsSection = Configuration.GetSection(nameof(AppSettings));
-
-            services.Configure<AppSettings>(appSettingsSection);
-            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
-            return appSettings;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,7 +67,6 @@ namespace LibraryManagementSystem.API
         {
             if (env.IsDevelopment())
             {
-                // var appSettings = new AppSettings();
                 AppSettings appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
                 seeder.SeedData(dataContext, appSettings.SeedDb).Wait();
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
@@ -123,8 +110,6 @@ namespace LibraryManagementSystem.API
             //        defaults: new { controller = "Fallback", action = "Index" }
             //        );
             //    routeBuilder.EnableDependencyInjection();
-            // TODO Fix or Remove OData
-            //    routeBuilder.Expand().Select().Count().OrderBy().Filter().MaxTop(null);
             //});
             app.UseEndpoints(endpoints =>
             {

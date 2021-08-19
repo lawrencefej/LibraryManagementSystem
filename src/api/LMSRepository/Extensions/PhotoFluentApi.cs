@@ -9,8 +9,9 @@ namespace LMSRepository.Extensions
         {
             modelBuilder.Entity<Photo>(e =>
             {
-                e.Property(a => a.Url).HasMaxLength(50).IsRequired();
+                e.Property(a => a.Url).IsRequired();
                 e.Property(a => a.DateAdded).IsRequired();
+                e.Property(a => a.PublicId).IsRequired();
             });
 
         }
