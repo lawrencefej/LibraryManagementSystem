@@ -112,6 +112,10 @@ namespace LibraryManagementSystem.API.Helpers
             CreateMap<LibraryAssetCategoryDto, LibraryAssetCategory>().ReverseMap();
             CreateMap<LibraryCardForCreationDto, LibraryCard>();
             CreateMap<LibraryCard, LibraryCardForDetailedDto>()
+                .ForMember(dest => dest.PhotoUrl, opt =>
+                {
+                    opt.MapFrom(src => src.LibraryCardPhoto.Url);
+                })
                 .ForMember(dest => dest.Age, opt =>
                 {
                     opt.MapFrom(src => src.DateOfBirth.CalculateAge());

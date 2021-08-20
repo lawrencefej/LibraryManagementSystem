@@ -15,7 +15,6 @@ export interface LibraryCardForDetailedDto {
   gender: string;
   id: number;
   lastName: string;
-  libraryCardPhoto: string;
   phoneNumber: string;
   photoUrl: string;
   status: string;

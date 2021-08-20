@@ -21,6 +21,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost("userphoto/{userId}")]
+        [ProducesResponseType(typeof(PhotoResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddPhotoForUser(int userId, IFormFile file)
         {
             LmsResponseHandler<PhotoResponseDto> result = await _photoService.AddPhotoForUser(file, userId);
@@ -29,6 +31,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost("libraryCard/{cardId}")]
+        [ProducesResponseType(typeof(PhotoResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddPhotoForCard(int cardId, IFormFile file)
         {
             LmsResponseHandler<PhotoResponseDto> result = await _photoService.AddPhotoForCard(file, cardId);
@@ -37,6 +41,8 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost("assetphoto/{assetId}")]
+        [ProducesResponseType(typeof(PhotoResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddPhotoForAsset(int assetId, IFormFile file)
         {
             LmsResponseHandler<PhotoResponseDto> result = await _photoService.AddPhotoForAsset(file, assetId);

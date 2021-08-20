@@ -8,7 +8,8 @@ import {
   LibraryAssetForCreationDto,
   LibraryAssetForDetailedDto,
   LibraryAssetForListDto,
-  LibraryAssetForUpdateDto
+  LibraryAssetForUpdateDto,
+  PhotoResponseDto
 } from 'src/dto/models';
 import { environment } from 'src/environments/environment';
 
@@ -17,28 +18,32 @@ export class LibraryAssetService {
   baseUrl = environment.apiUrl;
   assetUrl = this.baseUrl + 'catalog';
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly httpService: HttpClient) {}
 
   getAsset(assetId: number): Observable<LibraryAssetForDetailedDto> {
-    return this.http.get<LibraryAssetForDetailedDto>(`${this.assetUrl}/${assetId}`);
+    return this.httpService.get<LibraryAssetForDetailedDto>(`${this.assetUrl}/${assetId}`);
   }
 
   addAsset(assetForCreation: LibraryAssetForCreationDto): Observable<LibraryAssetForDetailedDto> {
-    return this.http.post<LibraryAssetForDetailedDto>(`${this.assetUrl}`, assetForCreation);
+    return this.httpService.post<LibraryAssetForDetailedDto>(`${this.assetUrl}`, assetForCreation);
   }
 
   updateAsset(asset: LibraryAssetForUpdateDto): Observable<LibraryAssetForDetailedDto> {
-    return this.http.put<LibraryAssetForDetailedDto>(`${this.assetUrl}`, asset);
+    return this.httpService.put<LibraryAssetForDetailedDto>(`${this.assetUrl}`, asset);
   }
 
   deleteAsset(assetId: number): Observable<void> {
-    return this.http.delete<void>(`${this.assetUrl}/${assetId}`);
+    return this.httpService.delete<void>(`${this.assetUrl}/${assetId}`);
+  }
+
+  changeAssetPhoto(assetId: number, formData: FormData): Observable<PhotoResponseDto> {
+    return this.httpService.post<PhotoResponseDto>(`${this.baseUrl}photo/assetphoto/${assetId}`, formData);
   }
 
   getAuthors(searchString: string): Observable<AuthorDto[]> {
     let params = new HttpParams();
     params = params.append('searchString', searchString);
-    return this.http
+    return this.httpService
       .get<AuthorDto[]>(`${this.baseUrl}author`, { observe: 'response', params })
       .pipe(map(response => response.body || []));
   }
@@ -63,7 +68,7 @@ export class LibraryAssetService {
       params = params.append('pageSize', itemsPerPage.toString());
     }
 
-    return this.http
+    return this.httpService
       .get<LibraryAssetForListDto[]>(`${this.assetUrl}`, {
         observe: 'response',
         params

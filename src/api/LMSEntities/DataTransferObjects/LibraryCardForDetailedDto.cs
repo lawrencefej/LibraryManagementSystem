@@ -44,9 +44,6 @@ namespace LMSEntities.DataTransferObjects
         public string Status { get; set; }
 
         [Required]
-        public string LibraryCardPhoto { get; set; }
-
-        [Required]
         public int Age { get; set; }
 
         [Required]

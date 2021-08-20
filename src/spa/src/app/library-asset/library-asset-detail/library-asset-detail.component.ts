@@ -4,8 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { PhotoService } from 'src/app/_services/photo.service';
 import { LibraryAssetForDetailedDto, LibraryAssetStatus } from 'src/dto/models';
+import { LibraryAssetService } from '../services/library-asset.service';
 
 @Component({
   templateUrl: './library-asset-detail.component.html',
@@ -14,16 +14,17 @@ import { LibraryAssetForDetailedDto, LibraryAssetStatus } from 'src/dto/models';
 export class LibraryAssetDetailComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  @ViewChild('fileInput') myInputVariable?: ElementRef;
+  @ViewChild('fileInput') myInputVariable!: ElementRef;
+
   asset!: LibraryAssetForDetailedDto;
+  assetStatus = LibraryAssetStatus;
   displayedColumns = ['libraryCardId', 'until', 'status'];
   isCardFormDirty = false;
   isEditTab = false;
   selectedTab = new FormControl(0);
-  assetStatus = LibraryAssetStatus;
 
   constructor(
-    private photoService: PhotoService,
+    private readonly assetService: LibraryAssetService,
     private readonly notify: NotificationService,
     private readonly route: ActivatedRoute
   ) {}
@@ -72,20 +73,23 @@ export class LibraryAssetDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  updatePhoto(event: any): void {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const fd = new FormData();
-      fd.append('libraryAssetId', this.asset.id.toString());
-      fd.append('file', file);
-      this.photoService
-        .changeMemberPhoto(fd)
+  updatePhoto(files: File[]): void {
+    // TODO validate file ext type
+    const file: File = files[0];
+
+    const formData = new FormData();
+
+    formData.append('file', file, file.name);
+
+    if (file) {
+      this.assetService
+        .changeAssetPhoto(this.asset.id, formData)
         .pipe(takeUntil(this.unsubscribe))
-        .subscribe(res => {
-          this.asset.photoUrl = res.url;
+        .subscribe(photoResponse => {
+          this.asset.photoUrl = photoResponse.url;
           this.notify.success('Photo changed successfully');
+          this.myInputVariable.nativeElement.value = '';
         });
     }
-    this.myInputVariable!.nativeElement.value = '';
   }
 }

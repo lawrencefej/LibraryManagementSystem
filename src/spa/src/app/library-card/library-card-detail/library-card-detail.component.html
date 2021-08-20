@@ -6,12 +6,12 @@
       <mat-card-content>
         <div class="card-body">
           <div class="d-flex flex-column align-items-center text-center">
-            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" width="300"
-                 style="border-radius: 50%; border: 2px solid white" />
+            <!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" width="300"
+                 style="border-radius: 50%; border: 2px solid white" /> -->
             <!-- <img src="{{card?.photoUrl || 'https://picsum.photos/500'}}" alt="Avatar" width="300"
               style="border-radius: 50%; border: 2px solid white;"> -->
-            <!-- <img src="{{card?.photoUrl || '../../../assets/img/user.png'}}" alt="Avatar" width="300"
-              style="border-radius: 50%; border: 2px solid white;"> -->
+            <img src="{{card?.photoUrl || '../../../assets/img/user.png'}}" alt="Avatar" width="300"
+                 style="border-radius: 50%; border: 2px solid white;">
             <div style="margin: 10px">
               <ng-container>
                 <button *ngIf="!isEditTab" mat-raised-button color="accent" style="margin-right: 10px" type="button"
@@ -25,7 +25,7 @@
               </ng-container>
 
               <ng-container *ngIf="isEditTab">
-                <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)" />
+                <input type="file" style="display: none" #fileInput (change)="updatePhoto($event.target.files)" />
                 <button mat-raised-button color="primary" style="margin-right: 10px" type="button"
                         (click)="fileInput.click()">
                   Change Photo

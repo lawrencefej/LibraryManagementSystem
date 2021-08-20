@@ -7,32 +7,42 @@ import { LibraryCardForCreationDto } from 'src/dto/models/library-card-for-creat
 import { LibraryCardForDetailedDto } from 'src/dto/models/library-card-for-detailed-dto';
 import { LibraryCardForUpdate } from 'src/dto/models/library-card-for-update';
 import { LibrarycardForListDto } from 'src/dto/models/librarycard-for-list-dto';
+import { PhotoResponseDto } from 'src/dto/models/photo-response-dto';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class LibraryCardService {
-  baseUrl = environment.apiUrl + 'librarycard';
+  baseUrl = environment.apiUrl;
+  cardUrl = this.baseUrl + 'librarycard';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly httpService: HttpClient) {}
 
   getCardById(cardId: number): Observable<LibraryCardForDetailedDto> {
-    return this.http.get<LibraryCardForDetailedDto>(`${this.baseUrl}/${cardId}`);
+    return this.httpService.get<LibraryCardForDetailedDto>(`${this.cardUrl}/${cardId}`);
   }
 
   getCardByCardNumber(cardNumber: string): Observable<LibraryCardForDetailedDto> {
-    return this.http.get<LibraryCardForDetailedDto>(`${this.baseUrl}/cardnumber/${cardNumber}`);
+    return this.httpService.get<LibraryCardForDetailedDto>(`${this.cardUrl}/cardnumber/${cardNumber}`);
   }
 
   updateCard(card: LibraryCardForUpdate): Observable<LibraryCardForDetailedDto> {
-    return this.http.put<LibraryCardForDetailedDto>(`${this.baseUrl}`, card);
+    return this.httpService.put<LibraryCardForDetailedDto>(`${this.cardUrl}`, card);
   }
 
   deleteCard(cardId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${cardId}`);
+    return this.httpService.delete<void>(`${this.cardUrl}/${cardId}`);
   }
 
   AddCard(card: LibraryCardForCreationDto): Observable<LibrarycardForListDto> {
-    return this.http.post<LibrarycardForListDto>(`${this.baseUrl}`, card);
+    return this.httpService.post<LibrarycardForListDto>(`${this.cardUrl}`, card);
+  }
+
+  changeCardPhoto(cardId: number, formData: FormData): Observable<PhotoResponseDto> {
+    return this.httpService.post<PhotoResponseDto>(`${this.baseUrl}photo/librarycard/${cardId}`, formData);
+  }
+
+  payFees(cardId: number): Observable<void> {
+    return this.httpService.post<void>(`${this.baseUrl}fee/${cardId}`, {});
   }
 
   getCards(
@@ -55,8 +65,8 @@ export class LibraryCardService {
       params = params.append('pageSize', itemsPerPage.toString());
     }
 
-    return this.http
-      .get<LibrarycardForListDto[]>(`${this.baseUrl}`, {
+    return this.httpService
+      .get<LibrarycardForListDto[]>(`${this.cardUrl}`, {
         observe: 'response',
         params
       })

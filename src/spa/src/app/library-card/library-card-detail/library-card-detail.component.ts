@@ -1,16 +1,14 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Subject } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
 import { BasketViewModel } from 'src/app/basket/models/basket-view-model';
 import { BasketService } from 'src/app/basket/services/basket.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { FeeService } from 'src/app/_services/fee.service';
-import { PhotoService } from 'src/app/_services/photo.service';
 import { LibraryCardForDetailedDto, StateDto } from 'src/dto/models';
 import { LibraryCardStatus } from '../models/library-card-status.enum';
+import { LibraryCardService } from '../services/library-card.service';
 
 @Component({
   templateUrl: './library-card-detail.component.html',
@@ -20,6 +18,7 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
   @ViewChild('fileInput') myInputVariable!: ElementRef;
+
   basket!: BasketViewModel;
   card!: LibraryCardForDetailedDto;
   isCardFormDirty?: boolean;
@@ -30,11 +29,9 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly basketService: BasketService,
-    private readonly feeService: FeeService,
+    private readonly cardService: LibraryCardService,
     private readonly notify: NotificationService,
-    private readonly photoService: PhotoService,
-    private readonly route: ActivatedRoute,
-    public readonly dialog: MatDialog
+    private readonly route: ActivatedRoute
   ) {
     this.basketService.basket$.pipe(takeUntil(this.unsubscribe)).subscribe(basket => {
       this.basket = basket;
@@ -111,26 +108,24 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  updatePhoto(event: any): void {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const fd = new FormData();
-      fd.append('userId', this.card.id.toString());
-      fd.append('file', file);
-      this.photoService
-        .changeMemberPhoto(fd)
+  updatePhoto(files: File[]): void {
+    // TODO validate file ext type
+    const file: File = files[0];
+
+    const formData = new FormData();
+
+    formData.append('file', file, file.name);
+
+    if (file) {
+      this.cardService
+        .changeCardPhoto(this.card.id, formData)
         .pipe(takeUntil(this.unsubscribe))
-        .subscribe(
-          res => {
-            this.card.photoUrl = res.url;
-            this.notify.success('Photo changed successfully');
-          },
-          error => {
-            this.notify.error(error);
-          }
-        );
+        .subscribe(photoResponse => {
+          this.card.photoUrl = photoResponse.url;
+          this.notify.success('Photo changed successfully');
+          this.myInputVariable.nativeElement.value = '';
+        });
     }
-    this.myInputVariable.nativeElement.value = '';
   }
 
   payFees(): void {
@@ -141,7 +136,7 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe),
         concatMap(response => {
           if (response) {
-            return this.feeService.payFees(this.card.id);
+            return this.cardService.payFees(this.card.id);
           }
 
           return EMPTY;

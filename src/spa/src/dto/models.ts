@@ -32,6 +32,7 @@ export { LibraryCardForUpdate } from './models/library-card-for-update';
 export { LoginUserDto } from './models/login-user-dto';
 export { MemberForCreation } from './models/member-for-creation';
 export { MemberGenderDto } from './models/member-gender-dto';
+export { PhotoResponseDto } from './models/photo-response-dto';
 export { ProblemDetails } from './models/problem-details';
 export { ResetPassword } from './models/reset-password';
 export { StateDto } from './models/state-dto';
