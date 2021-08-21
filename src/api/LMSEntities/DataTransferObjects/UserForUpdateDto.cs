@@ -5,6 +5,7 @@ namespace LMSEntities.DataTransferObjects
 {
     public class UserForUpdateDto
     {
+        [Required]
         public int Id { get; set; }
         [Required]
         public string FirstName { get; set; }
@@ -14,14 +15,13 @@ namespace LMSEntities.DataTransferObjects
         public string Email { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
-        [Required]
-        public string Gender { get; set; }
-        [Required]
-        public DateTime DateOfBirth { get; set; }
-        [Required]
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zipcode { get; set; }
+        // public string Gender { get; set; }
+        // [Required]
+        // public DateTime DateOfBirth { get; set; }
+        // [Required]
+        // public string Address { get; set; }
+        // public string City { get; set; }
+        // public string State { get; set; }
+        // public string Zipcode { get; set; }
     }
 }

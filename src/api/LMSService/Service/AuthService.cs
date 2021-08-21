@@ -39,17 +39,17 @@ namespace LMSService.Service
             _context = context;
         }
 
-        public async Task<UserForDetailedDto> AddRoleToUser(UserForDetailedDto userToReturn, AppUser user)
-        {
-            IList<string> roles = await _userManager.GetRolesAsync(user);
+        // public async Task<UserForDetailedDto> AddRoleToUser(UserForDetailedDto userToReturn, AppUser user)
+        // {
+        //     IList<string> roles = await _userManager.GetRolesAsync(user);
 
-            foreach (string role in roles)
-            {
-                userToReturn.Role = role;
-            }
+        //     foreach (string role in roles)
+        //     {
+        //         userToReturn.Role = role;
+        //     }
 
-            return userToReturn;
-        }
+        //     return userToReturn;
+        // }
 
         public async Task<AppUser> FindUserByEmail(string email)
         {

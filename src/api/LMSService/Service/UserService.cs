@@ -1,120 +1,106 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
+using LMSService.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
-    public class UserService : IUserService
+    public class UserService : BaseService<AppUser, UserForDetailedDto, UserForDetailedDto, UserService>, IUserService
     {
-        private readonly IMapper _mapper;
-        // private readonly IUserRepository _userRepo;
-
         private readonly UserManager<AppUser> _userManager;
-        private readonly IEmailSender _emailSender;
-        // private readonly ILibraryCardRepository _libraryCardRepository;
-        private readonly ILogger<UserService> _logger;
-        private readonly DataContext _context;
+        private readonly IEmailService _emailSender;
 
-        public UserService(IMapper mapper, DataContext context,
-            UserManager<AppUser> userManager, IEmailSender emailSender, ILogger<UserService> logger)
+        public UserService(IMapper mapper,
+            DataContext context,
+            UserManager<AppUser> userManager,
+            IEmailService emailSender,
+            ILogger<UserService> logger,
+            IHttpContextAccessor httpContextAccessor) : base(context, mapper, logger, httpContextAccessor)
         {
-            _mapper = mapper;
             _userManager = userManager;
             _emailSender = emailSender;
-            _logger = logger;
-            _context = context;
         }
 
-        // public async Task<UserForDetailedDto> GetUser(int userId)
-        // {
-        //     var user = await _context.GetUser(userId);
+        public async Task<LmsResponseHandler<UserForDetailedDto>> GetUser(int userId)
+        {
+            if (!HttpContextAccessor.HttpContext.User.IsCurrentUser(userId))
+            {
+                LmsResponseHandler<UserForDetailedDto>.Failed("");
+            }
 
-        //     var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            AppUser user = await _userManager.Users.AsNoTracking()
+                .Include(u => u.ProfilePicture)
+                .FirstOrDefaultAsync(user => user.Id == userId);
 
-        //     return userToReturn;
-        // }
+            return user != null
+                ? LmsResponseHandler<UserForDetailedDto>.Successful(Mapper.Map<UserForDetailedDto>(user))
+                : LmsResponseHandler<UserForDetailedDto>.Failed("");
+        }
 
-        // public async Task<UserForDetailedDto> SearchUser(SearchUserDto searchUser)
-        // {
-        //     var user = await _context.SearchUsers(searchUser);
+        public async Task<LmsResponseHandler<UserForDetailedDto>> ResetPassword(UserPasswordResetRequest userPasswordReset)
+        {
+            if (!HttpContextAccessor.HttpContext.User.IsCurrentUser(userPasswordReset.UserId))
+            {
+                return LmsResponseHandler<UserForDetailedDto>.Failed("");
+            }
 
-        //     var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            AppUser user = await _userManager.Users.Include(u => u.ProfilePicture)
+                .FirstOrDefaultAsync(user => user.Id == userPasswordReset.UserId);
 
-        //     return userToReturn;
-        // }
+            if (user == null)
+            {
+                return LmsResponseHandler<UserForDetailedDto>.Failed("");
+            }
 
-        // public async Task<UserForDetailedDto> GetUserByCardNumber(int cardId)
-        // {
-        //     var user = await _context.GetUserByCardId(cardId);
+            bool signInResult = await _userManager.CheckPasswordAsync(user, userPasswordReset.CurrentPassword);
 
-        //     var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            if (!signInResult)
+            {
+                return LmsResponseHandler<UserForDetailedDto>.Failed("Invalid Password");
+            }
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, userPasswordReset.CurrentPassword, userPasswordReset.NewPassword);
 
-        //     return userToReturn;
-        // }
+            if (result.Succeeded)
+            {
+                return LmsResponseHandler<UserForDetailedDto>.Successful();
+            }
+            else
+            {
+                Logger.LogInformation($"failed password change attempt", result.Errors);
+                return LmsResponseHandler<UserForDetailedDto>.Failed("Something went wrong, please try again later");
+            }
+        }
 
-        // public async Task<UserForDetailedDto> GetUserByEmail(string email)
-        // {
-        //     var user = await _context.GetUserByEmail(email);
+        public async Task<LmsResponseHandler<UserForDetailedDto>> UpdateUserProfile(UserForUpdateDto userForUpdate)
+        {
+            if (!HttpContextAccessor.HttpContext.User.IsCurrentUser(userForUpdate.Id))
+            {
+                return LmsResponseHandler<UserForDetailedDto>.Failed("");
+            }
 
-        //     var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            AppUser user = await _userManager.Users
+                .Include(u => u.ProfilePicture)
+                .FirstOrDefaultAsync(user => user.Id == userForUpdate.Id);
 
-        //     return userToReturn;
-        // }
+            return user != null ? await UpdateUser(userForUpdate, user) : LmsResponseHandler<UserForDetailedDto>.Failed("");
 
-        // public async Task<IEnumerable<UserForListDto>> GetUsers()
-        // {
-        //     var users = await _context.GetUsers();
+        }
 
-        //     var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
-
-        //     return usersToReturn;
-        // }
-
-        // public async Task<IEnumerable<UserForListDto>> SearchUsers(string searchString)
-        // {
-        //     var users = await _context.SearchUsers(searchString);
-
-        //     var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
-
-        //     return usersToReturn;
-        // }
-
-        // public async Task UpdateMember(UserForUpdateDto userForUpdate)
-        // {
-        //     var user = await _context.GetUser(userForUpdate.Id);
-
-        //     if (user == null)
-        //     {
-        //         throw new NoValuesFoundException("User was not found");
-        //     }
-
-        //     _mapper.Map(userForUpdate, user);
-        //     await _context.SaveChangesAsync();
-        // }
-
-        // public async Task DeleteUser(int memberId)
-        // {
-        //     var member = await _context.GetUser(memberId);
-
-        //     if (member == null)
-        //     {
-        //         _logger.LogWarning($"memberID: {memberId} was not found");
-        //         throw new NoValuesFoundException($"memberID: {memberId} was not found");
-        //     }
-
-        //     _context.Remove(member.LibraryCard);
-        //     _context.Remove(member);
-        //     await _context.SaveChangesAsync();
-        //     _logger.LogInformation($"memberID: {member.Id} was deleted");
-        // }
+        private async Task<LmsResponseHandler<UserForDetailedDto>> UpdateUser(UserForUpdateDto userForUpdate, AppUser user)
+        {
+            Mapper.Map(userForUpdate, user);
+            await _userManager.UpdateAsync(user);
+            // await Context.SaveChangesAsync();
+            return LmsResponseHandler<UserForDetailedDto>.Successful(Mapper.Map<UserForDetailedDto>(user));
+        }
 
         // private async Task MemberWelcomeMessage(UserForDetailedDto user)
         // {

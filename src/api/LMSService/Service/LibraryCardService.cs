@@ -152,15 +152,6 @@ namespace LMSService.Service
                     .ThenInclude(s => s.State)
                 .OrderBy(u => u.CardNumber).AsQueryable();
 
-            // cards = cards
-            //     .Where(x => x.FirstName.Contains(card.FirstName)
-            //     || x.Email.Contains(card.LastName)
-            //     || x.Email.Contains(card.Email)
-            //     || x.PhoneNumber.Contains(card.PhoneNumber)
-            //     || x.Address.Zipcode.Contains(card.Zipcode)
-            //     || x.DateOfBirth == card.DateOfBirth
-            //     );
-
             cards = cards
                 .Where(x => x.FirstName == card.FirstName
                 && x.Email == card.LastName

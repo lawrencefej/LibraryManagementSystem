@@ -10,6 +10,7 @@ import {
   ResetPassword,
   TokenRequestDto,
   TokenResponseDto,
+  UserForDetailedDto,
   UserForLoginDto
 } from 'src/dto/models';
 import { environment } from 'src/environments/environment';
@@ -116,13 +117,13 @@ export class AuthenticationService implements OnDestroy {
     this.setCurrentUser(user);
   }
 
-  changeUserDetails(newUser: LoginUserDto): void {
+  changeUserDetails(newUser: UserForDetailedDto): void {
     const user: LoginUserDto = this.loggedInUserSubject.value;
     user.email = newUser.email;
     user.firstName = newUser.firstName;
     user.lastName = newUser.lastName;
     user.photoUrl = newUser.photoUrl;
-    user.role = newUser.role;
+    // user.role = newUser.role;
     user.id = newUser.id;
     this.setCurrentUser(user);
   }
