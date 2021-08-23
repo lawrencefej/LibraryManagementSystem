@@ -2,7 +2,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import { User } from 'src/app/_models/user';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
 import { SessionService } from 'src/app/_services/session.service';
 import { LoginUserDto } from 'src/dto/models';
@@ -15,9 +14,6 @@ import { LoginUserDto } from 'src/dto/models';
 export class ResponsiveNavComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  photoUrl!: string;
-  loggedInUser!: User;
-  user!: LoginUserDto;
   userObservable: Observable<LoginUserDto> = this.authenticationService.loggedInUser$;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(

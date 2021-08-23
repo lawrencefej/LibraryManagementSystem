@@ -7,7 +7,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { stateValidator } from 'src/app/shared/validators/state.validator';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
 import { LibraryCardForDetailedDto, LibraryCardForUpdate, MemberGenderDto, StateDto } from 'src/dto/models';
-import { LibraryCardService } from '../services/library-card.service';
+import { LibraryCardService } from '../../services/library-card.service';
 
 @Component({
   selector: 'lms-library-card-edit',
@@ -42,9 +42,9 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       startWith(''),
       map(s => (s ? this.filterStates(s) : this.states.slice()))
     );
-    this.cardForm.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
-      this.isFormDirty.emit(this.cardForm.dirty);
-    });
+    this.cardForm.valueChanges
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => this.isFormDirty.emit(this.cardForm.dirty));
     this.setStateId();
   }
 
@@ -115,7 +115,7 @@ export class LibraryCardEditComponent implements OnInit, OnDestroy {
       ),
       phoneNumber: new FormControl(
         card.phoneNumber,
-        Validators.compose([Validators.required, Validators.maxLength(15)])
+        Validators.compose([Validators.required, Validators.maxLength(15), Validators.pattern('^[0-9]{10}$')])
       ),
       gender: new FormControl(card.gender, Validators.required),
 

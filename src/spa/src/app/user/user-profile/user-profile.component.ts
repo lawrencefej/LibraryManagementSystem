@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { UserForDetailedDto } from 'src/dto/models';
+import { UserForDetailedDto, UserForUpdateDto } from 'src/dto/models';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -15,13 +16,15 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   @ViewChild('fileInput') myInputVariable!: ElementRef;
 
+  isEditTab = false;
+  isFormDirty = false;
+  selectedTab = new FormControl(0);
   user!: UserForDetailedDto;
 
   constructor(
-    private readonly userService: UserService,
+    private readonly notify: NotificationService,
     private readonly route: ActivatedRoute,
-    // private readonly authService: AuthenticationService,
-    private readonly notify: NotificationService
+    private readonly userService: UserService
   ) {}
 
   ngOnDestroy(): void {
@@ -31,6 +34,49 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => (this.user = routeData.initData));
+  }
+
+  tabClicked(tabIndex: number): void {
+    this.selectedTab.setValue(tabIndex);
+    if (this.selectedTab.value === 1) {
+      this.isEditTab = true;
+    } else {
+      this.isEditTab = false;
+    }
+  }
+
+  editUser(): void {
+    this.isEditTab = true;
+    this.selectedTab.setValue(1);
+  }
+
+  cancelEdit(): void {
+    if (this.isFormDirty) {
+      this.notify
+        .confirm('Are you sure you want to discard these changes?')
+        .afterClosed()
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(response => {
+          if (response) {
+            this.isEditTab = false;
+            this.isFormDirty = false;
+            this.selectedTab.setValue(0);
+          }
+        });
+    } else {
+      this.isEditTab = false;
+      this.selectedTab.setValue(0);
+    }
+  }
+
+  updateProfile(model: UserForUpdateDto): void {
+    this.userService
+      .updatedUserProfile(model)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(returnUser => {
+        this.user = returnUser;
+        this.notify.success('Profile updated successfully');
+      });
   }
 
   updatePhoto(files: File[]): void {

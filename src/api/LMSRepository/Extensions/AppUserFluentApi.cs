@@ -27,6 +27,7 @@ namespace LMSRepository.Extensions
                 e.Property(a => a.FirstName).HasMaxLength(25).IsRequired();
                 e.Property(a => a.LastName).HasMaxLength(25).IsRequired();
                 e.Property(a => a.Created).IsRequired();
+                e.Property(a => a.Gender).HasColumnType("varchar(15)");
             });
 
             modelBuilder.Entity<RefreshToken>(e =>

@@ -11,23 +11,24 @@ namespace LibraryManagementSystem.DIHelpers
     {
         public static void AddCombinedInterfaces(this IServiceCollection services)
         {
-            services.AddScoped<ICheckoutService, CheckoutService>();
-            services.AddScoped<ILibraryAssetService, LibraryAssetService>();
+            // services.AddScoped<LogUserActivity>();
+            // services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<DevOnlyActionFilter>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<ICheckoutService, CheckoutService>();
+            services.AddScoped<ILibraryAssetService, LibraryAssetService>();
+            services.AddScoped<ILibraryCardService, LibraryCardService>();
             services.AddScoped<IMemberService, MemberService>();
-            // services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPhotoService, PhotoService>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<ILibraryCardService, LibraryCardService>();
-            services.AddScoped<IValidatorService, ValidatorService>();
             services.AddScoped<ITokenService, TokenService>();
-            // services.AddScoped<LogUserActivity>();
-            services.AddScoped<DevOnlyActionFilter>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IValidatorService, ValidatorService>();
             services.AddScoped<Seed>();
         }
     }

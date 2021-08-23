@@ -19,6 +19,10 @@ namespace LibraryManagementSystem.API.Helpers
                          opt.MapFrom(src => src.LibraryCard.Id);
                      });
             CreateMap<AppUser, UserForDetailedDto>()
+                    .ForMember(dest => dest.Role, opt =>
+                     {
+                         opt.MapFrom(src => src.UserRoles.FirstOrDefault().Role.Name);
+                     })
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);

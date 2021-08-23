@@ -23,7 +23,15 @@ export class AuthenticationService implements OnDestroy {
   baseUrl = environment.apiUrl + 'auth/';
   private readonly jwtHelper = new JwtHelperService();
   private readonly unsubscribe = new Subject<void>();
-  private loggedInUserSubject = new BehaviorSubject<LoginUserDto>({});
+  private loggedInUserSubject = new BehaviorSubject<LoginUserDto>({
+    email: '',
+    firstName: '',
+    id: 0,
+    lastName: '',
+    refreshToken: '',
+    role: '',
+    token: ''
+  });
 
   loggedInUser$ = this.loggedInUserSubject.asObservable();
 

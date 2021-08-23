@@ -22,7 +22,7 @@ export class LibraryCardAdvancedSearchComponent implements OnInit, OnDestroy {
     firstName: new FormControl('', Validators.maxLength(25)),
     lastName: new FormControl('', Validators.maxLength(25)),
     email: new FormControl('', Validators.compose([Validators.email, Validators.maxLength(100)])),
-    phoneNumber: new FormControl('', Validators.compose([Validators.maxLength(15)])),
+    phoneNumber: new FormControl('', Validators.compose([, Validators.pattern('^[0-9]{10}$')])),
     dateOfBirth: new FormControl(''),
     zipcode: new FormControl('', Validators.compose([Validators.pattern('^[0-9]{5}$')]))
   });

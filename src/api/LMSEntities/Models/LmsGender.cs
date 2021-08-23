@@ -1,6 +1,6 @@
 namespace LMSEntities.Models
 {
-    public enum MemberGender
+    public enum LmsGender
     {
         Male = 1,
         Female = 2,

@@ -16,27 +16,29 @@ namespace LMSService.Service
     public class UserService : BaseService<AppUser, UserForDetailedDto, UserForDetailedDto, UserService>, IUserService
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IEmailService _emailSender;
+        // private readonly IEmailService _emailSender;
 
         public UserService(IMapper mapper,
             DataContext context,
             UserManager<AppUser> userManager,
-            IEmailService emailSender,
+            // IEmailService emailSender,
             ILogger<UserService> logger,
             IHttpContextAccessor httpContextAccessor) : base(context, mapper, logger, httpContextAccessor)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
+            // _emailSender = emailSender;
         }
 
         public async Task<LmsResponseHandler<UserForDetailedDto>> GetUser(int userId)
         {
             if (!HttpContextAccessor.HttpContext.User.IsCurrentUser(userId))
             {
-                LmsResponseHandler<UserForDetailedDto>.Failed("");
+                return LmsResponseHandler<UserForDetailedDto>.Failed("");
             }
 
             AppUser user = await _userManager.Users.AsNoTracking()
+                .Include(u => u.UserRoles)
+                .ThenInclude(r => r.Role)
                 .Include(u => u.ProfilePicture)
                 .FirstOrDefaultAsync(user => user.Id == userId);
 

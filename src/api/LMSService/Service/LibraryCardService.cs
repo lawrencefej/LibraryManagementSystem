@@ -226,7 +226,8 @@ namespace LMSService.Service
                 Created = card.Created,
                 Email = card.Email,
                 UserName = card.Email,
-                PhoneNumber = card.PhoneNumber
+                PhoneNumber = card.PhoneNumber,
+                Gender = card.Gender
             };
 
             IdentityResult result = await _userManager.CreateAsync(member);

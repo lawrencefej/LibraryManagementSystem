@@ -37,7 +37,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   createResetPasswordForm(): void {
     this.resetPasswordForm = this.fb.group(
       {
-        userID: new FormControl(this.route.snapshot.params.id),
+        userId: new FormControl(this.route.snapshot.params.id),
         code: new FormControl(this.route.snapshot.params.code),
         password: new FormControl('', Validators.compose([Validators.required])),
         confirmPassword: new FormControl('', [Validators.required])

@@ -21,7 +21,8 @@ export const validationMessages = {
   ],
   phoneNumber: [
     { type: 'required', message: 'Phone Number is required' },
-    { type: 'maxlength', message: 'Phone number cannot be more than 15 characters' }
+    { type: 'maxlength', message: 'Phone number cannot be more than 15 characters' },
+    { type: 'pattern', message: 'Please enter a valid Phone Number' }
   ],
   street: [
     { type: 'required', message: 'Address is required' },

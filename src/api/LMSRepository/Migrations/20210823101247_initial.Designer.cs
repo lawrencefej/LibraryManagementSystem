@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210818212934_initial")]
+    [Migration("20210823101247_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,21 +80,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "4063f725-61c2-4173-bba6-bde93bdfd108",
+                            ConcurrencyStamp = "fa709375-85f5-4dd0-a779-180b538c26c8",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "25c2925b-749b-4716-9367-5c908707354a",
+                            ConcurrencyStamp = "59c95b55-8b4b-4b7b-bba7-cde01fe51b05",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "1c4c33ed-86cc-49db-8c94-49372f65a1f4",
+                            ConcurrencyStamp = "f7392c12-6167-4f1c-943a-a1e4b2814242",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -127,6 +127,9 @@ namespace LMSRepository.Migrations
                         .IsRequired()
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("varchar(15)");
 
                     b.Property<bool>("IsAccountActivated")
                         .HasColumnType("tinyint(1)");

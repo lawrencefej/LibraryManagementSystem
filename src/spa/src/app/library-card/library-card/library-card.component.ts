@@ -120,7 +120,10 @@ export class LibraryCardComponent implements OnInit, OnDestroy {
         '',
         Validators.compose([Validators.required, Validators.email, Validators.maxLength(100)])
       ),
-      phoneNumber: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
+      phoneNumber: new FormControl(
+        '',
+        Validators.compose([Validators.required, Validators.maxLength(15), Validators.pattern('^[0-9]{10}$')])
+      ),
       gender: new FormControl('', Validators.required),
       dateOfBirth: new FormControl('', Validators.required),
 

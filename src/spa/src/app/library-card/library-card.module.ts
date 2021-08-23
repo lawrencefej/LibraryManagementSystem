@@ -27,7 +27,7 @@ import { LibraryCardCheckoutComponent } from './library-card-checkout/library-ca
 import { LibraryCardDetailCheckoutListComponent } from './library-card-detail/library-card-detail-checkout-list/library-card-detail-checkout-list.component';
 import { LibraryCardDetailComponent } from './library-card-detail/library-card-detail.component';
 import { LibraryCardDetailResolver } from './library-card-detail/library-card-detail.resolver';
-import { LibraryCardEditComponent } from './library-card-edit/library-card-edit.component';
+import { LibraryCardEditComponent } from './library-card-detail/library-card-edit/library-card-edit.component';
 import { LibraryCardListComponent } from './library-card-list/library-card-list.component';
 import { LibraryCardListResolver } from './library-card-list/library-card-list.resolver';
 import { LibraryCardRoutingModule } from './library-card-routing.module';

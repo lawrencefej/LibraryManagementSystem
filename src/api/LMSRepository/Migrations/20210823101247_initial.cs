@@ -41,6 +41,8 @@ namespace LMSRepository.Migrations
                     LastName = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Gender = table.Column<string>(type: "varchar(15)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     IsAccountActivated = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -589,9 +591,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "4063f725-61c2-4173-bba6-bde93bdfd108", "Member", "MEMBER" },
-                    { 2, "25c2925b-749b-4716-9367-5c908707354a", "Admin", "ADMIN" },
-                    { 3, "1c4c33ed-86cc-49db-8c94-49372f65a1f4", "Librarian", "LIBRARIAN" }
+                    { 1, "fa709375-85f5-4dd0-a779-180b538c26c8", "Member", "MEMBER" },
+                    { 2, "59c95b55-8b4b-4b7b-bba7-cde01fe51b05", "Admin", "ADMIN" },
+                    { 3, "f7392c12-6167-4f1c-943a-a1e4b2814242", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(

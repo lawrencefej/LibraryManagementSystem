@@ -3,23 +3,6 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { IsDevGuard } from './_guards/is-dev.guard';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: BaseLayoutComponent,
-  //   runGuardsAndResolvers: 'always',
-  //   canActivate: [AuthGuard],
-  //   children: [
-  //     {
-  //       path: 'user-profile',
-  //       component: UserProfileComponent,
-  //       resolve: { user: UserProfileResolver }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '',
-  //   component: SearchLibraryCardComponent
-  // },
   // TODO Fix no path route issues
   {
     path: '',
@@ -58,6 +41,10 @@ const routes: Routes = [
     path: 'test',
     loadChildren: () => import('./test/test.module').then(m => m.TesModule),
     canLoad: [IsDevGuard]
+  },
+  {
+    path: 'user',
+    loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
   // {
   //   path: '',

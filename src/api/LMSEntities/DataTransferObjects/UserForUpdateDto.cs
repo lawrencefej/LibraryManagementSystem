@@ -7,14 +7,19 @@ namespace LMSEntities.DataTransferObjects
     {
         [Required]
         public int Id { get; set; }
+
         [Required]
         public string FirstName { get; set; }
+
         [Required]
         public string Lastname { get; set; }
+
         [Required]
-        public string Email { get; set; }
+        public string Gender { get; set; }
+
         [Required]
         public string PhoneNumber { get; set; }
+        // TODO add validator
         // public string Gender { get; set; }
         // [Required]
         // public DateTime DateOfBirth { get; set; }

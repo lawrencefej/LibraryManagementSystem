@@ -18,7 +18,7 @@ namespace LMSEntities.Models
         public int MemberId { get; set; }
         public Address Address { get; set; }
         public int AddressId { get; set; }
-        public MemberGender Gender { get; set; }
+        public LmsGender Gender { get; set; }
         public LibraryCardStatus Status { get; set; } = LibraryCardStatus.Good;
         public LibraryCardPhoto LibraryCardPhoto { get; set; }
         public ICollection<Checkout> Checkouts { get; set; }
