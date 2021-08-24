@@ -1,13 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ChartModel } from 'src/app/_models/chartModel';
 import { TotalsReport } from 'src/app/_models/totalsReport';
 import { ReportService } from 'src/app/_services/report.service';
+import { DashboardResponse } from 'src/dto/models';
 
 @Component({
   templateUrl: './dashboard-panel.component.html',
   styleUrls: ['./dashboard-panel.component.css']
 })
-export class DashboardPanelComponent implements OnInit {
+export class DashboardPanelComponent implements OnInit, OnDestroy {
+  private readonly unsubscribe = new Subject<void>();
+
+  dashboardData!: DashboardResponse;
+
   checkoutsDataByDay: any;
   returnsDataByDay: any;
   dailyActivityLabel: any;
@@ -38,15 +46,24 @@ export class DashboardPanelComponent implements OnInit {
   totalCheckoutsName = 'Total Checkouts';
   totalCheckoutsIcon = 'library_add';
 
-  constructor(private reportService: ReportService) {}
+  constructor(private reportService: ReportService, private readonly route: ActivatedRoute) {}
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
 
   // TODO Handle token refresh and polling data
   ngOnInit(): void {
-    this.getDailyActivity();
-    this.getAssetTypeDistribution();
-    this.getCategoryDistribution();
-    this.getMonthlyActivity();
-    this.getTotals();
+    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => (this.dashboardData = routeData.initData));
+
+    console.log(this.dashboardData);
+
+    // this.getDailyActivity();
+    // this.getAssetTypeDistribution();
+    // this.getCategoryDistribution();
+    // this.getMonthlyActivity();
+    // this.getTotals();
   }
 
   getDailyActivity(): void {

@@ -329,7 +329,7 @@ namespace LMSRepository.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "LibraryAssetCategory",
+                name: "LibraryAssetCategories",
                 columns: table => new
                 {
                     LibrayAssetId = table.Column<int>(type: "int", nullable: false),
@@ -337,15 +337,15 @@ namespace LMSRepository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LibraryAssetCategory", x => new { x.LibrayAssetId, x.CategoryId });
+                    table.PrimaryKey("PK_LibraryAssetCategories", x => new { x.LibrayAssetId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_LibraryAssetCategory_Categories_CategoryId",
+                        name: "FK_LibraryAssetCategories_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_LibraryAssetCategory_LibraryAssets_LibrayAssetId",
+                        name: "FK_LibraryAssetCategories_LibraryAssets_LibrayAssetId",
                         column: x => x.LibrayAssetId,
                         principalTable: "LibraryAssets",
                         principalColumn: "Id",
@@ -591,9 +591,9 @@ namespace LMSRepository.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "fa709375-85f5-4dd0-a779-180b538c26c8", "Member", "MEMBER" },
-                    { 2, "59c95b55-8b4b-4b7b-bba7-cde01fe51b05", "Admin", "ADMIN" },
-                    { 3, "f7392c12-6167-4f1c-943a-a1e4b2814242", "Librarian", "LIBRARIAN" }
+                    { 1, "cfe0d60a-7d41-4964-ad37-a92079e26197", "Member", "MEMBER" },
+                    { 2, "fab74fda-42ca-4f3d-af86-77a27a338906", "Admin", "ADMIN" },
+                    { 3, "e4dd0eff-d3ad-4cf8-b1f9-14a67e908b1c", "Librarian", "LIBRARIAN" }
                 });
 
             migrationBuilder.InsertData(
@@ -732,8 +732,8 @@ namespace LMSRepository.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LibraryAssetCategory_CategoryId",
-                table: "LibraryAssetCategory",
+                name: "IX_LibraryAssetCategories_CategoryId",
+                table: "LibraryAssetCategories",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
@@ -829,7 +829,7 @@ namespace LMSRepository.Migrations
                 name: "LibraryAssetAuthors");
 
             migrationBuilder.DropTable(
-                name: "LibraryAssetCategory");
+                name: "LibraryAssetCategories");
 
             migrationBuilder.DropTable(
                 name: "Photos");

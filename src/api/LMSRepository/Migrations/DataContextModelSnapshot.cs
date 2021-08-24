@@ -78,21 +78,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "fa709375-85f5-4dd0-a779-180b538c26c8",
+                            ConcurrencyStamp = "cfe0d60a-7d41-4964-ad37-a92079e26197",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "59c95b55-8b4b-4b7b-bba7-cde01fe51b05",
+                            ConcurrencyStamp = "fab74fda-42ca-4f3d-af86-77a27a338906",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "f7392c12-6167-4f1c-943a-a1e4b2814242",
+                            ConcurrencyStamp = "e4dd0eff-d3ad-4cf8-b1f9-14a67e908b1c",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -404,7 +404,7 @@ namespace LMSRepository.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("LibraryAssetCategory");
+                    b.ToTable("LibraryAssetCategories");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.LibraryCard", b =>

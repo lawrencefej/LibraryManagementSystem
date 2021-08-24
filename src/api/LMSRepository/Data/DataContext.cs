@@ -14,19 +14,20 @@ namespace LMSRepository.Data
         {
         }
 
-        public DbSet<Checkout> Checkouts { get; set; }
-        public DbSet<Hold> Holds { get; set; }
-        public DbSet<CheckoutHistory> CheckoutHistory { get; set; }
-        public DbSet<LibraryAsset> LibraryAssets { get; set; }
-        public DbSet<LibraryAssetAuthor> LibraryAssetAuthors { get; set; }
-        public DbSet<LibraryCard> LibraryCards { get; set; }
-        public DbSet<Photo> Photos { get; set; }
+        public DbSet<AssetPhoto> AssetPhotos { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<ReserveAsset> ReserveAssets { get; set; }
-        public DbSet<AssetPhoto> AssetPhotos { get; set; }
-        public DbSet<UserProfilePhoto> UserProfilePhotos { get; set; }
+        public DbSet<Checkout> Checkouts { get; set; }
+        public DbSet<CheckoutHistory> CheckoutHistory { get; set; }
+        public DbSet<Hold> Holds { get; set; }
+        public DbSet<LibraryAsset> LibraryAssets { get; set; }
+        public DbSet<LibraryAssetAuthor> LibraryAssetAuthors { get; set; }
+        public DbSet<LibraryAssetCategory> LibraryAssetCategories { get; set; }
+        public DbSet<LibraryCard> LibraryCards { get; set; }
+        public DbSet<Photo> Photos { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<ReserveAsset> ReserveAssets { get; set; }
+        public DbSet<UserProfilePhoto> UserProfilePhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

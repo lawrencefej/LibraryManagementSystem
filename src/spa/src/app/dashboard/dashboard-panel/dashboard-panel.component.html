@@ -15,18 +15,21 @@
   </div>
   <div flexLayout="row" fxLayoutAlign="space-between center" class="middle-dashboard">
     <div fxFlex="23" class="mat-elevation-z4">
-      <lms-total-card [iconName]='totalMembersIcon' [name]='totalMembersName' [totalNumber]='totalMembers'>
+      <lms-total-card [iconName]='totalMembersIcon' [name]='totalMembersName' [totalNumber]='dashboardData.totalCards'>
       </lms-total-card>
     </div>
     <div fxFlex="23" class="mat-elevation-z4">
-      <lms-total-card [iconName]='totalItemsIcon' [name]='totalItemsName' [totalNumber]='totalItems'></lms-total-card>
-    </div>
-    <div fxFlex="23" class="mat-elevation-z4">
-      <lms-total-card [iconName]='totalAuthorsIcon' [name]='totalAuthorsName' [totalNumber]='totalAuthors'>
+      <lms-total-card [iconName]='totalItemsIcon' [name]='totalItemsName' [totalNumber]='dashboardData.totalItems'>
       </lms-total-card>
     </div>
     <div fxFlex="23" class="mat-elevation-z4">
-      <lms-total-card [iconName]='totalCheckoutsIcon' [name]='totalCheckoutsName' [totalNumber]='totalCheckouts'>
+      <lms-total-card [iconName]='totalAuthorsIcon' [name]='totalAuthorsName'
+                      [totalNumber]='dashboardData.totalAuthors'>
+      </lms-total-card>
+    </div>
+    <div fxFlex="23" class="mat-elevation-z4">
+      <lms-total-card [iconName]='totalCheckoutsIcon' [name]='totalCheckoutsName'
+                      [totalNumber]='dashboardData.totalCheckouts'>
       </lms-total-card>
     </div>
   </div>

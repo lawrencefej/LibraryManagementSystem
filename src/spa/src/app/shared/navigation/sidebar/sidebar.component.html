@@ -1,8 +1,8 @@
 <mat-nav-list>
-  <a mat-list-item routerLink="/home">
+  <a mat-list-item routerLink="/home" routerLinkActive="active">
     <mat-icon>home</mat-icon> <span class="nav-caption">Home</span>
   </a>
-  <a *appHasRole="roles" mat-list-item routerLink="/dashboard/home">
+  <a *appHasRole="roles" mat-list-item routerLink="/dashboard/home" routerLinkActive="active">
     <mat-icon>dashboard</mat-icon> <span class="nav-caption">Dashboard</span>
   </a>
   <a mat-list-item routerLink="/library-card/cards" routerLinkActive="active">

@@ -21,6 +21,7 @@ namespace LibraryManagementSystem.DIHelpers
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICheckoutService, CheckoutService>();
+            services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<ILibraryAssetService, LibraryAssetService>();
             services.AddScoped<ILibraryCardService, LibraryCardService>();
             services.AddScoped<IMemberService, MemberService>();
