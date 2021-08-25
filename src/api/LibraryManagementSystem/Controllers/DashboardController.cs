@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
+using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -38,24 +40,103 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("test")]
         public async Task<IActionResult> GetDashboardTestData()
         {
+            // List<DataDto> data = await _context.Checkouts.AsNoTracking()
+            // .Where(r => r.Status == CheckoutStatus.Returned)
+            //     .GroupBy(t => t.DateReturned)
+            //     .Select(d => new DataDto
+            //     {
+            //         Count = d.Count(),
+            //         Date = d.Key.Date,
+            //         // Day = d.Key.DayOfWeek,
+            //         // Name = d.Key.Date.ToString("ddd")
+            //     }).ToListAsync();
 
-            List<DataDto> data = await _context.LibraryAssetCategories
-                .Include(s => s.Category)
-                .GroupBy(t => t.Category.Name)
+            // return Ok(data);
+
+            return Ok(await _context.Checkouts.AsNoTracking()
+            .Where(r => r.Status == CheckoutStatus.Returned)
+                .GroupBy(t => t.DateReturned.Date)
                 .Select(d => new DataDto
                 {
                     Count = d.Count(),
-                    Name = d.Key.ToString()
-                }).ToListAsync();
+                    Date = d.Key.Date,
+                    Day = d.Key.DayOfWeek,
+                    Name = d.Key.Date.ToString("ddd")
+                })
+                // .Select(d => new
+                // {
+                //     test = d.Count(),
+                //     test2 = d.Key
+                // })
+                .ToListAsync());
 
 
-            ChartDto chartData = new()
-            {
-                Data = data,
-                Label = "AssetDistribution"
-            };
+            // ChartDto chartData = new()
+            // {
+            //     Data = data,
+            //     Label = "AssetDistribution"
+            // };
 
-            return Ok(chartData);
+            // return Ok(chartData);
+        }
+
+        private static string GetMonthName(int month)
+        {
+            DateTime date = new(DateTime.Today.Year, month, 1);
+            return date.ToString("MMMM");
+        }
+
+        private List<DateTime> GetDays(int days)
+        {
+            var startDate = DateTime.Today.AddDays(-days);
+
+            var daysToReturn = Enumerable.Range(0, days)
+                .Select(i => startDate.AddDays(i))
+                .ToList();
+
+            return daysToReturn;
+        }
+
+        private List<DataDto> ParseData(int days, List<DataDto> dataDtos)
+        {
+            var startDate = DateTime.Today.AddDays(-days);
+
+            var emptyData = Enumerable.Range(1, days).Select(i =>
+                new DataDto
+                {
+                    Count = 0,
+                    Date = startDate.AddDays(i),
+                    Day = startDate.AddDays(i).DayOfWeek,
+                    Name = startDate.AddDays(i).ToString("ddd")
+                });
+
+            var result = dataDtos.Union(
+                emptyData.Where(e => !dataDtos
+                    .Select(x => x.Date).Contains(e.Date)))
+                .ToList();
+
+            return result;
+        }
+
+        private List<DataDto> ParseData(List<DataDto> dataDtos)
+        {
+            var startDate = DateTime.Today.AddMonths(-12);
+
+            var emptyData = Enumerable.Range(1, 12).Select(i =>
+                new DataDto
+                {
+                    Count = 0,
+                    Month = DateTime.Today.AddMonths(i - 12).Month,
+                    Name = GetMonthName(DateTime.Today.AddMonths(i - 12).Month),
+                    Date = DateTime.Today.AddMonths(i - 12)
+                }).ToList();
+
+            var result = dataDtos.Union(
+                emptyData.Where(e => !dataDtos
+                    .Select(x => x.Month).Contains(e.Month)))
+                .ToList();
+
+            return result;
         }
     }
 }

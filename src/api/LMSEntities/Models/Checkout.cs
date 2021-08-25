@@ -16,7 +16,7 @@ namespace LMSEntities.Models
 
         public int LibraryCardId { get; set; }
 
-        public DateTime CheckoutDate { get; private set; } = DateTime.Now;
+        public DateTime CheckoutDate { get; set; } = DateTime.Now;
 
         public DateTime DueDate { get; private set; } = DateTime.Now.AddDays(21);
 

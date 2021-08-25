@@ -120,33 +120,31 @@ namespace LMSService.Service
                {
                    Count = x.Count(),
                    Date = x.Key.Date,
-                   //    Day = x.Key.Date.Value.DayOfWeek,
-                   //    Name = x.Key.Date.Value.ToString("ddd")
+                   Day = x.Key.Date.DayOfWeek,
+                   Name = x.Key.Date.ToString("ddd")
                })
                .ToListAsync();
 
             var days = GetDays(30);
             data = ParseData(7, data);
 
-            var chartData = new ChartDto()
+            return new ChartDto()
             {
                 Data = data,
                 Label = "Returns"
             };
-
-            return chartData;
         }
 
         public async Task<ChartDto> GetReturnsByMonthReport()
         {
             var data = await _context.Checkouts.AsNoTracking()
                .Where(d => d.DateReturned > DateTime.Today.AddMonths(-12))
-               .GroupBy(d => new { d.DateReturned })
+               .GroupBy(d => d.DateReturned)
                .Select(x => new DataDto
                {
                    Count = x.Count(),
-                   //   Month = x.Key.DateReturned.Value.Month,
-                   //   Name = GetMonthName(x.Key.DateReturned.Value.Month)
+                   Month = x.Key.Date.Month,
+                   Name = GetMonthName(x.Key.Date.Month)
                })
                .ToListAsync();
 
@@ -176,7 +174,7 @@ namespace LMSService.Service
 
         private static string GetMonthName(int month)
         {
-            DateTime date = new DateTime(DateTime.Today.Year, month, 1);
+            DateTime date = new(DateTime.Today.Year, month, 1);
             return date.ToString("MMMM");
         }
 
@@ -191,7 +189,7 @@ namespace LMSService.Service
             return daysToReturn;
         }
 
-        private List<DataDto> ParseData(int days, List<DataDto> dataDtos)
+        private static List<DataDto> ParseData(int days, List<DataDto> dataDtos)
         {
             var startDate = DateTime.Today.AddDays(-days);
 

@@ -19,6 +19,8 @@ namespace LibraryManagementSystem.Extensions
                 await seeder.SeedBooksAsset();
                 await seeder.SeedMediaAsset();
                 await seeder.SeedOtherAsset();
+                await seeder.SeedPastCheckout();
+                await seeder.SeedCurrentCheckout();
             }
         }
     }

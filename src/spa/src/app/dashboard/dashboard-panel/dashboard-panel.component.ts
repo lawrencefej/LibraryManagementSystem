@@ -46,7 +46,7 @@ export class DashboardPanelComponent implements OnInit, OnDestroy {
   totalCheckoutsName = 'Total Checkouts';
   totalCheckoutsIcon = 'library_add';
 
-  constructor(private reportService: ReportService, private readonly route: ActivatedRoute) {}
+  constructor(private readonly reportService: ReportService, private readonly route: ActivatedRoute) {}
 
   ngOnDestroy(): void {
     this.unsubscribe.next();

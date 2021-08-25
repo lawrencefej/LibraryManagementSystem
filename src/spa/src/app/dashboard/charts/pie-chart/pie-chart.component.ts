@@ -1,18 +1,22 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ChartOptions } from 'chart.js';
+import { ChartDto } from 'src/dto/models';
 
 @Component({
   selector: 'lms-pie-chart',
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent {
-  @Input() pieChartData: any[] = [];
-  @Input() pieChartLabels: any[] = [];
+export class PieChartComponent implements OnInit {
+  // @Input() pieChartData: any[] = [];
+  // @Input() pieChartLabels: any[] = [];
   @Input() chartName!: string;
+  @Input() chartData: ChartDto = {};
 
-  constructor() {}
-  public pieChartOptions: ChartOptions = {
+  labels: string[] = [];
+  dataset?: number[] = [];
+
+  pieChartOptions: ChartOptions = {
     responsive: true
   };
   colors: any[] = [
@@ -20,6 +24,13 @@ export class PieChartComponent {
       backgroundColor: ['#26547c', '#ff6b6b', '#ffd166']
     }
   ];
-  public pieChartLegend = true;
+  pieChartLegend = true;
   pieChartType = 'pie';
+
+  constructor() {}
+
+  ngOnInit(): void {
+    this.dataset = this.chartData.data!.map(a => a.count!);
+    this.labels = this.chartData.data!.map(a => a.name!);
+  }
 }

@@ -22,5 +22,17 @@ namespace LMSEntities.DataTransferObjects
         [Required]
         public ChartDto TypeDistribution { get; set; }
 
+        [Required]
+        public ChartDto ReturnsByMonth { get; set; }
+
+        [Required]
+        public ChartDto ReturnsByDay { get; set; }
+
+        [Required]
+        public ChartDto CheckoutsByMonth { get; set; }
+
+        [Required]
+        public ChartDto CheckoutsByDay { get; set; }
+
     }
 }

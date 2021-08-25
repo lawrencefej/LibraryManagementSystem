@@ -78,6 +78,41 @@ namespace LMSRepository.Data
             }
         }
 
+        public async Task SeedPastCheckout()
+        {
+            string checkoutData = System.IO.File.ReadAllText("Data/CheckoutPastSeedData.json");
+            List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
+            foreach (Checkout checkout in checkouts)
+            {
+                checkout.CheckoutDate = DateTime.Now.AddDays(GetRandomNumber(-14, -7));
+                checkout.DateReturned = DateTime.Now.AddDays(GetRandomNumber(-6, 0));
+                checkout.Status = CheckoutStatus.Returned;
+            }
+
+            _context.Checkouts.AddRange(checkouts);
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task SeedCurrentCheckout()
+        {
+            string checkoutData = System.IO.File.ReadAllText("Data/CheckoutCurrentSeedData.json");
+            List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
+            foreach (Checkout checkout in checkouts)
+            {
+                checkout.CheckoutDate = DateTime.Now.AddDays(GetRandomNumber(-6, 0));
+            }
+
+            _context.Checkouts.AddRange(checkouts);
+            await _context.SaveChangesAsync();
+
+        }
+
+        private static int GetRandomNumber(int start, int end)
+        {
+            return new Random().Next(start, end);
+        }
+
         public async Task SeedCategories()
         {
             if (await _context.Categories.AnyAsync())
