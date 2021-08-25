@@ -37,34 +37,6 @@ namespace LMSService.Service
             return dashboardData;
         }
 
-        // private async Task<ChartDto> GetCategoryDistributionData()
-        // {
-        //     List<DataDto> data = await _context.LibraryAssets.AsNoTracking()
-        //         .GroupBy(c => c.AssetCategories)
-        //         .Select(d => new DataDto
-        //         {
-        //             Count = d.Count(),
-        //             Name = d.Key
-        //         }).ToListAsync();
-
-        //     return new ChartDto
-        //     {
-        //         Data = data,
-        //         Label = "CategoryDistribution"
-        //     };
-        // }
-
-        // private async Task<TotalsReport> GetTotals()
-        // {
-        //     return new TotalsReport
-        //     {
-        //         TotalAuthors = await _context.Authors.AsNoTracking().CountAsync(),
-        //         TotalCheckouts = await _context.Checkouts.AsNoTracking().CountAsync(),
-        //         TotalItems = await _context.LibraryAssets.AsNoTracking().CountAsync(),
-        //         TotalMembers = await _context.LibraryCards.AsNoTracking().CountAsync()
-        //     };
-        // }
-
         private async Task<ChartDto> GetCategoryDistributionData()
         {
             List<DataDto> data = await _context.LibraryAssetCategories
@@ -150,6 +122,28 @@ namespace LMSService.Service
             };
         }
 
+        private async Task<ChartDto> GetReturnsByMonthReportData()
+        {
+            List<DataDto> data = await _context.Checkouts.AsNoTracking()
+               .Where(d => d.DateReturned > DateTime.Today.AddMonths(-12))
+               .GroupBy(d => d.DateReturned.Date.Month)
+               .Select(x => new DataDto
+               {
+                   Count = x.Count(),
+                   Month = x.Key,
+                   Name = GetMonthName(x.Key)
+               })
+               .ToListAsync();
+
+            List<DataDto> result = ParseData(data);
+
+            return new ChartDto()
+            {
+                Data = result,
+                Label = "Returns"
+            };
+        }
+
         private async Task<ChartDto> GetReturnsByDayReport()
         {
             List<DataDto> data = await _context.Checkouts.AsNoTracking()
@@ -170,28 +164,6 @@ namespace LMSService.Service
             return new ChartDto()
             {
                 Data = data,
-                Label = "Returns"
-            };
-        }
-
-        private async Task<ChartDto> GetReturnsByMonthReportData()
-        {
-            List<DataDto> data = await _context.Checkouts.AsNoTracking()
-               .Where(d => d.DateReturned > DateTime.Today.AddMonths(-12))
-               .GroupBy(d => d.DateReturned.Date)
-               .Select(x => new DataDto
-               {
-                   Count = x.Count(),
-                   Month = x.Key.Date.Month,
-                   Name = GetMonthName(x.Key.Date.Month)
-               })
-               .ToListAsync();
-
-            List<DataDto> result = ParseData(data);
-
-            return new ChartDto()
-            {
-                Data = result,
                 Label = "Returns"
             };
         }

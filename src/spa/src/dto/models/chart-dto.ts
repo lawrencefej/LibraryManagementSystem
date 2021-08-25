@@ -2,6 +2,6 @@
 /* eslint-disable */
 import { DataDto } from './data-dto';
 export interface ChartDto {
-  data?: null | Array<DataDto>;
-  label?: null | string;
+  data: Array<DataDto>;
+  label: string;
 }

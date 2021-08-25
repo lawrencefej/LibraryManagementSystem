@@ -8,29 +8,33 @@ import { ChartDto } from 'src/dto/models';
   styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent implements OnInit {
-  // @Input() pieChartData: any[] = [];
-  // @Input() pieChartLabels: any[] = [];
   @Input() chartName!: string;
-  @Input() chartData: ChartDto = {};
+  @Input() chartData!: ChartDto;
 
-  labels: string[] = [];
-  dataset?: number[] = [];
+  pieChartLabels: string[] = [];
+  pieChartData?: number[] = [];
 
   pieChartOptions: ChartOptions = {
-    responsive: true
-  };
-  colors: any[] = [
-    {
-      backgroundColor: ['#26547c', '#ff6b6b', '#ffd166']
+    responsive: true,
+    legend: {
+      position: 'left',
+      align: 'center',
+      display: true,
+      fullWidth: true
     }
-  ];
+  };
+  // colors: Color[] = [
+  //   {
+  //     backgroundColor: ['#26547c', '#ff6b6b', '#ffd166']
+  //   }
+  // ];
   pieChartLegend = true;
   pieChartType = 'pie';
 
   constructor() {}
 
   ngOnInit(): void {
-    this.dataset = this.chartData.data!.map(a => a.count!);
-    this.labels = this.chartData.data!.map(a => a.name!);
+    this.pieChartData = this.chartData.data.map(a => a.count);
+    this.pieChartLabels = this.chartData.data.map(a => a.name);
   }
 }

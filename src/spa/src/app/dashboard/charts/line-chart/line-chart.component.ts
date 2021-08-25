@@ -1,17 +1,17 @@
-import { Component, Input } from '@angular/core';
-import { Data } from '@angular/router';
-import { Color } from 'ng2-charts';
-import { ChartModel } from 'src/app/_models/chartModel';
+import { Component, Input, OnInit } from '@angular/core';
+import { ChartDataSets } from 'chart.js';
+import { Color, Label } from 'ng2-charts';
+import { ChartDto } from 'src/dto/models';
 
 @Component({
   selector: 'lms-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css']
 })
-export class LineChartComponent {
-  @Input() lineChartData: any[] = [];
-  @Input() lineChartLabels: any[] = [];
+export class LineChartComponent implements OnInit {
   @Input() chartName!: string;
+  @Input() firstData!: ChartDto;
+  @Input() secondData?: ChartDto;
 
   lineChartOptions: any = {
     responsive: true,
@@ -39,15 +39,25 @@ export class LineChartComponent {
   ];
   public lineChartLegend = true;
   public lineChartType = 'line';
+  lineChartLabels: Label[] = [];
+  lineChartData: ChartDataSets[] = [];
 
-  constructor() {
-    this.lineChartData = [{ data: [] }];
+  constructor() {}
+
+  ngOnInit(): void {
+    this.lineChartLabels = this.firstData.data.map(a => a.name);
+    this.lineChartData = [
+      {
+        data: this.firstData.data.map(a => a.count),
+        label: this.firstData.label
+      }
+    ];
+
+    if (this.secondData) {
+      this.lineChartData.push({
+        data: this.secondData?.data.map(a => a.count),
+        label: this.secondData?.label
+      });
+    }
   }
-
-  chartData!: ChartModel;
-  data: Data[] = [];
-  chartData2!: ChartModel;
-  data2: Data[] = [];
-  localLabel: any;
-  LocalBarChartLabels: any[] = [];
 }

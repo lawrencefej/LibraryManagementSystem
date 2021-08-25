@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartOptions, ChartType } from 'chart.js';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { Label } from 'ng2-charts';
 import { ChartDto } from 'src/dto/models';
 
 @Component({
@@ -8,31 +9,37 @@ import { ChartDto } from 'src/dto/models';
   styleUrls: ['./bar-chart.component.css']
 })
 export class BarChartComponent implements OnInit {
-  // @Input() barChartData: any[] = [];
-  // @Input() barChartLabels: any[] = [];
   @Input() chartName!: string;
   @Input() chartData!: ChartDto;
+  @Input() secondData?: ChartDto;
 
   labels: string[] = [];
   dataset: number[] = [];
 
-  public barChartOptions: ChartOptions = {
+  barChartOptions: ChartOptions = {
     responsive: true
   };
-  public barChartType: ChartType = 'bar';
-  public barChartLegend = true;
+  barChartType: ChartType = 'bar';
+  barChartLegend = true;
+  barChartLabels: Label[] = [];
+  barChartData: ChartDataSets[] = [];
 
-  constructor() {
-    // this.dataset = this.chartData.data!.map(a => a.count!);
-    // this.labels = this.chartData.data!.map(a => a.name!);
-  }
+  constructor() {}
 
   ngOnInit(): void {
-    console.log(this.chartData);
+    this.barChartLabels = this.chartData.data.map(a => a.name);
+    this.barChartData = [
+      {
+        data: this.chartData.data.map(a => a.count),
+        label: this.chartData.label
+      }
+    ];
 
-    this.dataset = this.chartData.data!.map(a => a.count!);
-    this.labels = this.chartData.data!.map(a => a.name!);
-    console.log(this.dataset);
-    console.log(this.labels);
+    if (this.secondData) {
+      this.barChartData.push({
+        data: this.secondData?.data.map(a => a.count),
+        label: this.secondData?.label
+      });
+    }
   }
 }
