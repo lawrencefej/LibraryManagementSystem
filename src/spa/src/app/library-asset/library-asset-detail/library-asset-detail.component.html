@@ -25,7 +25,7 @@
               </ng-container>
 
               <ng-container *ngIf="isEditTab">
-                <input type="file" style="display: none" #fileInput (change)="updatePhoto($event.target.files)" />
+                <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)" />
                 <button mat-raised-button color="primary" style="margin-right: 10px" type="button"
                         (click)="fileInput.click()">
                   Change Photo

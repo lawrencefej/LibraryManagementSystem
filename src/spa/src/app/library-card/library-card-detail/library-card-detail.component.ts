@@ -108,9 +108,9 @@ export class LibraryCardDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  updatePhoto(files: File[]): void {
+  updatePhoto(event: any): void {
     // TODO validate file ext type
-    const file: File = files[0];
+    const file: File = event.target.files[0];
 
     const formData = new FormData();
 

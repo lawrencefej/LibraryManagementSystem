@@ -12,7 +12,7 @@
         </div>
         <mat-card-actions>
           <div *ngIf="isEditTab; else editTemplate" flexLayout="row" fxLayoutAlign="center center">
-            <input type="file" style="display: none" #fileInput (change)="updatePhoto($event.target.files)" />
+            <input type="file" style="display: none" #fileInput (change)="updatePhoto($event)" />
             <button mat-raised-button color="accent" (click)="cancelEdit()">Cancel Edit</button>
             <button mat-raised-button color="primary" (click)="fileInput.click()">Change Photo</button>
           </div>

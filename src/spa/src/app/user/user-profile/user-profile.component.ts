@@ -78,10 +78,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.notify.success('Profile updated successfully');
       });
   }
-
-  updatePhoto(files: File[]): void {
+  updatePhoto(event: any): void {
     // TODO validate file ext type
-    const file: File = files[0];
+    const file: File = event.target.files[0];
 
     const formData = new FormData();
 

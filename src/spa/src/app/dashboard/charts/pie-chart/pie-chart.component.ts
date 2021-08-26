@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartOptions } from 'chart.js';
+import { ChartOptions, ChartType } from 'chart.js';
+import { SingleDataSet } from 'ng2-charts';
 import { ChartDto } from 'src/dto/models';
 
 @Component({
@@ -12,7 +13,7 @@ export class PieChartComponent implements OnInit {
   @Input() chartData!: ChartDto;
 
   pieChartLabels: string[] = [];
-  pieChartData?: number[] = [];
+  pieChartData!: SingleDataSet;
 
   pieChartOptions: ChartOptions = {
     responsive: true,
@@ -29,7 +30,7 @@ export class PieChartComponent implements OnInit {
   //   }
   // ];
   pieChartLegend = true;
-  pieChartType = 'pie';
+  pieChartType: ChartType = 'pie';
 
   constructor() {}
 

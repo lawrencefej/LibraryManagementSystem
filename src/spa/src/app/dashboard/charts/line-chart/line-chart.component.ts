@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartDataSets } from 'chart.js';
+import { ChartDataSets, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { ChartDto } from 'src/dto/models';
 
@@ -38,7 +38,7 @@ export class LineChartComponent implements OnInit {
     }
   ];
   public lineChartLegend = true;
-  public lineChartType = 'line';
+  public lineChartType: ChartType = 'line';
   lineChartLabels: Label[] = [];
   lineChartData: ChartDataSets[] = [];
 
