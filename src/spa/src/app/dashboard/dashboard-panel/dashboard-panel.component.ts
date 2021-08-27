@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ReportService } from 'src/app/_services/report.service';
 import { DashboardResponse } from 'src/dto/models';
 
 @Component({
@@ -26,7 +25,7 @@ export class DashboardPanelComponent implements OnInit, OnDestroy {
   totalMembersIcon = 'account_box';
   totalMembersName = 'Total Members';
 
-  constructor(private readonly reportService: ReportService, private readonly route: ActivatedRoute) {}
+  constructor(private readonly route: ActivatedRoute) {}
 
   ngOnDestroy(): void {
     this.unsubscribe.next();

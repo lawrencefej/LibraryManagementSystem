@@ -6,7 +6,6 @@ import { BasketForCheckoutDto, CheckoutForCheckInDto } from 'src/dto/models';
 import { CheckoutForDetailedDto } from 'src/dto/models/checkout-for-detailed-dto';
 import { CheckoutForListDto } from 'src/dto/models/checkout-for-list-dto';
 import { environment } from 'src/environments/environment';
-import { Checkout } from '../_models/checkout';
 import { PaginatedResult } from '../_models/pagination';
 
 @Injectable({
@@ -47,14 +46,6 @@ export class CheckoutService {
 
   checkoutBasket(basket: BasketForCheckoutDto): Observable<void> {
     return this.http.post<void>(this.baseUrl, basket);
-  }
-
-  checkoutAsset(checkout: Checkout): Observable<void> {
-    return this.http.post<void>(this.baseUrl, checkout);
-  }
-
-  checkoutAssets(checkouts: Checkout[]): Observable<void> {
-    return this.http.post<void>(this.baseUrl, checkouts);
   }
 
   getPaginatedCheckouts(

@@ -10,8 +10,8 @@ import { LibraryAssetForBasketViewModel } from 'src/app/basket/models/library-as
 import { BasketService } from 'src/app/basket/services/basket.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-import { AssetService } from 'src/app/_services/asset.service';
 import { LibraryAssetForListDto, LibraryAssetStatus, LibraryCardForDetailedDto } from 'src/dto/models';
+import { LibraryCardService } from '../services/library-card.service';
 
 @Component({
   selector: 'lms-library-card-checkout',
@@ -36,7 +36,7 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
 
   constructor(
     private readonly basketService: BasketService,
-    private readonly assetService: AssetService,
+    private readonly assetService: LibraryCardService,
     private readonly notify: NotificationService
   ) {}
 
@@ -142,7 +142,7 @@ export class LibraryCardCheckoutComponent implements OnDestroy, OnInit, AfterVie
     if (searchString === '') {
       return of(test);
     } else {
-      return this.assetService.getPaginatedAssets(
+      return this.assetService.getAssets(
         this.paginator.pageIndex + 1,
         this.paginator.pageSize,
         this.sort.active,

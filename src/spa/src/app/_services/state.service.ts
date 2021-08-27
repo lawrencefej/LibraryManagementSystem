@@ -178,7 +178,6 @@ export class StateService {
   }
 
   getStatesObject(): Observable<StateDto[]> {
-    // return this.statesObject;
     return of(this.statesObject);
   }
 }

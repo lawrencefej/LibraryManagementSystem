@@ -2,7 +2,6 @@ import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } fr
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { LoginUserDto } from 'src/dto/models';
-import { User } from '../_models/user';
 import { AuthenticationService } from '../_services/authentication.service';
 
 @Directive({
@@ -13,7 +12,6 @@ export class HasRoleDirective implements OnInit, OnDestroy {
 
   @Input() appHasRole: string[] = [];
   isVisible = false;
-  currentUser!: User;
   user!: LoginUserDto;
 
   constructor(

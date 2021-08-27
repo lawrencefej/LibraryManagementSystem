@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PaginatedResult } from 'src/app/_models/pagination';
+import { LibraryAssetForListDto } from 'src/dto/models';
 import { LibraryCardForCreationDto } from 'src/dto/models/library-card-for-creation-dto';
 import { LibraryCardForDetailedDto } from 'src/dto/models/library-card-for-detailed-dto';
 import { LibraryCardForUpdate } from 'src/dto/models/library-card-for-update';
@@ -67,6 +68,42 @@ export class LibraryCardService {
 
     return this.httpService
       .get<LibrarycardForListDto[]>(`${this.cardUrl}`, {
+        observe: 'response',
+        params
+      })
+      .pipe(
+        map(response => {
+          paginatedResult.result = response.body || [];
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('Pagination')!);
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  getAssets(
+    page: number,
+    itemsPerPage: number,
+    orderBy: string,
+    sortDirection: string,
+    searchString: string
+  ): Observable<PaginatedResult<LibraryAssetForListDto[]>> {
+    const paginatedResult: PaginatedResult<LibraryAssetForListDto[]> = new PaginatedResult<LibraryAssetForListDto[]>();
+
+    let params = new HttpParams();
+
+    params = params.append('orderBy', orderBy);
+    params = params.append('sortDirection', sortDirection);
+    params = params.append('searchString', searchString);
+
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page.toString());
+      params = params.append('pageSize', itemsPerPage.toString());
+    }
+
+    return this.httpService
+      .get<LibraryAssetForListDto[]>(`${this.baseUrl}catalog`, {
         observe: 'response',
         params
       })
