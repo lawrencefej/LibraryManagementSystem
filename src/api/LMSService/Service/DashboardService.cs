@@ -104,12 +104,13 @@ namespace LMSService.Service
         {
             List<DataDto> data = await _context.Checkouts.AsNoTracking()
                .Where(d => d.CheckoutDate > DateTime.Today.AddMonths(-12))
-               .GroupBy(d => new { d.CheckoutDate.Month })
+               .GroupBy(d => d.CheckoutDate.Month)
                .Select(x => new DataDto
                {
                    Count = x.Count(),
-                   Month = x.Key.Month,
-                   Name = GetMonthName(x.Key.Month)
+                   Month = x.Key,
+                   Date = DateTime.Today,
+                   Name = GetMonthName(x.Key)
                })
                .ToListAsync();
 
@@ -131,6 +132,7 @@ namespace LMSService.Service
                {
                    Count = x.Count(),
                    Month = x.Key,
+                   Date = DateTime.Today,
                    Name = GetMonthName(x.Key)
                })
                .ToListAsync();
@@ -222,6 +224,7 @@ namespace LMSService.Service
             List<DataDto> result = dataDtos.Union(
                 emptyData.Where(e => !dataDtos
                     .Select(x => x.Month).Contains(e.Month)))
+                    .OrderBy(s => s.Date)
                 .ToList();
 
             return result;

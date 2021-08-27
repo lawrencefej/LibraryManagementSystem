@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
-using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -40,44 +39,28 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet("test")]
         public async Task<IActionResult> GetDashboardTestData()
         {
-            // List<DataDto> data = await _context.Checkouts.AsNoTracking()
-            // .Where(r => r.Status == CheckoutStatus.Returned)
-            //     .GroupBy(t => t.DateReturned)
-            //     .Select(d => new DataDto
-            //     {
-            //         Count = d.Count(),
-            //         Date = d.Key.Date,
-            //         // Day = d.Key.DayOfWeek,
-            //         // Name = d.Key.Date.ToString("ddd")
-            //     }).ToListAsync();
+            List<DataDto> data = await _context.Checkouts.AsNoTracking()
+               .Where(d => d.CheckoutDate > DateTime.Today.AddMonths(-12))
+               .GroupBy(d => d.CheckoutDate.Month)
+               .Select(x => new DataDto
+               {
+                   Count = x.Count(),
+                   Month = x.Key,
+                   Date = DateTime.Today,
+                   Name = GetMonthName(x.Key)
+               })
+               .ToListAsync();
 
-            // return Ok(data);
-
-            return Ok(await _context.Checkouts.AsNoTracking()
-            .Where(r => r.Status == CheckoutStatus.Returned)
-                .GroupBy(t => t.DateReturned.Date)
-                .Select(d => new DataDto
-                {
-                    Count = d.Count(),
-                    Date = d.Key.Date,
-                    Day = d.Key.DayOfWeek,
-                    Name = d.Key.Date.ToString("ddd")
-                })
-                // .Select(d => new
-                // {
-                //     test = d.Count(),
-                //     test2 = d.Key
-                // })
-                .ToListAsync());
+            List<DataDto> result = ParseData(data);
 
 
-            // ChartDto chartData = new()
-            // {
-            //     Data = data,
-            //     Label = "AssetDistribution"
-            // };
+            ChartDto chartData = new()
+            {
+                Data = result,
+                Label = "checkouts"
+            };
 
-            // return Ok(chartData);
+            return Ok(chartData);
         }
 
         private static string GetMonthName(int month)
@@ -120,23 +103,29 @@ namespace LibraryManagementSystem.Controllers
 
         private List<DataDto> ParseData(List<DataDto> dataDtos)
         {
-            var startDate = DateTime.Today.AddMonths(-12);
+            DateTime startDate = DateTime.Today.AddMonths(-12);
 
-            var emptyData = Enumerable.Range(1, 12).Select(i =>
+            List<DataDto> emptyData = Enumerable.Range(1, 12).Select(i =>
                 new DataDto
                 {
                     Count = 0,
-                    Month = DateTime.Today.AddMonths(i - 12).Month,
-                    Name = GetMonthName(DateTime.Today.AddMonths(i - 12).Month),
-                    Date = DateTime.Today.AddMonths(i - 12)
+                    // Month = DateTime.Today.AddMonths(i - 12).Month,
+                    Month = startDate.AddMonths(-i).Month,
+                    // Name = GetMonthName(DateTime.Today.AddMonths(i - 12).Month),
+                    Name = GetMonthName(startDate.AddMonths(-i).Month),
+                    // Date = DateTime.Today.AddMonths(i - 12)
+                    Date = startDate.AddMonths(-i)
                 }).ToList();
 
-            var result = dataDtos.Union(
+            List<DataDto> result = dataDtos.Union(
                 emptyData.Where(e => !dataDtos
                     .Select(x => x.Month).Contains(e.Month)))
+                .OrderBy(s => s.Date)
                 .ToList();
 
             return result;
+
+            // return emptyData;
         }
     }
 }
