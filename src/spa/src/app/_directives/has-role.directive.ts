@@ -2,7 +2,7 @@ import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } fr
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { LoginUserDto } from 'src/dto/models';
-import { AuthenticationService } from '../_services/authentication.service';
+import { AuthService } from '../_services/authentication.service';
 
 @Directive({
   selector: '[appHasRole]'
@@ -15,11 +15,11 @@ export class HasRoleDirective implements OnInit, OnDestroy {
   user!: LoginUserDto;
 
   constructor(
-    authenticationService: AuthenticationService,
+    authService: AuthService,
     private readonly templateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef
   ) {
-    authenticationService.loggedInUser$.pipe(take(1)).subscribe(user => (this.user = user));
+    authService.loggedInUser$.pipe(take(1)).subscribe(user => (this.user = user));
   }
 
   ngOnDestroy(): void {
@@ -34,7 +34,6 @@ export class HasRoleDirective implements OnInit, OnDestroy {
       return;
     }
 
-    // if (this.user?.roles.some(r => this.appHasRole.includes(r))) {
     if (this.appHasRole.includes(this.user.role)) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);
     } else {

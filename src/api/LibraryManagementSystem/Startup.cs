@@ -5,6 +5,7 @@ using LMSEntities.Configuration;
 using LMSRepository.Data;
 using LMSService.Exceptions;
 using LMSService.Helpers;
+using LMSService.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -44,6 +45,7 @@ namespace LibraryManagementSystem.API
             services.Configure<CloudinarySettings>(Configuration.GetSection(nameof(CloudinarySettings)));
             services.AddThirdPartyConfiguration();
             services.AddCombinedInterfaces();
+            services.AddSignalR(e => e.EnableDetailedErrors = true);
 
             if (CurrentEnv.IsProduction() || CurrentEnv.IsStaging())
             {
@@ -114,6 +116,7 @@ namespace LibraryManagementSystem.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<DashboardHub>("/hubs/chart");
                 if (!env.IsDevelopment())
                 {
                     endpoints.MapFallbackToController("Index", "Fallback");

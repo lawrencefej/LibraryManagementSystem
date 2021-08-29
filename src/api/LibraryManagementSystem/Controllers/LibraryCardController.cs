@@ -16,10 +16,12 @@ namespace LibraryManagementSystem.Controllers
     public class LibraryCardController : BaseApiController<LibraryCardForDetailedDto, LibrarycardForListDto>
     {
         private readonly ILibraryCardService _libraryCardService;
+        private readonly IDashboardService _dashboardService;
 
-        public LibraryCardController(ILibraryCardService libraryCardService)
+        public LibraryCardController(ILibraryCardService libraryCardService, IDashboardService dashboardService)
         {
             _libraryCardService = libraryCardService;
+            _dashboardService = dashboardService;
         }
 
         [HttpGet]
@@ -47,6 +49,8 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> CreateCard(LibraryCardForCreationDto addCardDto)
         {
             LmsResponseHandler<LibraryCardForDetailedDto> result = await _libraryCardService.AddLibraryCard(addCardDto);
+
+            await _dashboardService.BroadcastDashboardData();
 
             return result.Succeeded
                 ? result.Succeeded ? CreatedAtRoute(nameof(GetById), new { cardId = result.Item.Id }, result.Item) : BadRequest(result.Errors)

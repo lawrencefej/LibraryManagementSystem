@@ -15,9 +15,11 @@ namespace LibraryManagementSystem.API.Controllers
     public class CheckoutController : BaseApiController<CheckoutForDetailedDto, CheckoutForListDto>
     {
         private readonly ICheckoutService _checkoutService;
+        private readonly IDashboardService _dashboardService;
 
-        public CheckoutController(ICheckoutService checkoutService)
+        public CheckoutController(ICheckoutService checkoutService, IDashboardService dashboardService)
         {
+            _dashboardService = dashboardService;
             _checkoutService = checkoutService;
         }
 
@@ -28,6 +30,8 @@ namespace LibraryManagementSystem.API.Controllers
         {
             LmsResponseHandler<CheckoutForDetailedDto> result = await _checkoutService.CheckInAsset(checkoutForCheckIn);
 
+            await _dashboardService.BroadcastDashboardData();
+
             return ResultCheck(result);
         }
 
@@ -37,6 +41,8 @@ namespace LibraryManagementSystem.API.Controllers
         public async Task<IActionResult> CheckoutAsset(BasketForCheckoutDto basketForCheckout)
         {
             LmsResponseHandler<CheckoutForDetailedDto> result = await _checkoutService.CheckoutAssets(basketForCheckout);
+
+            await _dashboardService.BroadcastDashboardData();
 
             return ResultCheck(result);
         }

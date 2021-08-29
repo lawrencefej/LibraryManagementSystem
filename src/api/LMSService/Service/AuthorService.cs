@@ -20,9 +20,9 @@ namespace LMSService.Service
 
         public AuthorService(DataContext context, IMapper mapper, ILogger<AuthorService> logger)
         {
-            _mapper = mapper;
-            _logger = logger;
             _context = context;
+            _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<AuthorDto> AddAuthor(AuthorDto authorDto)

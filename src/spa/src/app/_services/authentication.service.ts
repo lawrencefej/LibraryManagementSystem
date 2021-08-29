@@ -19,7 +19,7 @@ import { SessionService } from './session.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService implements OnDestroy {
+export class AuthService implements OnDestroy {
   baseUrl = environment.apiUrl + 'auth/';
   private readonly jwtHelper = new JwtHelperService();
   private readonly unsubscribe = new Subject<void>();
@@ -93,10 +93,6 @@ export class AuthenticationService implements OnDestroy {
       return false;
     }
   }
-
-  // isTokenExpired(): boolean {
-  //   return !!this.jwtHelper.isTokenExpired(this.loggedInUserSubject.value.token);
-  // }
 
   sendForgotPasswordLink(model: ForgotPasswordRequest): Observable<void> {
     return this.httpService.post<void>(`${this.baseUrl}forgot-password`, model);

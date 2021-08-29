@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using LMSEntities.Configuration;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Role = LibraryManagementSystem.API.Helpers.Role;
 
@@ -34,9 +37,9 @@ namespace LibraryManagementSystem.DIHelpers
             builder.AddSignInManager<SignInManager<AppUser>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(Options =>
+                .AddJwtBearer(options =>
                 {
-                    Options.TokenValidationParameters = new TokenValidationParameters
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         // TODO validate issue
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
@@ -44,6 +47,23 @@ namespace LibraryManagementSystem.DIHelpers
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ClockSkew = TimeSpan.Zero
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            StringValues accessToken = context.Request.Query["access_token"];
+
+                            PathString path = context.HttpContext.Request.Path;
+
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 

@@ -12,9 +12,11 @@ namespace LibraryManagementSystem.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IDashboardService _dashboardService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IDashboardService dashboardService)
         {
+            _dashboardService = dashboardService;
             _categoryService = categoryService;
         }
 
@@ -38,6 +40,8 @@ namespace LibraryManagementSystem.Controllers
         public async Task<ActionResult<Category>> AddCategory(CategoryDto categoryForCreation)
         {
             CategoryDto category = await _categoryService.AddCategory(categoryForCreation);
+
+            await _dashboardService.BroadcastDashboardData();
 
             return CreatedAtAction(nameof(GetCategory), new { categoryId = category.Id }, category);
         }

@@ -1,20 +1,3 @@
-/* .dashboard-container {
-  margin: 20px;
-} */
-
-mat-card-header {
-  background-color: rgb(44, 62, 80);
-  color: white;
+.middle-dashboard {
+  margin: 10px;
 }
-
-/* .top-dashboard {
-  margin: 10px;
-} */
-
-/* .bottom-dashboard {
-  margin: 10px;
-} */
-
-/* .middle-dashboard {
-  margin: 10px;
-} */

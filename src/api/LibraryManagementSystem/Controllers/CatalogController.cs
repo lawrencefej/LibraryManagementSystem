@@ -16,10 +16,12 @@ namespace LibraryManagementSystem.API.Controllers
     public class CatalogController : BaseApiController<LibraryAssetForDetailedDto, LibraryAssetForListDto>
     {
         private readonly ILibraryAssetService _libraryAssestService;
+        private readonly IDashboardService _dashboardService;
 
-        public CatalogController(ILibraryAssetService libraryAssestService)
+        public CatalogController(ILibraryAssetService libraryAssestService, IDashboardService dashboardService)
         {
             _libraryAssestService = libraryAssestService;
+            _dashboardService = dashboardService;
         }
 
         [HttpPost]
@@ -28,6 +30,8 @@ namespace LibraryManagementSystem.API.Controllers
         public async Task<IActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
             LibraryAssetForDetailedDto asset = await _libraryAssestService.AddAsset(libraryAssetForCreation);
+
+            await _dashboardService.BroadcastDashboardData();
 
             return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, asset);
         }

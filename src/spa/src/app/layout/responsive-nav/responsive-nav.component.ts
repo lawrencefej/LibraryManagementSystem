@@ -2,7 +2,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { AuthService } from 'src/app/_services/authentication.service';
 import { SessionService } from 'src/app/_services/session.service';
 import { LoginUserDto } from 'src/dto/models';
 
@@ -14,7 +14,7 @@ import { LoginUserDto } from 'src/dto/models';
 export class ResponsiveNavComponent implements OnInit, OnDestroy {
   private readonly unsubscribe = new Subject<void>();
 
-  userObservable: Observable<LoginUserDto> = this.authenticationService.loggedInUser$;
+  userObservable: Observable<LoginUserDto> = this.authService.loggedInUser$;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches),
@@ -22,7 +22,7 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
   );
 
   constructor(
-    private readonly authenticationService: AuthenticationService,
+    private readonly authService: AuthService,
     private readonly breakpointObserver: BreakpointObserver,
     private readonly sessionService: SessionService
   ) {}
@@ -38,15 +38,15 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authenticationService.logout().pipe(takeUntil(this.unsubscribe)).subscribe();
+    this.authService.logout().pipe(takeUntil(this.unsubscribe)).subscribe();
   }
 
   private trackTokenRefreshTimer(): void {
     this.sessionService.tokenTimerObservable
       .pipe(
         switchMap(() => {
-          if (this.authenticationService.allowTokenRefresh()) {
-            return this.authenticationService.refreshToken();
+          if (this.authService.allowTokenRefresh()) {
+            return this.authService.refreshToken();
           } else {
             return EMPTY;
           }
@@ -60,7 +60,7 @@ export class ResponsiveNavComponent implements OnInit, OnDestroy {
     this.sessionService.logoutTimerObservable
       .pipe(
         takeUntil(this.unsubscribe),
-        switchMap(() => this.authenticationService.logout())
+        switchMap(() => this.authService.logout())
       )
       .subscribe();
   }

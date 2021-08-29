@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Controllers
 {
-    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : ControllerBase
@@ -61,6 +60,14 @@ namespace LibraryManagementSystem.Controllers
             };
 
             return Ok(chartData);
+        }
+
+        [HttpGet("test2")]
+        public async Task<IActionResult> GetDashboardTest2Data()
+        {
+            await _dashboardService.BroadcastDashboardData();
+
+            return NoContent();
         }
 
         private static string GetMonthName(int month)

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { ChartDto } from 'src/dto/models';
@@ -8,9 +8,9 @@ import { ChartDto } from 'src/dto/models';
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.css']
 })
-export class BarChartComponent implements OnInit {
+export class BarChartComponent implements OnInit, OnChanges {
   @Input() chartName!: string;
-  @Input() chartData!: ChartDto;
+  @Input() firstData!: ChartDto;
   @Input() secondData?: ChartDto;
 
   labels: string[] = [];
@@ -26,19 +26,27 @@ export class BarChartComponent implements OnInit {
 
   constructor() {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.buildData(changes.firstData.currentValue, changes.secondData.currentValue);
+  }
+
   ngOnInit(): void {
-    this.barChartLabels = this.chartData.data.map(a => a.name);
+    this.buildData(this.firstData, this.secondData);
+  }
+
+  private buildData(firstData: ChartDto, secondData?: ChartDto): void {
+    this.barChartLabels = firstData.data.map(a => a.name);
     this.barChartData = [
       {
-        data: this.chartData.data.map(a => a.count),
-        label: this.chartData.label
+        data: firstData.data.map(a => a.count),
+        label: firstData.label
       }
     ];
 
-    if (this.secondData) {
+    if (secondData) {
       this.barChartData.push({
-        data: this.secondData?.data.map(a => a.count),
-        label: this.secondData?.label
+        data: secondData?.data.map(a => a.count),
+        label: secondData?.label
       });
     }
   }

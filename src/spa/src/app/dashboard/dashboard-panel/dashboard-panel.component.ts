@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { DashboardResponse } from 'src/dto/models';
+import { Observable, Subject } from 'rxjs';
+import { DashboardResponseViewModel, DashboardService } from '../services/dashboard.service';
 
 @Component({
   templateUrl: './dashboard-panel.component.html',
@@ -14,7 +12,7 @@ export class DashboardPanelComponent implements OnInit, OnDestroy {
   assetTypedChartName = 'Item Type Distribution';
   categoryChartName = 'Category Distribution';
   dailyChartName = 'Daily Activity';
-  dashboardData!: DashboardResponse;
+  dashboardDataObservable!: Observable<DashboardResponseViewModel>;
   monthlyChartName = 'Monthly Activity';
   totalAuthorsIcon = 'person';
   totalAuthorsName = 'Total Authors';
@@ -25,15 +23,17 @@ export class DashboardPanelComponent implements OnInit, OnDestroy {
   totalMembersIcon = 'account_box';
   totalMembersName = 'Total Members';
 
-  constructor(private readonly route: ActivatedRoute) {}
+  constructor(private readonly dashboardService: DashboardService) {}
 
   ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+    this.dashboardService.stopConnection();
   }
 
   // TODO Handle token refresh and polling data
   ngOnInit(): void {
-    this.route.data.pipe(takeUntil(this.unsubscribe)).subscribe(routeData => (this.dashboardData = routeData.initData));
+    this.dashboardService.startConnection();
+    this.dashboardDataObservable = this.dashboardService.getDashboardObservable();
   }
 }

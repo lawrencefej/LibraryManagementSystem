@@ -4,14 +4,14 @@ import { NavigationExtras, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
 import { NotificationService } from '../shared/services/notification.service';
-import { AuthenticationService } from '../_services/authentication.service';
+import { AuthService } from '../_services/authentication.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private readonly notify: NotificationService,
     private readonly router: Router,
-    private readonly authService: AuthenticationService
+    private readonly authService: AuthService
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {

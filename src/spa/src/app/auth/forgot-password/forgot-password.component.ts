@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { AuthService } from 'src/app/_services/authentication.service';
 
 @Component({
   templateUrl: './forgot-password.component.html',
@@ -18,7 +18,7 @@ export class ForgotPasswordComponent implements OnDestroy {
   validationMessages = validationMessages;
 
   constructor(
-    public readonly authService: AuthenticationService,
+    public readonly authService: AuthService,
     private readonly notify: NotificationService,
     private readonly router: Router
   ) {}

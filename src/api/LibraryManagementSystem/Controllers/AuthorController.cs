@@ -14,9 +14,11 @@ namespace LibraryManagementSystem.Controllers
     public class AuthorController : BaseApiController<AuthorDto, AuthorDto>
     {
         private readonly IAuthorService _authorService;
+        private readonly IDashboardService _dashboardService;
 
-        public AuthorController(IAuthorService authorService)
+        public AuthorController(IAuthorService authorService, IDashboardService dashboardService)
         {
+            _dashboardService = dashboardService;
             _authorService = authorService;
         }
 
@@ -46,6 +48,8 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> AddAuthor(AuthorDto authorDto)
         {
             AuthorDto authorToReturn = await _authorService.AddAuthor(authorDto);
+
+            await _dashboardService.BroadcastDashboardData();
 
             return CreatedAtRoute(nameof(GetAuthor), new { authorId = authorToReturn.Id }, authorToReturn);
         }

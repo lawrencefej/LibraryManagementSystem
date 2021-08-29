@@ -6,5 +6,7 @@ namespace LMSContracts.Interfaces
     public interface IDashboardService
     {
         Task<DashboardResponse> GetDashboardData();
+
+        Task BroadcastDashboardData();
     }
 }

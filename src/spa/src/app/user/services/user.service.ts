@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { AuthService } from 'src/app/_services/authentication.service';
 import { PhotoResponseDto, UserForDetailedDto, UserForUpdateDto, UserPasswordResetRequest } from 'src/dto/models';
 import { environment } from 'src/environments/environment';
 
@@ -11,7 +11,7 @@ export class UserService {
   baseUrl = environment.apiUrl;
   userUrl = this.baseUrl + 'user';
 
-  constructor(private readonly httpService: HttpClient, private readonly authService: AuthenticationService) {}
+  constructor(private readonly httpService: HttpClient, private readonly authService: AuthService) {}
 
   getUser(userId: number): Observable<UserForDetailedDto> {
     return this.httpService.get<UserForDetailedDto>(`${this.userUrl}/${userId}`);

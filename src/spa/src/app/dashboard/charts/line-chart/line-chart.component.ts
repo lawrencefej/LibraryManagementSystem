@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartDataSets, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { ChartDto } from 'src/dto/models';
@@ -8,7 +8,7 @@ import { ChartDto } from 'src/dto/models';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css']
 })
-export class LineChartComponent implements OnInit {
+export class LineChartComponent implements OnInit, OnChanges {
   @Input() chartName!: string;
   @Input() firstData!: ChartDto;
   @Input() secondData?: ChartDto;
@@ -44,19 +44,27 @@ export class LineChartComponent implements OnInit {
 
   constructor() {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.buildData(changes.firstData.currentValue, changes.secondData.currentValue);
+  }
+
   ngOnInit(): void {
-    this.lineChartLabels = this.firstData.data.map(a => a.name);
+    this.buildData(this.firstData, this.secondData);
+  }
+
+  private buildData(firstData: ChartDto, secondData?: ChartDto): void {
+    this.lineChartLabels = firstData.data.map(a => a.name);
     this.lineChartData = [
       {
-        data: this.firstData.data.map(a => a.count),
-        label: this.firstData.label
+        data: firstData.data.map(a => a.count),
+        label: firstData.label
       }
     ];
 
-    if (this.secondData) {
+    if (secondData) {
       this.lineChartData.push({
-        data: this.secondData?.data.map(a => a.count),
-        label: this.secondData?.label
+        data: secondData?.data.map(a => a.count),
+        label: secondData?.label
       });
     }
   }

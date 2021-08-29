@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSRepository.Data;
+using LMSService.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMSService.Service
@@ -12,10 +14,12 @@ namespace LMSService.Service
     public class DashboardService : IDashboardService
     {
         private readonly DataContext _context;
+        private readonly IHubContext<DashboardHub, IDashboardHub> _hub;
 
-        public DashboardService(DataContext context)
+        public DashboardService(DataContext context, IHubContext<DashboardHub, IDashboardHub> hub)
         {
             _context = context;
+            _hub = hub;
         }
 
         public async Task<DashboardResponse> GetDashboardData()
@@ -35,6 +39,11 @@ namespace LMSService.Service
             };
 
             return dashboardData;
+        }
+
+        public async Task BroadcastDashboardData()
+        {
+            await _hub.Clients.All.BroadcastChartData(await GetDashboardData());
         }
 
         private async Task<ChartDto> GetCategoryDistributionData()
@@ -203,6 +212,7 @@ namespace LMSService.Service
             List<DataDto> result = dataDtos.Union(
                 emptyData.Where(e => !dataDtos
                     .Select(x => x.Date).Contains(e.Date)))
+                    .OrderBy(s => s.Date)
                 .ToList();
 
             return result;

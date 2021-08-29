@@ -2,14 +2,14 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AuthenticationService } from '../_services/authentication.service';
+import { AuthService } from '../_services/authentication.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private readonly authenticationService: AuthenticationService) {}
+  constructor(private readonly authService: AuthService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    this.authenticationService.loggedInUser$.pipe(take(1)).subscribe(user => {
+    this.authService.loggedInUser$.pipe(take(1)).subscribe(user => {
       if (user) {
         request = this.setTokenHeader(request, user.token!);
       }

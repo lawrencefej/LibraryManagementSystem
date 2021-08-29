@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { validationMessages } from 'src/app/shared/validators/validator.constants';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { AuthService } from 'src/app/_services/authentication.service';
 import { UserForLoginDto } from 'src/dto/models';
 
 @Component({
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   validationMessages = validationMessages;
 
   constructor(
-    private readonly authenticationService: AuthenticationService,
+    private readonly authService: AuthService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly fb: FormBuilder,
@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onSubmit(model: UserForLoginDto): void {
     if (this.loginForm.valid) {
-      this.authenticationService
+      this.authService
         .login(model)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(() => {
