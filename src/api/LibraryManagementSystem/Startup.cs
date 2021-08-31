@@ -39,6 +39,7 @@ namespace LibraryManagementSystem.API
             services.AddDataAccessServices(Configuration);
             services.AddIdentityConfiguration(Configuration);
             services.AddMvcConfiguration();
+            services.Configure<AwsSettings>(Configuration.GetSection(nameof(AwsSettings)));
             services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
             services.Configure<SmtpSettings>(Configuration.GetSection(nameof(SmtpSettings)));
             services.Configure<DbSettings>(Configuration.GetSection(nameof(DbSettings)));

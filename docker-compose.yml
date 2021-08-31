@@ -18,6 +18,8 @@ services:
     volumes:
       - .:/workspace:cached
       - ${HOME}/.microsoft/usersecrets:/home/vscode/.microsoft/usersecrets:cached
+      - ${HOME}/.aspnet/https:/home/vscode/.aspnet/https:cached
+      - ${HOME}/.aws/credentials:/home/vscode/.aws/credentials:cached
       - api-extensions-data:/home/vscode/.vscode-server/extensions
     environment:
       MACHINE_TYPE: computer

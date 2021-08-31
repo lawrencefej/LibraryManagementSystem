@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LMSContracts.Interfaces;
+using LMSEntities.Configuration;
 using LMSEntities.DataTransferObjects;
 using LMSRepository.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -18,9 +20,11 @@ namespace LibraryManagementSystem.Controllers
     {
         private readonly DataContext _context;
         private readonly IDashboardService _dashboardService;
+        private readonly AwsSettings _config;
 
-        public DashboardController(DataContext context, IDashboardService dashboardService)
+        public DashboardController(DataContext context, IDashboardService dashboardService, IOptionsSnapshot<AwsSettings> options)
         {
+            _config = options.Value;
             _context = context;
             _dashboardService = dashboardService;
         }
@@ -36,30 +40,31 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet("test")]
-        public async Task<IActionResult> GetDashboardTestData()
+        public IActionResult GetDashboardTestData()
         {
-            List<DataDto> data = await _context.Checkouts.AsNoTracking()
-               .Where(d => d.CheckoutDate > DateTime.Today.AddMonths(-12))
-               .GroupBy(d => d.CheckoutDate.Month)
-               .Select(x => new DataDto
-               {
-                   Count = x.Count(),
-                   Month = x.Key,
-                   Date = DateTime.Today,
-                   Name = GetMonthName(x.Key)
-               })
-               .ToListAsync();
+            // List<DataDto> data = await _context.Checkouts.AsNoTracking()
+            //    .Where(d => d.CheckoutDate > DateTime.Today.AddMonths(-12))
+            //    .GroupBy(d => d.CheckoutDate.Month)
+            //    .Select(x => new DataDto
+            //    {
+            //        Count = x.Count(),
+            //        Month = x.Key,
+            //        Date = DateTime.Today,
+            //        Name = GetMonthName(x.Key)
+            //    })
+            //    .ToListAsync();
 
-            List<DataDto> result = ParseData(data);
+            // List<DataDto> result = ParseData(data);
 
 
-            ChartDto chartData = new()
-            {
-                Data = result,
-                Label = "checkouts"
-            };
+            // ChartDto chartData = new()
+            // {
+            //     Data = result,
+            //     Label = "checkouts"
+            // };
 
-            return Ok(chartData);
+            // return Ok(chartData);
+            return Ok(_config.Test);
         }
 
         [HttpGet("test2")]
