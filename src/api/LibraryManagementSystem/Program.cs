@@ -15,15 +15,16 @@ namespace LibraryManagementSystem.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            })
             .ConfigureAppConfiguration((context, config) =>
             {
                 // TODO figure out the reload time
                 config.AddSystemsManager($"/lms/{context.HostingEnvironment.EnvironmentName}/", reloadAfter: TimeSpan.FromSeconds(20));
             })
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            }).ConfigureLogging(logging =>
+            .ConfigureLogging(logging =>
             {
                 logging.ClearProviders();
             });

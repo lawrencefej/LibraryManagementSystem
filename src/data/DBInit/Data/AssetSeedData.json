@@ -1,0 +1,162 @@
+[
+  {
+    "Title": "Latlux",
+    "Year": 1987,
+    "Cost": "45.09",
+    "StatusId": 1,
+    "NumberOfCopies": 25,
+    "Description": "Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.",
+    "AssetTypeId": 1,
+    "AuthorId": 1,
+    "Photo": {
+      "Url": "http://dummyimage.com/150x203.png/dddddd/000000",
+      "DateAdded": "2018-04-29 01:02:51"
+    },
+    "Isbn": "315230077-8",
+    "CategoryId": 2
+  },
+  {
+    "Title": "Pannier",
+    "Year": 1996,
+    "Cost": "93.79",
+    "StatusId": 1,
+    "NumberOfCopies": 34,
+    "Description": "In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.",
+    "AssetTypeId": 1,
+    "AuthorId": 3,
+    "Photo": {
+      "Url": "http://dummyimage.com/180x155.bmp/ff4444/ffffff",
+      "DateAdded": "2018-06-17 17:39:52"
+    },
+    "Isbn": "687924605-2",
+    "CategoryId": 1
+  },
+  {
+    "Title": "Biodex",
+    "Year": 1996,
+    "Cost": "10.95",
+    "StatusId": 1,
+    "NumberOfCopies": 25,
+    "Description": "Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.",
+    "AssetTypeId": 1,
+    "AuthorId": 1,
+    "Photo": {
+      "Url": "http://dummyimage.com/216x153.jpg/cc0000/ffffff",
+      "DateAdded": "2018-08-30 13:58:30"
+    },
+    "Isbn": "931118321-0",
+    "CategoryId": 2
+  },
+  {
+    "Title": "Cardguard",
+    "Year": 1995,
+    "Cost": "91.27",
+    "StatusId": 1,
+    "NumberOfCopies": 12,
+    "Description": "Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.\n\nIn sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",
+    "AssetTypeId": 2,
+    "AuthorId": 1,
+    "Photo": {
+      "Url": "http://dummyimage.com/177x162.png/ff4444/ffffff",
+      "DateAdded": "2018-06-25 03:47:53"
+    },
+    "Isbn": "579930609-0",
+    "CategoryId": 1
+  },
+  {
+    "Title": "Cookley",
+    "Year": 2010,
+    "Cost": "62.09",
+    "StatusId": 1,
+    "NumberOfCopies": 31,
+    "Description": "Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.",
+    "AssetTypeId": 2,
+    "AuthorId": 1,
+    "Photo": {
+      "Url": "http://dummyimage.com/241x120.png/cc0000/ffffff",
+      "DateAdded": "2018-12-10 12:46:57"
+    },
+    "Isbn": "114520779-0",
+    "CategoryId": 1
+  },
+  {
+    "Title": "Wrapsafe",
+    "Year": 2008,
+    "Cost": "30.14",
+    "StatusId": 1,
+    "NumberOfCopies": 19,
+    "Description": "Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",
+    "AssetTypeId": 2,
+    "AuthorId": 2,
+    "Photo": {
+      "Url": "http://dummyimage.com/119x231.png/dddddd/000000",
+      "DateAdded": "2018-04-30 06:17:24"
+    },
+    "Isbn": "861803093-7",
+    "CategoryId": 1
+  },
+  {
+    "Title": "Tin",
+    "Year": 2008,
+    "Cost": "26.99",
+    "StatusId": 1,
+    "NumberOfCopies": 40,
+    "Description": "Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.",
+    "AssetTypeId": 2,
+    "AuthorId": 2,
+    "Photo": {
+      "Url": "http://dummyimage.com/176x118.bmp/ff4444/ffffff",
+      "DateAdded": "2018-01-19 07:10:28"
+    },
+    "Isbn": "815884056-6",
+    "CategoryId": 1
+  },
+  {
+    "Title": "Stronghold",
+    "Year": 1986,
+    "Cost": "31.03",
+    "StatusId": 1,
+    "NumberOfCopies": 25,
+    "Description": "Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",
+    "AssetTypeId": 2,
+    "AuthorId": 1,
+    "Photo": {
+      "Url": "http://dummyimage.com/140x158.bmp/ff4444/ffffff",
+      "DateAdded": "2018-11-28 21:45:10"
+    },
+    "Isbn": "841289587-8",
+    "CategoryId": 1
+  },
+  {
+    "Title": "Flexidy",
+    "Year": 2008,
+    "Cost": "73.42",
+    "StatusId": 1,
+    "NumberOfCopies": 31,
+    "Description": "Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.",
+    "AssetTypeId": 1,
+    "AuthorId": 2,
+    "Photo": {
+      "Url": "http://dummyimage.com/101x213.bmp/5fa2dd/ffffff",
+      "DateAdded": "2018-08-11 07:33:39"
+    },
+    "Isbn": "919077870-7",
+    "CategoryId": 1
+  },
+  {
+    "Title": "Asoka",
+    "Year": 2002,
+    "Cost": "48.41",
+    "StatusId": 1,
+    "NumberOfCopies": 18,
+    "Description": "Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.\n\nIn congue. Etiam justo. Etiam pretium iaculis justo.",
+    "AssetTypeId": 1,
+    "AuthorId": 1,
+    "Photo": {
+      "Url": "http://dummyimage.com/128x127.jpg/cc0000/ffffff",
+      "DateAdded": "2018-02-15 05:06:08"
+    },
+    "Isbn": "412431353-5",
+    "CategoryId": 2
+  }
+]

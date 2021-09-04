@@ -53,11 +53,11 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 # **/Properties/launchSettings.json
-/appsettings.json
-/LibraryManagementSystem/appsettings.Development.json
-/LibraryManagementSystem/appsettings.Integration.json
-/LibraryManagementSystem/appsettings.Staging.json
-/LibraryManagementSystem/appsettings.Production.json
+# /appsettings.json
+# /LibraryManagementSystem/appsettings.Development.json
+# /LibraryManagementSystem/appsettings.Integration.json
+# /LibraryManagementSystem/appsettings.Staging.json
+**/LibraryManagementSystem/appsettings.Production.json
 
 
 # StyleCop
@@ -343,5 +343,6 @@ ASALocalRun/
 /Test
 # /LibraryManagementSystem/appsettings.Integration.json
 # /LibraryManagementSystem/appsettings.json
-/LibraryManagementSystem/appsettings.json
-/LibraryManagementSystem/test/docker-compose.yml
+# /LibraryManagementSystem/appsettings.json
+# /LibraryManagementSystem/test/docker-compose.yml
+.env

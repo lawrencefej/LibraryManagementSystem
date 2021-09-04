@@ -110,10 +110,11 @@ namespace LMSService.Service
 
                     LoginUserDto userToReturn = await GenerateResponse(user, GetIpAddress());
 
-                    _logger.LogInformation("Successful Login by Id: {0}, Email: {1}", userToReturn.Id, userToReturn.Email);
+                    // _logger.LogInformation("Successful Login by Id: {0}, Email: {1}", userToReturn.Id, userToReturn.Email);
 
                     return LmsResponseHandler<LoginUserDto>.Successful(userToReturn);
                 }
+                // TODO clean up logs
             }
 
             _logger.LogWarning("Unsuccessful login by user: {0}", userForLoginDto.Email);

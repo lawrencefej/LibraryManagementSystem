@@ -68,6 +68,7 @@ namespace LibraryManagementSystem.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, DataContext dataContext, Seed seeder)
         {
+            seeder.SeedData(dataContext, true).Wait();
             if (env.IsDevelopment())
             {
                 AppSettings appSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
