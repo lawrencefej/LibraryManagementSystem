@@ -11,10 +11,11 @@ namespace DBInit
         {
             _seedService = seedService;
         }
+
         public async void Run()
         {
             Console.WriteLine("Hello World!");
-            await _seedService.SeedLibraryCard();
+            // await _seedService.SeedLibraryCard();
         }
     }
 }

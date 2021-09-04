@@ -32,6 +32,22 @@ namespace DBInit.Services
             _libraryAssetService = libraryAssetService;
         }
 
+        public async Task SeedDatabase()
+        {
+            // Order matters because data has to be created before lower data can be added
+            await _context.Database.EnsureDeletedAsync();
+            await _context.Database.MigrateAsync();
+            await SeedCategories();
+            await SeedAuthors();
+            await SeedUsers();
+            await SeedLibraryCard();
+            await SeedBooksAsset();
+            await SeedMediaAsset();
+            await SeedOtherAsset();
+            await SeedPastCheckout();
+            await SeedCurrentCheckout();
+        }
+
         public async Task SeedLibraryCard()
         {
             if (await _context.LibraryCards.AnyAsync())

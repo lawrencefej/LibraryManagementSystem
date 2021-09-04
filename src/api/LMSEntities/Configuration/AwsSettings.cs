@@ -6,5 +6,9 @@ namespace LMSEntities.Configuration
     {
         [Required]
         public string Test { get; set; }
+
+        public bool UseLocal { get; set; }
+
+        public int ReloadTime { get; set; }
     }
 }

@@ -13,8 +13,13 @@
             "program": "${workspaceFolder}/DBInit/bin/Debug/net5.0/DBInit.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DBInit",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            },
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-            "console": "internalConsole",
+            // "console": "internalConsole",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
             "stopAtEntry": false
         },
         {

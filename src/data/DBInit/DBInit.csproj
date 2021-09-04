@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>5bf90bd6-7df2-4be1-ac6e-01084ccb7e1a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
