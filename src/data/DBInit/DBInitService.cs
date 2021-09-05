@@ -15,7 +15,7 @@ namespace DBInit
         public async void Run()
         {
             Console.WriteLine("Hello World!");
-            // await _seedService.SeedLibraryCard();
+            await _seedService.SeedDatabase();
         }
     }
 }
