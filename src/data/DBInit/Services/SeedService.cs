@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.Runtime.Internal.Util;
 using DBInit.Interfaces;
-using LMSContracts.Interfaces;
-using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using LMSRepository.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -18,36 +16,25 @@ namespace DBInit.Services
     public class SeedService : ISeedService
     {
         private readonly DataContext _context;
-
-        // private readonly DataContext _context;
-        // private readonly ILibraryCardService _libraryCardService;
-        // private readonly IAdminService _adminService;
-        // private readonly IAuthorService _authorService;
-        // private readonly ICategoryService _categoryService;
-        // private readonly ILibraryAssetService _libraryAssetService;
-
-        // public SeedService(DataContext context, ILibraryCardService libraryCardService, IAdminService adminService, IAuthorService authorService, ICategoryService categoryService, ILibraryAssetService libraryAssetService)
-        // {
-        //     _context = context;
-        //     _libraryCardService = libraryCardService;
-        //     _adminService = adminService;
-        //     _authorService = authorService;
-        //     _categoryService = categoryService;
-        //     _libraryAssetService = libraryAssetService;
-        // }
         private readonly ILogger<SeedService> _logger;
 
-        public SeedService(DataContext context, ILogger<SeedService> logger)
+        public SeedService(IServiceProvider serviceProvider, ILogger<SeedService> logger)
         {
-            this._context = context;
+            _context = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
             _logger = logger;
         }
 
         public async Task SeedDatabase()
         {
             // Order matters because data has to be created before lower data can be added
+            _logger.LogInformation("Deleting the database");
             await _context.Database.EnsureDeletedAsync();
+            _logger.LogInformation("Database deleted successfully");
+
+            _logger.LogInformation("Applying Migrations");
             await _context.Database.MigrateAsync();
+            _logger.LogInformation("Migrations applied successfully");
+
             await SeedCategories();
             await SeedAuthors();
             await SeedUsers();
@@ -61,24 +48,44 @@ namespace DBInit.Services
 
         public async Task SeedLibraryCard()
         {
-            if (await _context.LibraryCards.AnyAsync())
-            {
-                return;
-            }
+            _logger.LogInformation("Seeding LibraryCards");
+            // if (await _context.LibraryCards.AnyAsync())
+            // {
+            //     return;
+            // }
 
             string libraryCardData = System.IO.File.ReadAllText("Data/LibraryCardData.json");
             List<LibraryCard> cards = JsonConvert.DeserializeObject<List<LibraryCard>>(libraryCardData);
 
-            // foreach (LibraryCardForCreationDto card in cards)
-            // {
-            //     await _libraryCardService.AddLibraryCard(card);
-            // }
+            foreach (LibraryCard card in cards)
+            {
+                // await _libraryCardService.AddLibraryCard(card);
+                card.GenerateCardNumber();
+
+                await GenerateCardNumber(cards, card);
+            }
+
             _context.AddRange(cards);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("LibraryCards seeded successfully");
+        }
+
+        private async static Task GenerateCardNumber(List<LibraryCard> cards, LibraryCard card)
+        {
+            card.GenerateCardNumber();
+
+            if (cards.Where(c => c != card).Any(x => x.CardNumber == card.CardNumber))
+            {
+                await Task.Delay(1000);
+                card.GenerateCardNumber();
+
+                await GenerateCardNumber(cards, card);
+            }
         }
 
         public async Task SeedUsers()
         {
+            _logger.LogInformation("Seeding Users");
             if (await _context.Users.Where(u => u.UserRoles.Any(r => r.Role.Name != nameof(EnumRoles.Member))).AnyAsync())
             {
                 return;
@@ -94,10 +101,12 @@ namespace DBInit.Services
             // TODO check to see if roles are added
             _context.AddRange(users);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Users seeded successfully");
         }
 
         public async Task SeedAuthors()
         {
+            _logger.LogInformation("Seeding Authors");
             // if (await _context.Authors.AnyAsync())
             // {
             //     return;
@@ -113,10 +122,12 @@ namespace DBInit.Services
 
             _context.AddRange(authors);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Authors seeded successfully");
         }
 
         public async Task SeedPastCheckout()
         {
+            _logger.LogInformation("Seeding Past checkouts");
             string checkoutData = System.IO.File.ReadAllText("Data/CheckoutPastSeedData.json");
             List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
             foreach (Checkout checkout in checkouts)
@@ -128,11 +139,13 @@ namespace DBInit.Services
 
             _context.Checkouts.AddRange(checkouts);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Past checkouts seeded successfully");
 
         }
 
         public async Task SeedCurrentCheckout()
         {
+            _logger.LogInformation("Seeding Current checkouts");
             string checkoutData = System.IO.File.ReadAllText("Data/CheckoutCurrentSeedData.json");
             List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
             foreach (Checkout checkout in checkouts)
@@ -142,15 +155,16 @@ namespace DBInit.Services
 
             _context.Checkouts.AddRange(checkouts);
             await _context.SaveChangesAsync();
-
+            _logger.LogInformation("Current checkouts seeded successfully");
         }
 
         public async Task SeedCategories()
         {
-            if (await _context.Categories.AnyAsync())
-            {
-                return;
-            }
+            _logger.LogInformation("Seeding Categories");
+            // if (await _context.Categories.AnyAsync())
+            // {
+            //     return;
+            // }
 
             string authorData = System.IO.File.ReadAllText("Data/CategorySeedData.json");
             List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(authorData);
@@ -161,48 +175,55 @@ namespace DBInit.Services
             // }
             _context.AddRange(categories);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Categories seeded successfully");
         }
 
         public async Task SeedBooksAsset()
         {
-            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Book))
-            {
-                string assetData = System.IO.File.ReadAllText("Data/BookSeedData.json");
-                List<LibraryAsset> assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
+            _logger.LogInformation("Seeding Book Assets");
+            // if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Book))
+            // {
+            string assetData = System.IO.File.ReadAllText("Data/BookSeedData.json");
+            List<LibraryAsset> assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
 
-                CleanAssetData(assets);
-                // await _libraryAssetService.AddAsset(assets);
-                _context.AddRange(assets);
-                await _context.SaveChangesAsync();
-            }
+            CleanAssetData(assets);
+            // await _libraryAssetService.AddAsset(assets);
+            _context.AddRange(assets);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Book Assets seeded successfully");
+            // }
         }
 
-        public async Task SeedMediaAsset()
+        private async Task SeedMediaAsset()
         {
-            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Media))
-            {
-                string assetData = System.IO.File.ReadAllText("Data/MediaSeedData.json");
-                List<LibraryAsset> assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
+            _logger.LogInformation("Seeding media assets");
+            // if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Media))
+            // {
+            string assetData = System.IO.File.ReadAllText("Data/MediaSeedData.json");
+            List<LibraryAsset> assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
 
-                CleanAssetData(assets);
-                // await _libraryAssetService.AddAsset(assets);
-                _context.AddRange(assets);
-                await _context.SaveChangesAsync();
-            }
+            CleanAssetData(assets);
+            // await _libraryAssetService.AddAsset(assets);
+            _context.AddRange(assets);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Media Assets seeded successfully");
+            // }
         }
 
-        public async Task SeedOtherAsset()
+        private async Task SeedOtherAsset()
         {
-            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Other))
-            {
-                string assetData = System.IO.File.ReadAllText("Data/OtherSeedData.json");
-                List<LibraryAsset> assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
+            _logger.LogInformation("Seeding other assets");
+            // if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Other))
+            // {
+            string assetData = System.IO.File.ReadAllText("Data/OtherSeedData.json");
+            List<LibraryAsset> assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
 
-                CleanAssetData(assets);
-                // await _libraryAssetService.AddAsset(assets);
-                _context.AddRange(assets);
-                await _context.SaveChangesAsync();
-            }
+            CleanAssetData(assets);
+
+            _context.AddRange(assets);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Other Assets seeded successfully");
+            // }
         }
 
         private static void CleanAssetData(List<LibraryAsset> assets)

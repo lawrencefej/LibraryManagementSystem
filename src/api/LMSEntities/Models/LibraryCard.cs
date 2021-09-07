@@ -14,8 +14,8 @@ namespace LMSEntities.Models
         public decimal Fees { get; private set; } = 0;
         public DateTime DateOfBirth { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
-        public AppUser Member { get; set; }
-        public int MemberId { get; set; }
+        // public AppUser Member { get; set; }
+        // public int MemberId { get; set; }
         public Address Address { get; set; }
         public int AddressId { get; set; }
         public LmsGender Gender { get; set; }

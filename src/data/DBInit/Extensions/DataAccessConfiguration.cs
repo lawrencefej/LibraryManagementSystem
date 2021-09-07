@@ -1,4 +1,3 @@
-using System;
 using LMSEntities.Configuration;
 using LMSRepository.Data;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +11,10 @@ namespace DBInit.Extensions
         public static void AddDataAccessServices(this IServiceCollection services, IConfiguration configuration)
         {
             DbSettings dbSettings = configuration.GetSection(nameof(DbSettings)).Get<DbSettings>();
-            AwsSettings awsSettings = configuration.GetSection(nameof(AwsSettings)).Get<AwsSettings>();
-
-            Console.Write(dbSettings.DatabaseName, "here");
 
             string connectionString = $"Server={dbSettings.Host};Port={dbSettings.Port};Database={dbSettings.DatabaseName};Uid={dbSettings.DbUser};Pwd={dbSettings.DbPassword};";
 
-            // IdentityModelEventSource.ShowPII = true;
-            services.AddDbContext<DataContext>(x => x
+            services.AddDbContext<DataContext>(option => option
                 .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                 );
         }

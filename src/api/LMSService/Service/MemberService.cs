@@ -62,7 +62,7 @@ namespace LMSService.Service
         {
             await _userManager.AddToRoleAsync(member, nameof(LmsAppRoles.Member));
 
-            member.LibraryCard = await CreateNewCard(member.Id);
+            // member.LibraryCard = await CreateNewCard(member.Id);
 
             // TODO fix email
             // await MemberWelcomeMessage(member);
@@ -70,18 +70,18 @@ namespace LMSService.Service
             return member;
         }
 
-        private async Task<LibraryCard> CreateNewCard(int memberId)
-        {
-            LibraryCard newCard = new()
-            {
-                MemberId = memberId
-            };
+        // private async Task<LibraryCard> CreateNewCard(int memberId)
+        // {
+        //     LibraryCard newCard = new()
+        //     {
+        //         MemberId = memberId
+        //     };
 
-            _context.Add(newCard);
-            await _context.SaveChangesAsync();
+        //     _context.Add(newCard);
+        //     await _context.SaveChangesAsync();
 
-            return newCard;
-        }
+        //     return newCard;
+        // }
 
         // private async Task MemberWelcomeMessage(AppUser user)
         // {

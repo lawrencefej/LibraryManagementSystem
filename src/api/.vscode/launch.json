@@ -20,9 +20,9 @@
                 "pattern": "\\\\bNow listening on:\\\\s+(https?://\\\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Prod",
-                // "ASPNETCORE_ENVIRONMENT": "Development",
-                // "AppSettings__SeedDb": "true"
+                // "ASPNETCORE_ENVIRONMENT": "Prod",
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "AppSettings__SeedDb": "true"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

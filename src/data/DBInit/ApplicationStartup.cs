@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DBInit.Interfaces;
@@ -17,21 +18,27 @@ namespace DBInit
             _logger = logger;
             _seedService = seedService;
             _appLifetime = appLifetime;
-            // appLifetime.ApplicationStarted.Register(OnStarted);
 
         }
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("1. StartAsync has been called.");
+            try
+            {
+                _logger.LogInformation("Starting Database seed");
+                await _seedService.SeedDatabase();
+                _logger.LogInformation("Database seeded successfully");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Database seed failed, Please fix the issue and try again. {0}", e);
+            }
 
             _appLifetime.StopApplication();
-
-            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("4. StopAsync has been called.");
+            _logger.LogInformation("Finished");
 
             return Task.CompletedTask;
         }

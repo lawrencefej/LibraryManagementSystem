@@ -78,21 +78,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "cfe0d60a-7d41-4964-ad37-a92079e26197",
+                            ConcurrencyStamp = "4248f33d-9245-42a3-a589-53273b3876ba",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "fab74fda-42ca-4f3d-af86-77a27a338906",
+                            ConcurrencyStamp = "93fc55f1-e226-42c9-8dab-f8ff36a0477d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "e4dd0eff-d3ad-4cf8-b1f9-14a67e908b1c",
+                            ConcurrencyStamp = "924f8296-96c5-41c1-8086-035588ab13e0",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -137,6 +137,9 @@ namespace LMSRepository.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)");
 
+                    b.Property<int?>("LibraryCardId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -171,6 +174,8 @@ namespace LMSRepository.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LibraryCardId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -449,9 +454,6 @@ namespace LMSRepository.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)");
 
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -469,9 +471,6 @@ namespace LMSRepository.Migrations
                         .IsUnique();
 
                     b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("MemberId")
                         .IsUnique();
 
                     b.ToTable("LibraryCards");
@@ -1044,6 +1043,15 @@ namespace LMSRepository.Migrations
                     b.Navigation("State");
                 });
 
+            modelBuilder.Entity("LMSEntities.Models.AppUser", b =>
+                {
+                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
+                        .WithMany()
+                        .HasForeignKey("LibraryCardId");
+
+                    b.Navigation("LibraryCard");
+                });
+
             modelBuilder.Entity("LMSEntities.Models.AppUserRole", b =>
                 {
                     b.HasOne("LMSEntities.Models.AppRole", "Role")
@@ -1158,15 +1166,7 @@ namespace LMSRepository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LMSEntities.Models.AppUser", "Member")
-                        .WithOne("LibraryCard")
-                        .HasForeignKey("LMSEntities.Models.LibraryCard", "MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Address");
-
-                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.RefreshToken", b =>
@@ -1275,8 +1275,6 @@ namespace LMSRepository.Migrations
 
             modelBuilder.Entity("LMSEntities.Models.AppUser", b =>
                 {
-                    b.Navigation("LibraryCard");
-
                     b.Navigation("ProfilePicture");
 
                     b.Navigation("UserRoles");

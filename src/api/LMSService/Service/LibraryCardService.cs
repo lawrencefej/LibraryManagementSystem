@@ -34,24 +34,24 @@ namespace LMSService.Service
 
             LibraryCard card = Mapper.Map<LibraryCard>(addCardDto);
 
-            LmsResponseHandler<AppUser> member = await CreateNewMember(card);
+            // LmsResponseHandler<AppUser> member = await CreateNewMember(card);
 
-            if (member.Succeeded)
-            {
-                card = await GenerateCardNumber(card);
-                card.Member = member.Item;
+            // if (member.Succeeded)
+            // {
+            card = await GenerateCardNumber(card);
+            // card.Member = member.Item;
 
-                Context.Add(card);
-                await Context.SaveChangesAsync();
+            Context.Add(card);
+            await Context.SaveChangesAsync();
 
-                Logger.LogInformation($"added LibraryCard {card.CardNumber} with ID: {card.Id}");
+            Logger.LogInformation($"added LibraryCard {card.CardNumber} with ID: {card.Id}");
 
-                LibraryCardForDetailedDto cardsToReturn = Mapper.Map<LibraryCardForDetailedDto>(card);
+            LibraryCardForDetailedDto cardsToReturn = Mapper.Map<LibraryCardForDetailedDto>(card);
 
-                return LmsResponseHandler<LibraryCardForDetailedDto>.Successful(cardsToReturn);
-            }
+            return LmsResponseHandler<LibraryCardForDetailedDto>.Successful(cardsToReturn);
+            // }
 
-            return LmsResponseHandler<LibraryCardForDetailedDto>.Failed(member.Errors);
+            // return LmsResponseHandler<LibraryCardForDetailedDto>.Failed(member.Errors);
         }
 
         public async Task<LmsResponseHandler<LibraryCardForDetailedDto>> DeleteLibraryCard(int cardId)
@@ -109,7 +109,7 @@ namespace LMSService.Service
         {
             LibraryCard card = await Context.LibraryCards.AsNoTracking()
                 .Where(m => m.Status != LibraryCardStatus.Deactivated)
-                .Include(m => m.Member)
+                // .Include(m => m.Member)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
                     .ThenInclude(s => s.State).FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
@@ -123,7 +123,7 @@ namespace LMSService.Service
                 .Where(m => m.Status != LibraryCardStatus.Deactivated)
                 .Include(m => m.Checkouts.Where(s => s.Status == CheckoutStatus.Checkedout)).ThenInclude(b => b.LibraryAsset)
                 .Include(m => m.Checkouts)
-                .Include(m => m.Member)
+                // .Include(m => m.Member)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
                 .ThenInclude(s => s.State)
@@ -136,7 +136,7 @@ namespace LMSService.Service
         {
             return await Context.LibraryCards.AsNoTracking()
                 .Where(m => m.Status != LibraryCardStatus.Deactivated)
-                .Include(m => m.Member)
+                // .Include(m => m.Member)
                 .Include(m => m.LibraryCardPhoto)
                 .Include(m => m.Address)
                 .ThenInclude(s => s.State)
