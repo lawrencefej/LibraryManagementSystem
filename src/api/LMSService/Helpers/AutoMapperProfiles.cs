@@ -13,10 +13,6 @@ namespace LibraryManagementSystem.API.Helpers
                     .ForMember(dest => dest.PhotoUrl, opt =>
                      {
                          opt.MapFrom(src => src.ProfilePicture.Url);
-                     })
-                     .ForMember(dest => dest.LibraryCardNumber, opt =>
-                     {
-                         opt.MapFrom(src => src.LibraryCard.Id);
                      });
             CreateMap<AppUser, UserForDetailedDto>()
                     .ForMember(dest => dest.Role, opt =>

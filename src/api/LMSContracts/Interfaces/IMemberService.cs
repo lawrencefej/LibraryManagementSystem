@@ -11,7 +11,7 @@ namespace LMSContracts.Interfaces
     {
         Task<AppUser> GetMember(int memberID);
 
-        Task<AppUser> GetMemberByCardNumber(int cardId);
+        // Task<AppUser> GetMemberByCardNumber(int cardId);
 
         Task<bool> DoesMemberExist(string email);
 

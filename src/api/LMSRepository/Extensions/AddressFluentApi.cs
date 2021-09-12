@@ -9,8 +9,8 @@ namespace LMSRepository.Extensions
         {
             modelBuilder.Entity<Address>(e =>
             {
-                e.Property(a => a.Street).HasMaxLength(50).IsRequired();
-                e.Property(a => a.City).HasMaxLength(25).IsRequired();
+                e.Property(a => a.Street).HasMaxLength(100).IsRequired();
+                e.Property(a => a.City).HasMaxLength(50).IsRequired();
                 e.Property(a => a.Zipcode).HasMaxLength(10).IsRequired();
             });
 

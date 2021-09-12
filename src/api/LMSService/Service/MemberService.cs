@@ -104,7 +104,7 @@ namespace LMSService.Service
         {
             // TODO Test
             _context.Remove(member);
-            _context.Remove(member.LibraryCard);
+            // _context.Remove(member.LibraryCard);
             await _context.SaveChangesAsync();
         }
 
@@ -112,7 +112,7 @@ namespace LMSService.Service
         {
             IQueryable<AppUser> members = _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
-                .Include(c => c.LibraryCard)
+                // .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(LmsAppRoles.Member)))
                 .OrderBy(u => u.Email).AsQueryable();
@@ -170,7 +170,7 @@ namespace LMSService.Service
         {
             IQueryable<AppUser> members = _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
-                .Include(c => c.LibraryCard)
+                // .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(LmsAppRoles.Member)))
                 .OrderBy(u => u.Email).AsQueryable();
@@ -189,29 +189,29 @@ namespace LMSService.Service
         {
             AppUser user = await _userManager.Users
                 .Include(p => p.ProfilePicture)
-                .Include(c => c.LibraryCard)
+                // .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .FirstOrDefaultAsync(u => u.Id == memberID);
 
             return user;
         }
 
-        public async Task<AppUser> GetMemberByCardNumber(int cardId)
-        {
-            AppUser user = await _userManager.Users
-                .Include(c => c.LibraryCard)
-                .Include(c => c.ProfilePicture)
-                .Include(c => c.UserRoles)
-                .FirstOrDefaultAsync(u => u.LibraryCard.Id == cardId);
+        // public async Task<AppUser> GetMemberByCardNumber(int cardId)
+        // {
+        //     AppUser user = await _userManager.Users
+        //         // .Include(c => c.LibraryCard)
+        //         .Include(c => c.ProfilePicture)
+        //         .Include(c => c.UserRoles)
+        //         .FirstOrDefaultAsync(u => u.LibraryCard.Id == cardId);
 
-            return user;
-        }
+        //     return user;
+        // }
 
         public async Task<IEnumerable<AppUser>> SearchMembers()
         {
             List<AppUser> users = await _userManager.Users.AsNoTracking()
                 .Include(p => p.ProfilePicture)
-                .Include(c => c.LibraryCard)
+                // .Include(c => c.LibraryCard)
                 .Include(c => c.UserRoles)
                 .Where(u => u.UserRoles.Any(r => r.Role.Name == nameof(LmsAppRoles.Member)))
                 .OrderBy(u => u.Email).ToListAsync();

@@ -14,8 +14,6 @@ namespace LMSEntities.Models
 
         public UserProfilePhoto ProfilePicture { get; set; }
 
-        public LibraryCard LibraryCard { get; set; }
-
         public LmsGender? Gender { get; set; }
 
         public bool IsAccountActivated { get; set; }

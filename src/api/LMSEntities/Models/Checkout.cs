@@ -16,9 +16,9 @@ namespace LMSEntities.Models
 
         public int LibraryCardId { get; set; }
 
-        public DateTime CheckoutDate { get; set; } = DateTime.Now;
+        public DateTime CheckoutDate { get; set; } = DateTime.UtcNow;
 
-        public DateTime DueDate { get; private set; } = DateTime.Now.AddDays(21);
+        public DateTime DueDate { get; set; } = DateTime.UtcNow.AddDays(21);
 
         public DateTime DateReturned { get; set; }
 
@@ -39,7 +39,7 @@ namespace LMSEntities.Models
 
         public void CheckInAsset()
         {
-            DateReturned = DateTime.Now;
+            DateReturned = DateTime.UtcNow;
             Status = CheckoutStatus.Returned;
             LibraryAsset.IncreaseCopiesAvailable();
         }

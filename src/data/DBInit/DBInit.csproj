@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>5bf90bd6-7df2-4be1-ac6e-01084ccb7e1a</UserSecretsId>
+    <UserSecretsId>1a7aabeb-17e3-4208-89a5-206c8e6e8af3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\api\LMSService\LMSService.csproj" />
+    <ProjectReference Include="..\..\api\LMSRepository\LMSRepository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="Data\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

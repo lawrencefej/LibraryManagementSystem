@@ -20,7 +20,7 @@ namespace LMSEntities.DataTransferObjects
         [Required]
         public string Role { get; set; }
 
-        public DateTime Created { get; set; } = DateTime.Now;
+        public DateTime Created { get; set; } = DateTime.UtcNow;
 
         public string CallbackUrl { get; set; }
     }

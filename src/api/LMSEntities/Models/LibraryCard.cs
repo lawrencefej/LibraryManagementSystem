@@ -10,12 +10,10 @@ namespace LMSEntities.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string CardNumber { get; private set; }
+        public string CardNumber { get; set; }
         public decimal Fees { get; private set; } = 0;
         public DateTime DateOfBirth { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;
-        // public AppUser Member { get; set; }
-        // public int MemberId { get; set; }
+        public DateTime Created { get; set; } = DateTime.UtcNow;
         public Address Address { get; set; }
         public int AddressId { get; set; }
         public LmsGender Gender { get; set; }

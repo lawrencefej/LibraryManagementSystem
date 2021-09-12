@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210907145150_initial")]
+    [Migration("20210912011715_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,16 +27,16 @@ namespace LMSRepository.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("varchar(25)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("StateId")
                         .HasColumnType("int");
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Zipcode")
                         .IsRequired()
@@ -80,21 +80,21 @@ namespace LMSRepository.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "4248f33d-9245-42a3-a589-53273b3876ba",
+                            ConcurrencyStamp = "7514f68e-88c0-49f2-bb7e-5665f2bea05f",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "93fc55f1-e226-42c9-8dab-f8ff36a0477d",
+                            ConcurrencyStamp = "995273e4-a71d-44a8-a44b-5a0cbf78c2ff",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "924f8296-96c5-41c1-8086-035588ab13e0",
+                            ConcurrencyStamp = "6ae5999d-6d92-4fb6-a45a-0f78359479c8",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         });
@@ -139,9 +139,6 @@ namespace LMSRepository.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)");
 
-                    b.Property<int?>("LibraryCardId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -176,8 +173,6 @@ namespace LMSRepository.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LibraryCardId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1043,15 +1038,6 @@ namespace LMSRepository.Migrations
                         .IsRequired();
 
                     b.Navigation("State");
-                });
-
-            modelBuilder.Entity("LMSEntities.Models.AppUser", b =>
-                {
-                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
-                        .WithMany()
-                        .HasForeignKey("LibraryCardId");
-
-                    b.Navigation("LibraryCard");
                 });
 
             modelBuilder.Entity("LMSEntities.Models.AppUserRole", b =>

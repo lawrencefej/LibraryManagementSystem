@@ -17,7 +17,7 @@ namespace LMSEntities.DataTransferObjects
 
         public ReserveForCreationDto()
         {
-            Reserved = DateTime.Now;
+            Reserved = DateTime.UtcNow;
             Until = DateTime.Today.AddDays(5);
         }
     }

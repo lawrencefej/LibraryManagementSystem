@@ -118,7 +118,7 @@ namespace LMSService.Service
                {
                    Count = x.Count(),
                    Month = x.Key,
-                   Date = DateTime.Today,
+                   Date = GetMonthDate(x.Key),
                    Name = GetMonthName(x.Key)
                })
                .ToListAsync();
@@ -141,7 +141,7 @@ namespace LMSService.Service
                {
                    Count = x.Count(),
                    Month = x.Key,
-                   Date = DateTime.Today,
+                   Date = GetMonthDate(x.Key),
                    Name = GetMonthName(x.Key)
                })
                .ToListAsync();
@@ -226,9 +226,9 @@ namespace LMSService.Service
                 new DataDto
                 {
                     Count = 0,
-                    Month = DateTime.Today.AddMonths(i - 12).Month,
-                    Name = GetMonthName(DateTime.Today.AddMonths(i - 12).Month),
-                    Date = DateTime.Today.AddMonths(i - 12)
+                    Month = startDate.AddMonths(i).Month,
+                    Name = GetMonthName(startDate.AddMonths(i).Month),
+                    Date = startDate.AddMonths(i)
                 }).ToList();
 
             List<DataDto> result = dataDtos.Union(
@@ -238,6 +238,12 @@ namespace LMSService.Service
                 .ToList();
 
             return result;
+        }
+
+        private static DateTime GetMonthDate(int month)
+        {
+            List<DateTime> dates = Enumerable.Range(1, 12).Select(i => DateTime.Today.AddMonths(-i + 1)).ToList();
+            return dates.FirstOrDefault(x => x.Month == month);
         }
     }
 }

@@ -77,20 +77,20 @@ namespace LibraryManagementSystem.Controllers
             return Ok(userToReturn);
         }
 
-        [HttpGet("card/{cardId}")]
-        public async Task<IActionResult> GetMemberByCardNumber(int cardId)
-        {
-            AppUser user = await _memberService.GetMemberByCardNumber(cardId);
+        // [HttpGet("card/{cardId}")]
+        // public async Task<IActionResult> GetMemberByCardNumber(int cardId)
+        // {
+        //     AppUser user = await _memberService.GetMemberByCardNumber(cardId);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
+        //     if (user == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
+        //     UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
-            return Ok(userToReturn);
-        }
+        //     return Ok(userToReturn);
+        // }
 
         [HttpPut]
         public async Task<IActionResult> UpdateMember(UserForUpdateDto userForUpdateDto)

@@ -27,7 +27,7 @@ namespace LMSService.Helpers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(24),
+                Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = creds
             };
 
@@ -54,7 +54,7 @@ namespace LMSService.Helpers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(30),
+                Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = creds
             };
 

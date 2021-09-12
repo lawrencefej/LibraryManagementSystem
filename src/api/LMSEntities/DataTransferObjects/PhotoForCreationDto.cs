@@ -13,7 +13,7 @@ namespace LMSEntities.DataTransferObjects
 
         public PhotoForCreationDto()
         {
-            DateAdded = DateTime.Now;
+            DateAdded = DateTime.UtcNow;
         }
     }
 }

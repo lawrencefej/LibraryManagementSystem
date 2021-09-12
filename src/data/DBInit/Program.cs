@@ -24,11 +24,12 @@ namespace DBInit
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            .UseSerilog((context, services, configuration) => configuration
-                .ReadFrom.Configuration(context.Configuration)
+            .UseSerilog((context, services, configuration) =>
+            {
+                configuration.ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(services)
-                .Enrich.FromLogContext()
-            )
+                .Enrich.FromLogContext();
+            })
             .ConfigureServices((context, services) =>
             {
                 services.AddDataAccessServices(context.Configuration);
@@ -37,7 +38,7 @@ namespace DBInit
             })
             .ConfigureAppConfiguration((context, config) =>
             {
-                config.AddSystemsManager($"/lms/{context.HostingEnvironment.EnvironmentName}/", reloadAfter: TimeSpan.FromSeconds(20));
+                config.AddSystemsManager($"/lmsDbInit/{context.HostingEnvironment.EnvironmentName}/", reloadAfter: TimeSpan.FromSeconds(20));
             });
     }
 }

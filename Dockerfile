@@ -20,12 +20,6 @@ COPY ./src/spa/ /usr/src/app
 RUN npm run lint
 RUN npm run build-prod
 
-
-
-
-
-
-
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
 COPY ["./src/api/LibraryManagementSystem/LibraryManagementSystem.csproj", "LibraryManagementSystem/"]

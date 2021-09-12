@@ -6,7 +6,7 @@ namespace LMSEntities.Models
     public class LibraryAsset
     {
         public int Id { get; set; }
-        public DateTime Added { get; set; } = DateTime.Now;
+        public DateTime Added { get; set; } = DateTime.UtcNow;
         public string DeweyIndex { get; set; }
         public ICollection<LibraryAssetCategory> AssetCategories { get; set; }
         public LibraryAssetStatus Status { get; set; } = LibraryAssetStatus.Available;

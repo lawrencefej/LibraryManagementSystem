@@ -84,8 +84,8 @@ namespace LMSRepository.Data
             List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
             foreach (Checkout checkout in checkouts)
             {
-                checkout.CheckoutDate = DateTime.Now.AddDays(GetRandomNumber(-14, -7));
-                checkout.DateReturned = DateTime.Now.AddDays(GetRandomNumber(-6, 0));
+                checkout.CheckoutDate = DateTime.UtcNow.AddDays(GetRandomNumber(-14, -7));
+                checkout.DateReturned = DateTime.UtcNow.AddDays(GetRandomNumber(-6, 0));
                 checkout.Status = CheckoutStatus.Returned;
             }
 
@@ -100,7 +100,7 @@ namespace LMSRepository.Data
             List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
             foreach (Checkout checkout in checkouts)
             {
-                checkout.CheckoutDate = DateTime.Now.AddDays(GetRandomNumber(-6, 0));
+                checkout.CheckoutDate = DateTime.UtcNow.AddDays(GetRandomNumber(-6, 0));
             }
 
             _context.Checkouts.AddRange(checkouts);
