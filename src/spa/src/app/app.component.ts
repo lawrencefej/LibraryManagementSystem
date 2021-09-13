@@ -1,29 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-
-import { AuthService } from './_services/auth.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { User } from './_models/user';
+import { LoginUserDto } from 'src/dto/models';
+import { AuthService } from './_services/authentication.service';
+import { SessionService } from './_services/session.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'lms-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  jwtHelper = new JwtHelperService();
+  constructor(private readonly authService: AuthService, private readonly sessionService: SessionService) {}
 
-  constructor(private authService: AuthService) {}
+  ngOnInit(): void {
+    this.setCurrentUser();
+  }
 
-  ngOnInit() {
-    const token = localStorage.getItem('token');
-    const user: User = JSON.parse(localStorage.getItem('user'));
-    if (token) {
-      this.authService.decodedToken = this.jwtHelper.decodeToken(token);
-    }
+  private setCurrentUser(): void {
+    if (localStorage.getItem('user')) {
+      const user: LoginUserDto = JSON.parse(localStorage.getItem('user')!);
 
-    if (user) {
-      this.authService.changeUserDetails(user);
-      this.authService.changeMemberPhoto(user.photoUrl);
+      if (user) {
+        this.authService.setCurrentUser(user);
+      }
     }
   }
 }

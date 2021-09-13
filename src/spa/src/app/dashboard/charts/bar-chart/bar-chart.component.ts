@@ -1,24 +1,53 @@
-import { ChartOptions, ChartType } from 'chart.js';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { Label } from 'ng2-charts';
+import { ChartDto } from 'src/dto/models';
 
 @Component({
-  selector: 'app-bar-chart',
+  selector: 'lms-bar-chart',
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.css']
 })
-export class BarChartComponent implements OnInit {
-  @Input() barChartData: any[];
-  @Input() barChartLabels: any[];
-  @Input() chartName: string;
+export class BarChartComponent implements OnInit, OnChanges {
+  @Input() chartName!: string;
+  @Input() firstData!: ChartDto;
+  @Input() secondData?: ChartDto;
 
-  public barChartOptions: ChartOptions = {
+  labels: string[] = [];
+  dataset: number[] = [];
+
+  barChartOptions: ChartOptions = {
     responsive: true
   };
-  public barChartType: ChartType = 'bar';
-  public barChartLegend = true;
+  barChartType: ChartType = 'bar';
+  barChartLegend = true;
+  barChartLabels: Label[] = [];
+  barChartData: ChartDataSets[] = [];
 
-  constructor() {
+  constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.buildData(changes.firstData.currentValue, changes.secondData.currentValue);
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.buildData(this.firstData, this.secondData);
+  }
+
+  private buildData(firstData: ChartDto, secondData?: ChartDto): void {
+    this.barChartLabels = firstData.data.map(a => a.name);
+    this.barChartData = [
+      {
+        data: firstData.data.map(a => a.count),
+        label: firstData.label
+      }
+    ];
+
+    if (secondData) {
+      this.barChartData.push({
+        data: secondData?.data.map(a => a.count),
+        label: secondData?.label
+      });
+    }
+  }
 }

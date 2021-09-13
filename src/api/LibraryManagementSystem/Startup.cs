@@ -1,19 +1,18 @@
-﻿using EmailService.Configuration;
-using LibraryManagementSystem.DIHelpers;
+﻿using LibraryManagementSystem.DIHelpers;
+using LibraryManagementSystem.Extensions;
 using LibraryManagementSystem.Helpers;
-using LMSEntities.Helpers;
+using LMSEntities.Configuration;
 using LMSRepository.Data;
-using LMSRepository.Interfaces.Helpers;
 using LMSService.Exceptions;
+using LMSService.Helpers;
+using LMSService.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PhotoLibrary.Configuration;
 using Serilog;
 
 namespace LibraryManagementSystem.API
@@ -33,22 +32,21 @@ namespace LibraryManagementSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO validate configs
             services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
 
-            var appSettingsSection = Configuration.GetSection(nameof(AppSettings));
-
-            services.Configure<AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<AppSettings>();
-
             //IdentityModelEventSource.ShowPII = true;
-            services.AddDataAccessServices(appSettings);
-            services.AddIdentityConfiguration(appSettings.Token);
+            services.AddDataAccessServices(Configuration);
+            services.AddIdentityConfiguration(Configuration);
             services.AddMvcConfiguration();
+            services.Configure<AwsSettings>(Configuration.GetSection(nameof(AwsSettings)));
+            services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
+            services.Configure<SmtpSettings>(Configuration.GetSection(nameof(SmtpSettings)));
+            services.Configure<DbSettings>(Configuration.GetSection(nameof(DbSettings)));
             services.Configure<CloudinarySettings>(Configuration.GetSection(nameof(CloudinarySettings)));
-            services.AddSingleton<ISmtpConfiguration>(Configuration.GetSection(nameof(EmailSettings)).Get<EmailSettings>());
-            services.AddSingleton<IPhotoConfiguration>(Configuration.GetSection(nameof(CloudinarySettings)).Get<PhotoSettings>());
             services.AddThirdPartyConfiguration();
             services.AddCombinedInterfaces();
+            services.AddSignalR(e => e.EnableDetailedErrors = true);
 
             if (CurrentEnv.IsProduction() || CurrentEnv.IsStaging())
             {
@@ -64,16 +62,14 @@ namespace LibraryManagementSystem.API
                 config.RootPath = "wwwroot";
                 // config.RootPath = "ClientApp/dist";
             });
-            //services.AddOData();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, DataContext dataContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("Integration"))
+            if (env.IsDevelopment())
             {
-                dataContext.Database.Migrate();
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
                 app.UseDeveloperExceptionPage();
             }
@@ -86,14 +82,7 @@ namespace LibraryManagementSystem.API
             }
 
             loggerFactory.AddSerilog();
-            // seeder.SeedUsers();
-            // seeder.SeedAuthors();
-            // seeder.SeedAssets();
             app.UseRouting();
-            // TODO Confirm if Cors in needed since we are now using spa proxy
-            //app.UseCors(x => x.AllowAnyOrigin()
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader());
             app.UseCors("CorsPolicy");
             //.AllowCredentials());
             //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
@@ -102,7 +91,6 @@ namespace LibraryManagementSystem.API
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            // app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseDefaultFiles();
@@ -123,12 +111,11 @@ namespace LibraryManagementSystem.API
             //        defaults: new { controller = "Fallback", action = "Index" }
             //        );
             //    routeBuilder.EnableDependencyInjection();
-            // TODO Fix or Remove OData
-            //    routeBuilder.Expand().Select().Count().OrderBy().Filter().MaxTop(null);
             //});
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<DashboardHub>("/hubs/chart");
                 if (!env.IsDevelopment())
                 {
                     endpoints.MapFallbackToController("Index", "Fallback");
@@ -138,10 +125,14 @@ namespace LibraryManagementSystem.API
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "../../spa/";
                 if (env.IsDevelopment())
                 {
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                }
+                else
+                {
+                    spa.Options.SourcePath = "../../spa/";
+
                 }
             });
         }

@@ -1,66 +1,58 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { AuthService } from 'src/app/_services/auth.service';
-import { ConfirmPasswordValidator } from 'src/app/shared/validators/password-match.validator';
-import { NotificationService } from 'src/app/_services/notification.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { MustMatch } from 'src/app/shared/validators/password-match.validator';
+import { validationMessages } from 'src/app/shared/validators/validator.constants';
+import { AuthService } from 'src/app/_services/authentication.service';
 
 @Component({
-  selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit {
-  resetPasswordForm: FormGroup;
+export class ResetPasswordComponent implements OnInit, OnDestroy {
+  private readonly unsubscribe = new Subject<void>();
 
-  validationMessages = {
-    password: [
-      { type: 'required', message: 'Password is required' },
-      { type: 'minlength', message: 'Password must be at least 4 characters long' }
-    ],
-    confirmPassword: [
-      { type: 'required', message: 'Confirm password is required' },
-      { type: 'confirmPasswordMatch', message: 'Password and Confirm Password do not match' }
-    ]
-  };
+  resetPasswordForm!: FormGroup;
+  validationMessages = validationMessages;
 
   constructor(
-    private route: ActivatedRoute,
-    private authService: AuthService,
-    private notify: NotificationService,
-    private router: Router,
-    private fb: FormBuilder
+    private readonly authService: AuthService,
+    private readonly fb: FormBuilder,
+    private readonly notify: NotificationService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
+  ngOnInit(): void {
     this.createResetPasswordForm();
   }
 
-  createResetPasswordForm() {
+  createResetPasswordForm(): void {
     this.resetPasswordForm = this.fb.group(
       {
-        userID: new FormControl(this.route.snapshot.params.id),
+        userId: new FormControl(this.route.snapshot.params.id),
         code: new FormControl(this.route.snapshot.params.code),
         password: new FormControl('', Validators.compose([Validators.required])),
         confirmPassword: new FormControl('', [Validators.required])
       },
       {
-        validator: ConfirmPasswordValidator
+        validators: MustMatch('password', 'confirmPassword')
       }
     );
   }
 
-  onSubmit() {
-    this.authService.resetPassword(this.resetPasswordForm.value).subscribe(
-      () => {
-        this.notify.success('Password has been reset successfully');
-        this.resetPasswordForm.reset();
-        this.router.navigate(['/login']);
-      },
-      error => {
-        this.notify.error(error);
-      }
-    );
+  onSubmit(): void {
+    this.authService.resetPassword(this.resetPasswordForm.value).subscribe(() => {
+      this.notify.success('Password has been reset successfully');
+      this.resetPasswordForm.reset();
+      this.router.navigate(['/login']);
+    });
   }
 }

@@ -1,5 +1,11 @@
-<h4>{{data.message}}</h4>
-<div flexLayout="row" fxLayoutAlign="space-between center">
-  <button mat-raised-button type="button" color="warn" class="Delete-btn" [mat-dialog-close]="true">Yes</button>
-  <button mat-raised-button type="submit" color="primary" class="Cancel-btn" [mat-dialog-close]="false">No</button>
-</div>
+<h1 matDialogTitle align="center">{{data.message}}</h1>
+<!-- TODO add color input -->
+
+<mat-dialog-content align="center">
+  {{ data.subMessage}}
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button style="margin-right: 30px;" mat-raised-button color="warn" [mat-dialog-close]="true">Yes</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="false">No</button>
+</mat-dialog-actions>

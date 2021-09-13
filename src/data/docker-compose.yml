@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  dbinit:
+    image: dbinit
+    build:
+      context: ../
+      dockerfile: data/Dockerfile
+    volumes:
+      - ${HOME}/.aws/credentials:/home/appuser/.aws/credentials:ro

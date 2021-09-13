@@ -10,9 +10,9 @@ namespace LMSService.Helpers
 {
     public static class LmsTokens
     {
-        public static string GenerateJwtToken(User user, string resetCode)
+        public static string GenerateJwtToken(AppUser user, string resetCode)
         {
-            var claims = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("ResetCode", resetCode)
@@ -27,7 +27,7 @@ namespace LMSService.Helpers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(24),
+                Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = creds
             };
 
@@ -38,7 +38,7 @@ namespace LMSService.Helpers
             return tokenHandler.WriteToken(token);
         }
 
-        public static string GenerateJwtToken(User user, string role, string secret)
+        public static string GenerateJwtToken(AppUser user, string role, string secret)
         {
             var claims = new List<Claim>
             {
@@ -54,7 +54,7 @@ namespace LMSService.Helpers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(30),
+                Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = creds
             };
 

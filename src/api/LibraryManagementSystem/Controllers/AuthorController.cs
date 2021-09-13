@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using LibraryManagementSystem.API.Helpers;
+﻿using System.Threading.Tasks;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.Controllers
@@ -14,97 +11,69 @@ namespace LibraryManagementSystem.Controllers
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLibrarianRole")]
     [ApiController]
-    public class AuthorController : ControllerBase
+    public class AuthorController : BaseApiController<AuthorDto, AuthorDto>
     {
         private readonly IAuthorService _authorService;
-        private readonly IMapper _mapper;
+        private readonly IDashboardService _dashboardService;
 
-        public AuthorController(IAuthorService authorService, IMapper mapper)
+        public AuthorController(IAuthorService authorService, IDashboardService dashboardService)
         {
+            _dashboardService = dashboardService;
             _authorService = authorService;
-            _mapper = mapper;
         }
 
-        [HttpGet("{authorId}", Name = "GetAuthor")]
+        [HttpGet("{authorId}", Name = nameof(GetAuthor))]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAuthor(int authorId)
         {
-            var author = await _authorService.GetAuthor(authorId);
+            LmsResponseHandler<AuthorDto> result = await _authorService.GetAuthorForController(authorId);
 
-            if (author == null)
-            {
-                return NotFound();
-            }
-
-            var authorToReturn = _mapper.Map<AuthorDto>(author);
-
-            return Ok(authorToReturn);
+            return ResultCheck(result);
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditAuthor(AuthorDto authorDto)
         {
-            var author = await _authorService.GetAuthor(authorDto.Id);
+            LmsResponseHandler<AuthorDto> result = await _authorService.EditAuthor(authorDto);
 
-            if (author == null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(authorDto, author);
-
-            await _authorService.EditAuthor(author);
-
-            return NoContent();
+            return ResultCheck(result);
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddAuthor(AuthorDto authorDto)
         {
-            var author = _mapper.Map<Author>(authorDto);
+            AuthorDto authorToReturn = await _authorService.AddAuthor(authorDto);
 
-            author = await _authorService.AddAuthor(author);
+            await _dashboardService.BroadcastDashboardData();
 
-            var authorToReturn = _mapper.Map<AuthorDto>(author);
-
-            return CreatedAtRoute("GetAuthor", new { authorId = author.Id }, authorToReturn);
+            return CreatedAtRoute(nameof(GetAuthor), new { authorId = authorToReturn.Id }, authorToReturn);
         }
 
         [HttpDelete("{authorId}")]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteAuthor(int authorId)
         {
-            var author = await _authorService.GetAuthor(authorId);
+            // TODO do not allow delete if author has books
+            LmsResponseHandler<AuthorDto> result = await _authorService.DeleteAuthor(authorId);
 
-            if (author == null)
-            {
-                return NotFound();
-            }
-
-            await _authorService.DeleteAuthor(author);
-
-            return NoContent();
+            return ResultCheck(result);
         }
 
-        [HttpGet("search/")]
-        public async Task<IActionResult> SearchAuthors([FromQuery] string searchString)
-        {
-            var authors = await _authorService.SearchAuthors(searchString);
-
-            var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
-
-            return Ok(authorsToReturn);
-        }
-
-        [HttpGet("pagination/")]
+        [HttpGet]
+        [ProducesResponseType(typeof(AuthorDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var authors = await _authorService.GetPaginatedAuthors(paginationParams);
+            // TODO Fix pagination
+            PagedList<AuthorDto> authors = await _authorService.GetPaginatedAuthors(paginationParams);
 
-            var authorsToReturn = _mapper.Map<IEnumerable<AuthorDto>>(authors);
-
-            Response.AddPagination(authors.CurrentPage, authors.PageSize,
-                 authors.TotalCount, authors.TotalPages);
-
-            return Ok(authorsToReturn);
+            return ReturnPagination(authors);
         }
     }
 }

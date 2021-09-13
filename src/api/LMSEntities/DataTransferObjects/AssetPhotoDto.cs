@@ -12,13 +12,8 @@ namespace LMSEntities.DataTransferObjects
         public IFormFile File { get; set; }
 
         public string Description { get; set; }
-        public DateTime DateAdded { get; set; }
+        public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public string PublicId { get; set; }
         public int LibraryAssetId { get; set; }
-
-        public AssetPhotoDto()
-        {
-            DateAdded = DateTime.Now;
-        }
     }
 }

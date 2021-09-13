@@ -2,25 +2,13 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.163.1/containers/dotnet
 {
 	"name": "api",
-	"dockerComposeFile": "../../../docker-compose.yml",
+	"dockerComposeFile": "../../../docker-compose.development.yml",
 	"service": "api",
 	"workspaceFolder": "/workspace/src/api",
 	"shutdownAction": "none",
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
-		"terminal.integrated.defaultProfile.linux": "/bin/zsh",
-		"sqltools.connections": [
-			{
-				"name": "Container database",
-				"driver": "MariaDB",
-				"server": "localhost",
-				"previewLimit": 50,
-				"port": 3306,
-				"database": "librarydb",
-				"username": "root",
-				"password": "mariadb"
-			}
-		]
+		"terminal.integrated.defaultProfile.linux": "zsh",
 	},
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
@@ -30,6 +18,7 @@
 		"formulahendry.dotnet-test-explorer",
 		"jmrog.vscode-nuget-package-manager",
 		"kreativ-software.csharpextensions",
+		"patcx.vscode-nuget-gallery"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [

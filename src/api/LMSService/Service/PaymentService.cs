@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using LMSContracts.Interfaces;
+using LMSEntities.Models;
 using LMSRepository.Data;
 using LMSService.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace LMSService.Service
 
         public async Task PayFees(int libraryCardID)
         {
-            var card = await _context.LibraryCards
+            LibraryCard card = await _context.LibraryCards
                 .FirstOrDefaultAsync(p => p.Id == libraryCardID);
 
             if (card == null)
@@ -29,7 +30,7 @@ namespace LMSService.Service
                 throw new NoValuesFoundException($"LibraryCard {libraryCardID} was not found");
             }
 
-            card.Fees = 0;
+            card.ZeroFees();
 
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Fees were paid for Library Card {libraryCardID}");

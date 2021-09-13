@@ -1,100 +1,113 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
     public class AuthorService : IAuthorService
     {
+        // TODO fix to use base api
         private readonly DataContext _context;
+        private readonly ILogger<AuthorService> _logger;
+        private readonly IMapper _mapper;
 
-        public AuthorService(DataContext context)
+        public AuthorService(DataContext context, IMapper mapper, ILogger<AuthorService> logger)
         {
             _context = context;
+            _logger = logger;
+            _mapper = mapper;
         }
 
-        public async Task<Author> AddAuthor(Author author)
+        public async Task<AuthorDto> AddAuthor(AuthorDto authorDto)
         {
+            Author author = _mapper.Map<Author>(authorDto);
+
             _context.Add(author);
             await _context.SaveChangesAsync();
 
-            return author;
+            _logger.LogInformation($"");
+
+            return _mapper.Map<AuthorDto>(author);
         }
 
-        public async Task DeleteAuthor(Author author)
+        public async Task<LmsResponseHandler<AuthorDto>> DeleteAuthor(int authorId)
         {
-            _context.Remove(author);
-            await _context.SaveChangesAsync();
+            Author author = await GetAuthor(authorId);
+
+            if (author != null)
+            {
+                _context.Remove(author);
+                await _context.SaveChangesAsync();
+
+                return LmsResponseHandler<AuthorDto>.Successful();
+            }
+            return LmsResponseHandler<AuthorDto>.Failed("");
         }
 
-        public async Task EditAuthor(Author author)
+        public async Task<LmsResponseHandler<AuthorDto>> EditAuthor(AuthorDto authorDto)
         {
-            _context.Update(author);
-            await _context.SaveChangesAsync();
+            Author author = await GetAuthor(authorDto.Id);
+
+            if (author != null)
+            {
+                _mapper.Map(authorDto, author);
+                _context.Update(author);
+                await _context.SaveChangesAsync();
+
+                return LmsResponseHandler<AuthorDto>.Successful(_mapper.Map<AuthorDto>(author));
+            }
+
+            return LmsResponseHandler<AuthorDto>.Failed("");
         }
 
-        public async Task<Author> GetAuthor(int authorId)
+        public async Task<LmsResponseHandler<AuthorDto>> GetAuthorForController(int authorId)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);
+            Author author = await GetAuthor(authorId);
 
-            return author;
+            if (author != null)
+            {
+                AuthorDto authorForReturn = _mapper.Map<AuthorDto>(author);
+
+                return LmsResponseHandler<AuthorDto>.Successful(authorForReturn);
+            }
+
+            return LmsResponseHandler<AuthorDto>.Failed("");
         }
 
-        public async Task<IEnumerable<Author>> SearchAuthors(string searchString)
+        public async Task<PagedList<AuthorDto>> GetPaginatedAuthors(PaginationParams paginationParams)
         {
-            var authors = _context.Authors.AsNoTracking().AsQueryable();
-            // TODO make this case insensitive
-            authors = authors.Where(s => s.FirstName.Contains(searchString)
-                    || s.LastName.Contains(searchString));
+            IQueryable<Author> authors = _context.Authors.AsNoTracking().AsQueryable();
 
-            return await authors.ToListAsync();
+            authors = FilterAuthors(paginationParams, authors);
+
+            PagedList<Author> authorsToReturn = await PagedList<Author>.CreateAsync(authors, paginationParams.PageNumber, paginationParams.PageSize);
+
+            return _mapper.Map<PagedList<AuthorDto>>(authorsToReturn);
         }
 
-        public async Task<PagedList<Author>> GetPaginatedAuthors(PaginationParams paginationParams)
+        private async Task<Author> GetAuthor(int authorId)
         {
-            var authors = _context.Authors.AsNoTracking().AsQueryable();
+            return await _context.Authors.FirstOrDefaultAsync(a => a.Id == authorId);
+        }
 
+        private static IQueryable<Author> FilterAuthors(PaginationParams paginationParams, IQueryable<Author> authors)
+        {
             if (!string.IsNullOrEmpty(paginationParams.SearchString))
             {
                 authors = authors
-                    .Where(x => x.FirstName.Contains(paginationParams.SearchString)
-                    || x.LastName.Contains(paginationParams.SearchString));
+                    .Where(x => x.FullName.Contains(paginationParams.SearchString));
             }
 
-            if (paginationParams.SortDirection == "asc")
-            {
-                if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderBy(x => x.FirstName);
-                }
-                else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderBy(x => x.LastName);
-                }
-            }
-            else if (paginationParams.SortDirection == "desc")
-            {
-                if (string.Equals(paginationParams.OrderBy, "firstname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderByDescending(x => x.FirstName);
-                }
-                else if (string.Equals(paginationParams.OrderBy, "lastname", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    authors = authors.OrderByDescending(x => x.LastName);
-                }
-            }
-            else
-            {
-                authors = authors.OrderBy(x => x.LastName);
-            }
+            authors = paginationParams.SortDirection == "desc" ? authors.OrderByDescending(x => x.FullName) : authors.OrderBy(x => x.FullName);
 
-            return await PagedList<Author>.CreateAsync(authors, paginationParams.PageNumber, paginationParams.PageSize);
+            return authors;
         }
     }
 }

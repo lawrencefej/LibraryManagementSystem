@@ -1,0 +1,96 @@
+<mat-card class="mat-elevation-z4"
+          style="text-align: center; max-width: 700px; margin: 5% 30%; background-color: rgb(248, 248, 248);">
+  <mat-card-title>Library Card Advanced Search</mat-card-title>
+  <mat-card-content>
+    <form style="margin-top: 10px;" fxLayout="column" [formGroup]="advancedSearchForm"
+          (ngSubmit)="advancedSearch(advancedSearchForm.value)">
+      <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+        <mat-form-field appearance="fill" fxFlex>
+          <input matInput type="text" placeholder="First Name" formControlName="firstName" autocomplete="test" />
+          <mat-error *ngFor="let validation of validationMessages.firstName">
+            <mat-error *ngIf="
+                advancedSearchForm.get('firstName')?.hasError(validation.type) &&
+                (advancedSearchForm.get('firstName')?.dirty || advancedSearchForm.get('firstName')?.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex>
+          <input matInput type="text" placeholder="Last Name" formControlName="lastName" autocomplete="test" />
+          <mat-error *ngFor="let validation of validationMessages.lastName">
+            <mat-error *ngIf="
+                advancedSearchForm.get('lastName')?.hasError(validation.type) &&
+                (advancedSearchForm.get('lastName')?.dirty || advancedSearchForm.get('lastName')?.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+        <mat-form-field appearance="fill" fxFlex>
+          <input matInput type="text" placeholder="Email" formControlName="email" autocomplete="test" />
+          <mat-error *ngFor="let validation of validationMessages.email">
+            <mat-error *ngIf="
+            advancedSearchForm.get('email')?.hasError(validation.type) &&
+            (advancedSearchForm.get('email')?.dirty || advancedSearchForm.get('email')?.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngFor="let validation of validationMessages.dateOfBirth">
+            <mat-error
+                       *ngIf="
+                                  advancedSearchForm.get('dateOfBirth')?.hasError(validation.type) &&
+                                  (advancedSearchForm.get('dateOfBirth')?.dirty || advancedSearchForm.get('dateOfBirth')?.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+        <mat-form-field appearance="fill" fxFlex>
+          <input matInput type="text" maxlength="5" placeholder="Zipcode" formControlName="zipcode"
+                 autocomplete="test" />
+          <mat-hint align="end">{{ advancedSearchForm.get('zipcode')?.value.length }} / 5</mat-hint>
+          <mat-error *ngFor="let validation of validationMessages.zipcode">
+            <mat-error *ngIf="
+                            advancedSearchForm.get('zipcode')?.hasError(validation.type) &&
+                            (advancedSearchForm.get('zipcode')?.dirty || advancedSearchForm.get('zipcode')?.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex>
+          <span matPrefix>+1 &nbsp;</span>
+          <input matInput type="text" placeholder="Mobile" maxlength="10" formControlName="phoneNumber"
+                 autocomplete="test" required />
+          <mat-error *ngFor="let validation of validationMessages.phoneNumber">
+            <mat-error *ngIf="
+                advancedSearchForm.get('phoneNumber')?.hasError(validation.type) &&
+                (advancedSearchForm.get('phoneNumber')?.dirty || advancedSearchForm.get('phoneNumber')?.touched)">
+              {{ validation.message }}
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div style="margin-top: 20px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+        <div class="button-row" fxLayoutAlign="end center" fxFlex>
+          <button mat-raised-button color="accent" type="reset" *ngIf="advancedSearchForm.dirty">Reset</button>
+          <button style="margin-left: 20px;" mat-raised-button color="primary" type="submit"
+                  [disabled]="advancedSearchForm.invalid || advancedSearchForm.pristine">Submit</button>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

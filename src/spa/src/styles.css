@@ -1,60 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body {
-    height: 100%;
+html,
+body {
+  height: 100%;
 }
 
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 /* notification */
 
 snack-bar-container {
-    text-align: center;
-    border: solid 1px #ddd;
-    border-radius: 2px;
+  text-align: center;
+  border: solid 1px #ddd;
+  border-radius: 2px;
 }
 
 snack-bar-container.success {
-    color: #fff;
-    background: rgba(91, 189, 114, .95);
-    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);
-    text-align: center;
-    border: solid 1px #ddd;
-    border-radius: 2px;
+  color: #fff;
+  background: rgba(91, 189, 114, 0.95);
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);
+  text-align: center;
+  border: solid 1px #ddd;
+  border-radius: 2px;
 }
 
 snack-bar-container.warn {
-    background: #fd8b2e;
-    border-color: #999;
-    color: #000;
+  background: #fd8b2e;
+  border-color: #999;
+  color: #000;
 }
 
 snack-bar-container.error {
-    color: #fff;
-    background: rgba(221, 34, 34, 0.95);
-    /* background: rgba(217, 92, 92, .95); */
-    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);
+  color: #fff;
+  background: rgba(221, 34, 34, 0.95);
+  /* background: rgba(217, 92, 92, .95); */
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .mat-simple-snackbar-action {
-    color: black !important;
+  color: black !important;
 }
 
 /* Main components */
 .main-container {
-    width: 80%;
-    margin: 20px auto;
+  width: 80%;
+  margin: 20px auto;
 }
 
 /* All tables */
 .full-width-table {
-    width: 100%;
+  width: 100%;
 }
 
-.hide{
-    display: none;
+.hide {
+  display: none;
 }
-

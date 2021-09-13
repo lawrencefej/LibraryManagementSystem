@@ -1,145 +1,87 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using LibraryManagementSystem.API.Helpers;
+using LibraryManagementSystem.Controllers;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "RequireLibrarianRole")]
+    [Authorize(Policy = Role.RequireLibrarianRole)]
     [ApiController]
-    public class CatalogController : ControllerBase
+    public class CatalogController : BaseApiController<LibraryAssetForDetailedDto, LibraryAssetForListDto>
     {
         private readonly ILibraryAssetService _libraryAssestService;
-        private readonly ILogger<CatalogController> _logger;
-        private readonly IMapper _mapper;
+        private readonly IDashboardService _dashboardService;
 
-        public CatalogController(ILibraryAssetService libraryAssestService, ILogger<CatalogController> logger,
-            IMapper mapper)
+        public CatalogController(ILibraryAssetService libraryAssestService, IDashboardService dashboardService)
         {
             _libraryAssestService = libraryAssestService;
-            _logger = logger;
-            _mapper = mapper;
+            _dashboardService = dashboardService;
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddLibraryAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
-            // TODO decide if this should accept models instead of Id's
-            var assetForCreation = _mapper.Map<LibraryAsset>(libraryAssetForCreation);
+            LibraryAssetForDetailedDto asset = await _libraryAssestService.AddAsset(libraryAssetForCreation);
 
-            var asset = await _libraryAssestService.AddAsset(assetForCreation);
+            await _dashboardService.BroadcastDashboardData();
 
-            var assetToReturn = _mapper.Map<LibraryAssetForListDto>(asset);
-
-            return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, assetToReturn);
+            return CreatedAtRoute(nameof(GetLibraryAsset), new { assetId = asset.Id }, asset);
         }
 
         [HttpDelete("{assetId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteLibraryAsset(int assetId)
         {
-            await _libraryAssestService.DeleteAsset(assetId);
+            LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.DeleteAsset(assetId);
 
-            return NoContent();
+            return ResultCheck(result);
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
-            var asset = await _libraryAssestService.GetAsset(libraryAssetForUpdate.Id);
+            LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.EditAsset(libraryAssetForUpdate);
 
-            if (asset == null)
-            {
-                return BadRequest("Item not found");
-            }
-
-            _mapper.Map(libraryAssetForUpdate, asset);
-
-            await _libraryAssestService.EditAsset(asset);
-
-            return NoContent();
+            return ResultCheck(result);
         }
 
         [HttpGet("{assetId}", Name = nameof(GetLibraryAsset))]
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetLibraryAsset(int assetId)
         {
-            // TODO decide if you want this
-            var userId = LoggedInUserID();
-            _logger.LogInformation("User {0} requested Asset {1}", userId, assetId);
-            var libraryAsset = await _libraryAssestService.GetAsset(assetId);
+            LmsResponseHandler<LibraryAssetForDetailedDto> result = await _libraryAssestService.GetAssetWithDetails(assetId);
 
-            if (libraryAsset == null)
-            {
-                _logger.LogWarning("Asset {0} was not found", assetId);
-                return NoContent();
-            }
-
-            var assetToReturn = _mapper.Map<LibraryAssetForDetailedDto>(libraryAsset);
-
-            return Ok(assetToReturn);
+            return ResultCheck(result);
         }
 
-        [HttpGet("search/")]
-        public async Task<IActionResult> SearchAvailableLibraryAsset([FromQuery] string searchString)
-        {
-            var assets = await _libraryAssestService.SearchAvalableLibraryAsset(searchString);
-
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
-
-            return Ok(assetsToReturn);
-        }
-
-        [HttpGet("pagination/")]
+        [HttpGet]
+        [ProducesResponseType(typeof(LibraryAssetForListDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetLibraryAssets([FromQuery] PaginationParams paginationParams)
         {
-            var assets = await _libraryAssestService.GetAllAsync(paginationParams);
+            PagedList<LibraryAssetForListDto> assets = await _libraryAssestService.GetPaginatedAssets(paginationParams);
 
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(assets);
-
-            Response.AddPagination(assets.CurrentPage, assets.PageSize,
-                 assets.TotalCount, assets.TotalPages);
-
-            return Ok(assetsToReturn);
+            return ReturnPagination(assets);
         }
 
         [HttpGet("author/{authorId}")]
-        public async Task<IActionResult> GetAssetForAuthor(int authorId)
+        [ProducesResponseType(typeof(LibraryAssetForDetailedDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAssetForAuthor(int authorId, [FromQuery] PaginationParams paginationParams)
         {
-            var libraryAsset = await _libraryAssestService.GetAssetsByAuthor(authorId);
+            PagedList<LibraryAssetForListDto> assets = await _libraryAssestService.GetAssetsByAuthor(paginationParams, authorId);
 
-            if (libraryAsset == null)
-            {
-                return NoContent();
-            }
-
-            var assetsToReturn = _mapper.Map<IEnumerable<LibraryAssetForDetailedDto>>(libraryAsset);
-
-            return Ok(assetsToReturn);
-        }
-
-        private bool IsCurrentuser(int id)
-        {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private int LoggedInUserID()
-        {
-            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            return id;
+            return ReturnPagination(assets);
         }
     }
 }

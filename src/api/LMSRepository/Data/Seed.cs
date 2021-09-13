@@ -1,137 +1,220 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
-using Microsoft.AspNetCore.Identity;
+using LMSRepository.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace LMSRepository.Data
 {
     public class Seed
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
         private readonly DataContext _context;
+        private readonly ILibraryCardService _libraryCardService;
+        private readonly IAdminService _adminService;
+        private readonly IAuthorService _authorService;
+        private readonly ICategoryService _categoryService;
+        private readonly ILibraryAssetService _libraryAssetService;
 
-        public Seed(UserManager<User> userManager,
-            RoleManager<Role> roleManager,
-            DataContext context)
+        public Seed(DataContext context, ILibraryCardService libraryCardService, IAdminService adminService, IAuthorService authorService, ICategoryService categoryService, ILibraryAssetService libraryAssetService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _libraryAssetService = libraryAssetService;
+            _categoryService = categoryService;
+            _authorService = authorService;
+            _adminService = adminService;
+            _libraryCardService = libraryCardService;
             _context = context;
         }
 
-        public void SeedUsers()
+        public async Task SeedLibraryCard()
         {
-            if (!_userManager.Users.Any())
+            if (await _context.LibraryCards.AnyAsync())
             {
-                var userData = System.IO.File.ReadAllText("UserSeedData.json");
-                var users = JsonConvert.DeserializeObject<List<User>>(userData);
+                return;
+            }
 
-                foreach (var user in users)
+            string libraryCardData = System.IO.File.ReadAllText("Data/LibraryCardData.json");
+            List<LibraryCardForCreationDto> cards = JsonConvert.DeserializeObject<List<LibraryCardForCreationDto>>(libraryCardData);
+
+            foreach (LibraryCardForCreationDto card in cards)
+            {
+                await _libraryCardService.AddLibraryCard(card);
+            }
+        }
+
+        public async Task SeedUsers()
+        {
+            if (await _context.Users.Where(u => u.UserRoles.Any(r => r.Role.Name != nameof(EnumRoles.Member))).AnyAsync())
+            {
+                return;
+            }
+
+            string userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
+            List<AddAdminDto> users = JsonConvert.DeserializeObject<List<AddAdminDto>>(userData);
+
+            foreach (AddAdminDto user in users)
+            {
+                await _adminService.CreateUser(user, true);
+            }
+        }
+
+        public async Task SeedAuthors()
+        {
+            if (await _context.Authors.AnyAsync())
+            {
+                return;
+            }
+
+            string authorData = System.IO.File.ReadAllText("Data/AuthorSeedData.json");
+            List<AuthorDto> authors = JsonConvert.DeserializeObject<List<AuthorDto>>(authorData);
+
+            foreach (AuthorDto author in authors)
+            {
+                await _authorService.AddAuthor(author);
+            }
+        }
+
+        public async Task SeedPastCheckout()
+        {
+            string checkoutData = System.IO.File.ReadAllText("Data/CheckoutPastSeedData.json");
+            List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
+            foreach (Checkout checkout in checkouts)
+            {
+                checkout.CheckoutDate = DateTime.UtcNow.AddDays(GetRandomNumber(-14, -7));
+                checkout.DateReturned = DateTime.UtcNow.AddDays(GetRandomNumber(-6, 0));
+                checkout.Status = CheckoutStatus.Returned;
+            }
+
+            _context.Checkouts.AddRange(checkouts);
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task SeedCurrentCheckout()
+        {
+            string checkoutData = System.IO.File.ReadAllText("Data/CheckoutCurrentSeedData.json");
+            List<Checkout> checkouts = JsonConvert.DeserializeObject<List<Checkout>>(checkoutData);
+            foreach (Checkout checkout in checkouts)
+            {
+                checkout.CheckoutDate = DateTime.UtcNow.AddDays(GetRandomNumber(-6, 0));
+            }
+
+            _context.Checkouts.AddRange(checkouts);
+            await _context.SaveChangesAsync();
+
+        }
+
+        private static int GetRandomNumber(int start, int end)
+        {
+            return new Random().Next(start, end);
+        }
+
+        public async Task SeedCategories()
+        {
+            if (await _context.Categories.AnyAsync())
+            {
+                return;
+            }
+
+            string authorData = System.IO.File.ReadAllText("Data/CategorySeedData.json");
+            List<CategoryDto> categories = JsonConvert.DeserializeObject<List<CategoryDto>>(authorData);
+
+            foreach (CategoryDto category in categories)
+            {
+                await _categoryService.AddCategory(category);
+            }
+        }
+
+        public async Task SeedBooksAsset()
+        {
+            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Book))
+            {
+                string assetData = System.IO.File.ReadAllText("Data/BookSeedData.json");
+                List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
+
+                CleanAssetData(assets);
+                await _libraryAssetService.AddAsset(assets);
+            }
+        }
+
+        public async Task SeedMediaAsset()
+        {
+            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Media))
+            {
+                string assetData = System.IO.File.ReadAllText("Data/MediaSeedData.json");
+                List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
+
+                CleanAssetData(assets);
+                await _libraryAssetService.AddAsset(assets);
+            }
+        }
+
+        public async Task SeedOtherAsset()
+        {
+            if (!_context.LibraryAssets.Any(i => i.AssetType == LibraryAssetType.Other))
+            {
+                string assetData = System.IO.File.ReadAllText("Data/OtherSeedData.json");
+                List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
+
+                CleanAssetData(assets);
+                await _libraryAssetService.AddAsset(assets);
+            }
+        }
+
+        private static void CleanAssetData(List<LibraryAssetForCreationDto> assets)
+        {
+            foreach (LibraryAssetForCreationDto asset in assets)
+            {
+                if (asset.AssetAuthors.Distinct().Count() > 1)
                 {
-                    user.UserName = user.Email;
-                    _userManager.CreateAsync(user, "password").Wait();
-                    _userManager.AddToRoleAsync(user, "Member").Wait();
+                    List<LibraryAssetAuthorDto> AssetAuthors = new()
+                    {
+                        new LibraryAssetAuthorDto { AuthorId = new Random().Next(1, 5) },
+                        new LibraryAssetAuthorDto { AuthorId = new Random().Next(6, 10) }
+                    };
+                    asset.AssetCategories.Clear();
+                    asset.AssetAuthors = AssetAuthors;
                 }
 
-                var adminUser = new User
+                if (asset.AssetCategories.Distinct().Count() > 1)
                 {
-                    Email = "a@x.com",
-                };
+                    List<LibraryAssetCategoryDto> AssetCategories = new()
+                    {
+                        new LibraryAssetCategoryDto { CategoryId = new Random().Next(1, 5) },
+                        new LibraryAssetCategoryDto { CategoryId = new Random().Next(6, 10) }
+                    };
+                    asset.AssetCategories.Clear();
+                    asset.AssetCategories = AssetCategories;
+                }
 
-                adminUser.UserName = adminUser.Email;
-
-                var librarianUser = new User
+                if (asset.Description.Length > 250)
                 {
-                    Email = "b@x.com"
-                };
+                    asset.Description = asset.Description.Substring(0, 250);
+                }
 
-                librarianUser.UserName = librarianUser.Email;
-
-                IdentityResult result = _userManager.CreateAsync(adminUser, "password").Result;
-                IdentityResult result2 = _userManager.CreateAsync(librarianUser, "password").Result;
-
-                if (result.Succeeded && result2.Succeeded)
+                if (asset.Title.Length > 50)
                 {
-                    var admin = _userManager.FindByEmailAsync("a@x.com").Result;
-                    _userManager.AddToRoleAsync(admin, "Admin").Wait();
-
-                    var librarian = _userManager.FindByEmailAsync("b@x.com").Result;
-                    _userManager.AddToRoleAsync(librarian, "Librarian").Wait();
+                    asset.Title = asset.Title.Substring(0, 50);
                 }
             }
         }
 
-        public void SeedAuthors()
-        {
-            if (!_context.Authors.Any())
-            {
-                var authorData = System.IO.File.ReadAllText("AuthorSeedData.json");
-                var authors = JsonConvert.DeserializeObject<List<Author>>(authorData);
-
-                foreach (var author in authors)
-                {
-                    _context.Add(author);
-                }
-
-                _context.SaveChanges();
-            }
-        }
-
-        public void SeedAssets()
+        public async Task SeedAssets()
         {
             if (!_context.LibraryAssets.Any())
             {
-                var assetData = System.IO.File.ReadAllText("AssetSeedData.json");
-                var assets = JsonConvert.DeserializeObject<List<LibraryAsset>>(assetData);
+                string assetData = System.IO.File.ReadAllText("Data/AssetSeedData.json");
+                List<LibraryAssetForCreationDto> assets = JsonConvert.DeserializeObject<List<LibraryAssetForCreationDto>>(assetData);
 
-                foreach (var asset in assets)
+                foreach (LibraryAssetForCreationDto asset in assets)
                 {
-                    asset.CopiesAvailable = asset.NumberOfCopies;
-                    _context.Add(asset);
+                    await _libraryAssetService.AddAsset(asset);
                 }
-
-                _context.SaveChanges();
             }
-        }
-
-        public void SeedBooks()
-        {
-            //if (!_context.Books.Any())
-            //{
-            //    var bookData = System.IO.File.ReadAllText("BookSeedData.json");
-            //    var books = JsonConvert.DeserializeObject<List<Book>>(bookData);
-
-            //    foreach (var book in books)
-            //    {
-            //        book.AssetType = _context.AssetTypes.FirstOrDefault(a => a.Id == 1);
-            //        book.Status = _context.Statuses.FirstOrDefault(a => a.Id == 1);
-            //        book.CopiesAvailable = book.NumberOfCopies;
-            //        _context.Add(book);
-            //    }
-
-            //    _context.SaveChanges();
-            //}
-        }
-
-        public void SeedMedia()
-        {
-            //if (!_context.Medias.Any())
-            //{
-            //    var mediaData = System.IO.File.ReadAllText("MediaSeedData.json");
-            //    var medias = JsonConvert.DeserializeObject<List<Media>>(mediaData);
-
-            //    foreach (var media in medias)
-            //    {
-            //        media.CopiesAvailable = media.NumberOfCopies;
-            //        media.AssetType = _context.AssetTypes.FirstOrDefault(a => a.Id == 2);
-            //        media.Status = _context.Statuses.FirstOrDefault(a => a.Id == 1);
-            //        _context.Add(media);
-            //    }
-
-            //    _context.SaveChanges();
-            //}
         }
     }
 }

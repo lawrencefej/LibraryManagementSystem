@@ -1,18 +1,24 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LMSEntities.DataTransferObjects
 {
     public class LibraryCardForCreationDto
     {
-        public int CardNumber { get; set; }
-        public decimal Fees { get; set; }
-        public DateTime Created { get; set; }
-        public int UserId { get; set; }
+        public string FirstName { get; set; }
 
-        public LibraryCardForCreationDto()
-        {
-            Created = DateTime.Now;
-            Fees = 0;
-        }
+        public string LastName { get; set; }
+
+        public string Email { get; set; }
+
+        [Phone]
+        public string PhoneNumber { get; set; }
+
+        public DateTime DateOfBirth { get; set; }
+
+        [Required]
+        public AddAddressDto Address { get; set; }
+        [Required]
+        public MemberGenderDto Gender { get; set; }
     }
 }

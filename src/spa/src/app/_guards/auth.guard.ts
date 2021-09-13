@@ -1,61 +1,31 @@
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
-
-import { AuthService } from '../_services/auth.service';
 import { Injectable } from '@angular/core';
-import { NotificationService } from '../_services/notification.service';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs/operators';
+import { AuthService } from '../_services/authentication.service';
+import { SessionService } from '../_services/session.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private notification: NotificationService
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly sessionService: SessionService
   ) {}
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
-    const allowedRoles = next.firstChild.data.allowedRoles as Array<string>;
-
-    if (allowedRoles) {
-      if (this.authService.loggedIn) {
-        if (this.authService.isAuthorized(allowedRoles)) {
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.authService.loggedInUser$.pipe(
+      map(user => {
+        if (user) {
+          this.sessionService.resetLogoutTimer();
           return true;
+        } else {
+          this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+          return false;
         }
-        this.blockAccess();
-      }
-      this.login(state);
-    }
-
-    if (this.authService.loggedIn()) {
-      return true;
-    }
-
-    this.login(state);
-  }
-
-  blockAccess() {
-    this.notification.error('Access Denied');
-    this.router.navigate(['/']);
-    return false;
-  }
-
-  login(state: any) {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-    return false;
+      })
+    );
   }
 }

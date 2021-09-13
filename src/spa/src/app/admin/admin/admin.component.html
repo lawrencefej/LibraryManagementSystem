@@ -1,0 +1,69 @@
+<div fxLayout="row wrap" fxLayoutAlign="space-between center">
+  <h3>
+    Add User
+  </h3>
+  <button style="margin-left: 50px;" mat-button matSuffix mat-icon-button tabIndex="-1" area-label="clear"
+          (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <form fxLayout="column" [formGroup]="userForm" (ngSubmit)="addUser(userForm.value)">
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field appearance="fill" fxFlex>
+        <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+        <mat-error *ngFor="let validation of validationMessages.firstName">
+          <mat-error *ngIf="
+              userForm.get('firstName')?.hasError(validation.type) &&
+                    (userForm.get('firstName')?.dirty || userForm.get('firstName')?.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" fxFlex>
+        <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+        <mat-error *ngFor="let validation of validationMessages.lastName">
+          <mat-error *ngIf="
+              userForm.get('lastName')?.hasError(validation.type) &&
+                    (userForm.get('lastName')?.dirty || userForm.get('lastName')?.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-form-field appearance="fill" fxFlex>
+        <input matInput type="text" placeholder="Email" formControlName="email" required />
+        <mat-error *ngFor="let validation of validationMessages.email">
+          <mat-error *ngIf="
+              userForm.get('email')?.hasError(validation.type) &&
+                  (userForm.get('email')?.dirty || userForm.get('email')?.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+      <mat-radio-group style="margin: auto;" formControlName="role">
+        <mat-radio-button style="margin-left: 10px;" *ngFor="let role of userRoles" class="example-radio-button"
+                          [value]="role.name">
+          {{role.name}}
+        </mat-radio-button>
+      </mat-radio-group>
+      <mat-error *ngFor="let validation of validationMessages.role">
+        <mat-error
+                   *ngIf="userForm.get('role')?.hasError('validation.role') && (userForm.get('role')?.dirty || userForm.get('role')?.touched)">
+          {{ validation.message }}</mat-error>
+      </mat-error>
+
+      <div fxLayoutAlign="space-between center" class="button-row" fxFlex>
+        <button mat-raised-button color="primary" type="submit"
+                [disabled]="userForm.pristine || !userForm.valid">Submit</button>
+        <button mat-raised-button color="warn" type="button" (click)="closeDialog()">Cancel</button>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

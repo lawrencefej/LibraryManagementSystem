@@ -42,7 +42,7 @@ namespace LMSEntities.DataTransferObjects
         public UserForRegisterDto()
         {
             UserName = Email;
-            Created = DateTime.Now;
+            Created = DateTime.UtcNow;
         }
     }
 }

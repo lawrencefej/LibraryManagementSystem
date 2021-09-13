@@ -1,131 +1,158 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using AutoMapper;
 using LMSContracts.Interfaces;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Enumerations;
+using LMSEntities.Helpers;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
     public class AuthService : IAuthService
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly IEmailSender _emailSender;
+        // private readonly IEmailSender _emailSender;
+        private readonly IHttpContextAccessor _context;
+        private readonly ILogger<AuthService> _logger;
+        private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender)
+        public AuthService(UserManager<AppUser> userManager,
+                           SignInManager<AppUser> signInManager,
+                           ILogger<AuthService> logger,
+                           IMapper mapper, ITokenService tokenService,
+                           IHttpContextAccessor context)
         {
+            _logger = logger;
+            _mapper = mapper;
+            _tokenService = tokenService;
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
+            _context = context;
         }
 
-        public async Task<UserForDetailedDto> AddRoleToUser(UserForDetailedDto userToReturn, User user)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
+        // public async Task<UserForDetailedDto> AddRoleToUser(UserForDetailedDto userToReturn, AppUser user)
+        // {
+        //     IList<string> roles = await _userManager.GetRolesAsync(user);
 
-            foreach (var role in roles)
+        //     foreach (string role in roles)
+        //     {
+        //         userToReturn.Role = role;
+        //     }
+
+        //     return userToReturn;
+        // }
+
+        public async Task<AppUser> FindUserByEmail(string email)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(email);
+
+            return user;
+        }
+
+        public async Task ForgotPassword(AppUser user, string scheme, HostString host)
+        {
+            string code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            string encodedToken = HttpUtility.UrlEncode(code);
+
+            Uri callbackUrl = new Uri(scheme + "://" + host + "/resetpassword/" + user.Id + "/" + encodedToken);
+
+            string body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking <a href='{callbackUrl}'>here</a>:";
+
+            // TODO fix email
+            // await _emailSender.SendEmail(user.Email, "Reset Password", body);
+        }
+
+        public async Task<IdentityResult> ResetPassword(AppUser user, string password, string code)
+        {
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, code, password);
+
+            return result;
+        }
+
+        public async Task RevokeToken(TokenRequestDto tokenRequestDto)
+        {
+            await _tokenService.RevokeToken(tokenRequestDto.RefreshToken);
+        }
+
+        public async Task<AppUser> FindUserById(int userId)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId.ToString());
+
+            return user;
+        }
+
+        public async Task<bool> IsResetEligible(AppUser user)
+        {
+            return user != null && !await _userManager.IsInRoleAsync(user, nameof(LmsAppRoles.Member));
+        }
+
+        public async Task<LmsResponseHandler<LoginUserDto>> Login(UserForLoginDto userForLoginDto)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
+
+            if (user != null)
             {
-                userToReturn.Role = role;
+                SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
+
+                if (result.Succeeded)
+                {
+                    user = await GetUserDetails(user.Id);
+
+                    LoginUserDto userToReturn = await GenerateResponse(user, GetIpAddress());
+
+                    // _logger.LogInformation("Successful Login by Id: {0}, Email: {1}", userToReturn.Id, userToReturn.Email);
+
+                    return LmsResponseHandler<LoginUserDto>.Successful(userToReturn);
+                }
+                // TODO clean up logs
             }
 
+            _logger.LogWarning("Unsuccessful login by user: {0}", userForLoginDto.Email);
+
+            return LmsResponseHandler<LoginUserDto>.Failed("Email or Password does not match");
+        }
+
+        public async Task<LmsResponseHandler<TokenResponseDto>> RefreshToken(TokenRequestDto tokenRequestDto)
+        {
+            LmsResponseHandler<TokenResponseDto> result = await _tokenService.RefreshToken(tokenRequestDto, GetIpAddress());
+
+            return result.Succeeded
+                ? LmsResponseHandler<TokenResponseDto>.Successful(result.Item)
+                : LmsResponseHandler<TokenResponseDto>.Failed("");
+        }
+
+        private async Task<LoginUserDto> GenerateResponse(AppUser user, string clientIpAddress)
+        {
+            TokenResponseDto tokenResponse = await _tokenService.GetLoginToken(user, clientIpAddress);
+            LoginUserDto userToReturn = _mapper.Map<LoginUserDto>(user);
+            userToReturn.Token = tokenResponse.Token;
+            userToReturn.RefreshToken = tokenResponse.RefreshToken;
             return userToReturn;
         }
 
-        public async Task<User> FindUserByEmail(string email)
+        private async Task<AppUser> GetUserDetails(int userId)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            return user;
+            return await _userManager.Users.Include(p => p.ProfilePicture)
+                        .Include(p => p.UserRoles)
+                        .ThenInclude(r => r.Role)
+                        .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        public async Task ForgotPassword(User user, string scheme, HostString host)
+
+
+        private string GetIpAddress()
         {
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var encodedToken = HttpUtility.UrlEncode(code);
-
-            var callbackUrl = new Uri(scheme + "://" + host + "/resetpassword/" + user.Id + "/" + encodedToken);
-
-            var body = $"Hello {user.FirstName.ToLower()}, Please reset your password by clicking <a href='{callbackUrl}'>here</a>:";
-
-            await _emailSender.SendEmail(user.Email, "Reset Password", body);
-        }
-
-        public async Task<IdentityResult> ResetPassword(User user, string password, string code)
-        {
-            var result = await _userManager.ResetPasswordAsync(user, code, password);
-
-            return result;
-        }
-
-        public async Task<SignInResult> SignInUser(User user, string password)
-        {
-            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-
-            return result;
-        }
-
-        public async Task<User> GetUser(string email)
-        {
-            var user = await _userManager.Users.Include(p => p.ProfilePicture)
-                        .FirstOrDefaultAsync(u => u.NormalizedEmail == email.ToUpper());
-
-            return user;
-        }
-
-        public async Task<string> GenerateJwtToken(User user, string jwtToken)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtToken));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(30),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
-        }
-
-        public async Task<User> FindUserById(int userId)
-        {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-
-            return user;
-        }
-
-        public async Task<bool> IsResetEligible(User user)
-        {
-            return user != null && !await _userManager.IsInRoleAsync(user, nameof(RolesEnum.Member));
+            return _context.HttpContext.Connection.RemoteIpAddress.ToString();
         }
     }
 }

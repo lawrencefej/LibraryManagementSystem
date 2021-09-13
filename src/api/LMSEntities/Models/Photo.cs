@@ -6,9 +6,8 @@ namespace LMSEntities.Models
     {
         public int Id { get; set; }
         public string Url { get; set; }
-        public DateTime DateAdded { get; set; }
+        // Set datetime to utc UtcNow
+        public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public string PublicId { get; set; }
-        //public User User { get; set; }
-        //public int UserId { get; set; }
     }
 }

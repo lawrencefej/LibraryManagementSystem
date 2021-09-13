@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace LMSEntities.DataTransferObjects
 {
     public class ChartDto
     {
-        public List<DataDto> Data { get; set; }
-        public string Label { get; set; }
+        [Required]
+        public List<DataDto> Data { get; set; } = new List<DataDto>();
 
-        public ChartDto()
-        {
-            Data = new List<DataDto>();
-        }
+        [Required]
+        public string Label { get; set; }
     }
 }

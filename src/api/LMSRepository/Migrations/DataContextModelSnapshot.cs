@@ -14,103 +14,253 @@ namespace LMSRepository.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64)
+                .HasAnnotation("ProductVersion", "5.0.5");
 
-            modelBuilder.Entity("LMSRepository.Models.AssetType", b =>
+            modelBuilder.Entity("LMSEntities.Models.Address", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Name");
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Zipcode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AssetTypes");
+                    b.HasIndex("StateId");
+
+                    b.ToTable("Address");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.AppRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Description = "Paper back books",
-                            Name = "Book"
+                            ConcurrencyStamp = "7514f68e-88c0-49f2-bb7e-5665f2bea05f",
+                            Name = "Member",
+                            NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Video and media",
-                            Name = "Media"
+                            ConcurrencyStamp = "995273e4-a71d-44a8-a44b-5a0cbf78c2ff",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Others",
-                            Name = "Other"
+                            ConcurrencyStamp = "6ae5999d-6d92-4fb6-a45a-0f78359479c8",
+                            Name = "Librarian",
+                            NormalizedName = "LIBRARIAN"
                         });
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.Author", b =>
+            modelBuilder.Entity("LMSEntities.Models.AppUser", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("FirstName");
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<bool>("IsAccountActivated")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.AppUserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.Category", b =>
+            modelBuilder.Entity("LMSEntities.Models.Category", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Paper back books",
-                            Name = "Science"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Video and media",
-                            Name = "Computer"
-                        });
+                    b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.Checkout", b =>
+            modelBuilder.Entity("LMSEntities.Models.Checkout", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateReturned");
+                    b.Property<DateTime>("CheckoutDate")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsReturned");
+                    b.Property<DateTime>("DateReturned")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int>("LibraryAssetId");
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int>("LibraryCardId");
+                    b.Property<int>("LibraryAssetId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Since");
+                    b.Property<int>("LibraryCardId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("StatusId");
+                    b.Property<byte>("RenewalCount")
+                        .HasMaxLength(3)
+                        .HasColumnType("tinyint unsigned");
 
-                    b.Property<DateTime>("Until");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
 
                     b.HasKey("Id");
 
@@ -118,23 +268,26 @@ namespace LMSRepository.Migrations
 
                     b.HasIndex("LibraryCardId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Checkouts");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.CheckoutHistory", b =>
+            modelBuilder.Entity("LMSEntities.Models.CheckoutHistory", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime?>("CheckedIn");
+                    b.Property<DateTime?>("CheckedIn")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("CheckedOut");
+                    b.Property<DateTime>("CheckedOut")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("LibraryAssetId");
+                    b.Property<int?>("LibraryAssetId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("LibraryCardId");
+                    b.Property<int?>("LibraryCardId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -145,16 +298,20 @@ namespace LMSRepository.Migrations
                     b.ToTable("CheckoutHistory");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.Hold", b =>
+            modelBuilder.Entity("LMSEntities.Models.Hold", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("HoldPlaced");
+                    b.Property<DateTime>("HoldPlaced")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("LibraryAssetId");
+                    b.Property<int?>("LibraryAssetId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("LibraryCardId");
+                    b.Property<int?>("LibraryCardId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -165,84 +322,175 @@ namespace LMSRepository.Migrations
                     b.ToTable("Holds");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.LibraryAsset", b =>
+            modelBuilder.Entity("LMSEntities.Models.LibraryAsset", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Added");
+                    b.Property<DateTime>("Added")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AssetTypeId");
+                    b.Property<string>("AssetType")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
 
-                    b.Property<int>("AuthorId");
+                    b.Property<int>("CopiesAvailable")
+                        .HasColumnType("int");
 
-                    b.Property<int>("CategoryId");
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
-                    b.Property<int>("CopiesAvailable");
+                    b.Property<string>("DeweyIndex")
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
-                    b.Property<decimal>("Cost");
+                    b.Property<string>("ISBN")
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
 
-                    b.Property<string>("Description");
+                    b.Property<int>("NumberOfCopies")
+                        .HasColumnType("int");
 
-                    b.Property<string>("DeweyIndex");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
 
-                    b.Property<string>("ISBN");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<int>("NumberOfCopies");
-
-                    b.Property<int>("StatusId");
-
-                    b.Property<string>("Title");
-
-                    b.Property<int>("Year");
+                    b.Property<int>("Year")
+                        .HasMaxLength(4)
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssetTypeId");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("StatusId");
+                    b.HasIndex("ISBN")
+                        .IsUnique();
 
                     b.ToTable("LibraryAssets");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.LibraryCard", b =>
+            modelBuilder.Entity("LMSEntities.Models.LibraryAssetAuthor", b =>
+                {
+                    b.Property<int>("LibrayAssetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Order")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.HasKey("LibrayAssetId", "AuthorId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("LibraryAssetAuthors");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.LibraryAssetCategory", b =>
+                {
+                    b.Property<int>("LibrayAssetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LibrayAssetId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("LibraryAssetCategories");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.LibraryCard", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("CardNumber");
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Created");
+                    b.Property<string>("CardNumber")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
 
-                    b.Property<decimal>("Fees");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId");
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("Fees")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("CardNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
                         .IsUnique();
 
                     b.ToTable("LibraryCards");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.Photo", b =>
+            modelBuilder.Entity("LMSEntities.Models.Photo", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("DateAdded");
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Discriminator")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("PublicId");
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -251,26 +499,72 @@ namespace LMSRepository.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Photo");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.ReserveAsset", b =>
+            modelBuilder.Entity("LMSEntities.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateCheckedOut");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsCheckedOut");
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsExpired");
+                    b.Property<bool>("Invalidated")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("LibraryAssetId");
+                    b.Property<string>("JwtId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("LibraryCardId");
+                    b.Property<string>("RequestIp")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<DateTime>("Reserved");
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("StatusId");
+                    b.Property<bool>("Used")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("Until");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.ReserveAsset", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DateCheckedOut")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsCheckedOut")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsExpired")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("LibraryAssetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LibraryCardId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Reserved")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Until")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -278,218 +572,352 @@ namespace LMSRepository.Migrations
 
                     b.HasIndex("LibraryCardId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("ReserveAssets");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.Role", b =>
+            modelBuilder.Entity("LMSEntities.Models.State", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                    b.Property<string>("Abbreviations")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("varchar(5)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("State");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "62ef0d32-e662-4a76-bd02-5cfe43ea5c91",
-                            Name = "Member",
-                            NormalizedName = "MEMBER"
+                            Abbreviations = "AL",
+                            Name = "Alabama"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "f96c54ee-70bd-4339-aba3-73615b9f6e15",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            Abbreviations = "AK",
+                            Name = "Alaska"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "e499849a-7b35-4cff-9e16-743233ed45a9",
-                            Name = "Librarian",
-                            NormalizedName = "LIBRARIAN"
-                        });
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.Status", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Statuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "There is a copy available for loan",
-                            Name = "Available"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "The last available copy has been checked out",
-                            Name = "Unavailable"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "",
-                            Name = "Checkedout"
+                            Abbreviations = "AR",
+                            Name = "Arkansas"
                         },
                         new
                         {
                             Id = 4,
-                            Description = "",
-                            Name = "Reserved"
+                            Abbreviations = "AZ",
+                            Name = "Arizona"
                         },
                         new
                         {
                             Id = 5,
-                            Description = "",
-                            Name = "Canceled"
+                            Abbreviations = "CA",
+                            Name = "California"
                         },
                         new
                         {
                             Id = 6,
-                            Description = "",
-                            Name = "Returned"
+                            Abbreviations = "CO",
+                            Name = "Colorado"
                         },
                         new
                         {
                             Id = 7,
-                            Description = "",
-                            Name = "Expired"
+                            Abbreviations = "CT",
+                            Name = "Connecticut"
                         },
                         new
                         {
                             Id = 8,
-                            Description = "",
-                            Name = "Canceled"
+                            Abbreviations = "DC",
+                            Name = "District of Columbia"
                         },
                         new
                         {
                             Id = 9,
-                            Description = "",
-                            Name = "Late"
+                            Abbreviations = "DE",
+                            Name = "Delaware"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Abbreviations = "FL",
+                            Name = "Florida"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Abbreviations = "GA",
+                            Name = "Georgia"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Abbreviations = "HI",
+                            Name = "Hawaii"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Abbreviations = "ID",
+                            Name = "Idaho"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Abbreviations = "IL",
+                            Name = "Illinois"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Abbreviations = "IN",
+                            Name = "Indiana"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Abbreviations = "IA",
+                            Name = "Iowa"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Abbreviations = "KS",
+                            Name = "Kansas"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Abbreviations = "KY",
+                            Name = "Kentucky"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Abbreviations = "LA",
+                            Name = "Louisiana"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Abbreviations = "ME",
+                            Name = "Maine"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Abbreviations = "MD",
+                            Name = "Maryland"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Abbreviations = "MA",
+                            Name = "Massachusetts"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Abbreviations = "MI",
+                            Name = "Michigan"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Abbreviations = "MN",
+                            Name = "Minnesota"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Abbreviations = "MS",
+                            Name = "Mississippi"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Abbreviations = "MO",
+                            Name = "Missouri"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Abbreviations = "MT",
+                            Name = "Montana"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Abbreviations = "NE",
+                            Name = "Nebraska"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Abbreviations = "NH",
+                            Name = "New Hampshire"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Abbreviations = "NJ",
+                            Name = "New Jersey"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Abbreviations = "NM",
+                            Name = "New Mexico"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Abbreviations = "NY",
+                            Name = "New York"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Abbreviations = "NC",
+                            Name = "North Carolina"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Abbreviations = "NV",
+                            Name = "Nevada"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Abbreviations = "ND",
+                            Name = "North Dakota"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Abbreviations = "OH",
+                            Name = "Ohio"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Abbreviations = "OK",
+                            Name = "Oklahoma"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Abbreviations = "OR",
+                            Name = "Oregon"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Abbreviations = "PA",
+                            Name = "Pennsylvania"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Abbreviations = "RI",
+                            Name = "Rhode Island"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Abbreviations = "SC",
+                            Name = "South Carolina"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Abbreviations = "SD",
+                            Name = "South Dakota"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Abbreviations = "TN",
+                            Name = "Tennessee"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Abbreviations = "TX",
+                            Name = "Texas"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Abbreviations = "UT",
+                            Name = "Utah"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Abbreviations = "VT",
+                            Name = "Vermont"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Abbreviations = "VA",
+                            Name = "Virginia"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Abbreviations = "WA",
+                            Name = "Washington"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Abbreviations = "WV",
+                            Name = "West Virginia"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Abbreviations = "WI",
+                            Name = "Wisconsin"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Abbreviations = "WY",
+                            Name = "Wyoming"
                         });
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("City");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("DateOfBirth");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("Gender");
-
-                    b.Property<string>("Lastname");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<string>("State");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Zipcode");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.UserRole", b =>
-                {
-                    b.Property<int>("UserId");
-
-                    b.Property<int>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("RoleId");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -501,13 +929,17 @@ namespace LMSRepository.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -518,13 +950,17 @@ namespace LMSRepository.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<string>("ProviderKey");
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<string>("ProviderDisplayName");
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -535,24 +971,29 @@ namespace LMSRepository.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Value");
+                    b.Property<string>("Value")
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.AssetPhoto", b =>
+            modelBuilder.Entity("LMSEntities.Models.AssetPhoto", b =>
                 {
-                    b.HasBaseType("LMSRepository.Models.Photo");
+                    b.HasBaseType("LMSEntities.Models.Photo");
 
-                    b.Property<int>("LibraryAssetId");
+                    b.Property<int>("LibraryAssetId")
+                        .HasColumnType("int");
 
                     b.HasIndex("LibraryAssetId")
                         .IsUnique();
@@ -560,11 +1001,25 @@ namespace LMSRepository.Migrations
                     b.HasDiscriminator().HasValue("AssetPhoto");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.UserProfilePhoto", b =>
+            modelBuilder.Entity("LMSEntities.Models.LibraryCardPhoto", b =>
                 {
-                    b.HasBaseType("LMSRepository.Models.Photo");
+                    b.HasBaseType("LMSEntities.Models.Photo");
 
-                    b.Property<int>("UserId");
+                    b.Property<int>("LibraryCardId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("LibraryCardId")
+                        .IsUnique();
+
+                    b.HasDiscriminator().HasValue("LibraryCardPhoto");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.UserProfilePhoto", b =>
+                {
+                    b.HasBaseType("LMSEntities.Models.Photo");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -572,154 +1027,271 @@ namespace LMSRepository.Migrations
                     b.HasDiscriminator().HasValue("UserProfilePhoto");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.Checkout", b =>
+            modelBuilder.Entity("LMSEntities.Models.Address", b =>
                 {
-                    b.HasOne("LMSRepository.Models.LibraryAsset", "LibraryAsset")
+                    b.HasOne("LMSEntities.Models.State", "State")
                         .WithMany()
-                        .HasForeignKey("LibraryAssetId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("LMSRepository.Models.LibraryCard", "LibraryCard")
-                        .WithMany("Checkouts")
-                        .HasForeignKey("LibraryCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LMSRepository.Models.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Navigation("State");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.CheckoutHistory", b =>
+            modelBuilder.Entity("LMSEntities.Models.AppUserRole", b =>
                 {
-                    b.HasOne("LMSRepository.Models.LibraryAsset", "LibraryAsset")
-                        .WithMany()
-                        .HasForeignKey("LibraryAssetId");
-
-                    b.HasOne("LMSRepository.Models.LibraryCard", "LibraryCard")
-                        .WithMany()
-                        .HasForeignKey("LibraryCardId");
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.Hold", b =>
-                {
-                    b.HasOne("LMSRepository.Models.LibraryAsset", "LibraryAsset")
-                        .WithMany()
-                        .HasForeignKey("LibraryAssetId");
-
-                    b.HasOne("LMSRepository.Models.LibraryCard", "LibraryCard")
-                        .WithMany()
-                        .HasForeignKey("LibraryCardId");
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.LibraryAsset", b =>
-                {
-                    b.HasOne("LMSRepository.Models.AssetType", "AssetType")
-                        .WithMany()
-                        .HasForeignKey("AssetTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LMSRepository.Models.Author", "Author")
-                        .WithMany("Assets")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LMSRepository.Models.Category", "Category")
-                        .WithMany("Assets")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LMSRepository.Models.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.LibraryCard", b =>
-                {
-                    b.HasOne("LMSRepository.Models.User", "User")
-                        .WithOne("LibraryCard")
-                        .HasForeignKey("LMSRepository.Models.LibraryCard", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.ReserveAsset", b =>
-                {
-                    b.HasOne("LMSRepository.Models.LibraryAsset", "LibraryAsset")
-                        .WithMany()
-                        .HasForeignKey("LibraryAssetId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LMSRepository.Models.LibraryCard", "LibraryCard")
-                        .WithMany("ReservedAssets")
-                        .HasForeignKey("LibraryCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LMSRepository.Models.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("LMSRepository.Models.UserRole", b =>
-                {
-                    b.HasOne("LMSRepository.Models.Role", "Role")
+                    b.HasOne("LMSEntities.Models.AppRole", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("LMSRepository.Models.User", "User")
+                    b.HasOne("LMSEntities.Models.AppUser", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.Checkout", b =>
+                {
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
+                        .WithMany()
+                        .HasForeignKey("LibraryAssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
+                        .WithMany("Checkouts")
+                        .HasForeignKey("LibraryCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LibraryAsset");
+
+                    b.Navigation("LibraryCard");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.CheckoutHistory", b =>
+                {
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
+                        .WithMany()
+                        .HasForeignKey("LibraryAssetId");
+
+                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
+                        .WithMany()
+                        .HasForeignKey("LibraryCardId");
+
+                    b.Navigation("LibraryAsset");
+
+                    b.Navigation("LibraryCard");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.Hold", b =>
+                {
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
+                        .WithMany()
+                        .HasForeignKey("LibraryAssetId");
+
+                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
+                        .WithMany()
+                        .HasForeignKey("LibraryCardId");
+
+                    b.Navigation("LibraryAsset");
+
+                    b.Navigation("LibraryCard");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.LibraryAssetAuthor", b =>
+                {
+                    b.HasOne("LMSEntities.Models.Author", "Author")
+                        .WithMany("AuthorAssets")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
+                        .WithMany("AssetAuthors")
+                        .HasForeignKey("LibrayAssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("LibraryAsset");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.LibraryAssetCategory", b =>
+                {
+                    b.HasOne("LMSEntities.Models.Category", "Category")
+                        .WithMany("CategoryAssets")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
+                        .WithMany("AssetCategories")
+                        .HasForeignKey("LibrayAssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("LibraryAsset");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.LibraryCard", b =>
+                {
+                    b.HasOne("LMSEntities.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.RefreshToken", b =>
+                {
+                    b.HasOne("LMSEntities.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.ReserveAsset", b =>
+                {
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
+                        .WithMany()
+                        .HasForeignKey("LibraryAssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
+                        .WithMany("ReservedAssets")
+                        .HasForeignKey("LibraryCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LibraryAsset");
+
+                    b.Navigation("LibraryCard");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("LMSRepository.Models.Role")
+                    b.HasOne("LMSEntities.Models.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("LMSRepository.Models.User")
+                    b.HasOne("LMSEntities.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("LMSRepository.Models.User")
+                    b.HasOne("LMSEntities.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("LMSRepository.Models.User")
+                    b.HasOne("LMSEntities.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.AssetPhoto", b =>
+            modelBuilder.Entity("LMSEntities.Models.AssetPhoto", b =>
                 {
-                    b.HasOne("LMSRepository.Models.LibraryAsset", "LibraryAsset")
+                    b.HasOne("LMSEntities.Models.LibraryAsset", "LibraryAsset")
                         .WithOne("Photo")
-                        .HasForeignKey("LMSRepository.Models.AssetPhoto", "LibraryAssetId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("LMSEntities.Models.AssetPhoto", "LibraryAssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LibraryAsset");
                 });
 
-            modelBuilder.Entity("LMSRepository.Models.UserProfilePhoto", b =>
+            modelBuilder.Entity("LMSEntities.Models.LibraryCardPhoto", b =>
                 {
-                    b.HasOne("LMSRepository.Models.User", "User")
+                    b.HasOne("LMSEntities.Models.LibraryCard", "LibraryCard")
+                        .WithOne("LibraryCardPhoto")
+                        .HasForeignKey("LMSEntities.Models.LibraryCardPhoto", "LibraryCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LibraryCard");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.UserProfilePhoto", b =>
+                {
+                    b.HasOne("LMSEntities.Models.AppUser", "User")
                         .WithOne("ProfilePicture")
-                        .HasForeignKey("LMSRepository.Models.UserProfilePhoto", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("LMSEntities.Models.UserProfilePhoto", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.AppRole", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.AppUser", b =>
+                {
+                    b.Navigation("ProfilePicture");
+
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.Author", b =>
+                {
+                    b.Navigation("AuthorAssets");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.Category", b =>
+                {
+                    b.Navigation("CategoryAssets");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.LibraryAsset", b =>
+                {
+                    b.Navigation("AssetAuthors");
+
+                    b.Navigation("AssetCategories");
+
+                    b.Navigation("Photo");
+                });
+
+            modelBuilder.Entity("LMSEntities.Models.LibraryCard", b =>
+                {
+                    b.Navigation("Checkouts");
+
+                    b.Navigation("LibraryCardPhoto");
+
+                    b.Navigation("ReservedAssets");
                 });
 #pragma warning restore 612, 618
         }

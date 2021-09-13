@@ -1,0 +1,24 @@
+<mat-card class="mat-elevation-z4"
+          style="text-align: center; min-width: 500px; margin: 5% 30%; background-color: rgb(248, 248, 248);">
+  <mat-card-title>Library Card Search</mat-card-title>
+  <mat-card-content>
+    <mat-form-field>
+      <span matPrefix>
+        <mat-icon>card_membership</mat-icon>&nbsp;
+      </span>
+      <input matInput [formControl]="cardSearchForm" type="text" placeholder="Card Number" required />
+      <mat-error *ngFor="let validation of validationMessages.cardNumber">
+        <mat-error *ngIf="
+                        cardSearchForm.hasError(validation.type) &&
+                            (cardSearchForm.dirty || cardSearchForm.touched)">
+          {{ validation.message }}
+        </mat-error>
+      </mat-error><button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="cardSearchForm.dirty"
+              (click)="clearForm()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <button style="margin-left: 30px;" [disabled]="!cardSearchForm.valid" mat-raised-button color="primary"
+            (click)="cardSearch(cardSearchForm.value)">Submit</button>
+  </mat-card-content>
+</mat-card>

@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LMSContracts.Interfaces;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,54 +12,47 @@ namespace LibraryManagementSystem.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IDashboardService _dashboardService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IDashboardService dashboardService)
         {
+            _dashboardService = dashboardService;
             _categoryService = categoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            var category = await _categoryService.GetCategories();
+            IEnumerable<Category> category = await _categoryService.GetCategories();
 
             return Ok(category);
         }
 
-        [HttpGet("{categoryId}")]
+        [HttpGet("{categoryId}", Name = nameof(GetCategory))]
         public async Task<IActionResult> GetCategory(int categoryId)
         {
-            var category = await _categoryService.GetCategory(categoryId);
+            Category category = await _categoryService.GetCategory(categoryId);
 
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(category);
+            return category == null ? NotFound() : Ok(category);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> AddCategory(CategoryDto categoryForCreation)
         {
-            category = await _categoryService.AddCategory(category);
+            CategoryDto category = await _categoryService.AddCategory(categoryForCreation);
 
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            await _dashboardService.BroadcastDashboardData();
+
+            return CreatedAtAction(nameof(GetCategory), new { categoryId = category.Id }, category);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-            var category = await _categoryService.GetCategory(id);
+            // TODO do not allow delete if category is assigned to assets
+            await _categoryService.DeleteCategory(id);
 
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            await _categoryService.DeleteCategory(category);
-
-            return category;
+            return await _categoryService.GetCategory(id);
         }
     }
 }

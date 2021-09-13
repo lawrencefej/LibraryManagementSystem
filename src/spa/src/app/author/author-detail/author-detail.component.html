@@ -1,0 +1,25 @@
+<div class="main-container">
+  <mat-card class="mat-elevation-z4">
+    <mat-card-title mat-subheader align="center">{{ author.fullName | titlecase }}</mat-card-title>
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab label="Items">
+          <ng-template matTabContent>
+            <lms-author-asset-list [author]="author" [assets]="assetsForAuthor"></lms-author-asset-list>
+          </ng-template>
+        </mat-tab>
+
+        <mat-tab label="Description">
+          <ng-template matTabContent>
+            {{ author.description }}
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <!-- TODO Wire button -->
+      <button mat-raised-button color="accent" (click)="editAuthor()">Edit Details</button>
+      <button mat-raised-button color="primary">Add Item</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

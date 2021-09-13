@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace LMSService.Exceptions
 {
@@ -29,13 +30,27 @@ namespace LMSService.Exceptions
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError; // 500 if unexpected
+            HttpStatusCode code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            if (exception is NoValuesFoundException) code = HttpStatusCode.NotFound;
-            else if (exception is LMSValidationException) code = HttpStatusCode.BadRequest;
-            else if (exception is LMSUnauthorizedException) code = HttpStatusCode.Unauthorized;
+            switch (exception)
+            {
+                case NoValuesFoundException:
+                    code = HttpStatusCode.NotFound;
+                    break;
+                case LMSValidationException:
+                    code = HttpStatusCode.BadRequest;
+                    break;
+                case LMSUnauthorizedException:
+                    code = HttpStatusCode.Unauthorized;
+                    break;
+                case DbUpdateException:
+                    code = HttpStatusCode.BadRequest;
+                    break;
+                default:
+                    break;
+            }
 
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            string result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

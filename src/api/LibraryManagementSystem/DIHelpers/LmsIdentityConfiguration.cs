@@ -1,9 +1,15 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
+using LMSEntities.Configuration;
 using LMSEntities.Models;
 using LMSRepository.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Role = LibraryManagementSystem.API.Helpers.Role;
 
@@ -11,9 +17,12 @@ namespace LibraryManagementSystem.DIHelpers
 {
     public static class LmsIdentityConfiguration
     {
-        public static void AddIdentityConfiguration(this IServiceCollection services, string token)
+        public static void AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
+
+            JwtSettings jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+
+            IdentityBuilder builder = services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireDigit = false;
                 opt.Password.RequiredLength = 4;
@@ -21,22 +30,40 @@ namespace LibraryManagementSystem.DIHelpers
                 opt.Password.RequireUppercase = false;
             });
 
-            builder = new IdentityBuilder(builder.UserType, typeof(LMSEntities.Models.Role), builder.Services);
+            builder = new IdentityBuilder(builder.UserType, typeof(AppRole), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
-            builder.AddRoleValidator<RoleValidator<LMSEntities.Models.Role>>();
-            // TODO: Fix role naming issue
-            builder.AddRoleManager<RoleManager<LMSEntities.Models.Role>>();
-            builder.AddSignInManager<SignInManager<User>>();
+            builder.AddRoleValidator<RoleValidator<AppRole>>();
+            builder.AddRoleManager<RoleManager<AppRole>>();
+            builder.AddSignInManager<SignInManager<AppUser>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(Options =>
+                .AddJwtBearer(options =>
                 {
-                    Options.TokenValidationParameters = new TokenValidationParameters
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        // TODO validate issue
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-                            .GetBytes(token)),
+                            .GetBytes(jwtSettings.Secret)),
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            StringValues accessToken = context.Request.Query["access_token"];
+
+                            PathString path = context.HttpContext.Request.Path;
+
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 

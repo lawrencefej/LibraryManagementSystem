@@ -1,28 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LMSEntities.DataTransferObjects;
-using LMSEntities.Models;
-using Microsoft.AspNetCore.Identity;
+using LMSEntities.Helpers;
 
 namespace LMSContracts.Interfaces
 {
     public interface IAdminService
     {
-        Task<IEnumerable<User>> GetAdminUsers();
+        Task<LmsResponseHandler<AdminUserForListDto>> CreateUser(AddAdminDto addAdminDto, bool password = false);
 
-        Task<IdentityResult> CreateUser(User user);
-        Task<IdentityResult> CreateUser(User user, string password);
 
-        Task<User> CompleteUserCreation(User newUser, string newRole, string callbackUrl);
+        Task<LmsResponseHandler<AdminUserForListDto>> GetAdminUser(int userId);
 
-        IEnumerable<UserForDetailedDto> AddRoleToUsers(IEnumerable<UserForDetailedDto> users);
 
-        UserForDetailedDto AddRoleToUser(UserForDetailedDto user);
+        Task<LmsResponseHandler<AdminUserForListDto>> UpdateUser(UpdateAdminRoleDto userforUpdate);
 
-        Task UpdateUser(User userforUpdate, string role);
 
-        Task DeleteUser(User user);
+        Task<LmsResponseHandler<AdminUserForListDto>> DeleteUser(int userId);
 
-        Task<User> GetAdminUser(int userId);
+
+        Task<PagedList<AdminUserForListDto>> GetAdminUsers(PaginationParams paginationParams);
     }
 }

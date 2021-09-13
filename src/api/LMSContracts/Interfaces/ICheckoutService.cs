@@ -1,29 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 
 namespace LMSContracts.Interfaces
 {
     public interface ICheckoutService
     {
-        Task CheckInAsset(int checkoutId);
+        Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckoutAssets(BasketForCheckoutDto basketForCheckout);
 
-        Task<CheckoutForReturnDto> CheckoutAsset(CheckoutForCreationDto checkoutForCreation);
+        Task<LmsResponseHandler<CheckoutForDetailedDto>> CheckInAsset(CheckoutForCheckInDto checkoutForCheckIn);
 
-        Task CheckoutAsset(IEnumerable<CheckoutForCreationDto> checkoutsForCreation);
+        Task<LmsResponseHandler<CheckoutForDetailedDto>> GetCheckoutWithDetails(int checkoutId);
 
-        Task<Checkout> GetCheckout(int checkoutId);
+        Task<PagedList<CheckoutForListDto>> GetCheckoutsForAsset(int libraryAssetId, PaginationParams paginationParams);
 
-        Task<IEnumerable<Checkout>> GetCheckoutsForAsset(int libraryAssetId);
+        Task<PagedList<CheckoutForListDto>> GetCheckoutsForCard(int LibraryCardId, PaginationParams paginationParams);
 
-        Task<IEnumerable<Checkout>> GetCheckoutsForMember(int userId);
-
-        Task<LibraryAsset> GetLibraryAsset(int id);
-
-        Task<IEnumerable<Checkout>> SearchCheckouts(string searchString);
-
-        Task<PagedList<Checkout>> GetAllCurrentCheckouts(PaginationParams paginationParams);
+        Task<PagedList<CheckoutForListDto>> GetCheckouts(PaginationParams paginationParams);
     }
 }

@@ -1,24 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
-using LMSEntities.Models;
 
 namespace LMSContracts.Interfaces
 {
     public interface ILibraryAssetService
     {
-        Task<LibraryAsset> AddAsset(LibraryAsset asset);
+        Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation);
 
-        Task DeleteAsset(int assetId);
+        Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(int assetId);
 
-        Task EditAsset(LibraryAsset libraryAssetForUpdate);
+        Task<LmsResponseHandler<LibraryAssetForDetailedDto>> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate);
 
-        Task<LibraryAsset> GetAsset(int assetId);
+        Task<LmsResponseHandler<LibraryAssetForDetailedDto>> GetAssetWithDetails(int assetId);
 
-        Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId);
+        Task<PagedList<LibraryAssetForListDto>> GetAssetsByAuthor(PaginationParams paginationParams, int authorId);
 
-        Task<IEnumerable<LibraryAsset>> SearchAvalableLibraryAsset(string searchString);
-
-        Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams);
+        Task<PagedList<LibraryAssetForListDto>> GetPaginatedAssets(PaginationParams paginationParams);
+        Task AddAsset(List<LibraryAssetForCreationDto> libraryAssetForCreations);
     }
 }

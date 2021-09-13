@@ -14,21 +14,14 @@ namespace LMSEntities.DataTransferObjects
         [Required]
         public string Email { get; set; }
 
-        public string UserName { get; set; }
-
         public string Password { get; set; }
 
+        // TODO Make this an enum
         [Required]
         public string Role { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.UtcNow;
 
         public string CallbackUrl { get; set; }
-
-        public AddAdminDto()
-        {
-            UserName = Email;
-            Created = DateTime.Now;
-        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -13,18 +15,24 @@ namespace LibraryManagementSystem.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                }).ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                });
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            })
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                // TODO figure out the reload time
+                config.AddSystemsManager($"/lms/{context.HostingEnvironment.EnvironmentName}/", reloadAfter: TimeSpan.FromSeconds(20));
+            })
+            .ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+            });
         //.ConfigureLogging(logging =>
         //{
         //    logging.ClearProviders();
         //})
         //.UseStartup<Startup>();
-        // Todo Fix login
+        // Todo Fix logging
     }
 }

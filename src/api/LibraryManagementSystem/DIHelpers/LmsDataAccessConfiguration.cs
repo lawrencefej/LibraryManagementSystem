@@ -1,24 +1,23 @@
-﻿using LibraryManagementSystem.Helpers;
+﻿using LMSEntities.Configuration;
 using LMSRepository.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
-using System;
 
 namespace LibraryManagementSystem.DIHelpers
 {
     public static class LmsDataAccessConfiguration
     {
-        public static void AddDataAccessServices(this IServiceCollection services, AppSettings appSettings)
+        public static void AddDataAccessServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = $"Server={appSettings.Host};Port={appSettings.Port};Database={appSettings.DatabaseName};Uid={appSettings.DbUser};Pwd={appSettings.DbPassword};";
+            DbSettings dbSettings = configuration.GetSection(nameof(DbSettings)).Get<DbSettings>();
 
-            //var serverVersion = new MariaDbServerVersion(new Version());
+            string connectionString = $"Server={dbSettings.Host};Port={dbSettings.Port};Database={dbSettings.DatabaseName};Uid={dbSettings.DbUser};Pwd={dbSettings.DbPassword};";
+
             IdentityModelEventSource.ShowPII = true;
             services.AddDbContext<DataContext>(x => x
                 .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                //.ConfigureWarnings(t => t
-                //.Ignore(CoreEventId.IncludeIgnoredWarning))
                 );
         }
     }

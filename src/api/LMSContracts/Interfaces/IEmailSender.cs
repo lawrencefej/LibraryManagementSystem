@@ -2,7 +2,7 @@
 
 namespace LMSContracts.Interfaces
 {
-    public interface IEmailSender
+    public interface IEmailService
     {
         Task SendEmail(string toAddress, string subject, string message);
     }

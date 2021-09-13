@@ -1,0 +1,88 @@
+<div fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button matSuffix mat-icon-button tabIndex="-1" aria-label="clear" (click)="cancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+  <ng-container *ngIf="isEditAuthor; else showAddTemplate">
+    <mat-card-title mat-subheader>Edit Author</mat-card-title>
+  </ng-container>
+  <ng-template #showAddTemplate>
+    <mat-card-title mat-subheader>Add New Author</mat-card-title>
+  </ng-template>
+</div>
+<lms-error-list [errors]="serverValidationErrors"></lms-error-list>
+
+<form fxLayout="column" [formGroup]="authorForm">
+  <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+    <ng-container *ngIf="isEditAuthor;else showAddNameTemplate">
+      <mat-form-field appearance="fill" fxFlex>
+        <input matInput type="text" placeholder="Full Name" formControlName="fullName" required />
+        <mat-error *ngFor="let validation of validationMessages.lastName">
+          <mat-error *ngIf="
+                      authorForm.get('fullName')?.hasError(validation.type) &&
+                                (authorForm.get('fullName')?.dirty || authorForm.get('fullName')?.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-template #showAddNameTemplate>
+      <mat-form-field appearance="fill" fxFlex>
+        <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+        <mat-error *ngFor="let validation of validationMessages.firstName">
+          <mat-error *ngIf="
+                    authorForm.get('firstName')?.hasError(validation.type) &&
+                              (authorForm.get('firstName')?.dirty || authorForm.get('firstName')?.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" fxFlex>
+        <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+        <mat-error *ngFor="let validation of validationMessages.lastName">
+          <mat-error *ngIf="
+                    authorForm.get('lastName')?.hasError(validation.type) &&
+                              (authorForm.get('lastName')?.dirty || authorForm.get('lastName')?.touched)">
+            {{ validation.message }}
+          </mat-error>
+        </mat-error>
+      </mat-form-field>
+    </ng-template>
+  </div>
+
+  <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+    <mat-form-field appearance="fill" fxFlex>
+      <textarea matInput type="text" maxlength="250" placeholder="Description" formControlName="description"></textarea>
+      <mat-hint align="end">{{ authorForm.get('description')?.value?.length }} / 250</mat-hint>
+      <mat-error *ngFor="let validation of validationMessages.description">
+        <mat-error *ngIf="
+          authorForm.get('description')?.hasError(validation.type) &&
+                    (authorForm.get('description')?.dirty || authorForm.get('description')?.touched)">
+          {{ validation.message }}
+        </mat-error>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div style="margin-top: 20px;" class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px"
+       fxLayoutGap.lt-md="0px">
+    <div fxLayoutAlign="space-between center" class="button-row" fxFlex>
+      <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+      <ng-container *ngIf="isEditAuthor;else showAddButtonTemplate"></ng-container>
+      <button mat-raised-button color="accent" type="button" *ngIf="isEditAuthor" (click)="revert()"
+              [disabled]="authorForm.pristine || !authorForm.valid">Reset</button>
+      <button *ngIf="isEditAuthor" mat-raised-button color="primary" type="submit"
+              [disabled]="authorForm.pristine || !authorForm.valid"
+              (click)="updateAuthor(authorForm.value)">Save</button>
+      <ng-template #showAddButtonTemplate>
+        <button mat-raised-button color="accent" type="button" *ngIf="isEditAuthor" (click)="reset()"
+                [disabled]="authorForm.pristine || !authorForm.valid">Reset</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="authorForm.pristine || !authorForm.valid"
+                (click)="addAuthor(authorForm.value)">Submit</button>
+      </ng-template>
+    </div>
+  </div>
+</form>

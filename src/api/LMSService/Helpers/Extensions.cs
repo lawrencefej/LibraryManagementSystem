@@ -1,7 +1,7 @@
-﻿using LMSService.ErrorHandling;
+﻿using System;
+using LMSService.ErrorHandling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace LibraryManagementSystem.API.Helpers
 {
@@ -25,15 +25,20 @@ namespace LibraryManagementSystem.API.Helpers
         //    response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         //}
 
-        public static int CalculateAge(this DateTime theDatetime)
+        public static int CalculateAge(this DateTime dob)
         {
-            var age = DateTime.Today.Year - theDatetime.Year;
-            if (theDatetime.AddYears(age) > DateTime.Today)
+            int age = DateTime.Today.Year - dob.Year;
+            if (dob.AddYears(age) > DateTime.Today)
             {
                 age--;
             }
 
             return age;
+        }
+
+        public static bool IsValidYear(this int year)
+        {
+            return year >= 1000 && year <= DateTime.Today.Year + 2;
         }
 
         public static void ConfigureCustomExceptionMiddleware(this IApplicationBuilder app)

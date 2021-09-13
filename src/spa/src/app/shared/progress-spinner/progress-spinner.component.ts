@@ -1,22 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-
-import { LoaderService } from 'src/app/_services/loader.service';
+import { Component } from '@angular/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { Subject } from 'rxjs/internal/Subject';
+import { LoaderService } from 'src/app/_interceptors/loader.service';
 
 @Component({
-  selector: 'app-progress-spinner',
+  selector: 'lms-progress-spinner',
   templateUrl: './progress-spinner.component.html',
   styleUrls: ['./progress-spinner.component.css']
 })
-export class ProgressSpinnerComponent implements OnInit {
+export class ProgressSpinnerComponent {
   isLoading: Subject<boolean> = this.loaderService.isLoading;
   color = 'accent';
-  mode = 'indeterminate';
+  mode = 'indeterminate' as ProgressSpinnerMode;
   value = 50;
 
-  constructor(private loaderService: LoaderService) { }
-
-  ngOnInit() {
-  }
-
+  constructor(private readonly loaderService: LoaderService) {}
 }

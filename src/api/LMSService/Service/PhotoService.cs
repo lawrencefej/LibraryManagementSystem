@@ -1,125 +1,181 @@
-﻿using System;
+﻿using System.IO;
 using System.Threading.Tasks;
-using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using LMSContracts.Interfaces;
+using LMSEntities.Configuration;
 using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using PhotoLibrary;
-using PhotoLibrary.Configuration;
-using PhotoLibrary.Model;
+using Microsoft.Extensions.Options;
 
 namespace LMSService.Service
 {
     public class PhotoService : IPhotoService
     {
         private readonly DataContext _context;
+        private readonly Cloudinary _cloudinary;
 
-        private readonly IPhotoLibraryService _photoLibrary;
-        private readonly IPhotoConfiguration _photoConfiguration;
-        private readonly IMapper _mapper;
-
-        public PhotoService(DataContext context, IPhotoLibraryService photoLibrary,
-            IPhotoConfiguration photoConfiguration, IMapper mapper)
+        public PhotoService(DataContext context, IOptions<CloudinarySettings> cloudinarySettings)
         {
+            Account acc = new(cloudinarySettings.Value.Name,
+                              cloudinarySettings.Value.ApiKey,
+                              cloudinarySettings.Value.ApiSecret);
             _context = context;
-            _photoLibrary = photoLibrary;
-            _photoConfiguration = photoConfiguration;
-            _mapper = mapper;
+            _cloudinary = new Cloudinary(acc);
         }
 
-        public async Task<ResponseHandler> AddPhotoForAsset(AssetPhotoDto assetPhotoDto)
+        public async Task<LmsResponseHandler<PhotoResponseDto>> AddPhotoForCard(IFormFile file, int cardId)
         {
-            var asset = await _context.LibraryAssets.Include(x => x.Photo).FirstOrDefaultAsync(x => x.Id == assetPhotoDto.LibraryAssetId);
-
-            PhotoSettings settings = CloudinarySettings();
-
-            if (asset.Photo != null)
+            if (file.Length > 0)
             {
-                await DeletePhoto(settings, asset.Photo);
-            }
+                LibraryCard card = await _context.LibraryCards.Include(x => x.LibraryCardPhoto)
+                .FirstOrDefaultAsync(x => x.Id == cardId);
 
-            var photoModel = new PhotoModel(assetPhotoDto.File)
-            {
-                Folder = "LMS/Assets",
-                Width = 500,
-                Height = 500,
-                Crop = "fill"
-            };
+                if (card.LibraryCardPhoto != null)
+                {
+                    await DeletePhoto(card.LibraryCardPhoto.PublicId);
+                }
 
-            var result = _photoLibrary.UploadPhoto(settings, photoModel);
+                using Stream stream = file.OpenReadStream();
 
-            assetPhotoDto.Url = result.Url;
-            assetPhotoDto.PublicId = result.PublicId;
+                ImageUploadParams uploadParams = new()
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Transformation = new Transformation().Height(500)
+                    .Width(500)
+                    .Crop("fill")
+                    .Gravity("face"),
+                    Folder = "LMS/LibraryCards"
+                };
 
-            var photo = _mapper.Map<AssetPhoto>(assetPhotoDto);
+                ImageUploadResult result = await _cloudinary.UploadAsync(uploadParams);
 
-            asset.Photo = photo;
+                if (result.Error != null)
+                {
+                    // TODO log error and return generic message
+                    return LmsResponseHandler<PhotoResponseDto>.Failed(result.Error.Message);
+                }
 
-            await _context.SaveChangesAsync();
+                LibraryCardPhoto photo = new()
+                {
+                    PublicId = result.PublicId,
+                    Url = result.SecureUrl.AbsoluteUri
+                };
 
-            var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
+                card.LibraryCardPhoto = photo;
 
-            return new ResponseHandler(photoToreturn, photo.Id);
-        }
-
-        public async Task<ResponseHandler> AddPhotoForUser(UserPhotoDto userPhotoDto)
-        {
-            var user = await _context.Users.Include(x => x.ProfilePicture).FirstOrDefaultAsync(x => x.Id == userPhotoDto.UserId);
-
-            PhotoSettings settings = CloudinarySettings();
-
-            if (user.ProfilePicture != null)
-            {
-                await DeletePhoto(settings, user.ProfilePicture);
-            }
-
-            var photoModel = new PhotoModel(userPhotoDto.File)
-            {
-                Folder = "LMS/Members",
-                Width = 500,
-                Height = 500,
-                Gravity = "face",
-                Crop = "fill"
-            };
-
-            var result = _photoLibrary.UploadPhoto(settings, photoModel);
-
-            userPhotoDto.Url = result.Url;
-            userPhotoDto.PublicId = result.PublicId;
-
-            var photo = _mapper.Map<UserProfilePhoto>(userPhotoDto);
-
-            user.ProfilePicture = photo;
-
-            await _context.SaveChangesAsync();
-
-            var photoToreturn = _mapper.Map<PhotoForReturnDto>(photo);
-            return new ResponseHandler(photoToreturn, photo.Id);
-        }
-
-        private async Task DeletePhoto(PhotoSettings settings, Photo photo)
-        {
-            if (_photoLibrary.DeletePhoto(settings, photo.PublicId))
-            {
-                _context.Remove(photo);
                 await _context.SaveChangesAsync();
-                return;
+
+                return LmsResponseHandler<PhotoResponseDto>.Successful(new PhotoResponseDto { Id = photo.Id, Url = photo.Url });
             }
 
-            throw new Exception($"Cloud delete failed, please try again later");
+            return LmsResponseHandler<PhotoResponseDto>.Failed("");
         }
 
-        private PhotoSettings CloudinarySettings()
+        public async Task<LmsResponseHandler<PhotoResponseDto>> AddPhotoForUser(IFormFile file, int userId)
         {
-            return new PhotoSettings
+            if (file.Length > 0)
             {
-                Name = _photoConfiguration.Name,
-                ApiSecret = _photoConfiguration.ApiSecret,
-                ApiKey = _photoConfiguration.ApiKey
-            };
+                AppUser user = await _context.Users.Include(x => x.ProfilePicture)
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+                if (user.ProfilePicture != null)
+                {
+                    await DeletePhoto(user.ProfilePicture.PublicId);
+                }
+
+                using Stream stream = file.OpenReadStream();
+
+                ImageUploadParams uploadParams = new()
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Transformation = new Transformation().Height(500)
+                    .Width(500)
+                    .Crop("fill")
+                    .Gravity("face"),
+                    Folder = "LMS/Users"
+                };
+
+                ImageUploadResult result = await _cloudinary.UploadAsync(uploadParams);
+
+                if (result.Error != null)
+                {
+                    // TODO log error and return generic message
+                    return LmsResponseHandler<PhotoResponseDto>.Failed(result.Error.Message);
+                }
+
+                UserProfilePhoto photo = new()
+                {
+                    PublicId = result.PublicId,
+                    Url = result.SecureUrl.AbsoluteUri
+                };
+
+                user.ProfilePicture = photo;
+
+                await _context.SaveChangesAsync();
+
+                return LmsResponseHandler<PhotoResponseDto>.Successful(new PhotoResponseDto { Id = photo.Id, Url = photo.Url });
+            }
+
+            return LmsResponseHandler<PhotoResponseDto>.Failed("");
+        }
+
+        public async Task<LmsResponseHandler<PhotoResponseDto>> AddPhotoForAsset(IFormFile file, int assetId)
+        {
+            if (file.Length > 0)
+            {
+                LibraryAsset asset = await _context.LibraryAssets.Include(x => x.Photo)
+                .FirstOrDefaultAsync(x => x.Id == assetId);
+
+                if (asset.Photo != null)
+                {
+                    await DeletePhoto(asset.Photo.PublicId);
+                }
+
+                using Stream stream = file.OpenReadStream();
+
+                ImageUploadParams uploadParams = new()
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Transformation = new Transformation().Height(500)
+                    .Width(500)
+                    .Crop("fill"),
+                    Folder = "LMS/Assets"
+                };
+
+                ImageUploadResult result = await _cloudinary.UploadAsync(uploadParams);
+
+                if (result.Error != null)
+                {
+                    // TODO log error and return generic message
+                    return LmsResponseHandler<PhotoResponseDto>.Failed(result.Error.Message);
+                }
+
+                AssetPhoto photo = new()
+                {
+                    PublicId = result.PublicId,
+                    Url = result.SecureUrl.AbsoluteUri
+                };
+
+                asset.Photo = photo;
+
+                await _context.SaveChangesAsync();
+
+                return LmsResponseHandler<PhotoResponseDto>.Successful(new PhotoResponseDto { Id = photo.Id, Url = photo.Url });
+            }
+
+            return LmsResponseHandler<PhotoResponseDto>.Failed("");
+        }
+
+        private async Task<DeletionResult> DeletePhoto(string publicId)
+        {
+            DeletionParams deleteParams = new(publicId);
+
+            return await _cloudinary.DestroyAsync(deleteParams);
         }
     }
 }

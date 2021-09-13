@@ -1,152 +1,157 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LMSContracts.Interfaces;
-using LMSEntities.Enumerations;
+using LMSEntities.DataTransferObjects;
 using LMSEntities.Helpers;
 using LMSEntities.Models;
 using LMSRepository.Data;
-using LMSService.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LMSService.Service
 {
-    public class LibraryAssetService : ILibraryAssetService
+    public class LibraryAssetService : BaseService<LibraryAsset, LibraryAssetForDetailedDto, LibraryAssetForListDto, LibraryAssetService>, ILibraryAssetService
     {
-        private readonly ILogger<LibraryAssetService> _logger;
-        private readonly DataContext _context;
-
-        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger)
+        public LibraryAssetService(DataContext context, ILogger<LibraryAssetService> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(context, mapper, logger, httpContextAccessor)
         {
-            _logger = logger;
-            _context = context;
         }
 
-        public async Task<LibraryAsset> AddAsset(LibraryAsset asset)
+        public async Task<LibraryAssetForDetailedDto> AddAsset(LibraryAssetForCreationDto libraryAssetForCreation)
         {
-            asset.StatusId = (int)StatusEnum.Available;
-            asset.CopiesAvailable = asset.NumberOfCopies;
+            LibraryAsset asset = Mapper.Map<LibraryAsset>(libraryAssetForCreation);
 
-            asset.AssetType = null;
-            asset.Author = null;
-            asset.Category = null;
+            asset.SetCopiesAvailable();
 
-            _context.Add(asset);
-            await _context.SaveChangesAsync();
+            Context.Add(asset);
+            await Context.SaveChangesAsync();
 
-            _logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
+            Logger.LogInformation($"added {asset.Title} with ID: {asset.Id}");
 
-            return asset;
+            return Mapper.Map<LibraryAssetForDetailedDto>(asset);
         }
 
-        public async Task DeleteAsset(int assetId)
+        public async Task AddAsset(List<LibraryAssetForCreationDto> libraryAssetForCreations)
         {
-            var asset = await _context.LibraryAssets
-                .FirstOrDefaultAsync(a => a.Id == assetId).ConfigureAwait(false);
+            List<LibraryAsset> assets = Mapper.Map<List<LibraryAsset>>(libraryAssetForCreations);
 
-            if (asset == null)
+            foreach (LibraryAsset asset in assets)
             {
-                _logger.LogWarning($"assetId: {assetId} was not found");
-                throw new NoValuesFoundException($"assetId: {assetId} was not found");
+
+                asset.SetCopiesAvailable();
             }
 
-            _context.Remove(asset);
-            await _context.SaveChangesAsync();
-            // TODO log who performed the action
 
-            _logger.LogInformation($"assetId: {asset.Id} was deleted");
-            return;
+            Context.AddRange(assets);
+            await Context.SaveChangesAsync();
         }
 
-        public async Task EditAsset(LibraryAsset libraryAssetForUpdate)
+        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> DeleteAsset(int assetId)
         {
-            if (libraryAssetForUpdate.CopiesAvailable > 0)
+            LibraryAsset asset = await GetAsset(assetId);
+
+            if (asset != null)
             {
-                libraryAssetForUpdate.StatusId = (int)StatusEnum.Available;
+                Context.Remove(asset);
+                await Context.SaveChangesAsync();
+                // TODO log who performed the action
+
+                Logger.LogInformation($"{asset.Id} was deleted by user {GetLoggedInUserId()}");
+                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful();
             }
 
-            _context.Update(libraryAssetForUpdate);
-
-            await _context.SaveChangesAsync();
-            _logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
-            return;
+            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"Selected item does not exist");
         }
 
-        public async Task<PagedList<LibraryAsset>> GetAllAsync(PaginationParams paginationParams)
+        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> EditAsset(LibraryAssetForUpdateDto libraryAssetForUpdate)
         {
-            var assets = _context.LibraryAssets.AsNoTracking()
+            LibraryAsset asset = await GetAsset(libraryAssetForUpdate.Id);
+
+            if (asset != null)
+            {
+                Mapper.Map(libraryAssetForUpdate, asset);
+
+                asset.SetToAvailable();
+
+                Context.Update(asset);
+
+
+                await Context.SaveChangesAsync();
+                Logger.LogInformation($"assetId: {libraryAssetForUpdate.Id} was edited");
+
+                return LmsResponseHandler<LibraryAssetForDetailedDto>.Successful(Mapper.Map<LibraryAssetForDetailedDto>(await GetAsset(asset.Id)));
+            }
+
+            return LmsResponseHandler<LibraryAssetForDetailedDto>.Failed($"Item with title: '{libraryAssetForUpdate.Title}' does not exist");
+        }
+
+        public async Task<PagedList<LibraryAssetForListDto>> GetPaginatedAssets(PaginationParams paginationParams)
+        {
+            IQueryable<LibraryAsset> assets = Context.LibraryAssets.AsNoTracking()
                 .Include(p => p.Photo)
-                .Include(p => p.Category)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
+                .Include(p => p.AssetCategories)
+                .ThenInclude(c => c.Category)
+                .Include(s => s.AssetAuthors.OrderBy(o => o.Order))
+                .ThenInclude(a => a.Author)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(paginationParams.SearchString))
+            return await FilterAssets(paginationParams, assets);
+        }
+
+        public async Task<PagedList<LibraryAssetForListDto>> GetAssetsByAuthor(PaginationParams paginationParams, int authorId)
+        {
+            IQueryable<LibraryAsset> assets = Context.LibraryAssets.AsNoTracking()
+                .Include(c => c.AssetCategories)
+                    .ThenInclude(t => t.Category)
+                    .Where(x => x.AssetAuthors.Any(t => t.AuthorId == authorId))
+                    .AsQueryable();
+
+            return await FilterAssets(paginationParams, assets);
+        }
+
+        public async Task<LmsResponseHandler<LibraryAssetForDetailedDto>> GetAssetWithDetails(int assetId)
+        {
+            return MapDetailReturn(await GetAsset(assetId));
+        }
+
+        private async Task<LibraryAsset> GetAsset(int assetId)
+        {
+            return await Context.LibraryAssets
+                .Include(p => p.Photo)
+                .Include(p => p.AssetCategories)
+                .ThenInclude(ba => ba.Category)
+                .Include(s => s.AssetAuthors.OrderBy(o => o.Order))
+                .ThenInclude(ba => ba.Author)
+                .FirstOrDefaultAsync(a => a.Id == assetId);
+        }
+
+        private async Task<PagedList<LibraryAssetForListDto>> FilterAssets(PaginationParams paginationParams, IQueryable<LibraryAsset> assets)
+        {
+            if (!string.IsNullOrWhiteSpace(paginationParams.SearchString))
             {
                 assets = assets.Where(x => x.Title.Contains(paginationParams.SearchString));
             }
 
-            if (paginationParams.SortDirection == "asc")
-            {
-                assets = assets.OrderBy(x => x.Title);
-            }
-            else if (paginationParams.SortDirection == "desc")
-            {
-                assets = assets.OrderByDescending(x => x.Title);
-            }
-            else
-            {
-                assets = assets.OrderBy(x => x.Title);
-            }
+            assets = paginationParams.SortDirection == "desc" ? assets.OrderByDescending(x => x.Title) : assets.OrderBy(x => x.Title);
 
-            return await PagedList<LibraryAsset>.CreateAsync(assets, paginationParams.PageNumber, paginationParams.PageSize);
+            return await MapPagination(assets, paginationParams);
         }
 
-        public async Task<LibraryAsset> GetAsset(int assetId)
-        {
-            var asset = await _context.LibraryAssets
-                .Include(p => p.Photo)
-                .Include(p => p.Category)
-                .Include(a => a.AssetType)
-                .Include(s => s.Status)
-                .Include(s => s.Author)
-                .FirstOrDefaultAsync(x => x.Id == assetId);
+        // private bool DoesIsbnExist(string isbn)
+        // {
+        //     return !_context.LibraryAssets.Any(p => p.ISBN == isbn);
+        // }
 
-            return asset;
-        }
+        // private bool DoesCategoryExist(int id)
+        // {
+        //     return _context.Categories.Any(a => a.Id == id);
+        // }
 
-        public async Task<IEnumerable<LibraryAsset>> GetAssetsByAuthor(int authorId)
-        {
-            var assets = await _context.LibraryAssets.AsNoTracking()
-                .Include(a => a.AssetType)
-                .Include(s => s.Author)
-                .Where(x => x.AuthorId == authorId)
-                .ToListAsync();
-
-            return assets;
-        }
-
-        public async Task<IEnumerable<LibraryAsset>> SearchAvalableLibraryAsset(string searchString)
-        {
-            // TODO make sure it is case insensitive
-            var assets = _context.LibraryAssets.AsNoTracking()
-                        .Include(p => p.Photo)
-                        .Include(s => s.Author)
-                        .Include(s => s.AssetType)
-                        .AsQueryable();
-
-            assets = assets.Where(x => x.StatusId == (int)StatusEnum.Available);
-
-            assets = assets
-                .Where(s => s.Title.Contains(searchString)
-                || s.Author.LastName.Contains(searchString)
-                || s.Author.FirstName.Contains(searchString)
-                || s.ISBN.Contains(searchString));
-            await assets.ToListAsync();
-
-            return assets;
-        }
+        // private bool DoesAuthorExist(int id)
+        // {
+        //     return _context.Authors.Any(a => a.Id == id);
+        // }
     }
 }
