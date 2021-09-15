@@ -68,7 +68,7 @@ jobs:
             latest=false
           tags: |
             type=edge
-            branch=$repo.default_branch
+            type=edge,branch=main
 
       - name: Build and push
         id: docker_build
