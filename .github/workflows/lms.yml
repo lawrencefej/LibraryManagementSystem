@@ -80,8 +80,8 @@ jobs:
           file: ./Dockerfile
           push: true
           # tags: ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem:latest
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
