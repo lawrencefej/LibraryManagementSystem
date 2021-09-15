@@ -63,14 +63,11 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            lawrencefej/librarymanagementsystem
+            ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem
           flavor: |
-            latest=false
+            latest=true
           tags: |
-            # minimal
-            type=edge
-            # define default branch
-            type=edge,branch=main
+            type=edge,enable=true,priority=700,prefix=,suffix=,branch=$repo.default_branch
 
       - name: Build and push
         id: docker_build
