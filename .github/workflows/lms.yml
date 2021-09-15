@@ -59,15 +59,11 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Docker meta
-        id: docker_meta
+        id: meta
         uses: docker/metadata-action@v3
         with:
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem
-          flavor: |
-            latest=true
-          tags: |
-            type=edge,enable=true,priority=700,prefix=,suffix=,branch=$repo.default_branch
 
       - name: Build and push
         id: docker_build
@@ -77,8 +73,8 @@ jobs:
           file: ./Dockerfile
           push: true
           # tags: ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem:latest
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
