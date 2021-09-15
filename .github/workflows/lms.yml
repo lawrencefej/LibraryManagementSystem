@@ -63,7 +63,13 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem
+            # branch event
+            type=ref,event=branch
+            # tag event
+            type=ref,event=tag
+            # pull request event
+            type=ref,event=pr
+            # ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem
 
       - name: Build and push
         id: docker_build
