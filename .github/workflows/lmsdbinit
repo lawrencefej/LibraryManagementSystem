@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: LMS CI
+name: LMS DBInit CI
 
 # Controls when the workflow will run
 on:
@@ -10,9 +10,9 @@ on:
       - 'main'
       - 'github-actions'
     paths:
-      - 'src/api'
-      - 'src/spa'
-      - '.github/workflows/lms.yml'
+      - 'src/data'
+      - 'src/api/LMSRepository'
+      - '.github/workflows/lmsdbinit.yml'
   pull_request:
     branches:
       - 'main'
@@ -63,7 +63,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem
+            ${{ secrets.DOCKER_HUB_USERNAME }}/LMSDBInit
           flavor: |
             latest=false
           tags: |
@@ -73,8 +73,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: ./
-          file: ./Dockerfile
+          context: ../
+          file: data/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
