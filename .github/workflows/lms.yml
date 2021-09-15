@@ -22,7 +22,7 @@ on:
       - '.github/workflows/lms.yml'
   schedule:
     # re-run monthly to keep the image fresh with the upstream base images
-    _ cron: '0 12 15 * *'
+    - cron: '0 12 15 * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -62,8 +62,7 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v3
         with:
-          images:
-            - lawrencefej/librarymanagementsystem
+          images: lawrencefej/librarymanagementsystem
 
       - name: Build and push
         id: docker_build
