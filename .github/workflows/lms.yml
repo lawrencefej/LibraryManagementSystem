@@ -68,7 +68,6 @@ jobs:
             latest=false
           tags: |
             type=edge
-            enable=true
             priority=700
             branch=$repo.default_branch
 
