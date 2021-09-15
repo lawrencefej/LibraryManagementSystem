@@ -68,7 +68,6 @@ jobs:
             latest=false
           tags: |
             type=edge
-            priority=700
             branch=$repo.default_branch
 
       - name: Build and push
