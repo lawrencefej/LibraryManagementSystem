@@ -62,7 +62,15 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v3
         with:
-          images: lawrencefej/librarymanagementsystem
+          images: |
+            lawrencefej/librarymanagementsystem
+          flavor: |
+            latest=false
+          tags: |
+            # minimal
+            type=edge
+            # define default branch
+            type=edge,branch=main
 
       - name: Build and push
         id: docker_build
