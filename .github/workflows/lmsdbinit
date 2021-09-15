@@ -67,7 +67,7 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=edge,enable=true,priority=700,prefix=,suffix=,branch=$repo.default_branch
+            type=raw,value={{branch}}-{{date 'YYYYMMDD'}}-{{sha}}
 
       - name: Build and push
         id: docker_build
