@@ -65,9 +65,9 @@ jobs:
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/librarymanagementsystem
           flavor: |
-            latest=false
+            latest=true
           tags: |
-            type=edge,enable=true,priority=700,prefix=,suffix=,branch=$repo.default_branch
+            type=raw,value={{branch}}-{{date 'YYYYMMDD'}}-{{sha}}
 
       - name: Build and push
         id: docker_build
