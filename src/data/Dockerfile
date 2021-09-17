@@ -12,7 +12,7 @@ WORKDIR /src
 COPY ["/data/DBInit/DBInit.csproj", "/data/DBInit/"]
 COPY ["/api/LMSRepository/LMSRepository.csproj", "/api/LMSRepository/"]
 COPY ["/api/LMSContracts/LMSContracts.csproj", "/api/LMSContracts/"]
-COPY ["/api/LMSEntities/LMSEntities.csproj", "/api/LMSEntities/"]
+# COPY ["/api/LMSEntities/LMSEntities.csproj", "/api/LMSEntities/"]
 RUN dotnet restore "/data/DBInit/DBInit.csproj"
 COPY . .
 WORKDIR "/src/data/DBInit"
