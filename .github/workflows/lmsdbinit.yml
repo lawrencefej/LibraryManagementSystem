@@ -9,10 +9,10 @@ on:
     branches:
       - 'main'
       - 'github-actions'
-    paths:
-      - 'src/data'
-      - 'src/api/LMSRepository'
-      - '.github/workflows/lmsdbinit.yml'
+#     paths:
+#       - 'src/data'
+#       - 'src/api/LMSRepository'
+#       - '.github/workflows/lmsdbinit.yml'
   pull_request:
     branches:
       - 'main'
