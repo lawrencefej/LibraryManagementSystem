@@ -67,7 +67,7 @@ jobs:
           flavor: |
             latest=true
           tags: |
-            type=raw,value={{branch}}-{{date 'YYYYMMDD'}}-{{sha}}
+            type=raw,value={{branch}}-{{date 'YYYYMMDD'}}-{{sha}}-$GITHUB_RUN_NUMBER
 
       - name: Build and push
         id: docker_build
