@@ -8,7 +8,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'github-actions'
+      # - 'github-actions'
     paths:
       - 'src/data'
       - 'src/api/LMSRepository'
