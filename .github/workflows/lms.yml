@@ -51,6 +51,8 @@ jobs:
             echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
             echo "GITHUB_SHA: ${GITHUB_SHA}"
             echo "GITHUB_REF: ${GITHUB_REF}"
+            echo "GITHUB_RUN_ID: ${GITHUB_RUN_ID}"
+            echo "GITHUB_RUN_NUMBER: ${GITHUB_RUN_NUMBER}"
 
       - name: Set up Docker Buildx
         id: buildx
