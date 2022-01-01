@@ -3,7 +3,8 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-# ENV ASPNETCORE_URLS=http://+:5000;https://+:5001
+ENV ASPNETCORE_URLS=http://+:5000;https://+:5001
+# ENV ASPNETCORE_URLS=https://+:443;http://+:80
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers
@@ -12,9 +13,7 @@ USER appuser
 
 FROM node:14 as client-app
 WORKDIR /usr/src/app
-# COPY ["./src/spa/package.json", "npm-shrinkwrap.json*", "./"]
 COPY ["./src/spa/package.json", "./src/spa/package-lock.json", "/usr/src/app/"]
-# COPY ./src/spa/package.json /usr/src/app/
 RUN npm install --silent
 COPY ./src/spa/ /usr/src/app
 RUN npm run lint

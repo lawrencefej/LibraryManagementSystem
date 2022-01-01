@@ -20,5 +20,11 @@ namespace LMSEntities.Configuration
         public string DatabaseName { get; set; }
 
         public bool SeedDb { get; set; }
+
+
+        public string GetConnectionString()
+        {
+            return $"Server={Host};Port={Port};Database={DatabaseName};Uid={DbUser};Pwd={DbPassword};";
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace LibraryManagementSystem.DIHelpers
         {
             DbSettings dbSettings = configuration.GetSection(nameof(DbSettings)).Get<DbSettings>();
 
-            string connectionString = $"Server={dbSettings.Host};Port={dbSettings.Port};Database={dbSettings.DatabaseName};Uid={dbSettings.DbUser};Pwd={dbSettings.DbPassword};";
+            string connectionString = dbSettings.GetConnectionString();
 
             IdentityModelEventSource.ShowPII = true;
             services.AddDbContext<DataContext>(x => x

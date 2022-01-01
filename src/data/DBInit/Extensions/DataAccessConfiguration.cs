@@ -12,7 +12,7 @@ namespace DBInit.Extensions
         {
             DbSettings dbSettings = configuration.GetSection(nameof(DbSettings)).Get<DbSettings>();
 
-            string connectionString = $"Server={dbSettings.Host};Port={dbSettings.Port};Database={dbSettings.DatabaseName};Uid={dbSettings.DbUser};Pwd={dbSettings.DbPassword};";
+            string connectionString = dbSettings.GetConnectionString();
 
             services.AddDbContext<DataContext>(option => option
                 .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))

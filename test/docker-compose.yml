@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  lmsprod:
+    image: lawrencefej/librarymanagementsystem:latest
+    ports:
+      - 5000:80
+      - 5001:443
+    volumes:
+      - ${HOME}/.aspnet/https:/https:ro
+      - ${HOME}/.aws/credentials:/home/appuser/.aws/credentials:ro
+    environment:
+      # ASPNETCORE_URLS: https://+:443;http://+:80
+      # ASPNETCORE_ENVIRONMENT: Development

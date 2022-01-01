@@ -1,4 +1,8 @@
-﻿using LibraryManagementSystem.DIHelpers;
+﻿using System;
+using System.Net.Http;
+
+using HealthChecks.UI.Client;
+using LibraryManagementSystem.DIHelpers;
 using LibraryManagementSystem.Extensions;
 using LibraryManagementSystem.Helpers;
 using LMSEntities.Configuration;
@@ -7,10 +11,12 @@ using LMSService.Exceptions;
 using LMSService.Helpers;
 using LMSService.Hubs;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -47,6 +53,19 @@ namespace LibraryManagementSystem.API
             services.AddThirdPartyConfiguration();
             services.AddCombinedInterfaces();
             services.AddSignalR(e => e.EnableDetailedErrors = true);
+            services.AddHealthChecks().AddDbContextCheck<DataContext>();
+
+            services.AddHealthChecksUI(setup =>
+            {
+                setup.UseApiEndpointHttpMessageHandler(sp =>
+                {
+                    return new HttpClientHandler
+                    {
+                        ClientCertificateOptions = ClientCertificateOption.Manual,
+                        ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; }
+                    };
+                });
+            }).AddInMemoryStorage();
 
             if (CurrentEnv.IsProduction() || CurrentEnv.IsStaging())
             {
@@ -60,7 +79,6 @@ namespace LibraryManagementSystem.API
             services.AddSpaStaticFiles(config =>
             {
                 config.RootPath = "wwwroot";
-                // config.RootPath = "ClientApp/dist";
             });
 
         }
@@ -82,6 +100,19 @@ namespace LibraryManagementSystem.API
             }
 
             loggerFactory.AddSerilog();
+            app.UseHealthChecks("/health", new HealthCheckOptions()
+            {
+                // Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+            app.UseHealthChecks("/quickhealth", new HealthCheckOptions()
+            {
+                Predicate = _ => false,
+            });
+
+            //Sets the Health Check dashboard configuration
+            app.UseHealthChecksUI();
+
             app.UseRouting();
             app.UseCors("CorsPolicy");
             //.AllowCredentials());
