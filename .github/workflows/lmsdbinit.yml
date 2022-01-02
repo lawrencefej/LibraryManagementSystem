@@ -65,7 +65,7 @@ jobs:
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/LMSDBInit
           flavor: |
-            latest=false
+            latest=true
           tags: |
             type=raw,value={{branch}}-{{date 'YYYYMMDD'}}-{{sha}}
           github-token: ${{ secrets.GITHUB_TOKEN }}

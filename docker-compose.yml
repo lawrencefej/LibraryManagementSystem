@@ -24,7 +24,7 @@ services:
       # ASPNETCORE_ENVIRONMENT: Development
 
   db:
-    image: mariadb:10.4
+    image: mariadb:10.7
     restart: unless-stopped
     volumes:
       - mariadb-data:/var/lib/mysql
